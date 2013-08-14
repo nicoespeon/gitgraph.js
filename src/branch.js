@@ -1,26 +1,32 @@
 var branchs = [];
+var colors = ["green", "blue", "red", "purple"];
+
 /**
  * Main Branch construtor
  *
  * @param {Object} options
  **/
 function Branch(options) {
+  
   // Options
   this.context = options.context || null;
   this.name = options.name || "no name";
-  this.color = options.color || "red";
   this.origin = options.origin || 0;
   this.size = options.size || 400;
   this.lineWidth = options.lineWidth || 2;
+  
+  // Calcul column number for auto-color & auto-offset
+  this.column = 0;
+  this.calculColumn();
+  
+  // Options with auto value
+  this.offsetX = options.offsetX || 20 + this.column * 20;
+  this.color = options.color || colors[this.column];
   
   // Defaults values
   this.merge = false;
   this.smoothOffset = 50; // Size of merge/fork portion
   
-  // Auto offset
-  this.offsetX = 20;
-  this.autoOffsetX();
-
   if (options.parent) {
     this.parent = options.parent;
     this.drawFork();
@@ -76,12 +82,12 @@ Branch.prototype.drawMerge = function () {
 }
 
 /**
- * Auto position the branch in function of others
+ * Calcul column
  **/
-Branch.prototype.autoOffsetX = function () {
+Branch.prototype.calculColumn = function () {
   for (var i = 0; i < branchs.length; i++ ) {
     if (branchs[i].origin - branchs[i].size - branchs[i].smoothOffset * 2 < this.origin)
-      this.offsetX += 20;
+      this.column++;
   }
-  
+  console.log(this.column);
 }

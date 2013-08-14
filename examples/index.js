@@ -12,7 +12,7 @@ var dev = new Branch({
   context: context,
   name: "dev",
   origin: canvas.height - 120,
-  color: "green",
+  //color: "green",
   size: 40,
   parent: master
 });
@@ -22,7 +22,7 @@ var test = new Branch({
   context: context,
   name: "test",
   origin: canvas.height - 120,
-  color: "blue",
+  //color: "blue",
   size: 200,
   parent: master
 });
