@@ -18,7 +18,8 @@ function Branch(options) {
   this.smoothOffset = 50; // Size of merge/fork portion
   
   // Auto offset
-  this.offsetX = 20 + branchs.length * 20;
+  this.offsetX = 20;
+  this.autoOffsetX();
 
   if (options.parent) {
     this.parent = options.parent;
@@ -72,4 +73,15 @@ Branch.prototype.drawMerge = function () {
   this.context.stroke()
   
   this.merge = true;
+}
+
+/**
+ * Auto position the branch in function of others
+ **/
+Branch.prototype.autoOffsetX = function () {
+  for (var i = 0; i < branchs.length; i++ ) {
+    if (branchs[i].origin - branchs[i].size - branchs[i].smoothOffset * 2 < this.origin)
+      this.offsetX += 20;
+  }
+  
 }
