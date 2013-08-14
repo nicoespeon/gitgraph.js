@@ -1,18 +1,24 @@
+var branchs = [];
 /**
  * Main Branch construtor
  *
  * @param {Object} options
  **/
 function Branch(options) {
+  // Options
   this.context = options.context || null;
   this.name = options.name || "no name";
-  this.offsetX = options.offsetX || 0;
   this.color = options.color || "red";
   this.origin = options.origin || 0;
   this.size = options.size || 400;
   this.lineWidth = options.lineWidth || 2;
   
+  // Defaults values
+  this.merge = false;
   this.smoothOffset = 50; // Size of merge/fork portion
+  
+  // Auto offset
+  this.offsetX = 20 + branchs.length * 20;
 
   if (options.parent) {
     this.parent = options.parent;
@@ -20,6 +26,8 @@ function Branch(options) {
   }
 
   this.drawMain();
+  
+  branchs.push(this);
 }
 
 /**
@@ -62,4 +70,6 @@ Branch.prototype.drawMerge = function () {
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke()
+  
+  this.merge = true;
 }
