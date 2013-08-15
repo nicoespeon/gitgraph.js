@@ -15,9 +15,9 @@ var test = gitGraph.branch({
   name: 'test',
   origin: 220,
 });
-gitGraph.commit({
-  
-});
+gitGraph.commit();
+gitGraph.commit();
+gitGraph.commit();
 master.checkout();
 test.merge();
 

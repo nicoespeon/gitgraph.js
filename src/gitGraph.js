@@ -36,7 +36,7 @@ GitGraph.prototype.commit = function (options) {
   options.context = this.context;
   options.color = this.HEAD.color;
   options.x = this.HEAD.offsetX;
-  options.y = 300;
+  options.y = this.HEAD.origin - 20 * this.HEAD.commits.length;
   
   var commit = new Commit(options);
   this.HEAD.commits.push(commit);
