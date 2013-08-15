@@ -46,10 +46,11 @@ function Branch(options) {
   
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
-  this.context = options.context || null;
+  this.targetBranch = options.targetBranch;
+  this.context = options.context;
   this.name = options.name || "no-name";
   this.origin = options.origin || 300;
-  this.size = options.size || 100;
+  this.size = options.size || 10;
   this.lineWidth = options.lineWidth || 2;
   
   // Calcul column number for auto-color & auto-offset
@@ -61,7 +62,6 @@ function Branch(options) {
   this.color = options.color || options.colors[this.column];
   
   // Defaults values
-  this.active = false; // Branch merged ?
   this.smoothOffset = 50; // Size of merge/fork portion
   this.commits = [];
   
@@ -94,6 +94,19 @@ Branch.prototype.draw = function () {
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke();
+  
+  // Merge part
+  if (this.targetBranch) {
+    this.context.beginPath();
+    this.context.moveTo(this.offsetX, this.origin - this.size);
+    this.context.bezierCurveTo(
+      this.offsetX, this.origin - this.size - this.smoothOffset / 2,
+      this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset / 2,
+      this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset);
+    this.context.lineWidth = this.lineWidth;
+    this.context.strokeStyle = this.color;
+    this.context.stroke()
+  }
 }
 
 /**
@@ -104,24 +117,13 @@ Branch.prototype.checkout = function () {
 }
 
 /**
- * Draw Bezier curve between this branch and merged branch
+ * Merge branch
  *
  * @param {Branch} target
  **/
 Branch.prototype.merge = function (target) {
-  target = target || this.parent.HEAD;
-  
-  this.context.beginPath();
-  this.context.moveTo(this.offsetX, this.origin - this.size);
-  this.context.bezierCurveTo(
-    this.offsetX, this.origin - this.size - this.smoothOffset / 2,
-    target.offsetX, this.origin - this.size - this.smoothOffset / 2,
-    target.offsetX, this.origin - this.size - this.smoothOffset);
-  this.context.lineWidth = this.lineWidth;
-  this.context.strokeStyle = this.color;
-  this.context.stroke()
-  
-  this.active = true;
+  this.targetBranch = target || this.parent.HEAD;
+  this.draw();
 }
 
 /**
