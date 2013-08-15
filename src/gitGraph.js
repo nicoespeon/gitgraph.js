@@ -166,7 +166,7 @@ function Commit(options) {
   this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
   this.message = options.message || "He doesn't like George Michael! Boooo!";
   this.date = options.date || new Date().toUTCString();
-  this.sha1 = Sha1.hash(this.date);
+  this.sha1 = Sha1.hash(new String(new Date().getTime()));
   this.context = options.context;
   this.color = options.color || "red";
   this.radius = options.size || 3;
