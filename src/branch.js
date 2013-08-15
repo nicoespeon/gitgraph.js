@@ -1,5 +1,5 @@
 var branchs = [];
-var colors = ["green", "blue", "red", "purple"];
+var colors = ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
 
 /**
  * Main Branch construtor
