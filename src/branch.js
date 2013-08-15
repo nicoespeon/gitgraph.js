@@ -1,5 +1,6 @@
 var branchs = [];
 var colors = ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
+var HEAD = {};
 
 /**
  * Main Branch construtor
@@ -24,7 +25,7 @@ function Branch(options) {
   this.color = options.color || colors[this.column];
   
   // Defaults values
-  this.merge = false;
+  this.active = false; // Branch merged ?
   this.smoothOffset = 50; // Size of merge/fork portion
   
   if (options.parent) {
@@ -35,6 +36,7 @@ function Branch(options) {
   this.drawMain();
   
   branchs.push(this);
+  this.checkout();
 }
 
 /**
@@ -67,18 +69,25 @@ Branch.prototype.drawMain = function () {
 /**
  * Draw Bezier curve between this branch and merged branch
  **/
-Branch.prototype.drawMerge = function () {
+Branch.prototype.merge = function () {
   this.context.beginPath();
   this.context.moveTo(this.offsetX, this.origin - this.size);
   this.context.bezierCurveTo(
     this.offsetX, this.origin - this.size - this.smoothOffset / 2,
-    this.parent.offsetX, this.origin - this.size - this.smoothOffset / 2,
-    this.parent.offsetX, this.origin - this.size - this.smoothOffset);
+    HEAD.offsetX, this.origin - this.size - this.smoothOffset / 2,
+    HEAD.offsetX, this.origin - this.size - this.smoothOffset);
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke()
   
-  this.merge = true;
+  this.active = true;
+}
+
+/**
+ * Checkout onto this branch
+ **/
+Branch.prototype.checkout = function () {
+  HEAD = this;
 }
 
 /**

@@ -16,7 +16,8 @@ var dev = new Branch({
   size: 40,
   parent: master
 });
-dev.drawMerge();
+master.checkout();
+dev.merge();
 
 var test = new Branch({
   context: context,
@@ -26,4 +27,5 @@ var test = new Branch({
   size: 200,
   parent: master
 });
-test.drawMerge();
+master.checkout();
+test.merge();
