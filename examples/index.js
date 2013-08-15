@@ -2,23 +2,28 @@ var gitGraph = new GitGraph();
 
 var master = gitGraph.branch({
   name: 'master',
-  origin: 300,
-  size: 300
+  size: 400
 });
+gitGraph.commit();
+gitGraph.commit();
+gitGraph.commit();
+
 var dev = gitGraph.branch({
   name: 'dev',
-  origin: 240
 });
+gitGraph.commit();
+gitGraph.commit();
+gitGraph.commit();
+
 master.checkout();
-dev.merge();;
 var test = gitGraph.branch({
   name: 'test',
-  origin: 220,
 });
 gitGraph.commit();
 gitGraph.commit();
-gitGraph.commit();
+gitGraph.commit(null, dev);
 master.checkout();
+dev.merge();;
 test.merge();
 
 

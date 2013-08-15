@@ -8,14 +8,17 @@ function GitGraph(options) {
 
   this.elementId = options.elementId || "gitGraph";
   this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
+  this.commitsSpacing = options.commitsSpacing || 25;
 
   // Canvas init
   var canvas = document.getElementById(this.elementId);
   this.context = canvas.getContext('2d');
+  this.origin = options.origin || canvas.height - 10;
 
   // Navigations vars
   this.HEAD = null;
   this.branchs = [];
+  this.commitCount = 0;
 }
 
 GitGraph.prototype.branch = function (options) {
@@ -23,6 +26,15 @@ GitGraph.prototype.branch = function (options) {
   options.context = this.context;
   options.colors = this.colors;
   options.parentBranch = options.parentBranch || this.HEAD;
+  
+  // Calcul origin of branch
+  if (options.parentBranch instanceof Branch) {
+    options.origin = this.origin - (options.parentBranch.commits.length + 1) * this.commitsSpacing;
+    this.commitCount++;
+  } else {
+    options.origin = this.origin;
+  }
+  
   options.parent = this;
 
   var branch = new Branch(options);
@@ -31,16 +43,18 @@ GitGraph.prototype.branch = function (options) {
   return branch;
 }
 
-GitGraph.prototype.commit = function (options) {
+GitGraph.prototype.commit = function (options, branch) {
   options = options || {};
+  branch = (branch instanceof Branch) ? branch : this.HEAD;
   options.context = this.context;
-  options.color = this.HEAD.color;
-  options.x = this.HEAD.offsetX;
-  options.y = this.HEAD.origin - 20 * this.HEAD.commits.length;
-  
+  options.color = branch.color;
+  options.x = branch.offsetX;
+  options.y = this.origin - this.commitsSpacing * this.commitCount;
+
   var commit = new Commit(options);
-  this.HEAD.commits.push(commit);
-  
+  branch.commits.push(commit);
+  this.commitCount++;
+
   return commit;
 }
 
@@ -136,6 +150,7 @@ Branch.prototype.checkout = function () {
  **/
 Branch.prototype.merge = function (target) {
   this.targetBranch = target || this.parent.HEAD;
+  this.size = this.origin - this.commits[this.commits.length - 1].y + 10;
   this.draw();
 }
 
@@ -180,7 +195,7 @@ Commit.prototype.draw = function () {
   this.context.beginPath();
   this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
   this.context.fillStyle = this.color;
-  this.context.fill();  
+  this.context.fill();
 }
 
 
