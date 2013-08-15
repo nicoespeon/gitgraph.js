@@ -45,6 +45,7 @@ function Branch(options) {
   options = options || {};
   
   this.parent = options.parent;
+  this.parentBranch = options.parentBranch;
   this.context = options.context || null;
   this.name = options.name || "no-name";
   this.origin = options.origin || 300;
@@ -62,38 +63,31 @@ function Branch(options) {
   // Defaults values
   this.active = false; // Branch merged ?
   this.smoothOffset = 50; // Size of merge/fork portion
-  
   this.commits = [];
   
-  if (options.parentBranch) {
-    this.parentBranch = options.parentBranch;
-    this.drawFork();
-  }
-
-  this.drawMain();
   
-  this.parent.HEAD = this;
+  this.draw();
+  this.checkout();
 }
 
 /**
- * Draw Bezier curve between parent branch and this branch
+ * Draw the branch 
  **/
-Branch.prototype.drawFork = function () {
-  this.context.beginPath();
-  this.context.moveTo(this.offsetX, this.origin);
-  this.context.bezierCurveTo(
-    this.offsetX, this.origin + this.smoothOffset / 2,
-    this.parentBranch.offsetX, this.origin + this.smoothOffset / 2,
-    this.parentBranch.offsetX, this.origin + this.smoothOffset);
-  this.context.lineWidth = this.lineWidth;
-  this.context.strokeStyle = this.color;
-  this.context.stroke()
-}
-
-/**
- * Draw Line for main part of branch 
- **/
-Branch.prototype.drawMain = function () {
+Branch.prototype.draw = function () {
+  // Fork part
+  if (this.parentBranch) {
+    this.context.beginPath();
+    this.context.moveTo(this.offsetX, this.origin);
+    this.context.bezierCurveTo(
+      this.offsetX, this.origin + this.smoothOffset / 2,
+      this.parentBranch.offsetX, this.origin + this.smoothOffset / 2,
+      this.parentBranch.offsetX, this.origin + this.smoothOffset);
+    this.context.lineWidth = this.lineWidth;
+    this.context.strokeStyle = this.color;
+    this.context.stroke()  
+  }
+  
+  // Main part
   this.context.beginPath();
   this.context.moveTo(this.offsetX, this.origin);
   this.context.lineTo(this.offsetX, this.origin - this.size);
