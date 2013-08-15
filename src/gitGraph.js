@@ -31,6 +31,19 @@ GitGraph.prototype.branch = function (options) {
   return branch;
 }
 
+GitGraph.prototype.commit = function (options) {
+  options = options || {};
+  options.context = this.context;
+  options.color = this.HEAD.color;
+  options.x = this.HEAD.offsetX;
+  options.y = 300;
+  
+  var commit = new Commit(options);
+  this.HEAD.commits.push(commit);
+  
+  return commit;
+}
+
 // --------------------------------------------------------------------
 // ----------------------        Branch         -----------------------
 // --------------------------------------------------------------------
@@ -151,15 +164,23 @@ function Commit(options) {
   options = options || {};
 
   this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
+  this.message = options.message || "He doesn't like George Michael! Boooo!";
   this.date = options.date || new Date().toUTCString();
   this.sha1 = Sha1.hash(this.date);
-  this.size = options.size || 3;
+  this.context = options.context;
   this.color = options.color || "red";
+  this.radius = options.size || 3;
   this.x = options.x;
   this.y = options.y;
 
+  this.draw();
 }
+
 Commit.prototype.draw = function () {
+  this.context.beginPath();
+  this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+  this.context.fillStyle = this.color;
+  this.context.fill();  
 }
 
 
