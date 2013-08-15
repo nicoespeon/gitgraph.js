@@ -2,17 +2,17 @@
 // ----------------------      GitGraph         -----------------------
 // --------------------------------------------------------------------
 
-function GitGraph (options) {
+function GitGraph(options) {
   // Options
   options = options || {};
-  
+
   this.elementId = options.elementId || "gitGraph";
   this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
-  
+
   // Canvas init
   var canvas = document.getElementById(this.elementId);
   this.context = canvas.getContext('2d');
-  
+
   // Navigations vars
   this.HEAD = null;
   this.branchs = [];
@@ -24,10 +24,10 @@ GitGraph.prototype.branch = function (options) {
   options.colors = this.colors;
   options.parentBranch = options.parentBranch || this.HEAD;
   options.parent = this;
-  
+
   var branch = new Branch(options);
   this.branchs.push(branch);
-  
+
   return branch;
 }
 
@@ -43,7 +43,7 @@ GitGraph.prototype.branch = function (options) {
 function Branch(options) {
   // Options
   options = options || {};
-  
+
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
   this.targetBranch = options.targetBranch;
@@ -52,20 +52,20 @@ function Branch(options) {
   this.origin = options.origin || 300;
   this.size = options.size || 10;
   this.lineWidth = options.lineWidth || 2;
-  
+
   // Calcul column number for auto-color & auto-offset
   this.column = 0;
   this.calculColumn();
-  
+
   // Options with auto value
   this.offsetX = options.offsetX || 20 + this.column * 20;
   this.color = options.color || options.colors[this.column];
-  
+
   // Defaults values
   this.smoothOffset = 50; // Size of merge/fork portion
   this.commits = [];
-  
-  
+
+
   this.draw();
   this.checkout();
 }
@@ -84,9 +84,9 @@ Branch.prototype.draw = function () {
       this.parentBranch.offsetX, this.origin + this.smoothOffset);
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
-    this.context.stroke()  
+    this.context.stroke()
   }
-  
+
   // Main part
   this.context.beginPath();
   this.context.moveTo(this.offsetX, this.origin);
@@ -94,7 +94,7 @@ Branch.prototype.draw = function () {
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke();
-  
+
   // Merge part
   if (this.targetBranch) {
     this.context.beginPath();
@@ -130,9 +130,9 @@ Branch.prototype.merge = function (target) {
  * Calcul column
  **/
 Branch.prototype.calculColumn = function () {
-  for (var i = 0; i < this.parent.branchs.length; i++ ) {
+  for (var i = 0; i < this.parent.branchs.length; i++) {
     if (this.parent.branchs[i].origin - this.parent.branchs[i].size - this.parent.branchs[i].smoothOffset * 2 < this.origin)
       this.column++;
   }
-  console.log('[' + this.name + '] column:' +this.column);
+  console.log('[' + this.name + '] column:' + this.column);
 }
