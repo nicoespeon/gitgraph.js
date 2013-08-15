@@ -1,8 +1,25 @@
-// Main for test
-var canvas = document.getElementById('myCanvas');
-var context = canvas.getContext('2d');
+var gitGraph = new GitGraph();
 
-var master = new Branch({
+var master = gitGraph.branch({
+  name: 'master',
+  origin: 300,
+  size: 300
+});
+var dev = gitGraph.branch({
+  name: 'dev',
+  origin: 240
+});
+master.checkout();
+dev.merge();;
+var test = gitGraph.branch({
+  name: 'test',
+  origin: 220,
+});
+master.checkout();
+test.merge();
+
+
+/*var master = new Branch({
   context: context,
   name: "master",
   origin: canvas.height - 20,
@@ -28,4 +45,4 @@ var test = new Branch({
   parent: master
 });
 master.checkout();
-test.merge();
+test.merge();*/
