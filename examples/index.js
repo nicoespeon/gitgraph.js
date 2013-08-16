@@ -27,9 +27,9 @@ dev.commit(); // Commit on 'dev' Branch
 master.checkout();
 
 master.commit();
-dev.merge(test);
+dev.merge();
 test.commit();
 master.commit();
-test.merge();
+test.merge(null, false); // Merge into HEAD without merge commit
 
 gitGraph.render();
