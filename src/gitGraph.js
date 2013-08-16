@@ -21,6 +21,9 @@ function GitGraph(options) {
   this.HEAD = null;
   this.branchs = [];
   this.commitOffset = 0;
+  
+  // Utilities
+  this.columnMax = 0;
 
   // Error: no render()
   this.context.fillStyle = 'red';
@@ -219,7 +222,7 @@ Branch.prototype.calculColumn = function () {
     if (this.parent.branchs[i].origin - this.parent.branchs[i].size - this.parent.branchs[i].smoothOffset * 2 < this.origin)
       this.column++;
   }
-  console.log('[' + this.name + '] column:' + this.column);
+  this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
 }
 
 // --------------------------------------------------------------------
@@ -248,12 +251,17 @@ function Commit(options) {
 }
 
 Commit.prototype.draw = function () {
+  // Dot
   this.context.beginPath();
   this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
   this.context.fillStyle = this.color;
   this.context.fill();
+  
+  // Message
+  var message = this.sha1.substring(0, 7) + ' ' + this.message + ' - ' + this.author;
+  this.context.font = 'normal 12pt Calibri';
+  this.context.fillText(message, (this.parent.columnMax + 2) * 20 , this.y + 3);
 }
-
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 /*  SHA-1 implementation in JavaScript | (c) Chris Veness 2002-2010 | www.movable-type.co.uk      */
