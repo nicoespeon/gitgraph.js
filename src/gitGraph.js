@@ -30,7 +30,6 @@ GitGraph.prototype.branch = function (options) {
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
     options.origin = this.origin - (options.parentBranch.commits.length + 1) * this.commitsSpacing;
-    this.commitCount++;
   } else {
     options.origin = this.origin;
   }
@@ -40,6 +39,10 @@ GitGraph.prototype.branch = function (options) {
   var branch = new Branch(options);
   this.branchs.push(branch);
 
+  // Offset for first commit
+  if (branch.parentBranch instanceof Branch && branch.column - branch.parentBranch.column == 1)
+    this.commitCount++;
+  
   return branch;
 }
 
@@ -50,7 +53,7 @@ GitGraph.prototype.commit = function (options, branch) {
   options.color = branch.color;
   options.x = branch.offsetX;
   options.y = this.origin - this.commitsSpacing * this.commitCount;
-
+  
   var commit = new Commit(options);
   branch.commits.push(commit);
   this.commitCount++;
