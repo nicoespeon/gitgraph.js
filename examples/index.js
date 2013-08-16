@@ -25,3 +25,5 @@ gitGraph.commit(null, dev);
 master.checkout();
 dev.merge();
 test.merge();
+
+gitGraph.render();

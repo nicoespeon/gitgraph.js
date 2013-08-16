@@ -58,6 +58,12 @@ GitGraph.prototype.commit = function (options, branch) {
   return commit;
 }
 
+GitGraph.prototype.render = function () {
+  for (var i = 0; i < this.branchs.length; i++) {
+    this.branchs[i].draw();
+  }
+}
+
 // --------------------------------------------------------------------
 // ----------------------        Branch         -----------------------
 // --------------------------------------------------------------------
@@ -92,8 +98,6 @@ function Branch(options) {
   this.smoothOffset = 50; // Size of merge/fork portion
   this.commits = [];
 
-
-  this.draw();
   this.checkout();
 }
 
@@ -151,7 +155,6 @@ Branch.prototype.checkout = function () {
 Branch.prototype.merge = function (target) {
   this.targetBranch = target || this.parent.HEAD;
   this.size = this.origin - this.commits[this.commits.length - 1].y + 10;
-  this.draw();
 }
 
 /**
