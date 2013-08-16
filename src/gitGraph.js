@@ -10,6 +10,7 @@ function GitGraph(options) {
   this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
   this.commitsSpacing = options.commitsSpacing || 25;
   this.mergeCommit = options.mergeCommit || true;
+  this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
@@ -157,6 +158,7 @@ Branch.prototype.commit = function (options) {
   options = options || {};
 
   options.context = this.context;
+  options.parent = this.parent;
   options.color = this.color;
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
@@ -191,6 +193,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
     this.targetBranch.commits.push(new Commit({
       message: "Merge branch '" + this.name + "' into " + this.targetBranch.name,
       context: this.context,
+      parent: this.parent,
       color: this.targetBranch.color,
       x: this.targetBranch.offsetX,
       y: this.parent.origin - this.parent.commitOffset - 15
@@ -232,7 +235,8 @@ function Commit(options) {
   // Options
   options = options || {};
 
-  this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
+  this.parent = options.parent;
+  this.author = options.author || this.parent.author;
   this.message = options.message || "He doesn't like George Michael! Boooo!";
   this.date = options.date || new Date().toUTCString();
   this.sha1 = Sha1.hash(options.message + new String(new Date().getTime()));
