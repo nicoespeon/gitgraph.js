@@ -51,19 +51,8 @@ GitGraph.prototype.branch = function (options) {
   return branch;
 }
 
-GitGraph.prototype.commit = function (options, branch) {
-  options = options || {};
-  branch = (branch instanceof Branch) ? branch : this.HEAD;
-  options.context = this.context;
-  options.color = branch.color;
-  options.x = branch.offsetX;
-  options.y = this.origin - this.commitsSpacing * this.commitOffset;
-
-  var commit = new Commit(options);
-  branch.commit(commit);
-  this.commitOffset++;
-
-  return commit;
+GitGraph.prototype.commit = function (options) {
+  this.HEAD.commit(options);
 }
 
 GitGraph.prototype.render = function () {
@@ -163,8 +152,18 @@ Branch.prototype.draw = function () {
  *
  * @param {Commit} commit
  **/
-Branch.prototype.commit = function (commit) {
+Branch.prototype.commit = function (options) {
+  options = options || {};
+  
+  options.context = this.context;
+  options.color = this.color;
+  options.x = this.offsetX;
+  options.y = this.parent.origin - this.parent.commitsSpacing * this.parent.commitOffset;
+
+  var commit = new Commit(options);
   this.commits.push(commit);
+  
+  this.parent.commitOffset++;
 }
 /**
  * Checkout onto this branch

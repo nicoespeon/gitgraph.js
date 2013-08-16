@@ -4,7 +4,7 @@ var master = gitGraph.branch({
   name: 'master',
   size: 400
 });
-gitGraph.commit();
+gitGraph.commit(); // Commit on HEAD Branch
 gitGraph.commit();
 gitGraph.commit();
 
@@ -19,9 +19,12 @@ master.checkout();
 var test = gitGraph.branch({
   name: 'test',
 });
+gitGraph.commit({
+message: 'test'
+});
 gitGraph.commit();
-gitGraph.commit();
-gitGraph.commit(null, dev);
+dev.commit(); // Commit on 'dev' Branch
+master.commit();
 master.checkout();
 dev.merge();
 test.merge();
