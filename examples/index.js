@@ -2,7 +2,7 @@ var gitGraph = new GitGraph();
 
 var master = gitGraph.branch({
   name: 'master',
-  size: 400
+  size: 200
 });
 gitGraph.commit(); // Commit on HEAD Branch
 gitGraph.commit();
@@ -27,7 +27,8 @@ dev.commit(); // Commit on 'dev' Branch
 master.checkout();
 
 master.commit();
-dev.merge();
+dev.merge(test);
+test.commit();
 master.commit();
 test.merge();
 

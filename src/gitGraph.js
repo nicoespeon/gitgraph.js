@@ -187,7 +187,7 @@ Branch.prototype.merge = function (target) {
  * Update size of branch
  **/
 Branch.prototype.updateSize = function () {
-  if (!this.targetBranch instanceof Branch)
+  if (this.targetBranch instanceof Branch == false)
     this.size = this.parent.commitOffset;
 }
 
