@@ -142,6 +142,11 @@ Branch.prototype.draw = function () {
     this.context.strokeStyle = this.color;
     this.context.stroke()
   }
+  
+  // Commits part
+  for (var i = 0; i < this.commits.length; i++) {
+    this.commits[i].draw();
+  }
 }
 
 /**
@@ -211,8 +216,6 @@ function Commit(options) {
   this.radius = options.size || 3;
   this.x = options.x;
   this.y = options.y;
-
-  this.draw();
 }
 
 Commit.prototype.draw = function () {
