@@ -75,9 +75,9 @@ GitGraph.prototype.render = function () {
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
   // Render
-  for (var i = 0; i < this.branchs.length; i++) {
-    this.branchs[i].updateSize();
-    this.branchs[i].draw();
+  for (var i = 1; i <= this.branchs.length; i++) {
+    this.branchs[this.branchs.length - i].updateSize();
+    this.branchs[this.branchs.length - i].draw();
   }
 }
 
