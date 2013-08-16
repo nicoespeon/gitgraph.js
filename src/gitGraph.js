@@ -32,6 +32,9 @@ function GitGraph(options) {
   this.context.fillText('Error: No render() at the end', 150, 100);
 }
 
+/**
+ * Create new branch
+ **/
 GitGraph.prototype.branch = function (options) {
   options = options || {};
   options.context = this.context;
@@ -57,10 +60,16 @@ GitGraph.prototype.branch = function (options) {
   return branch;
 }
 
+/**
+ * Commit on HEAD
+ **/
 GitGraph.prototype.commit = function (options) {
   this.HEAD.commit(options);
 }
 
+/**
+ * Render the canvas
+ **/
 GitGraph.prototype.render = function () {
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
