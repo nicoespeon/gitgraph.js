@@ -239,7 +239,7 @@ function Commit(options) {
   this.author = options.author || this.parent.author;
   this.message = options.message || "He doesn't like George Michael! Boooo!";
   this.date = options.date || new Date().toUTCString();
-  this.sha1 = Sha1.hash(options.message + new String(new Date().getTime()));
+  this.sha1 = Sha1.hash(new String(Math.random(10)));
   this.context = options.context;
   this.color = options.color || "red";
   this.radius = options.size || 3;
