@@ -2,47 +2,34 @@ var gitGraph = new GitGraph();
 
 var master = gitGraph.branch({
   name: 'master',
-  origin: 300,
-  size: 300
+  size: 200
 });
+gitGraph.commit(); // Commit on HEAD Branch
+gitGraph.commit();
+gitGraph.commit();
+
 var dev = gitGraph.branch({
   name: 'dev',
-  origin: 240
 });
-master.checkout();
-dev.merge();;
+gitGraph.commit();
+gitGraph.commit();
+gitGraph.commit();
+
+//master.checkout();
 var test = gitGraph.branch({
   name: 'test',
-  origin: 220,
 });
+gitGraph.commit({
+message: 'test'
+});
+gitGraph.commit();
+dev.commit(); // Commit on 'dev' Branch
 master.checkout();
-test.merge();
-
-
-/*var master = new Branch({
-  context: context,
-  name: "master",
-  origin: canvas.height - 20,
-});
-
-var dev = new Branch({
-  context: context,
-  name: "dev",
-  origin: canvas.height - 120,
-  //color: "green",
-  size: 40,
-  parent: master
-});
-master.checkout();
+gitGraph.author = 'Fabien0102 <fabien0102@planee.fr>'; // Change author
+master.commit();
 dev.merge();
+test.commit();
+master.commit();
+test.merge(null, false); // Merge into HEAD without merge commit
 
-var test = new Branch({
-  context: context,
-  name: "test",
-  origin: canvas.height - 120,
-  //color: "blue",
-  size: 200,
-  parent: master
-});
-master.checkout();
-test.merge();*/
+gitGraph.render();
