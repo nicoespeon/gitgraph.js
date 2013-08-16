@@ -11,14 +11,19 @@ function GitGraph(options) {
   this.commitsSpacing = options.commitsSpacing || 25;
 
   // Canvas init
-  var canvas = document.getElementById(this.elementId);
-  this.context = canvas.getContext('2d');
-  this.origin = options.origin || canvas.height - 10;
+  this.canvas = document.getElementById(this.elementId);
+  this.context = this.canvas.getContext('2d');
+  this.origin = options.origin || this.canvas.height - 10;
 
   // Navigations vars
   this.HEAD = null;
   this.branchs = [];
   this.commitOffset = 0;
+
+  // Error: no render()
+  this.context.fillStyle = 'red';
+  this.context.font = 'bold 15pt Calibri';
+  this.context.fillText('Error: No render() at the end', 150, 100);
 }
 
 GitGraph.prototype.branch = function (options) {
@@ -62,6 +67,10 @@ GitGraph.prototype.commit = function (options, branch) {
 }
 
 GitGraph.prototype.render = function () {
+  // Clear All
+  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+  // Render
   for (var i = 0; i < this.branchs.length; i++) {
     this.branchs[i].updateSize();
     this.branchs[i].draw();
@@ -142,7 +151,7 @@ Branch.prototype.draw = function () {
     this.context.strokeStyle = this.color;
     this.context.stroke()
   }
-  
+
   // Commits part
   for (var i = 0; i < this.commits.length; i++) {
     this.commits[i].draw();
