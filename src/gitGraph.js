@@ -46,7 +46,7 @@ GitGraph.prototype.branch = function (options) {
 
   // Offset for first commit
   if (branch.parentBranch instanceof Branch && branch.column - branch.parentBranch.column == 1)
-    this.commitOffset++;
+    this.commitOffset += this.commitsSpacing;
 
   return branch;
 }
@@ -154,16 +154,16 @@ Branch.prototype.draw = function () {
  **/
 Branch.prototype.commit = function (options) {
   options = options || {};
-  
+
   options.context = this.context;
   options.color = this.color;
   options.x = this.offsetX;
-  options.y = this.parent.origin - this.parent.commitsSpacing * this.parent.commitOffset;
+  options.y = this.parent.origin - this.parent.commitOffset;
 
   var commit = new Commit(options);
   this.commits.push(commit);
-  
-  this.parent.commitOffset++;
+
+  this.parent.commitOffset += this.parent.commitsSpacing;
 }
 /**
  * Checkout onto this branch
@@ -179,16 +179,16 @@ Branch.prototype.checkout = function () {
  **/
 Branch.prototype.merge = function (target) {
   this.targetBranch = target || this.parent.HEAD;
+  this.size = this.parent.commitOffset - (this.parent.canvas.height - this.origin) - this.parent.commitsSpacing;
+  this.parent.commitOffset += this.smoothOffset;
 }
 
 /**
  * Update size of branch
  **/
 Branch.prototype.updateSize = function () {
-  if (this.targetBranch instanceof Branch)
-    this.size = this.origin - this.commits[this.commits.length - 1].y + 10;
-  else
-    this.size = this.parent.commitOffset * this.parent.commitsSpacing + this.smoothOffset;
+  if (!this.targetBranch instanceof Branch)
+    this.size = this.parent.commitOffset;
 }
 
 /**

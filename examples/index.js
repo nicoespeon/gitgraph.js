@@ -24,9 +24,11 @@ message: 'test'
 });
 gitGraph.commit();
 dev.commit(); // Commit on 'dev' Branch
-master.commit();
 master.checkout();
+
+master.commit();
 dev.merge();
+master.commit();
 test.merge();
 
 gitGraph.render();
