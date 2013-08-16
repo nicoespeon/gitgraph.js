@@ -55,7 +55,7 @@ GitGraph.prototype.commit = function (options, branch) {
   options.y = this.origin - this.commitsSpacing * this.commitOffset;
 
   var commit = new Commit(options);
-  branch.commits.push(commit);
+  branch.commit(commit);
   this.commitOffset++;
 
   return commit;
@@ -63,6 +63,7 @@ GitGraph.prototype.commit = function (options, branch) {
 
 GitGraph.prototype.render = function () {
   for (var i = 0; i < this.branchs.length; i++) {
+    this.branchs[i].updateSize();
     this.branchs[i].draw();
   }
 }
@@ -144,6 +145,14 @@ Branch.prototype.draw = function () {
 }
 
 /**
+ * Add a commit
+ *
+ * @param {Commit} commit
+ **/
+Branch.prototype.commit = function (commit) {
+  this.commits.push(commit);
+}
+/**
  * Checkout onto this branch
  **/
 Branch.prototype.checkout = function () {
@@ -157,7 +166,16 @@ Branch.prototype.checkout = function () {
  **/
 Branch.prototype.merge = function (target) {
   this.targetBranch = target || this.parent.HEAD;
-  this.size = this.origin - this.commits[this.commits.length - 1].y + 10;
+}
+
+/**
+ * Update size of branch
+ **/
+Branch.prototype.updateSize = function () {
+  if (this.targetBranch instanceof Branch)
+    this.size = this.origin - this.commits[this.commits.length - 1].y + 10;
+  else
+    this.size = this.parent.commitOffset * this.parent.commitsSpacing + this.smoothOffset;
 }
 
 /**
