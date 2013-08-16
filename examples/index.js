@@ -15,7 +15,7 @@ gitGraph.commit();
 gitGraph.commit();
 gitGraph.commit();
 
-master.checkout();
+//master.checkout();
 var test = gitGraph.branch({
   name: 'test',
 });

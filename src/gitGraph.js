@@ -34,7 +34,7 @@ GitGraph.prototype.branch = function (options) {
 
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
-    options.origin = this.origin - (options.parentBranch.commits.length + 1) * this.commitsSpacing;
+    options.origin = options.parentBranch.origin - (options.parentBranch.commits.length + 1) * this.commitsSpacing;
   } else {
     options.origin = this.origin;
   }
