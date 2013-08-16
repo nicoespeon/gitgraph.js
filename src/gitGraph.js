@@ -11,6 +11,7 @@ function GitGraph(options) {
   this.commitsSpacing = options.commitsSpacing || 25;
   this.mergeCommit = options.mergeCommit || true;
   this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
+  this.messageDisplay = options.messageDisplay || true;
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
@@ -241,6 +242,7 @@ function Commit(options) {
   this.parent = options.parent;
   this.author = options.author || this.parent.author;
   this.message = options.message || "He doesn't like George Michael! Boooo!";
+  this.messageDisplay = options.messageDisplay || this.parent.messageDisplay;
   this.date = options.date || new Date().toUTCString();
   this.sha1 = Sha1.hash(new String(Math.random(10)));
   this.context = options.context;
@@ -258,9 +260,11 @@ Commit.prototype.draw = function () {
   this.context.fill();
   
   // Message
-  var message = this.sha1.substring(0, 7) + ' ' + this.message + ' - ' + this.author;
-  this.context.font = 'normal 12pt Calibri';
-  this.context.fillText(message, (this.parent.columnMax + 2) * 20 , this.y + 3);
+  if (this.messageDisplay) {
+    var message = this.sha1.substring(0, 7) + ' ' + this.message + ' - ' + this.author;
+    this.context.font = 'normal 12pt Calibri';
+    this.context.fillText(message, (this.parent.columnMax + 2) * 20 , this.y + 3);
+  }
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
