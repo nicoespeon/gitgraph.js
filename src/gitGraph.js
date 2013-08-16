@@ -18,7 +18,7 @@ function GitGraph(options) {
   // Navigations vars
   this.HEAD = null;
   this.branchs = [];
-  this.commitCount = 0;
+  this.commitOffset = 0;
 }
 
 GitGraph.prototype.branch = function (options) {
@@ -26,14 +26,14 @@ GitGraph.prototype.branch = function (options) {
   options.context = this.context;
   options.colors = this.colors;
   options.parentBranch = options.parentBranch || this.HEAD;
-  
+
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
     options.origin = this.origin - (options.parentBranch.commits.length + 1) * this.commitsSpacing;
   } else {
     options.origin = this.origin;
   }
-  
+
   options.parent = this;
 
   var branch = new Branch(options);
@@ -41,8 +41,8 @@ GitGraph.prototype.branch = function (options) {
 
   // Offset for first commit
   if (branch.parentBranch instanceof Branch && branch.column - branch.parentBranch.column == 1)
-    this.commitCount++;
-  
+    this.commitOffset++;
+
   return branch;
 }
 
@@ -52,11 +52,11 @@ GitGraph.prototype.commit = function (options, branch) {
   options.context = this.context;
   options.color = branch.color;
   options.x = branch.offsetX;
-  options.y = this.origin - this.commitsSpacing * this.commitCount;
-  
+  options.y = this.origin - this.commitsSpacing * this.commitOffset;
+
   var commit = new Commit(options);
   branch.commits.push(commit);
-  this.commitCount++;
+  this.commitOffset++;
 
   return commit;
 }
