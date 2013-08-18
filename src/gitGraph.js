@@ -22,7 +22,7 @@ function GitGraph(options) {
   this.HEAD = null;
   this.branchs = [];
   this.commitOffset = 0;
-  
+
   // Utilities
   this.columnMax = 0;
 
@@ -253,7 +253,7 @@ function Commit(options) {
   this.message = options.message || "He doesn't like George Michael! Boooo!";
   this.messageDisplay = options.messageDisplay || this.parent.messageDisplay;
   this.date = options.date || new Date().toUTCString();
-  this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3,10);
+  this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
   this.context = options.context;
   this.color = options.color || "red";
   this.radius = options.size || 3;
@@ -267,11 +267,59 @@ Commit.prototype.draw = function () {
   this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
   this.context.fillStyle = this.color;
   this.context.fill();
-  
+  this.context.closePath();
+
+  // Arrow
+  var arrowHeight = 10;
+  var arrowWidth = 6;
+  var arrowX = this.x;
+  var arrowY = this.y + this.radius + 2;
+  this.context.beginPath();
+  this.context.moveTo(arrowX + arrowWidth, arrowY + arrowHeight); // Bottom left
+  this.context.lineTo(arrowX, arrowY); // top
+  this.context.lineTo(arrowX - arrowWidth, arrowY + arrowHeight); // Bottom right
+  this.context.quadraticCurveTo(arrowX, arrowY + arrowHeight / 2, arrowX + arrowWidth, arrowY + arrowHeight)
+  this.context.fill();
+
   // Message
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
     this.context.font = 'normal 12pt Calibri';
-    this.context.fillText(message, (this.parent.columnMax + 2) * 20 , this.y + 3);
+    this.context.fillText(message, (this.parent.columnMax + 2) * 20, this.y + 3);
   }
+}
+
+// --------------------------------------------------------------------
+// ----------------------       Template        -----------------------
+// --------------------------------------------------------------------
+
+function Template(options) {
+  // Options
+  options = options || {};
+  
+  // Branch style
+  this.branch = {};
+  this.branch.color = options.branch.color; // Only one color
+  this.branch.colors = options.branch.colors; // One color for each column
+  this.branch.lineWidth = options.branch.lineWidth;
+  this.branch.smoothOffset = options.branch.smoothOffset;
+  
+  // Arrow
+  this.arrow = {};
+  this.arrow.arrowHeight = options.arrow.arrowHeight;
+  this.arrow.arrowWidth = options.arrow.arrowWidth;
+  
+  // Commit style
+  this.commit = {};
+  this.commit.color = options.commit.color; // Only one color
+  this.commit.colors = options.commit.colors; // One color for each column
+  this.commit.size = options.commit.size;
+  this.commit.strokeWidth = options.commit.strokeWidth;
+  this.commit.strokeStyle = options.commit.strokeStyle;
+  
+  // Message style
+  this.message = {};
+  this.message.color = options.message.color; // Only one color
+  this.message.colors = options.message.colors; // One color for each column
+  this.message.font = options.message.font;
 }
