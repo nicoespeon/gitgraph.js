@@ -270,23 +270,43 @@ Commit.prototype.draw = function () {
   this.context.closePath();
 
   // Arrow
-  var arrowHeight = 10;
-  var arrowWidth = 6;
-  var arrowX = this.x;
-  var arrowY = this.y + this.radius + 2;
-  this.context.beginPath();
-  this.context.moveTo(arrowX + arrowWidth, arrowY + arrowHeight); // Bottom left
-  this.context.lineTo(arrowX, arrowY); // top
-  this.context.lineTo(arrowX - arrowWidth, arrowY + arrowHeight); // Bottom right
-  this.context.quadraticCurveTo(arrowX, arrowY + arrowHeight / 2, arrowX + arrowWidth, arrowY + arrowHeight)
-  this.context.fill();
-
+  this.arrow = new Arrow({
+    context: this.context,
+    height: 10,
+    width: 6,
+    x: this.x,
+    y: this.y + this.radius + 2
+  })
+  
   // Message
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
     this.context.font = 'normal 12pt Calibri';
     this.context.fillText(message, (this.parent.columnMax + 2) * 20, this.y + 3);
   }
+}
+
+
+// --------------------------------------------------------------------
+// ----------------------        Arrow          -----------------------
+// --------------------------------------------------------------------
+
+function Arrow(options) {
+  options = options || {};
+  
+  this.context = options.context;
+  this.height = options.height;
+  this.width = options.width;
+  this.x = options.x;
+  this.y = options.y;
+  this.rotation = options.rotation;
+  
+  this.context.beginPath();
+  this.context.moveTo(this.x + this.width, this.y + this.height); // Bottom left
+  this.context.lineTo(this.x, this.y); // top
+  this.context.lineTo(this.x - this.width, this.y + this.height); // Bottom right
+  this.context.quadraticCurveTo(this.x, this.y + this.height / 2, this.x + this.width, this.y + this.height);
+  this.context.fill();
 }
 
 // --------------------------------------------------------------------
@@ -296,19 +316,19 @@ Commit.prototype.draw = function () {
 function Template(options) {
   // Options
   options = options || {};
-  
+
   // Branch style
   this.branch = {};
   this.branch.color = options.branch.color; // Only one color
   this.branch.colors = options.branch.colors; // One color for each column
   this.branch.lineWidth = options.branch.lineWidth;
   this.branch.smoothOffset = options.branch.smoothOffset;
-  
+
   // Arrow
   this.arrow = {};
   this.arrow.arrowHeight = options.arrow.arrowHeight;
   this.arrow.arrowWidth = options.arrow.arrowWidth;
-  
+
   // Commit style
   this.commit = {};
   this.commit.color = options.commit.color; // Only one color
@@ -316,7 +336,7 @@ function Template(options) {
   this.commit.size = options.commit.size;
   this.commit.strokeWidth = options.commit.strokeWidth;
   this.commit.strokeStyle = options.commit.strokeStyle;
-  
+
   // Message style
   this.message = {};
   this.message.color = options.message.color; // Only one color
