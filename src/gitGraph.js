@@ -273,6 +273,8 @@ function Commit(options) {
   this.colorDot = options.colorDot || options.color;
   this.radius = options.size || this.template.commit.dot.size;
   this.arrowDisplay = options.arrowDisplay;
+  this.stokeWidth = options.strokeWidth || this.template.commit.dot.strokeWidth;
+  this.strokeStyle = options.strokeStyle || this.template.commit.dot.strokeStyle;
   this.x = options.x;
   this.y = options.y;
 }
@@ -282,6 +284,9 @@ Commit.prototype.draw = function () {
   this.context.beginPath();
   this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
   this.context.fillStyle = this.colorDot;
+  this.context.strokeStyle = this.strokeStyle;
+  this.context.lineWidth = this.stokeWidth;
+  if(this.strokeWidth) this.context.stroke();
   this.context.fill();
   this.context.closePath();
 
@@ -316,11 +321,13 @@ function Arrow(options) {
   this.template = this.parent.template.arrow;
   this.height = options.height || this.template.height;
   this.width = options.width || this.template.width;
+  this.color = options.color || this.template.color;
   this.x = options.x;
   this.y = options.y;
   this.rotation = options.rotation;
   
   this.context.beginPath();
+  this.context.fillStyle = this.color;
   this.context.moveTo(this.x + this.width, this.y + this.height); // Bottom left
   this.context.lineTo(this.x, this.y); // top
   this.context.lineTo(this.x - this.width, this.y + this.height); // Bottom right
@@ -356,6 +363,7 @@ function Template(options) {
   this.arrow = {};
   this.arrow.height = options.arrow.height || null;
   this.arrow.width = options.arrow.width || null;
+  this.arrow.color = options.arrow.color || this.branch.color || null;
   this.arrow.active = typeof(this.arrow.height) == 'number' && typeof(this.arrow.width) == 'number';
 
   // Commit style
