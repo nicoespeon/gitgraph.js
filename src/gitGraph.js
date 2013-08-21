@@ -170,9 +170,9 @@ Branch.prototype.commit = function (options) {
   options = options || {};
 
   options.parent = this.parent;
+  options.colorMessage = options.colorMessage || options.color || this.template.commit.message.color || null;
+  options.colorDot = options.colorDot || options.color || this.template.commit.dot.color || null;
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
-  options.colorMessage = options.colorMessage || this.template.message.color || null;
-  options.colorDot = options.colorDot || this.template.commit.colorDot || null;
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
 
@@ -253,12 +253,12 @@ function Commit(options) {
   this.context = this.parent.context;
   this.author = options.author || this.parent.author;
   this.message = options.message || "He doesn't like George Michael! Boooo!";
-  this.messageDisplay = options.messageDisplay || this.template.message.display;
+  this.messageDisplay = options.messageDisplay || this.template.commit.message.display;
   this.date = options.date || new Date().toUTCString();
   this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
   this.colorMessage = options.colorMessage || options.color;
   this.colorDot = options.colorDot || options.color;
-  this.radius = options.size || this.template.commit.size;
+  this.radius = options.size || this.template.commit.dot.size;
   this.x = options.x;
   this.y = options.y;
 }
@@ -283,7 +283,7 @@ Commit.prototype.draw = function () {
   // Message
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
-    this.context.font = this.template.message.font;
+    this.context.font = this.template.commit.message.font;
     this.context.fillStyle = this.colorMessage;
     this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.margin, this.y + 3);
   }
@@ -324,7 +324,8 @@ function Template(options) {
   options.branch = options.branch || {};
   options.arrow = options.arrow || {};
   options.commit = options.commit || {};
-  options.message = options.message || {};
+  options.commit.dot = options.commit.dot || {};
+  options.commit.message = options.commit.message || {};
   
   this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
   
@@ -337,7 +338,7 @@ function Template(options) {
   this.branch.mergeCommit = options.branch.mergeCommit || true;
   this.branch.margin = options.branch.margin || 20; // Space between branchs
 
-  // Arrow
+  // Arrow style
   this.arrow = {};
   this.arrow.height = options.arrow.height;
   this.arrow.width = options.arrow.width;
@@ -345,18 +346,19 @@ function Template(options) {
 
   // Commit style
   this.commit = {};
-  this.commit.color = options.commit.color || null; // Only one color, if null message takes branch color (full commit)
-  this.commit.colorDot = options.commit.colorDot || null; // // Only one color, if null message takes branch color (only dot)
-  this.commit.size = options.commit.size || 3;
-  this.commit.strokeWidth = options.commit.strokeWidth || null;
-  this.commit.strokeStyle = options.commit.strokeStyle || null;
   this.commit.spacing = options.commit.spacing || 25;
+  this.commit.color = options.commit.color || null; // Only one color, if null message takes branch color (full commit)
+  
+  this.commit.dot = {};
+  this.commit.dot.color = options.commit.dot.color || null; // // Only one color, if null message takes branch color (only dot)
+  this.commit.dot.size = options.commit.dot.size || 3;
+  this.commit.dot.strokeWidth = options.commit.dot.strokeWidth || null;
+  this.commit.dot.strokeStyle = options.commit.dot.strokeStyle || null;
 
-  // Message style
-  this.message = {};
-  this.message.display = options.message.display || true;
-  this.message.color = options.message.color || null; // Only one color, if null message takes commit color (only message)
-  this.message.font = options.message.font || 'normal 12pt Calibri';
+  this.commit.message = {};
+  this.commit.message.display = options.commit.message.display || true;
+  this.commit.message.color = options.commit.message.color || null; // Only one color, if null message takes commit color (only message)
+  this.commit.message.font = options.commit.message.font || 'normal 12pt Calibri';
   
   return this;
 }
