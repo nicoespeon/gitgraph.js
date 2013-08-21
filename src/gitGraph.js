@@ -18,10 +18,10 @@ function GitGraph(options) {
   // Navigations vars
   this.HEAD = null;
   this.branchs = [];
-  this.commitOffset = 0;
 
   // Utilities
   this.columnMax = 0; // nb of column for message position
+  this.commitOffset = 0;
 
   // Error: no render()
   this.context.fillStyle = 'red';
@@ -100,13 +100,14 @@ function Branch(options) {
   this.origin = options.origin || 300;
   this.size = options.size || 10;
   this.lineWidth = this.template.branch.lineWidth;
+  this.margin = this.template.branch.margin;
 
   // Calcul column number for auto-color & auto-offset
   this.column = 0;
   this.calculColumn();
 
   // Options with auto value
-  this.offsetX = options.offsetX || 20 + this.column * 20;
+  this.offsetX = this.margin + this.column * this.margin;
   this.color = options.color || this.template.branch.colors[this.column];
 
   // Defaults values
@@ -280,7 +281,7 @@ Commit.prototype.draw = function () {
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
     this.context.font = this.template.message.font;
-    this.context.fillText(message, (this.parent.columnMax + 2) * 20, this.y + 3);
+    this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.margin, this.y + 3);
   }
 }
 
@@ -327,7 +328,9 @@ function Template(options) {
   this.branch.colors = options.branch.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
   this.branch.lineWidth = options.branch.lineWidth || 2;
   this.branch.smoothOffset = options.branch.smoothOffset || 50;
+  this.branch.mergeStyle = options.branch.mergeStyle || 'quadratique'; // 'quadratique' | 'arrow'
   this.branch.mergeCommit = options.branch.mergeCommit || true;
+  this.branch.margin = options.branch.margin || 20; // Space between branchs
 
   // Arrow
   this.arrow = {};
