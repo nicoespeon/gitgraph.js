@@ -364,6 +364,4 @@ function Template(options) {
   this.commit.message.display = options.commit.message.display || true;
   this.commit.message.color = options.commit.message.color || null; // Only one color, if null message takes commit color (only message)
   this.commit.message.font = options.commit.message.font || 'normal 12pt Calibri';
-  
-  return this;
 }
