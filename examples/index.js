@@ -11,9 +11,9 @@ gitGraph.commit();
 var dev = gitGraph.branch({
   name: 'dev',
 });
-gitGraph.commit({color:'red'});
-gitGraph.commit();
-gitGraph.commit();
+gitGraph.commit({color:'red'}); // Dot + Message in red
+gitGraph.commit({colorDot: 'red'}); // Dot only in red
+gitGraph.commit({colorMessage: 'red'}); // Message only in red
 
 //master.checkout();
 var test = gitGraph.branch({
