@@ -7,12 +7,9 @@ function GitGraph(options) {
   options = options || {};
 
   this.elementId = options.elementId || "gitGraph";
-  this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
-  this.commitsSpacing = options.commitsSpacing || 25;
-  this.mergeCommit = options.mergeCommit || true;
+  this.template = options.template || new Template();
   this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
-  this.messageDisplay = options.messageDisplay || true;
-
+  
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext('2d');
@@ -24,7 +21,7 @@ function GitGraph(options) {
   this.commitOffset = 0;
 
   // Utilities
-  this.columnMax = 0;
+  this.columnMax = 0; // nb of column for message position
 
   // Error: no render()
   this.context.fillStyle = 'red';
@@ -36,27 +33,27 @@ function GitGraph(options) {
  * Create new branch
  **/
 GitGraph.prototype.branch = function (options) {
+  // Options
   options = options || {};
-  options.context = this.context;
-  options.colors = this.colors;
+  options.parent = this;
   options.parentBranch = options.parentBranch || this.HEAD;
 
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
-    options.origin = options.parentBranch.origin - (options.parentBranch.commits.length + 1) * this.commitsSpacing;
+    options.origin = options.parentBranch.origin - (options.parentBranch.commits.length + 1) * this.template.commit.spacing;
   } else {
     options.origin = this.origin;
   }
 
-  options.parent = this;
-
+  // Add branch
   var branch = new Branch(options);
   this.branchs.push(branch);
 
   // Offset for first commit
   if (branch.parentBranch instanceof Branch && branch.column - branch.parentBranch.column == 1)
-    this.commitOffset += this.commitsSpacing;
+    this.commitOffset += this.template.commit.spacing;
 
+  // Return
   return branch;
 }
 
@@ -97,11 +94,12 @@ function Branch(options) {
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
   this.targetBranch = options.targetBranch;
-  this.context = options.context;
+  this.context = this.parent.context;
+  this.template = this.parent.template;
   this.name = options.name || "no-name";
   this.origin = options.origin || 300;
   this.size = options.size || 10;
-  this.lineWidth = options.lineWidth || 2;
+  this.lineWidth = this.template.branch.lineWidth;
 
   // Calcul column number for auto-color & auto-offset
   this.column = 0;
@@ -109,10 +107,10 @@ function Branch(options) {
 
   // Options with auto value
   this.offsetX = options.offsetX || 20 + this.column * 20;
-  this.color = options.color || options.colors[this.column];
+  this.color = options.color || this.template.branch.colors[this.column];
 
   // Defaults values
-  this.smoothOffset = 50; // Size of merge/fork portion
+  this.smoothOffset = this.template.branch.smoothOffset; // Size of merge/fork portion
   this.commits = [];
 
   this.checkout();
@@ -170,16 +168,15 @@ Branch.prototype.draw = function () {
 Branch.prototype.commit = function (options) {
   options = options || {};
 
-  options.context = this.context;
   options.parent = this.parent;
-  options.color = this.color;
+  options.color = options.color || this.color;
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
 
   var commit = new Commit(options);
   this.commits.push(commit);
 
-  this.parent.commitOffset += this.parent.commitsSpacing;
+  this.parent.commitOffset += this.template.commit.spacing;
 }
 /**
  * Checkout onto this branch
@@ -191,21 +188,21 @@ Branch.prototype.checkout = function () {
 /**
  * Merge branch
  *
- * @param {Branch} target
+ * @param {Branch} target (Default HEAD)
+ * @param {boolean} mergeCommit
  **/
 Branch.prototype.merge = function (target, mergeCommit) {
   // Merge
   this.targetBranch = target || this.parent.HEAD;
 
   // Update size of branch
-  this.size = this.parent.commitOffset - (this.parent.canvas.height - this.origin) - this.parent.commitsSpacing;
+  this.size = this.parent.commitOffset - (this.parent.canvas.height - this.origin) - this.template.commit.spacing;
 
   // Optionnal Merge commit
-  mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.parent.mergeCommit;
+  mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
   if (mergeCommit) {
     this.targetBranch.commits.push(new Commit({
       message: "Merge branch '" + this.name + "' into " + this.targetBranch.name,
-      context: this.context,
       parent: this.parent,
       color: this.targetBranch.color,
       x: this.targetBranch.offsetX,
@@ -249,14 +246,15 @@ function Commit(options) {
   options = options || {};
 
   this.parent = options.parent;
+  this.template = this.parent.template;
+  this.context = this.parent.context;
   this.author = options.author || this.parent.author;
   this.message = options.message || "He doesn't like George Michael! Boooo!";
-  this.messageDisplay = options.messageDisplay || this.parent.messageDisplay;
+  this.messageDisplay = options.messageDisplay || this.template.message.display;
   this.date = options.date || new Date().toUTCString();
   this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
-  this.context = options.context;
-  this.color = options.color || "red";
-  this.radius = options.size || 3;
+  this.color = options.color || this.template.commit.color;
+  this.radius = options.size || this.template.commit.size;
   this.x = options.x;
   this.y = options.y;
 }
@@ -270,18 +268,18 @@ Commit.prototype.draw = function () {
   this.context.closePath();
 
   // Arrow
-  this.arrow = new Arrow({
-    context: this.context,
-    height: 10,
-    width: 6,
-    x: this.x,
-    y: this.y + this.radius + 2
-  })
+  if (this.template.arrow.active) {
+    this.arrow = new Arrow({
+      parent: this.parent,
+      x: this.x,
+      y: this.y + this.radius + 2
+    })
+  }
   
   // Message
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
-    this.context.font = 'normal 12pt Calibri';
+    this.context.font = this.template.message.font;
     this.context.fillText(message, (this.parent.columnMax + 2) * 20, this.y + 3);
   }
 }
@@ -294,9 +292,11 @@ Commit.prototype.draw = function () {
 function Arrow(options) {
   options = options || {};
   
-  this.context = options.context;
-  this.height = options.height;
-  this.width = options.width;
+  this.parent = options.parent;
+  this.context = this.parent.context;
+  this.template = this.parent.template.arrow;
+  this.height = options.height || this.template.height;
+  this.width = options.width || this.template.width;
   this.x = options.x;
   this.y = options.y;
   this.rotation = options.rotation;
@@ -316,30 +316,40 @@ function Arrow(options) {
 function Template(options) {
   // Options
   options = options || {};
-
+  options.branch = options.branch || {};
+  options.arrow = options.arrow || {};
+  options.commit = options.commit || {};
+  options.message = options.message || {};
+  
   // Branch style
   this.branch = {};
-  this.branch.color = options.branch.color; // Only one color
-  this.branch.colors = options.branch.colors; // One color for each column
-  this.branch.lineWidth = options.branch.lineWidth;
-  this.branch.smoothOffset = options.branch.smoothOffset;
+  this.branch.color = options.branch.color || null; // Only one color
+  this.branch.colors = options.branch.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
+  this.branch.lineWidth = options.branch.lineWidth || 2;
+  this.branch.smoothOffset = options.branch.smoothOffset || 50;
+  this.branch.mergeCommit = options.branch.mergeCommit || true;
 
   // Arrow
   this.arrow = {};
-  this.arrow.arrowHeight = options.arrow.arrowHeight;
-  this.arrow.arrowWidth = options.arrow.arrowWidth;
+  this.arrow.height = options.arrow.height;
+  this.arrow.width = options.arrow.width;
+  this.arrow.active = typeof(this.arrow.height) == 'number' && typeof(this.arrow.width) == 'number';
 
   // Commit style
   this.commit = {};
-  this.commit.color = options.commit.color; // Only one color
-  this.commit.colors = options.commit.colors; // One color for each column
-  this.commit.size = options.commit.size;
-  this.commit.strokeWidth = options.commit.strokeWidth;
-  this.commit.strokeStyle = options.commit.strokeStyle;
+  this.commit.color = options.commit.color || null; // Only one color
+  this.commit.colors = options.commit.colors || this.branch.colors; // One color for each column
+  this.commit.size = options.commit.size || 3;
+  this.commit.strokeWidth = options.commit.strokeWidth || null;
+  this.commit.strokeStyle = options.commit.strokeStyle || null;
+  this.commit.spacing = options.commit.spacing || 25;
 
   // Message style
   this.message = {};
-  this.message.color = options.message.color; // Only one color
-  this.message.colors = options.message.colors; // One color for each column
-  this.message.font = options.message.font;
+  this.message.display = options.message.display || true;
+  this.message.color = options.message.color || "black"; // Only one color
+  this.message.colors = options.message.colors || null; // One color for each column
+  this.message.font = options.message.font || 'normal 12pt Calibri';
+  
+  return this;
 }

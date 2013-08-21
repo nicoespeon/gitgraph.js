@@ -11,7 +11,7 @@ gitGraph.commit();
 var dev = gitGraph.branch({
   name: 'dev',
 });
-gitGraph.commit();
+gitGraph.commit({color:'red'});
 gitGraph.commit();
 gitGraph.commit();
 
@@ -29,7 +29,7 @@ gitGraph.author = 'Fabien0102 <fabien0102@planee.fr>'; // Change author
 master.commit();
 dev.merge();
 test.commit();
-master.commit();
+master.commit({color: 'black'});
 test.merge(null, false); // Merge into HEAD without merge commit
 
 gitGraph.render();
