@@ -176,7 +176,8 @@ Branch.prototype.commit = function (options) {
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
   if (options.type == 'mergeCommit') options.y -= 15; // Special offset
-
+  options.arrowDisplay = (this.commits.length == 0) ? false : this.template.arrow.active;
+  
   var commit = new Commit(options);
   this.commits.push(commit);
 
@@ -262,6 +263,7 @@ function Commit(options) {
   this.colorMessage = options.colorMessage || options.color;
   this.colorDot = options.colorDot || options.color;
   this.radius = options.size || this.template.commit.dot.size;
+  this.arrowDisplay = options.arrowDisplay;
   this.x = options.x;
   this.y = options.y;
 }
@@ -275,7 +277,7 @@ Commit.prototype.draw = function () {
   this.context.closePath();
 
   // Arrow
-  if (this.template.arrow.active) {
+  if (this.arrowDisplay) {
     this.arrow = new Arrow({
       parent: this.parent,
       x: this.x,
@@ -343,8 +345,8 @@ function Template(options) {
 
   // Arrow style
   this.arrow = {};
-  this.arrow.height = options.arrow.height;
-  this.arrow.width = options.arrow.width;
+  this.arrow.height = options.arrow.height || null;
+  this.arrow.width = options.arrow.width || null;
   this.arrow.active = typeof(this.arrow.height) == 'number' && typeof(this.arrow.width) == 'number';
 
   // Commit style
