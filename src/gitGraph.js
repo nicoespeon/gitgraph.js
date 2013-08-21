@@ -108,7 +108,7 @@ function Branch(options) {
 
   // Options with auto value
   this.offsetX = this.margin + this.column * this.margin;
-  this.color = options.color || this.template.branch.colors[this.column];
+  this.color = options.color || this.template.branch.color || this.template.colors[this.column];
 
   // Defaults values
   this.smoothOffset = this.template.branch.smoothOffset; // Size of merge/fork portion
@@ -170,7 +170,9 @@ Branch.prototype.commit = function (options) {
   options = options || {};
 
   options.parent = this.parent;
-  options.color = options.color || this.color;
+  options.color = options.color || this.template.commit.color || this.template.colors[this.column];
+  options.colorMessage = options.colorMessage || this.template.message.color || null;
+  options.colorDot = options.colorDot || this.template.commit.colorDot || null;
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
 
@@ -199,7 +201,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
   // Update size of branch
   this.size = this.parent.commitOffset - (this.parent.canvas.height - this.origin) - this.template.commit.spacing;
 
-  // Optionnal Merge commit
+  // Optionnal Merge commit 
   mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
   if (mergeCommit) {
     this.targetBranch.commits.push(new Commit({
@@ -254,7 +256,8 @@ function Commit(options) {
   this.messageDisplay = options.messageDisplay || this.template.message.display;
   this.date = options.date || new Date().toUTCString();
   this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
-  this.color = options.color || this.template.commit.color;
+  this.colorMessage = options.colorMessage || options.color;
+  this.colorDot = options.colorDot || options.color;
   this.radius = options.size || this.template.commit.size;
   this.x = options.x;
   this.y = options.y;
@@ -264,7 +267,7 @@ Commit.prototype.draw = function () {
   // Dot
   this.context.beginPath();
   this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-  this.context.fillStyle = this.color;
+  this.context.fillStyle = this.colorDot;
   this.context.fill();
   this.context.closePath();
 
@@ -281,6 +284,7 @@ Commit.prototype.draw = function () {
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
     this.context.font = this.template.message.font;
+    this.context.fillStyle = this.colorMessage;
     this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.margin, this.y + 3);
   }
 }
@@ -322,10 +326,11 @@ function Template(options) {
   options.commit = options.commit || {};
   options.message = options.message || {};
   
+  this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
+  
   // Branch style
   this.branch = {};
   this.branch.color = options.branch.color || null; // Only one color
-  this.branch.colors = options.branch.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
   this.branch.lineWidth = options.branch.lineWidth || 2;
   this.branch.smoothOffset = options.branch.smoothOffset || 50;
   this.branch.mergeStyle = options.branch.mergeStyle || 'quadratique'; // 'quadratique' | 'arrow'
@@ -340,8 +345,8 @@ function Template(options) {
 
   // Commit style
   this.commit = {};
-  this.commit.color = options.commit.color || null; // Only one color
-  this.commit.colors = options.commit.colors || this.branch.colors; // One color for each column
+  this.commit.color = options.commit.color || null; // Only one color, if null message takes branch color (full commit)
+  this.commit.colorDot = options.commit.colorDot || null; // // Only one color, if null message takes branch color (only dot)
   this.commit.size = options.commit.size || 3;
   this.commit.strokeWidth = options.commit.strokeWidth || null;
   this.commit.strokeStyle = options.commit.strokeStyle || null;
@@ -350,8 +355,7 @@ function Template(options) {
   // Message style
   this.message = {};
   this.message.display = options.message.display || true;
-  this.message.color = options.message.color || "black"; // Only one color
-  this.message.colors = options.message.colors || null; // One color for each column
+  this.message.color = options.message.color || null; // Only one color, if null message takes commit color (only message)
   this.message.font = options.message.font || 'normal 12pt Calibri';
   
   return this;
