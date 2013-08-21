@@ -125,10 +125,14 @@ Branch.prototype.draw = function () {
   if (this.parentBranch) {
     this.context.beginPath();
     this.context.moveTo(this.offsetX, this.origin);
-    this.context.bezierCurveTo(
-      this.offsetX, this.origin + this.smoothOffset / 2,
-      this.parentBranch.offsetX, this.origin + this.smoothOffset / 2,
-      this.parentBranch.offsetX, this.origin + this.smoothOffset);
+    if (this.template.branch.mergeStyle == 'quadratique') {
+      this.context.bezierCurveTo(
+        this.offsetX, this.origin + this.smoothOffset / 2,
+        this.parentBranch.offsetX, this.origin + this.smoothOffset / 2,
+        this.parentBranch.offsetX, this.origin + this.smoothOffset);
+    } else {
+      this.context.lineTo(this.parentBranch.offsetX, this.origin + this.smoothOffset);
+    }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
     this.context.stroke()
@@ -146,10 +150,14 @@ Branch.prototype.draw = function () {
   if (this.targetBranch) {
     this.context.beginPath();
     this.context.moveTo(this.offsetX, this.origin - this.size);
-    this.context.bezierCurveTo(
-      this.offsetX, this.origin - this.size - this.smoothOffset / 2,
-      this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset / 2,
-      this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset);
+    if (this.template.branch.mergeStyle == 'quadratique') {
+      this.context.bezierCurveTo(
+        this.offsetX, this.origin - this.size - this.smoothOffset / 2,
+        this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset / 2,
+        this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset);
+    } else {
+      this.context.lineTo(this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset);
+    }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
     this.context.stroke()
@@ -339,7 +347,7 @@ function Template(options) {
   this.branch.color = options.branch.color || null; // Only one color
   this.branch.lineWidth = options.branch.lineWidth || 2;
   this.branch.smoothOffset = options.branch.smoothOffset || 50;
-  this.branch.mergeStyle = options.branch.mergeStyle || 'quadratique'; // 'quadratique' | 'arrow'
+  this.branch.mergeStyle = options.branch.mergeStyle || 'quadratique'; // 'quadratique' | 'straight'
   this.branch.mergeCommit = options.branch.mergeCommit || true;
   this.branch.margin = options.branch.margin || 20; // Space between branchs
 
