@@ -241,6 +241,7 @@ Branch.prototype.updateSize = function () {
  **/
 Branch.prototype.calculColumn = function () {
   for (var i = 0; i < this.parent.branchs.length; i++) {
+    this.parent.branchs[i].updateSize();
     if (this.parent.branchs[i].origin - this.parent.branchs[i].size - this.parent.branchs[i].smoothOffset * 2 < this.origin)
       this.column++;
   }
