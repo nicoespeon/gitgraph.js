@@ -175,12 +175,16 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
+  if (options.type == 'mergeCommit') options.y -= 15; // Special offset
 
   var commit = new Commit(options);
   this.commits.push(commit);
 
-  this.parent.commitOffset += this.template.commit.spacing;
+  if (options.type != 'mergeCommit')
+    this.parent.commitOffset += this.template.commit.spacing;
+    
 }
+
 /**
  * Checkout onto this branch
  **/
@@ -204,16 +208,15 @@ Branch.prototype.merge = function (target, mergeCommit) {
   // Optionnal Merge commit 
   mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
   if (mergeCommit) {
-    this.targetBranch.commits.push(new Commit({
+    this.targetBranch.commit({
       message: "Merge branch '" + this.name + "' into " + this.targetBranch.name,
-      parent: this.parent,
-      color: this.targetBranch.color,
-      x: this.targetBranch.offsetX,
-      y: this.parent.origin - this.parent.commitOffset - 15
-    }));
+      type: 'mergeCommit'
+    });
   }
+  
   // Offset for futurs commits
   this.parent.commitOffset += this.smoothOffset;
+  
 }
 
 /**
