@@ -273,7 +273,7 @@ function Commit(options) {
   this.colorDot = options.colorDot || options.color;
   this.radius = options.size || this.template.commit.dot.size;
   this.arrowDisplay = options.arrowDisplay;
-  this.stokeWidth = options.strokeWidth || this.template.commit.dot.strokeWidth;
+  this.strokeWidth = options.strokeWidth || this.template.commit.dot.strokeWidth;
   this.strokeStyle = options.strokeStyle || this.template.commit.dot.strokeStyle;
   this.x = options.x;
   this.y = options.y;
@@ -285,8 +285,8 @@ Commit.prototype.draw = function () {
   this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
   this.context.fillStyle = this.colorDot;
   this.context.strokeStyle = this.strokeStyle;
-  this.context.lineWidth = this.stokeWidth;
-  if(this.strokeWidth) this.context.stroke();
+  this.context.lineWidth = this.strokeWidth;
+  if(typeof(this.strokeWidth) == 'number') this.context.stroke();
   this.context.fill();
   this.context.closePath();
 
