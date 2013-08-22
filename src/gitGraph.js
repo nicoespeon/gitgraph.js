@@ -13,7 +13,7 @@ function GitGraph(options) {
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext('2d');
-  this.origin = options.origin || this.canvas.height - 10;
+  this.origin = options.origin || this.canvas.height - this.template.commit.dot.size * 2;
 
   // Navigations vars
   this.HEAD = null;
