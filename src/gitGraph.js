@@ -121,7 +121,7 @@ Branch.prototype.draw = function () {
   if (this.parentBranch) {
     this.context.beginPath();
     this.context.moveTo(this.offsetX, this.origin);
-    if (this.template.branch.mergeStyle == 'quadratique') {
+    if (this.template.branch.mergeStyle == 'bezier') {
       this.context.bezierCurveTo(
         this.offsetX, this.origin + this.smoothOffset / 2,
         this.parentBranch.offsetX, this.origin + this.smoothOffset / 2,
@@ -146,7 +146,7 @@ Branch.prototype.draw = function () {
   if (this.targetBranch) {
     this.context.beginPath();
     this.context.moveTo(this.offsetX, this.origin - this.size);
-    if (this.template.branch.mergeStyle == 'quadratique') {
+    if (this.template.branch.mergeStyle == 'bezier') {
       this.context.bezierCurveTo(
         this.offsetX, this.origin - this.size - this.smoothOffset / 2,
         this.targetBranch.offsetX, this.origin - this.size - this.smoothOffset / 2,
@@ -345,7 +345,7 @@ function Template(options) {
   this.branch.color = options.branch.color || null; // Only one color
   this.branch.lineWidth = options.branch.lineWidth || 2;
   this.branch.smoothOffset = options.branch.smoothOffset || 50;
-  this.branch.mergeStyle = options.branch.mergeStyle || 'quadratique'; // 'quadratique' | 'straight'
+  this.branch.mergeStyle = options.branch.mergeStyle || 'bezier'; // 'bezier' | 'straight'
   this.branch.mergeCommit = options.branch.mergeCommit || true;
   this.branch.margin = options.branch.margin || 20; // Space between branchs
 
