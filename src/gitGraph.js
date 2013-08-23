@@ -221,8 +221,8 @@ Branch.prototype.commit = function (options) {
   options = options || {};
 
   options.parent = this.parent;
-  options.colorMessage = options.colorMessage || options.color || this.template.commit.message.color || null;
-  options.colorDot = options.colorDot || options.color || this.template.commit.dot.color || null;
+  options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
+  options.dotColor = options.dotColor || options.color || this.template.commit.dot.color || null;
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
