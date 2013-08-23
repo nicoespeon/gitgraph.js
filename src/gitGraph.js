@@ -40,7 +40,7 @@ GitGraph.prototype.branch = function (options) {
 
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
-    options.origin = options.parentBranch.origin - (options.parentBranch.commits.length + 1) * this.template.commit.spacing;
+    options.origin = options.parentBranch.origin - (options.parentBranch.commits.length) * this.template.commit.spacing;
   } else {
     options.origin = this.origin;
   }
@@ -48,10 +48,6 @@ GitGraph.prototype.branch = function (options) {
   // Add branch
   var branch = new Branch(options);
   this.branchs.push(branch);
-
-  // Offset for first commit
-  if (branch.parentBranch instanceof Branch && branch.column - branch.parentBranch.column == 1)
-    this.commitOffset += this.template.commit.spacing;
 
   // Return
   return branch;
@@ -111,7 +107,7 @@ function Branch(options) {
   this.color = options.color || this.template.branch.color || this.template.colors[this.column];
 
   // Defaults values
-  this.smoothOffset = this.template.branch.smoothOffset; // Size of merge/fork portion
+  this.smoothOffset = this.template.commit.spacing; // Size of merge/fork portion
   this.commits = [];
 
   this.checkout();
@@ -183,14 +179,12 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
-  if (options.type == 'mergeCommit') options.y -= 15; // Special offset
-  options.arrowDisplay = (this.commits.length == 0) ? false : this.template.arrow.active;
+  options.arrowDisplay = (this.commits.length == 0 || options.type == 'mergeCommit') ? false : this.template.arrow.active;
   
   var commit = new Commit(options);
   this.commits.push(commit);
 
-  if (options.type != 'mergeCommit')
-    this.parent.commitOffset += this.template.commit.spacing;
+  this.parent.commitOffset += this.template.commit.spacing;
     
 }
 
@@ -212,7 +206,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
   this.targetBranch = target || this.parent.HEAD;
 
   // Update size of branch
-  this.size = this.parent.commitOffset - (this.parent.canvas.height - this.origin) - this.template.commit.spacing;
+  this.size = this.origin - (this.parent.origin - this.parent.commitOffset) - this.template.commit.spacing;
 
   // Optionnal Merge commit 
   mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
@@ -222,10 +216,6 @@ Branch.prototype.merge = function (target, mergeCommit) {
       type: 'mergeCommit'
     });
   }
-  
-  // Offset for futurs commits
-  this.parent.commitOffset += this.smoothOffset;
-  
 }
 
 /**
@@ -242,7 +232,7 @@ Branch.prototype.updateSize = function () {
 Branch.prototype.calculColumn = function () {
   for (var i = 0; i < this.parent.branchs.length; i++) {
     this.parent.branchs[i].updateSize();
-    if (this.parent.branchs[i].origin - this.parent.branchs[i].size - this.parent.branchs[i].smoothOffset * 2 < this.origin)
+    if (this.parent.branchs[i].origin - this.parent.branchs[i].size <= this.origin)
       this.column++;
   }
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
