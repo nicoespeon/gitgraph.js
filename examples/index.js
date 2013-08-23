@@ -4,14 +4,13 @@ var gitGraph = new GitGraph({
       color: '#000000',
       lineWidth: 3,
       margin: 50,
-      mergeStyle: 'straight',
-      smoothOffset: 60
+      mergeStyle: 'straight'
     },
     commit: {
       spacing: 60,
       dot: {
         size: 12,
-        strokeStyle: '#000000',
+        strokeColor: '#000000',
         strokeWidth: 7
       },
       message: {
