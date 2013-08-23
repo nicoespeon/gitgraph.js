@@ -1,8 +1,32 @@
-var gitGraph = new GitGraph();
+var gitGraph = new GitGraph({
+  template: new Template({
+    branch: {
+      color: '#000000',
+      lineWidth: 3,
+      margin: 50,
+      mergeStyle: 'straight',
+      smoothOffset: 60
+    },
+    commit: {
+      spacing: 60,
+      dot: {
+        size: 12,
+        strokeStyle: '#000000',
+        strokeWidth: 7
+      },
+      message: {
+        color: 'black'
+      }
+    },
+    arrow: {
+      height: 16,
+      width: 13
+    }
+  })
+});
 
 var master = gitGraph.branch({
   name: 'master',
-  size: 200
 });
 gitGraph.commit(); // Commit on HEAD Branch
 gitGraph.commit();
@@ -12,8 +36,8 @@ var dev = gitGraph.branch({
   name: 'dev',
 });
 gitGraph.commit();
-gitGraph.commit();
-gitGraph.commit();
+gitGraph.commit(); 
+gitGraph.commit(); 
 
 //master.checkout();
 var test = gitGraph.branch({
@@ -29,7 +53,7 @@ gitGraph.author = 'Fabien0102 <fabien0102@planee.fr>'; // Change author
 master.commit();
 dev.merge();
 test.commit();
-master.commit();
+//master.commit();
 test.merge(null, false); // Merge into HEAD without merge commit
 
 gitGraph.render();
