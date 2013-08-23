@@ -223,7 +223,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
  **/
 Branch.prototype.updateSize = function () {
   if (this.targetBranch instanceof Branch == false)
-    this.size = this.parent.commitOffset;
+    this.size = this.parent.commitOffset + this.template.commit.spacing;
 }
 
 /**
