@@ -194,11 +194,16 @@ Branch.prototype.render = function () {
 /**
  * Add a commit
  *
- * @param {Object} options - Options of commit 
+ * @param {(String | Object)} [options] - Message | Options of commit 
  * @see Commit
  * @this Branch
  **/
 Branch.prototype.commit = function (options) {
+  if (typeof(options) == 'string') {
+    var message = options;
+    options = {};
+    options.message = message;
+  }
   options = options || {};
 
   options.parent = this.parent;

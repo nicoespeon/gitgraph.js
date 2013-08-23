@@ -34,7 +34,7 @@ gitGraph.commit();
 var dev = gitGraph.branch({
   name: 'dev',
 });
-gitGraph.commit();
+gitGraph.commit('Youhou \\o/');
 gitGraph.commit(); 
 gitGraph.commit(); 
 
