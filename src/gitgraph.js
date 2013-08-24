@@ -74,7 +74,7 @@ GitGraph.prototype.branch = function (options) {
 
   // Return
   return branch;
-}
+};
 
 /**
  * Commit on HEAD
@@ -85,7 +85,7 @@ GitGraph.prototype.branch = function (options) {
  **/
 GitGraph.prototype.commit = function (options) {
   this.HEAD.commit(options);
-}
+};
 
 /**
  * Render the canvas
@@ -101,7 +101,7 @@ GitGraph.prototype.render = function () {
     this.branchs[this.branchs.length - i].updateSize();
     this.branchs[this.branchs.length - i].render();
   }
-}
+};
 
 // --------------------------------------------------------------------
 // -----------------------      Branch         ------------------------
@@ -171,7 +171,7 @@ Branch.prototype.render = function () {
     }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
-    this.context.stroke()
+    this.context.stroke();
   }
 
   // Main part
@@ -196,14 +196,14 @@ Branch.prototype.render = function () {
     }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
-    this.context.stroke()
+    this.context.stroke();
   }
 
   // Commits part
   for (var i = 0; i < this.commits.length; i++) {
     this.commits[i].render();
   }
-}
+};
 
 /**
  * Add a commit
@@ -226,14 +226,14 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
-  options.arrowDisplay = (this.commits.length == 0 || options.type == 'mergeCommit') ? false : this.template.arrow.active;
+  options.arrowDisplay = (this.commits.length === 0 || options.type == 'mergeCommit') ? false : this.template.arrow.active;
 
   var commit = new Commit(options);
   this.commits.push(commit);
 
   this.parent.commitOffset += this.template.commit.spacing;
 
-}
+};
 
 /**
  * Checkout onto this branch
@@ -242,7 +242,7 @@ Branch.prototype.commit = function (options) {
  **/
 Branch.prototype.checkout = function () {
   this.parent.HEAD = this;
-}
+};
 
 /**
  * Merge branch
@@ -266,7 +266,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
       type: 'mergeCommit'
     });
   }
-}
+};
 
 /**
  * Update size of branch
@@ -274,9 +274,9 @@ Branch.prototype.merge = function (target, mergeCommit) {
  * @this Branch
  **/
 Branch.prototype.updateSize = function () {
-  if (this.targetBranch instanceof Branch == false)
+  if (this.targetBranch instanceof Branch === false)
     this.size = this.parent.commitOffset + this.template.commit.spacing;
-}
+};
 
 /**
  * Calcul column
@@ -290,7 +290,7 @@ Branch.prototype.calculColumn = function () {
       this.column++;
   }
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
-}
+};
 
 
 // --------------------------------------------------------------------
@@ -365,7 +365,7 @@ Commit.prototype.render = function () {
       parent: this.parent,
       x: this.x,
       y: this.y + this.dotSize + 2
-    })
+    });
   }
 
   // Message
@@ -375,7 +375,7 @@ Commit.prototype.render = function () {
     this.context.fillStyle = this.messageColor;
     this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.margin, this.y + 3);
   }
-}
+};
 
 
 // --------------------------------------------------------------------
