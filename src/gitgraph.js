@@ -3,8 +3,8 @@
  *             https://github.com/nicoespeon/gitgraph.js
  * ========================================================================
  * Copyright (c) 2013 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
- * Copyright (c) 2013 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌ 
- * 
+ * Copyright (c) 2013 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
+ *
  * GitGraph.js may be freely distributed under the MIT Licence
  * ======================================================================== */
 
@@ -28,7 +28,7 @@ function GitGraph(options) {
   this.elementId = options.elementId || "gitGraph";
   this.template = options.template || new Template();
   this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
-  
+
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext('2d');
@@ -79,7 +79,7 @@ GitGraph.prototype.branch = function (options) {
 /**
  * Commit on HEAD
  *
- * @param {Object} options - Options of commit 
+ * @param {Object} options - Options of commit
  * @see Commit
  * @this GitGraph
  **/
@@ -152,7 +152,7 @@ function Branch(options) {
 }
 
 /**
- * Render the branch 
+ * Render the branch
  *
  * @this Branch
  **/
@@ -208,7 +208,7 @@ Branch.prototype.render = function () {
 /**
  * Add a commit
  *
- * @param {(String | Object)} [options] - Message | Options of commit 
+ * @param {(String | Object)} [options] - Message | Options of commit
  * @see Commit
  * @this Branch
  **/
@@ -227,12 +227,12 @@ Branch.prototype.commit = function (options) {
   options.x = this.offsetX;
   options.y = this.parent.origin - this.parent.commitOffset;
   options.arrowDisplay = (this.commits.length == 0 || options.type == 'mergeCommit') ? false : this.template.arrow.active;
-  
+
   var commit = new Commit(options);
   this.commits.push(commit);
 
   this.parent.commitOffset += this.template.commit.spacing;
-    
+
 }
 
 /**
@@ -258,7 +258,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
   // Update size of branch
   this.size = this.origin - (this.parent.origin - this.parent.commitOffset) - this.template.commit.spacing;
 
-  // Optionnal Merge commit 
+  // Optionnal Merge commit
   mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
   if (mergeCommit) {
     this.targetBranch.commit({
@@ -367,7 +367,7 @@ Commit.prototype.render = function () {
       y: this.y + this.dotSize + 2
     })
   }
-  
+
   // Message
   if (this.messageDisplay) {
     var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
@@ -386,11 +386,11 @@ Commit.prototype.render = function () {
  * Arrow
  *
  * @constructor
- * 
+ *
  * @param {Object} options - Arrow Options
  * @param {GitGraph} options.parent - GitGraph constructor
- * @param {Number} options.x - Position X 
- * @param {Number} options.y - Position Y 
+ * @param {Number} options.x - Position X
+ * @param {Number} options.y - Position Y
  * @param {String} [options.color = this.template.color] - Arrow color
  * @param {Number} [options.height = this.template.height] - Arrow height
  * @param {Number} [options.width = this.template.width] - Arrow width
@@ -402,7 +402,7 @@ Commit.prototype.render = function () {
  **/
 function Arrow(options) {
   options = options || {};
-  
+
   this.parent = options.parent;
   this.context = this.parent.context;
   this.template = this.parent.template.arrow;
@@ -412,7 +412,7 @@ function Arrow(options) {
   this.x = options.x;
   this.y = options.y;
   this.rotation = options.rotation;
-  
+
   this.context.beginPath();
   this.context.fillStyle = this.color;
   this.context.moveTo(this.x + this.width, this.y + this.height); // Bottom left
@@ -462,9 +462,9 @@ function Template(options) {
   options.commit = options.commit || {};
   options.commit.dot = options.commit.dot || {};
   options.commit.message = options.commit.message || {};
-  
+
   this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
-  
+
   // Branch style
   this.branch = {};
   this.branch.color = options.branch.color || null; // Only one color
@@ -479,12 +479,12 @@ function Template(options) {
   this.arrow.width = options.arrow.width || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
   this.arrow.active = typeof(this.arrow.height) == 'number' && typeof(this.arrow.width) == 'number';
-  
+
   // Commit style
   this.commit = {};
   this.commit.spacing = options.commit.spacing || 25;
   this.commit.color = options.commit.color || null; // Only one color, if null message takes branch color (full commit)
-  
+
   this.commit.dot = {};
   this.commit.dot.color = options.commit.dot.color || null; // // Only one color, if null message takes branch color (only dot)
   this.commit.dot.size = options.commit.dot.size || 3;
