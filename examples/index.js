@@ -35,8 +35,8 @@ var dev = gitGraph.branch({
   name: 'dev',
 });
 gitGraph.commit('Youhou \\o/');
-gitGraph.commit(); 
-gitGraph.commit(); 
+gitGraph.commit();
+gitGraph.commit();
 
 //master.checkout();
 var test = gitGraph.branch({

@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*~
+
+# Folders
+dist/
+
+node_modules/*
+!node_modules/README.md
+
+vendor/*
+!vendor/README.md
+
+# Grunt files
+.grunt/
+_SpecRunner.html
