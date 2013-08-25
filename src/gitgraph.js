@@ -23,8 +23,7 @@
  **/
 function GitGraph(options) {
   // Options
-  options = options || {};
-
+  options = (typeof options === 'object') ? options : {};
   this.elementId = options.elementId || "gitGraph";
   this.template = options.template || new Template();
   this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
@@ -57,12 +56,13 @@ function GitGraph(options) {
  **/
 GitGraph.prototype.branch = function (options) {
   // Options
-  if (typeof(options) == 'string') {
+  if (typeof (options) == 'string') {
     var name = options;
     options = {};
     options.name = name;
   }
-  options = options || {};
+
+  options = (typeof options === 'object') ? options : {};
   options.parent = this;
   options.parentBranch = options.parentBranch || this.HEAD;
 
@@ -101,10 +101,10 @@ GitGraph.prototype.render = function () {
   // Resize canvas
   var oldCanvasHeight = this.canvas.height;
   this.canvas.height = this.branchs[0].updateSize();
-  
+
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  
+
   // Translate canvas for display all
   this.context.translate(0, this.canvas.height - oldCanvasHeight);
 
@@ -135,8 +135,7 @@ GitGraph.prototype.render = function () {
  **/
 function Branch(options) {
   // Options
-  options = options || {};
-
+  options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
   this.origin = options.origin;
@@ -223,12 +222,16 @@ Branch.prototype.render = function () {
  * @this Branch
  **/
 Branch.prototype.commit = function (options) {
-  if (typeof(options) == 'string') {
+  // Check integrity
+  if (this.targetBranch) return;
+
+  // Options
+  if (typeof (options) == 'string') {
     var message = options;
     options = {};
     options.message = message;
   }
-  options = options || {};
+  if (typeof (options) != 'object') options = {};
 
   options.parent = this.parent;
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
@@ -251,6 +254,9 @@ Branch.prototype.commit = function (options) {
  * @this Branch
  **/
 Branch.prototype.checkout = function () {
+  // Check integrity
+  if (this.targetBranch) return;
+
   this.parent.HEAD = this;
 };
 
@@ -265,10 +271,15 @@ Branch.prototype.merge = function (target, mergeCommit) {
   // Check self-merging case
   if (target instanceof Branch === false && this == this.parent.HEAD) return;
   if (target == this) return;
-  
+
   // Merge
   this.targetBranch = target || this.parent.HEAD;
-  
+
+  // Check integrity
+  if (this.targetBranch instanceof Branch === false) {
+    delete this.targetBranch;
+    return;
+  }
 
   // Update size of branch
   this.size = this.origin - (this.parent.origin - this.parent.commitOffset) - this.template.commit.spacing;
@@ -281,6 +292,9 @@ Branch.prototype.merge = function (target, mergeCommit) {
       type: 'mergeCommit'
     });
   }
+
+  // Checkout on target
+  this.parent.HEAD = this.targetBranch;
 };
 
 /**
@@ -341,8 +355,7 @@ Branch.prototype.calculColumn = function () {
  **/
 function Commit(options) {
   // Options
-  options = options || {};
-
+  options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
   this.template = this.parent.template;
   this.context = this.parent.context;
@@ -373,7 +386,7 @@ Commit.prototype.render = function () {
   this.context.fillStyle = this.dotColor;
   this.context.strokeStyle = this.dotStrokeColor;
   this.context.lineWidth = this.dotStrokeWidth;
-  if(typeof(this.dotStrokeWidth) == 'number') this.context.stroke();
+  if (typeof (this.dotStrokeWidth) == 'number') this.context.stroke();
   this.context.fill();
   this.context.closePath();
 
@@ -419,8 +432,8 @@ Commit.prototype.render = function () {
  * @this Arrow
  **/
 function Arrow(options) {
-  options = options || {};
-
+  // Options
+  options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
   this.context = this.parent.context;
   this.template = this.parent.template.arrow;
@@ -473,7 +486,7 @@ function Arrow(options) {
  **/
 function Template(options) {
   // Options
-  options = options || {};
+  options = (typeof options === 'object') ? options : {};
   options.branch = options.branch || {};
   options.arrow = options.arrow || {};
   options.commit = options.commit || {};
@@ -495,7 +508,7 @@ function Template(options) {
   this.arrow.height = options.arrow.height || null;
   this.arrow.width = options.arrow.width || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
-  this.arrow.active = typeof(this.arrow.height) == 'number' && typeof(this.arrow.width) == 'number';
+  this.arrow.active = typeof (this.arrow.height) == 'number' && typeof (this.arrow.width) == 'number';
 
   // Commit style
   this.commit = {};

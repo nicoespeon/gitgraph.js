@@ -77,5 +77,5 @@ dev.merge();
 test.commit();
 //master.commit();
 test.merge(null, false); // Merge into HEAD without merge commit
-
+test.commit('error'); // Error: You can't commit on merged branch
 gitGraph.render();
