@@ -93,8 +93,15 @@ GitGraph.prototype.commit = function (options) {
  * @this GitGraph
  **/
 GitGraph.prototype.render = function () {
+  // Resize canvas
+  var oldCanvasHeight = this.canvas.height;
+  this.canvas.height = this.branchs[0].updateSize();
+  
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  
+  // Translate canvas for display all
+  this.context.translate(0, this.canvas.height - oldCanvasHeight);
 
   // Render
   for (var i = 1; i <= this.branchs.length; i++) {
@@ -269,12 +276,15 @@ Branch.prototype.merge = function (target, mergeCommit) {
 /**
  * Update size of branch
  *
+ * @return {int} size
  * @this Branch
  **/
 Branch.prototype.updateSize = function () {
   if (this.targetBranch instanceof Branch === false)
     this.size = this.parent.commitOffset + this.template.commit.spacing;
-};
+
+  return this.size;
+}
 
 /**
  * Calcul column
