@@ -43,9 +43,7 @@ var gitGraph = new GitGraph({
   template: mytemplate2
 });
 
-var master = gitGraph.branch({
-  name: 'master',
-});
+var master = gitGraph.branch('master');
 gitGraph.commit(); // Commit on HEAD Branch
 gitGraph.commit();
 gitGraph.commit();

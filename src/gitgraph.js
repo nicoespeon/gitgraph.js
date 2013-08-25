@@ -51,12 +51,17 @@ function GitGraph(options) {
 /**
  * Create new branch
  *
- * @param {Object} options - Options of Branch
+ * @param {(String | Object)} options - Branch name | Options of Branch
  * @see Branch
  * @this GitGraph
  **/
 GitGraph.prototype.branch = function (options) {
   // Options
+  if (typeof(options) == 'string') {
+    var name = options;
+    options = {};
+    options.name = name;
+  }
   options = options || {};
   options.parent = this;
   options.parentBranch = options.parentBranch || this.HEAD;
