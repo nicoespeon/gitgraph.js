@@ -184,8 +184,6 @@ Branch.prototype.render = function () {
 
   // Merge part
   if (this.targetBranch) {
-    this.context.beginPath();
-    this.context.moveTo(this.offsetX, this.origin - this.size);
     if (this.template.branch.mergeStyle == 'bezier') {
       this.context.bezierCurveTo(
         this.offsetX, this.origin - this.size - this.smoothOffset / 2,

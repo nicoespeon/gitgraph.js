@@ -2,7 +2,7 @@ var gitGraph = new GitGraph({
   template: new Template({
     branch: {
       color: '#000000',
-      lineWidth: 3,
+      lineWidth: 4,
       margin: 50,
       mergeStyle: 'straight'
     },
