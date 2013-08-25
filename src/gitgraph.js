@@ -45,7 +45,7 @@ function GitGraph(options) {
   this.context.fillStyle = 'red';
   this.context.font = 'bold 15pt Calibri';
   this.context.fillText('Error: No render() at the end', 150, 100);
-};
+}
 
 /**
  * Create new branch
@@ -161,7 +161,7 @@ function Branch(options) {
   this.commits = [];
 
   this.checkout();
-};
+}
 
 /**
  * Render the branch
@@ -373,7 +373,7 @@ function Commit(options) {
   this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor;
   this.x = options.x;
   this.y = options.y;
-};
+}
 
 /**
  * Render the commit
@@ -452,7 +452,7 @@ function Arrow(options) {
   this.context.lineTo(this.x - this.width, this.y + this.height); // Bottom right
   this.context.quadraticCurveTo(this.x, this.y + this.height / 2, this.x + this.width, this.y + this.height);
   this.context.fill();
-};
+}
 
 // --------------------------------------------------------------------
 // -----------------------      Template       ------------------------
@@ -526,4 +526,4 @@ function Template(options) {
   this.commit.message.display = options.commit.message.display || true;
   this.commit.message.color = options.commit.message.color || null; // Only one color, if null message takes commit color (only message)
   this.commit.message.font = options.commit.message.font || 'normal 12pt Calibri';
-};
+}
