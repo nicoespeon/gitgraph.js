@@ -109,9 +109,10 @@ GitGraph.prototype.render = function () {
   this.context.translate(0, this.canvas.height - oldCanvasHeight);
 
   // Render
-  for (var i = 1; i <= this.branchs.length; i++) {
-    this.branchs[this.branchs.length - i].updateSize();
-    this.branchs[this.branchs.length - i].render();
+  for (var i = this.branchs.length - 1, branch; branch = this.branchs[i]; i--) {
+    console.log(branch);
+    branch.updateSize();
+    branch.render();
   }
 };
 
@@ -209,8 +210,8 @@ Branch.prototype.render = function () {
   }
 
   // Commits part
-  for (var i = 0; i < this.commits.length; i++) {
-    this.commits[i].render();
+  for (var i = 0, commit; commit = this.commits[i]; i++) {
+    commit.render();
   }
 };
 
@@ -316,9 +317,9 @@ Branch.prototype.updateSize = function () {
  * @this Branch
  **/
 Branch.prototype.calculColumn = function () {
-  for (var i = 0; i < this.parent.branchs.length; i++) {
-    this.parent.branchs[i].updateSize();
-    if (this.parent.branchs[i].origin - this.parent.branchs[i].size <= this.origin)
+  for (var i = 0, branch; branch = this.parent.branchs[i]; i++) {
+    branch.updateSize();
+    if (branch.origin - branch.size <= this.origin)
       this.column++;
   }
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
