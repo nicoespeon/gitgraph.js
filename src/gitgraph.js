@@ -278,7 +278,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
 
   // Check integrity
   if (this.targetBranch instanceof Branch === false) {
-    delete this.targetBranch;
+    this.targetBranch = null;
     return;
   }
 
