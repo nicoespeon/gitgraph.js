@@ -32,6 +32,7 @@ function GitGraph(options) {
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext('2d');
   this.origin = options.origin || this.canvas.height - this.template.commit.dot.size * 2;
+  this.origin = this.template.commit.dot.size * 2;
 
   // Navigations vars
   this.HEAD = null;
@@ -100,14 +101,14 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  var oldCanvasHeight = this.canvas.height;
   this.canvas.height = this.branchs[0].updateSize();
-
+  
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
   // Translate canvas for display all
-  this.context.translate(0, this.canvas.height - oldCanvasHeight);
+  if(this.template.commit.spacingY > 0)
+    this.context.translate(0, this.canvas.height - this.origin - this.template.commit.dot.size);
 
   // Render
   for (var i = this.branchs.length - 1, branch; branch = this.branchs[i]; i--) {
@@ -308,7 +309,7 @@ Branch.prototype.updateSize = function () {
   if (this.targetBranch instanceof Branch === false)
     this.size = this.parent.commitOffsetY + this.template.commit.spacingY;
 
-  return this.size;
+  return Math.abs(this.size);
 };
 
 /**
@@ -319,7 +320,7 @@ Branch.prototype.updateSize = function () {
 Branch.prototype.calculColumn = function () {
   for (var i = 0, branch; branch = this.parent.branchs[i]; i++) {
     branch.updateSize();
-    if (branch.origin - branch.size <= this.origin)
+    if (branch.origin - Math.abs(branch.size) <= this.origin)
       this.column++;
   }
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;

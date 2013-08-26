@@ -29,7 +29,7 @@ var mytemplate2 = new Template({
     spacingX: 50
   },
   commit: {
-    spacingY: 80,
+    spacingY: -80,
     dot: {
       size: 14
     },
@@ -44,7 +44,7 @@ var gitGraph = new GitGraph({
 });
 
 var master = gitGraph.branch('master');
-gitGraph.commit(); // Commit on HEAD Branch
+gitGraph.commit('Initial commit'); // Commit on HEAD Branch
 gitGraph.commit();
 gitGraph.commit();
 
