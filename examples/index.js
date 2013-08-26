@@ -2,11 +2,11 @@ var mytemplate = new Template({
   branch: {
     color: '#000000',
     lineWidth: 4,
-    margin: 50,
+    spacingX: 50,
     mergeStyle: 'straight'
   },
   commit: {
-    spacing: 60,
+    spacingY: 60,
     dot: {
       size: 12,
       strokeColor: '#000000',
@@ -26,10 +26,10 @@ var mytemplate2 = new Template({
   colors: ['#979797', '#008fb5', 'f1c109'],
   branch: {
     lineWidth: 10,
-    margin: 50
+    spacingX: 50
   },
   commit: {
-    spacing: 80,
+    spacingY: 80,
     dot: {
       size: 14
     },
