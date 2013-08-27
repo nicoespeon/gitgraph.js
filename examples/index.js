@@ -26,20 +26,15 @@ var mytemplate2 = new Template({
   colors: ['#979797', '#008fb5', 'f1c109'],
   branch: {
     lineWidth: 10,
-    spacingX: 50,
-    //spacingX: 0,
-    //spacingY: 50
+    spacingX: 50
   },
   commit: {
     spacingY: -80,
-    //spacingY: 0,
-    //spacingX: -80,
     dot: {
       size: 14
     },
     message: {
       font: 'normal 14pt Arial',
-      display: false
     }
   },
 });

@@ -30,8 +30,6 @@ function GitGraph(options) {
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext('2d');
-  this.originX = 0;
-  this.originY = 0;
 
   // Navigations vars
   this.HEAD = null;
@@ -71,10 +69,7 @@ GitGraph.prototype.branch = function (options) {
   if (options.parentBranch instanceof Branch) {
     options.originX = options.parentBranch.originX - (options.parentBranch.commits.length) * this.template.commit.spacingX;
     options.originY = options.parentBranch.originY - (options.parentBranch.commits.length) * this.template.commit.spacingY;
-  } else {
-    options.originX = this.originX;
-    options.originY = this.originY;
-  }
+  } 
 
   // Add branch
   var branch = new Branch(options);
@@ -102,23 +97,27 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  this.canvas.height = this.branchs[0].updateSize() || 1000;
+  this.canvas.height = this.branchs[0].updateSize().height || this.branchs[this.branchs.length - 1].offsetY + this.template.commit.dot.size * 3;
+  this.canvas.width = this.branchs[0].updateSize().width || 1000;
   
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-  // Translate canvas for display all
+  // Add some margin
+  this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2)
+  
+  // Translate for inverse orientation
   if(this.template.commit.spacingY > 0)
-    this.context.translate(0, this.canvas.height - this.originY - this.template.commit.dot.size * 2);
-  else
-      this.context.translate(0, this.template.commit.dot.size * 2)
-
+    this.context.translate(0, this.canvas.height - this.template.commit.dot.size * 3);
+  if(this.template.commit.spacingX > 0)
+    this.context.translate(this.canvas.width - this.template.commit.dot.size * 3, 0);
   // Render
   for (var i = this.branchs.length - 1, branch; branch = this.branchs[i]; i--) {
     branch.updateSize();
     branch.render();
   }
 };
+
 
 // --------------------------------------------------------------------
 // -----------------------      Branch         ------------------------
@@ -143,8 +142,8 @@ function Branch(options) {
   options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
-  this.originX = options.originX;
-  this.originY = options.originY;
+  this.originX = options.originX || 0;
+  this.originY = options.originY || 0;
   this.name = options.name || "no-name";
   this.targetBranch = null;
   this.context = this.parent.context;
@@ -162,8 +161,8 @@ function Branch(options) {
   this.calculColumn();
 
   // Options with auto value
-  this.offsetX = this.spacingX + this.column * this.spacingX;
-  this.offsetY = this.spacingY + this.column * this.spacingY;
+  this.offsetX = this.column * this.spacingX;
+  this.offsetY = this.column * this.spacingY;
   
   this.color = options.color || this.template.branch.color || this.template.colors[this.column];
 
@@ -246,8 +245,8 @@ Branch.prototype.commit = function (options) {
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
   options.dotColor = options.dotColor || options.color || this.template.commit.dot.color || null;
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
-  options.x = this.offsetX + this.parent.originX - this.parent.commitOffsetX;
-  options.y = this.offsetY + this.parent.originY - this.parent.commitOffsetY;
+  options.x = this.offsetX - this.parent.commitOffsetX;
+  options.y = this.offsetY - this.parent.commitOffsetY;
   options.arrowDisplay = (this.commits.length === 0 || options.type == 'mergeCommit') ? false : this.template.arrow.active;
 
   var commit = new Commit(options);
@@ -287,8 +286,8 @@ Branch.prototype.merge = function (target, mergeCommit) {
   }
 
   // Update size of branch
-  this.height = this.originY - (this.parent.originY - this.parent.commitOffsetY) - this.template.commit.spacingY;
-  this.width = this.originX - (this.parent.originX - this.parent.commitOffsetX) - this.template.commit.spacingX;
+  this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
+  this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
 
   // Optionnal Merge commit
   mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
@@ -317,7 +316,7 @@ Branch.prototype.updateSize = function () {
   
   this.size = Math.sqrt(this.height * this.height + this.width * this.width); // Pythagore powaaa
   
-  return this.size;
+  return {width: Math.abs(this.width), height: Math.abs(this.height)};
 };
 
 /**
@@ -462,6 +461,7 @@ function Arrow(options) {
   this.context.quadraticCurveTo(this.x, this.y + this.height / 2, this.x + this.width, this.y + this.height);
   this.context.fill();
 }
+
 
 // --------------------------------------------------------------------
 // -----------------------      Template       ------------------------
