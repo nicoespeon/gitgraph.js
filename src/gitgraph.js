@@ -155,6 +155,7 @@ function Branch(options) {
   this.size = 0;
   this.height = 0;
   this.width = 0;
+  this.commits = [];
 
   // Calcul column number for auto-color & auto-offset
   this.column = 0;
@@ -166,10 +167,7 @@ function Branch(options) {
   
   this.color = options.color || this.template.branch.color || this.template.colors[this.column];
 
-  // Defaults values
-  this.smoothOffset = this.template.commit.spacingY; // Size of merge/fork portion
-  this.commits = [];
-
+  // Checkout on this new branch
   this.checkout();
 }
 
@@ -182,14 +180,14 @@ Branch.prototype.render = function () {
   // Fork part
   if (this.parentBranch) {
     this.context.beginPath();
-    this.context.moveTo(this.offsetX, this.originY);
+    this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
     if (this.template.branch.mergeStyle == 'bezier') {
       this.context.bezierCurveTo(
-        this.offsetX, this.originY + this.smoothOffset / 2,
-        this.parentBranch.offsetX, this.originY + this.smoothOffset / 2,
-        this.parentBranch.offsetX, this.originY + this.smoothOffset);
+        this.offsetX + this.originX + this.template.commit.spacingX / 2, this.offsetY + this.originY + this.template.commit.spacingY / 2,
+        this.parentBranch.offsetX + this.originX + this.template.commit.spacingX / 2, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY / 2,
+        this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
     } else {
-      this.context.lineTo(this.parentBranch.offsetX, this.originY + this.smoothOffset);
+      this.context.lineTo(this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
     }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
@@ -198,8 +196,8 @@ Branch.prototype.render = function () {
 
   // Main part
   this.context.beginPath();
-  this.context.moveTo(this.offsetX, this.originY);
-  this.context.lineTo(this.offsetX, this.originY - this.height);
+  this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
+  this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke();
@@ -208,11 +206,11 @@ Branch.prototype.render = function () {
   if (this.targetBranch) {
     if (this.template.branch.mergeStyle == 'bezier') {
       this.context.bezierCurveTo(
-        this.offsetX, this.originY - this.height - this.smoothOffset / 2,
-        this.targetBranch.offsetX, this.originY - this.height - this.smoothOffset / 2,
-        this.targetBranch.offsetX, this.originY - this.height - this.smoothOffset);
+        this.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
+        this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
+        this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY);
     } else {
-      this.context.lineTo(this.targetBranch.offsetX, this.originY - this.height - this.smoothOffset);
+      this.context.lineTo(this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY);
     }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
@@ -290,7 +288,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
 
   // Update size of branch
   this.height = this.originY - (this.parent.originY - this.parent.commitOffsetY) - this.template.commit.spacingY;
-  this.widht = this.originX - (this.parent.originX - this.parent.commitOffsetX) - this.template.commit.spacingX;
+  this.width = this.originX - (this.parent.originX - this.parent.commitOffsetX) - this.template.commit.spacingX;
 
   // Optionnal Merge commit
   mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
@@ -478,9 +476,9 @@ function Arrow(options) {
  * @param {Array} [options.colors] - Colors scheme: One color for each column
  * @param {String} [options.arrow.color] - Arrow color
  * @param {Number} [options.arrow.height] - Arrow height
- * @param {Number} [options.arrow.width] - Arrow widht
+ * @param {Number} [options.arrow.width] - Arrow width
  * @param {String} [options.branch.color] - Branch color
- * @param {Number} [options.branch.lineWidht] - Branch line widht
+ * @param {Number} [options.branch.linewidth] - Branch line width
  * @param {('bezier'|'straight')} [options.branch.mergeStyle] - Branch merge style
  * @param {Boolean} [options.branch.mergeCommit] - Do a commit on merge
  * @param {Number} [options.branch.spacingX] - Space between branchs
@@ -490,7 +488,7 @@ function Arrow(options) {
  * @param {String} [options.commit.color] - Master commit color (dot & message)
  * @param {String} [options.commit.dot.color] - Commit dot color
  * @param {Number} [options.commit.dot.size] - Commit dot size
- * @param {Number} [options.commit.dot.strokeWidht] - Commit dot stroke widht
+ * @param {Number} [options.commit.dot.strokewidth] - Commit dot stroke width
  * @param {Number} [options.commit.dot.strokeColor] - Commit dot stroke color
  * @param {String} [options.commit.message.color] - Commit message color
  * @param {Boolean} [options.commit.message.display] - Commit display policy
