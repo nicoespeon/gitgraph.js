@@ -276,6 +276,9 @@ Branch.prototype.checkout = function () {
  * @this Branch
  **/
 Branch.prototype.merge = function (target, mergeCommit) {
+  // Check if this branch is allready merged
+  if (this.targetBranch instanceof Branch === true) return;
+  
   // Merge
   this.targetBranch = target || this.parent.HEAD;
 
