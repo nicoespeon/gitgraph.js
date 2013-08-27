@@ -279,15 +279,11 @@ Branch.prototype.checkout = function () {
  * @this Branch
  **/
 Branch.prototype.merge = function (target, mergeCommit) {
-  // Check self-merging case
-  if (target instanceof Branch === false && this == this.parent.HEAD) return;
-  if (target == this) return;
-
   // Merge
   this.targetBranch = target || this.parent.HEAD;
 
-  // Check integrity
-  if (this.targetBranch instanceof Branch === false) {
+  // Check integrity of target
+  if (this.targetBranch instanceof Branch === false || this.targetBranch === this) {
     this.targetBranch = null;
     return;
   }
