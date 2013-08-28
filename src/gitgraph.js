@@ -22,10 +22,14 @@
  **/
 function GitGraph(options) {
   // Options
-  options = (typeof options === 'object') ? options : {};
-  this.elementId = options.elementId || "gitGraph";
-  this.template = options.template || new Template();
-  this.author = options.author || 'Sergio Flores <saxo-guy@epic.com>';
+  options = (typeof options === 'object') ? 
+    options : {};
+  this.elementId = (typeof options.elementId === 'string') ? 
+    options.elementId : "gitGraph";
+  this.template = (options.template instanceof Template) ? 
+    options.template : new Template();
+  this.author = (typeof options.author === 'string') ? 
+    options.author : 'Sergio Flores <saxo-guy@epic.com>';
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
@@ -130,21 +134,24 @@ GitGraph.prototype.render = function () {
  *
  * @param {Object} options - Options of branch
  * @param {GitGraph} options.parent - GitGraph constructor
- * @param {Number} options.originX - Branch origin X
- * @param {Number} options.originY - Branch origin Y
+ * @param {Number} [options.originX] - Branch origin X
+ * @param {Number} [options.originY] - Branch origin Y
  * @param {Branch} [options.parentBranch] - Parent branch
  * @param {String} [options.name = 'no-name'] - Branch name
  *
  * @this Branch
  **/
 function Branch(options) {
+  // Check integrity
+  if (options.parent instanceof GitGraph === false) return;
+  
   // Options
   options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
-  this.originX = options.originX || 0;
-  this.originY = options.originY || 0;
-  this.name = options.name || "no-name";
+  this.originX = (typeof options.originX === 'number') ? options.originX : 0;
+  this.originY = (typeof options.originY === 'number') ? options.originY : 0;
+  this.name = (typeof options.name === 'string') ? options.name : "no-name";
   this.targetBranch = null;
   this.context = this.parent.context;
   this.template = this.parent.template;
@@ -203,7 +210,7 @@ Branch.prototype.render = function () {
 
   // Merge part
   if (this.targetBranch) {
-    if (this.template.branch.mergeStyle == 'bezier') {
+    if (this.template.branch.mergeStyle === 'bezier') {
       this.context.bezierCurveTo(
         this.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
         this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
@@ -234,12 +241,12 @@ Branch.prototype.commit = function (options) {
   if (this.targetBranch) return;
 
   // Options
-  if (typeof (options) == 'string') {
+  if (typeof (options) === 'string') {
     var message = options;
     options = {};
     options.message = message;
   }
-  if (typeof (options) != 'object') options = {};
+  if (typeof (options) !== 'object') options = {};
 
   options.parent = this.parent;
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
@@ -306,7 +313,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
 };
 
 /**
- * Update size of first branch
+ * Update size of branchs not merged
  *
  * @return {int} size
  * @this Branch
@@ -366,6 +373,9 @@ Branch.prototype.calculColumn = function () {
  * @this Commit
  **/
 function Commit(options) {
+  // Check integrity
+  if (options.parent instanceof GitGraph === false) return;
+  
   // Options
   options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
