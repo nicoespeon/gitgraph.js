@@ -72,7 +72,7 @@ gitGraph.commit({
   message: 'test'
 });
 gitGraph.commit();
-dev.commit(); // Commit on 'dev' Branch
+dev.commit().commit(); // Commit on 'dev' Branch
 master.checkout();
 gitGraph.author = 'Fabien0102 <fabien0102@planee.fr>'; // Change author
 master.commit();

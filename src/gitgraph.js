@@ -261,6 +261,9 @@ Branch.prototype.commit = function (options) {
 
   this.parent.commitOffsetX += this.template.commit.spacingX;
   this.parent.commitOffsetY += this.template.commit.spacingY;
+
+  // Return the main object so we can chain
+  return this;
 };
 
 /**
