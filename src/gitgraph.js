@@ -108,7 +108,7 @@ GitGraph.prototype.render = function () {
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
   // Add some margin
-  this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2)
+  this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2);
 
   // Translate for inverse orientation
   if(this.template.commit.spacingY > 0)
