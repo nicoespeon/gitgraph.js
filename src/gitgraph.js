@@ -22,13 +22,13 @@
  **/
 function GitGraph(options) {
   // Options
-  options = (typeof options === 'object') ? 
+  options = (typeof options === 'object') ?
     options : {};
-  this.elementId = (typeof options.elementId === 'string') ? 
+  this.elementId = (typeof options.elementId === 'string') ?
     options.elementId : "gitGraph";
-  this.template = (options.template instanceof Template) ? 
+  this.template = (options.template instanceof Template) ?
     options.template : new Template();
-  this.author = (typeof options.author === 'string') ? 
+  this.author = (typeof options.author === 'string') ?
     options.author : 'Sergio Flores <saxo-guy@epic.com>';
 
   // Canvas init
@@ -73,7 +73,7 @@ GitGraph.prototype.branch = function (options) {
   if (options.parentBranch instanceof Branch) {
     options.originX = options.parentBranch.commits[options.parentBranch.commits.length - 1].x - this.template.commit.spacingX - options.parentBranch.offsetX;
     options.originY = options.parentBranch.commits[options.parentBranch.commits.length - 1].y - this.template.commit.spacingY - options.parentBranch.offsetY;
-  } 
+  }
 
   // Add branch
   var branch = new Branch(options);
@@ -103,13 +103,13 @@ GitGraph.prototype.render = function () {
   // Resize canvas
   this.canvas.height = this.branchs[0].updateSize().height || this.branchs[this.branchs.length - 1].offsetY + this.template.commit.dot.size * 3;
   this.canvas.width = this.branchs[0].updateSize().width || 1000;
-  
+
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
   // Add some margin
   this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2)
-  
+
   // Translate for inverse orientation
   if(this.template.commit.spacingY > 0)
     this.context.translate(0, this.canvas.height - this.template.commit.dot.size * 3);
@@ -144,7 +144,7 @@ GitGraph.prototype.render = function () {
 function Branch(options) {
   // Check integrity
   if (options.parent instanceof GitGraph === false) return;
-  
+
   // Options
   options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
@@ -170,7 +170,7 @@ function Branch(options) {
   // Options with auto value
   this.offsetX = this.column * this.spacingX;
   this.offsetY = this.column * this.spacingY;
-  
+
   this.color = options.color || this.template.branch.color || this.template.colors[this.column];
 
   // Checkout on this new branch
@@ -288,7 +288,7 @@ Branch.prototype.checkout = function () {
 Branch.prototype.merge = function (target, mergeCommit) {
   // Check if this branch is allready merged
   if (this.targetBranch instanceof Branch === true) return;
-  
+
   // Merge
   this.targetBranch = target || this.parent.HEAD;
 
@@ -326,9 +326,9 @@ Branch.prototype.updateSize = function () {
     this.width = this.parent.commitOffsetX + this.template.commit.spacingX;
     this.height = this.parent.commitOffsetY + this.template.commit.spacingY;
   }
-  
+
   this.size = Math.sqrt(this.height * this.height + this.width * this.width); // Pythagore powaaa
-  
+
   return {width: Math.abs(this.width), height: Math.abs(this.height)};
 };
 
@@ -378,7 +378,7 @@ Branch.prototype.calculColumn = function () {
 function Commit(options) {
   // Check integrity
   if (options.parent instanceof GitGraph === false) return;
-  
+
   // Options
   options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
