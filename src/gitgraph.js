@@ -90,11 +90,15 @@ GitGraph.prototype.branch = function (options) {
  * Commit on HEAD
  *
  * @param {Object} options - Options of commit
+ * @return {GitGraph} this - Return the main object so we can chain
  * @see Commit
  * @this GitGraph
  **/
 GitGraph.prototype.commit = function (options) {
   this.HEAD.commit(options);
+  
+  // Return the main object so we can chain
+  return this;
 };
 
 /**
