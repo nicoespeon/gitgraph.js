@@ -420,7 +420,7 @@ Commit.prototype.render = function () {
     this.arrow = new Arrow({
       parent: this.parent,
       x: this.x,
-      y: this.y + this.dotSize + 2
+      y: this.y
     });
   }
 
@@ -450,7 +450,7 @@ Commit.prototype.render = function () {
  * @param {String} [options.color = this.template.color] - Arrow color
  * @param {Number} [options.height = this.template.height] - Arrow height
  * @param {Number} [options.width = this.template.width] - Arrow width
- * @param {Number} [options.rotation] - Arrow rotation
+ * @param {Number} [options.rotation] - Arrow rotation : 1 => up, -1 =>down
  *
  * @todo Implement rotation
  *
@@ -461,20 +461,39 @@ function Arrow(options) {
   options = (typeof options === 'object') ? options : {};
   this.parent = options.parent;
   this.context = this.parent.context;
-  this.template = this.parent.template.arrow;
-  this.height = options.height || this.template.height;
-  this.width = options.width || this.template.width;
-  this.color = options.color || this.template.color;
-  this.x = options.x;
-  this.y = options.y;
-  this.rotation = options.rotation;
+  this.template = this.parent.template;
+  this.size = options.size || this.template.arrow.size;
+  this.color = options.color || this.template.arrow.color;
+  this.x = options.x + this.template.arrow.offsetX;
+  this.y = options.y + this.template.arrow.offsetY;
 
+  // Angles calcul
+  var alpha = Math.atan2(this.template.commit.spacingY, this.template.commit.spacingX);
+  var delta = Math.PI/7; // Delta between left & right (radian)
+  
+  // Top
+  var h = this.template.commit.dot.size;
+  var x1 = h * Math.cos(alpha) + this.x;
+  var y1 = h * Math.sin(alpha) + this.y;
+  
+  // Bottom left
+  var x2 = (h + this.size) * Math.cos(alpha - delta) + this.x;
+  var y2 = (h + this.size) * Math.sin(alpha - delta) + this.y;
+  
+  // Bottom center
+  var x3 = (h + this.size / 2) * Math.cos(alpha) + this.x;
+  var y3 = (h + this.size / 2) * Math.sin(alpha) + this.y;
+  
+  // Bottom right
+  var x4 = (h + this.size) * Math.cos(alpha + delta) + this.x;
+  var y4 = (h + this.size) * Math.sin(alpha + delta) + this.y;
+  
   this.context.beginPath();
   this.context.fillStyle = this.color;
-  this.context.moveTo(this.x + this.width, this.y + this.height); // Bottom left
-  this.context.lineTo(this.x, this.y); // top
-  this.context.lineTo(this.x - this.width, this.y + this.height); // Bottom right
-  this.context.quadraticCurveTo(this.x, this.y + this.height / 2, this.x + this.width, this.y + this.height);
+  this.context.moveTo(x1, y1); // Top
+  this.context.lineTo(x2, y2); // Bottom left
+  this.context.quadraticCurveTo(x3, y3, x4, y4); // Bottom center
+  this.context.lineTo(x4, y4); // Bottom right
   this.context.fill();
 }
 
@@ -491,8 +510,7 @@ function Arrow(options) {
  * @param {Object} options - Template options
  * @param {Array} [options.colors] - Colors scheme: One color for each column
  * @param {String} [options.arrow.color] - Arrow color
- * @param {Number} [options.arrow.height] - Arrow height
- * @param {Number} [options.arrow.width] - Arrow width
+ * @param {Number} [options.arrow.size] - Arrow size
  * @param {String} [options.branch.color] - Branch color
  * @param {Number} [options.branch.linewidth] - Branch line width
  * @param {('bezier'|'straight')} [options.branch.mergeStyle] - Branch merge style
@@ -534,10 +552,11 @@ function Template(options) {
 
   // Arrow style
   this.arrow = {};
-  this.arrow.height = options.arrow.height || null;
-  this.arrow.width = options.arrow.width || null;
+  this.arrow.size = options.arrow.size || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
-  this.arrow.active = typeof (this.arrow.height) == 'number' && typeof (this.arrow.width) == 'number';
+  this.arrow.active = typeof (this.arrow.size) == 'number';
+  this.arrow.offsetX = options.arrow.offsetX || null;
+  this.arrow.offsetY = options.arrow.offsetY || 2;
 
   // Commit style
   this.commit = {};

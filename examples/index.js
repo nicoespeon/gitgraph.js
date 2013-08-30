@@ -6,7 +6,7 @@ var mytemplate = new Template({
     mergeStyle: 'straight'
   },
   commit: {
-    spacingY: 60,
+    spacingY: -60,
     dot: {
       size: 12,
       strokeColor: '#000000',
@@ -17,8 +17,8 @@ var mytemplate = new Template({
     }
   },
   arrow: {
-    height: 16,
-    width: 13
+    size: 16,
+    offsetY: -2
   }
 });
 
@@ -40,12 +40,12 @@ var mytemplate2 = new Template({
 });
 
 var gitGraph = new GitGraph({
-  template: mytemplate2
+  template: mytemplate
 });
 
 var master = gitGraph.branch('master');
 gitGraph.commit({
-  message:'Initial commit',
+  message:'Initial commit' ,
   color: 'pink'
 }); // Commit on HEAD Branch
 gitGraph.commit();
