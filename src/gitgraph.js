@@ -26,10 +26,13 @@ function GitGraph(options) {
     options : {};
   this.elementId = (typeof options.elementId === 'string') ?
     options.elementId : "gitGraph";
-  this.template = (options.template instanceof Template) ?
-    options.template : new Template();
   this.author = (typeof options.author === 'string') ?
     options.author : 'Sergio Flores <saxo-guy@epic.com>';
+  
+  // Template gestion
+  if (typeof options.template === 'string') options.template =  new Template().get(options.template);
+  this.template = (options.template instanceof Template) ?
+    options.template : new Template();
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
@@ -111,9 +114,9 @@ GitGraph.prototype.render = function () {
   this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2);
 
   // Translate for inverse orientation
-  if(this.template.commit.spacingY > 0)
+  if (this.template.commit.spacingY > 0)
     this.context.translate(0, this.canvas.height - this.template.commit.dot.size * 3);
-  if(this.template.commit.spacingX > 0)
+  if (this.template.commit.spacingX > 0)
     this.context.translate(this.canvas.width - this.template.commit.dot.size * 3, 0);
   // Render
   for (var i = this.branchs.length - 1, branch; branch = this.branchs[i]; i--) {
@@ -329,7 +332,10 @@ Branch.prototype.updateSize = function () {
 
   this.size = Math.sqrt(this.height * this.height + this.width * this.width); // Pythagore powaaa
 
-  return {width: Math.abs(this.width), height: Math.abs(this.height)};
+  return {
+    width: Math.abs(this.width),
+    height: Math.abs(this.height)
+  };
 };
 
 /**
@@ -469,25 +475,25 @@ function Arrow(options) {
 
   // Angles calcul
   var alpha = Math.atan2(this.template.commit.spacingY, this.template.commit.spacingX);
-  var delta = Math.PI/7; // Delta between left & right (radian)
-  
+  var delta = Math.PI / 7; // Delta between left & right (radian)
+
   // Top
   var h = this.template.commit.dot.size;
   var x1 = h * Math.cos(alpha) + this.x;
   var y1 = h * Math.sin(alpha) + this.y;
-  
+
   // Bottom left
   var x2 = (h + this.size) * Math.cos(alpha - delta) + this.x;
   var y2 = (h + this.size) * Math.sin(alpha - delta) + this.y;
-  
+
   // Bottom center
   var x3 = (h + this.size / 2) * Math.cos(alpha) + this.x;
   var y3 = (h + this.size / 2) * Math.sin(alpha) + this.y;
-  
+
   // Bottom right
   var x4 = (h + this.size) * Math.cos(alpha + delta) + this.x;
   var y4 = (h + this.size) * Math.sin(alpha + delta) + this.y;
-  
+
   this.context.beginPath();
   this.context.fillStyle = this.color;
   this.context.moveTo(x1, y1); // Top
@@ -574,4 +580,58 @@ function Template(options) {
   this.commit.message.display = (typeof options.commit.message.display === 'boolean') ? options.commit.message.display : true;
   this.commit.message.color = options.commit.message.color || null; // Only one color, if null message takes commit color (only message)
   this.commit.message.font = options.commit.message.font || 'normal 12pt Calibri';
+}
+
+/**
+ * Get a default template from library
+ *
+ * @param {String} name - Template name
+ * @return {Template} [template] - Template if exist
+ *
+ **/
+Template.prototype.get = function (name) {
+  switch (name) {
+  case 'blackarrow':
+    return new Template({
+      branch: {
+        color: '#000000',
+        lineWidth: 4,
+        spacingX: 50,
+        mergeStyle: 'straight'
+      },
+      commit: {
+        spacingY: -60,
+        dot: {
+          size: 12,
+          strokeColor: '#000000',
+          strokeWidth: 7
+        },
+        message: {
+          color: 'black'
+        }
+      },
+      arrow: {
+        size: 16,
+        offsetY: -2
+      }
+    });
+
+  case 'metro':
+    return new Template({
+      colors: ['#979797', '#008fb5', 'f1c109'],
+      branch: {
+        lineWidth: 10,
+        spacingX: 50
+      },
+      commit: {
+        spacingY: -80,
+        dot: {
+          size: 14
+        },
+        message: {
+          font: 'normal 14pt Arial',
+        }
+      },
+    });
+  }
 }

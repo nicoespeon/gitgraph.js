@@ -1,46 +1,5 @@
-var mytemplate = new Template({
-  branch: {
-    color: '#000000',
-    lineWidth: 4,
-    spacingX: 50,
-    mergeStyle: 'straight'
-  },
-  commit: {
-    spacingY: -60,
-    dot: {
-      size: 12,
-      strokeColor: '#000000',
-      strokeWidth: 7
-    },
-    message: {
-      color: 'black'
-    }
-  },
-  arrow: {
-    size: 16,
-    offsetY: -2
-  }
-});
-
-var mytemplate2 = new Template({
-  colors: ['#979797', '#008fb5', 'f1c109'],
-  branch: {
-    lineWidth: 10,
-    spacingX: 50
-  },
-  commit: {
-    spacingY: -80,
-    dot: {
-      size: 14
-    },
-    message: {
-      font: 'normal 14pt Arial',
-    }
-  },
-});
-
 var gitGraph = new GitGraph({
-  template: mytemplate
+  template: 'blackarrow' // 'blackarrow' or 'metro' or Template Object
 });
 
 var master = gitGraph.branch('master');
