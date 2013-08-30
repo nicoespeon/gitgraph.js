@@ -193,14 +193,14 @@ Branch.prototype.render = function () {
   // Fork part
   if (this.parentBranch) {
     this.context.beginPath();
-    this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
+    this.context.moveTo(this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
     if (this.template.branch.mergeStyle == 'bezier') {
       this.context.bezierCurveTo(
-        this.offsetX + this.originX + this.template.commit.spacingX / 2, this.offsetY + this.originY + this.template.commit.spacingY / 2,
         this.parentBranch.offsetX + this.originX + this.template.commit.spacingX / 2, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY / 2,
-        this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
+        this.offsetX + this.originX + this.template.commit.spacingX / 2, this.offsetY + this.originY + this.template.commit.spacingY / 2,
+        this.offsetX + this.originX, this.offsetY + this.originY);
     } else {
-      this.context.lineTo(this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
+      this.context.lineTo(this.offsetX + this.originX, this.offsetY + this.originY);
     }
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
@@ -208,8 +208,10 @@ Branch.prototype.render = function () {
   }
 
   // Main part
-  this.context.beginPath();
-  this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
+  if (!this.parentBranch) {
+    this.context.beginPath();  
+    this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
+  }
   this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
