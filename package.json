@@ -9,6 +9,7 @@
       "email": "fabien0102@gmail.com"
     }
   ],
+  "main": "./src/gitgraph.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/nicoespeon/gitgraph.js"
