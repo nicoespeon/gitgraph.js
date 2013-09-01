@@ -42,6 +42,14 @@ module.exports = function ( grunt ) {
         force: true,
         jshintrc: ".jshintrc"
       }
+    },
+
+
+    uglify: {
+      gitgraph: {
+        src: [ "src/gitgraph.js" ],
+        dest: "dist/js/gitgraph.min.js"
+      }
     }
 
   } );
