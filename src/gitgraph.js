@@ -651,4 +651,4 @@ Template.prototype.get = function (name) {
       },
     });
   }
-}
+};
