@@ -18,7 +18,7 @@ function GitGraph(options) {
     options.elementId : "gitGraph";
   this.author = (typeof options.author === 'string') ?
     options.author : 'Sergio Flores <saxo-guy@epic.com>';
-  
+
   // Template gestion
   if (typeof options.template === 'string') options.template =  new Template().get(options.template);
   this.template = (options.template instanceof Template) ?
@@ -86,7 +86,7 @@ GitGraph.prototype.branch = function (options) {
  **/
 GitGraph.prototype.commit = function (options) {
   this.HEAD.commit(options);
-  
+
   // Return the main object so we can chain
   return this;
 };
@@ -199,7 +199,7 @@ Branch.prototype.render = function () {
 
   // Main part
   if (!this.parentBranch) {
-    this.context.beginPath();  
+    this.context.beginPath();
     this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
   }
   this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
