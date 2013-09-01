@@ -1,7 +1,7 @@
 // This file defines grunt tasks used by [Grunt.js](http://gruntjs.com/sample-gruntfile)
 module.exports = function ( grunt ) {
 
-  // Initialize tasks for Grunt
+  // Project configuration
   grunt.initConfig( {
 
     // Metadata
@@ -59,7 +59,7 @@ module.exports = function ( grunt ) {
       }
     },
 
-
+    // The `uglify` task will minified the JavaScript source code for production.
     uglify: {
       options: {
         banner: "<%= banner %>"
