@@ -20,6 +20,16 @@ module.exports = function ( grunt ) {
       }
     },
 
+    // The `jasmine` task run unit tests over the source code
+    jasmine: {
+      gitgraph: {
+        src: "src/*.js",
+        options: {
+          specs: "tests/*.js"
+        }
+      }
+    },
+
     // The `jshint` task lint all the JavaScript code against best practices.
     // Warnings are here to help us improve code and follow best standards.
     jshint: {
