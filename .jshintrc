@@ -1,0 +1,11 @@
+{
+  "camelcase": true,
+  "curly": true,
+  "eqeqeq": true,
+  "forin": false,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "quotmark": "double",
+  "trailing": true
+}

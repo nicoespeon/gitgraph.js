@@ -1,13 +1,3 @@
-/* ========================================================================
- *                         GitGraph v0.1.0
- *             https://github.com/nicoespeon/gitgraph.js
- * ========================================================================
- * Copyright (c) 2013 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
- * Copyright (c) 2013 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
- *
- * GitGraph.js may be freely distributed under the MIT Licence
- * ======================================================================== */
-
 /**
  * GitGraph
  *
@@ -525,7 +515,7 @@ function Arrow(options) {
  * @param {Number} [options.arrow.size] - Arrow size
  * @param {String} [options.branch.color] - Branch color
  * @param {Number} [options.branch.linewidth] - Branch line width
- * @param {('bezier'|'straight')} [options.branch.mergeStyle] - Branch merge style
+ * @param {String} [options.branch.mergeStyle = ('bezier'|'straight')] - Branch merge style
  * @param {Boolean} [options.branch.mergeCommit] - Do a commit on merge
  * @param {Number} [options.branch.spacingX] - Space between branchs
  * @param {Number} [options.branch.spacingY] - Space between branchs
