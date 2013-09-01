@@ -1,13 +1,3 @@
-/* ========================================================================
- *                         GitGraph v0.1.0
- *             https://github.com/nicoespeon/gitgraph.js
- * ========================================================================
- * Copyright (c) 2013 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
- * Copyright (c) 2013 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
- *
- * GitGraph.js may be freely distributed under the MIT Licence
- * ======================================================================== */
-
 /**
  * GitGraph
  *
