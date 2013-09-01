@@ -525,7 +525,7 @@ function Arrow(options) {
  * @param {Number} [options.arrow.size] - Arrow size
  * @param {String} [options.branch.color] - Branch color
  * @param {Number} [options.branch.linewidth] - Branch line width
- * @param {('bezier'|'straight')} [options.branch.mergeStyle] - Branch merge style
+ * @param {String} [options.branch.mergeStyle = ('bezier'|'straight')] - Branch merge style
  * @param {Boolean} [options.branch.mergeCommit] - Do a commit on merge
  * @param {Number} [options.branch.spacingX] - Space between branchs
  * @param {Number} [options.branch.spacingY] - Space between branchs
