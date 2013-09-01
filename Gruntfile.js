@@ -6,4 +6,7 @@ module.exports = function ( grunt ) {
 
   } );
 
+  // Loads grunt tasks from `package.json`
+  require( "load-grunt-tasks" )( grunt, [ "grunt-*" ] );
+
 };
