@@ -4,6 +4,10 @@ module.exports = function ( grunt ) {
   // Initialize tasks for Grunt
   grunt.initConfig( {
 
+    // The `clean` task ensures all files are removed from the `dist/` directory
+    // so that no files linger from previous builds.
+    clean: [ "dist/" ],
+
     // The `jsdoc` task will produce the code documentation for the whole project.
     jsdoc: {
       dist: {
