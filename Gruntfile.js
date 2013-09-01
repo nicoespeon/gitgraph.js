@@ -75,4 +75,12 @@ module.exports = function ( grunt ) {
   // Loads grunt tasks from `package.json`
   require( "load-grunt-tasks" )( grunt, [ "grunt-*" ] );
 
+  // `grunt lint` will check code by running JSHint and unit tests over it.
+  grunt.registerTask( "lint", [ "jshint", "jasmine" ] );
+
+  // `grunt docs` will create non-versioned documentation for development use.
+  grunt.registerTask( "docs", [ "jsdoc:dist" ] );
+
+  // `grunt release` will create a new release of the source code.
+  grunt.registerTask( "release", [ "clean", "lint", "uglify", "jsdoc:release" ] );
 };
