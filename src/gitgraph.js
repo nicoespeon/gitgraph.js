@@ -20,7 +20,9 @@ function GitGraph(options) {
     options.author : "Sergio Flores <saxo-guy@epic.com>";
 
   // Template gestion
-  if (typeof options.template === "string") options.template =  new Template().get(options.template);
+  if (typeof options.template === "string") {
+    options.template =  new Template().get(options.template);
+  }
   this.template = (options.template instanceof Template) ?
     options.template : new Template();
 
@@ -108,10 +110,14 @@ GitGraph.prototype.render = function () {
   this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2);
 
   // Translate for inverse orientation
-  if (this.template.commit.spacingY > 0)
+  if (this.template.commit.spacingY > 0) {
     this.context.translate(0, this.canvas.height - this.template.commit.dot.size * 3);
-  if (this.template.commit.spacingX > 0)
+  }
+
+  if (this.template.commit.spacingX > 0) {
     this.context.translate(this.canvas.width - this.template.commit.dot.size * 3, 0);
+  }
+
   // Render
   for (var i = this.branchs.length - 1, branch; branch = this.branchs[i]; i--) {
     branch.updateSize();
@@ -140,7 +146,9 @@ GitGraph.prototype.render = function () {
  **/
 function Branch(options) {
   // Check integrity
-  if (options.parent instanceof GitGraph === false) return;
+  if (options.parent instanceof GitGraph === false) {
+    return;
+  }
 
   // Options
   options = (typeof options === "object") ? options : {};
@@ -184,7 +192,7 @@ Branch.prototype.render = function () {
   if (this.parentBranch) {
     this.context.beginPath();
     this.context.moveTo(this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
-    if (this.template.branch.mergeStyle == "bezier") {
+    if (this.template.branch.mergeStyle === "bezier") {
       this.context.bezierCurveTo(
         this.parentBranch.offsetX + this.originX + this.template.commit.spacingX / 2, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY / 2,
         this.offsetX + this.originX + this.template.commit.spacingX / 2, this.offsetY + this.originY + this.template.commit.spacingY / 2,
@@ -237,7 +245,9 @@ Branch.prototype.render = function () {
  **/
 Branch.prototype.commit = function (options) {
   // Check integrity
-  if (this.targetBranch) return;
+  if (this.targetBranch) {
+    return;
+  }
 
   // Options
   if (typeof (options) === "string") {
@@ -245,7 +255,9 @@ Branch.prototype.commit = function (options) {
     options = {};
     options.message = message;
   }
-  if (typeof (options) !== "object") options = {};
+  if (typeof (options) !== "object") {
+    options = {};
+  }
 
   options.parent = this.parent;
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
@@ -272,7 +284,9 @@ Branch.prototype.commit = function (options) {
  **/
 Branch.prototype.checkout = function () {
   // Check integrity
-  if (this.targetBranch) return;
+  if (this.targetBranch) {
+    return;
+  }
 
   this.parent.HEAD = this;
 };
@@ -286,7 +300,9 @@ Branch.prototype.checkout = function () {
  **/
 Branch.prototype.merge = function (target, mergeCommit) {
   // Check if this branch is allready merged
-  if (this.targetBranch instanceof Branch === true) return;
+  if (this.targetBranch instanceof Branch === true) {
+    return;
+  }
 
   // Merge
   this.targetBranch = target || this.parent.HEAD;
@@ -342,8 +358,9 @@ Branch.prototype.updateSize = function () {
 Branch.prototype.calculColumn = function () {
   for (var i = 0, branch; branch = this.parent.branchs[i]; i++) {
     branch.updateSize();
-    if (branch.originY - branch.size <= this.originY)
+    if (branch.originY - branch.size <= this.originY) {
       this.column++;
+    }
   }
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
 };
@@ -379,7 +396,9 @@ Branch.prototype.calculColumn = function () {
  **/
 function Commit(options) {
   // Check integrity
-  if (options.parent instanceof GitGraph === false) return;
+  if (options.parent instanceof GitGraph === false) {
+    return;
+  }
 
   // Options
   options = (typeof options === "object") ? options : {};
@@ -413,7 +432,9 @@ Commit.prototype.render = function () {
   this.context.fillStyle = this.dotColor;
   this.context.strokeStyle = this.dotStrokeColor;
   this.context.lineWidth = this.dotStrokeWidth;
-  if (typeof (this.dotStrokeWidth) == "number") this.context.stroke();
+  if (typeof (this.dotStrokeWidth) === "number") {
+    this.context.stroke();
+  }
   this.context.fill();
   this.context.closePath();
 
