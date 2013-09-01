@@ -54,7 +54,7 @@ function GitGraph(options) {
  **/
 GitGraph.prototype.branch = function (options) {
   // Options
-  if (typeof (options) == "string") {
+  if (typeof (options) === "string") {
     var name = options;
     options = {};
     options.name = name;
@@ -265,7 +265,7 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX - this.parent.commitOffsetX;
   options.y = this.offsetY - this.parent.commitOffsetY;
-  options.arrowDisplay = (this.commits.length === 0 || options.type == "mergeCommit") ? false : this.template.arrow.active;
+  options.arrowDisplay = (this.commits.length === 0 || options.type === "mergeCommit") ? false : this.template.arrow.active;
 
   var commit = new Commit(options);
   this.commits.push(commit);
@@ -318,7 +318,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
   this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
 
   // Optionnal Merge commit
-  mergeCommit = (typeof mergeCommit == "boolean") ? mergeCommit : this.template.branch.mergeCommit;
+  mergeCommit = (typeof mergeCommit === "boolean") ? mergeCommit : this.template.branch.mergeCommit;
   if (mergeCommit) {
     this.targetBranch.commit({
       message: "Merge branch '" + this.name + "' into " + this.targetBranch.name,
@@ -577,7 +577,7 @@ function Template(options) {
   this.arrow = {};
   this.arrow.size = options.arrow.size || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
-  this.arrow.active = typeof (this.arrow.size) == "number";
+  this.arrow.active = typeof (this.arrow.size) === "number";
   this.arrow.offsetX = options.arrow.offsetX || null;
   this.arrow.offsetY = options.arrow.offsetY || 2;
 
