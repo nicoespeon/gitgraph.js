@@ -12,21 +12,21 @@
  **/
 function GitGraph(options) {
   // Options
-  options = (typeof options === 'object') ?
+  options = (typeof options === "object") ?
     options : {};
-  this.elementId = (typeof options.elementId === 'string') ?
+  this.elementId = (typeof options.elementId === "string") ?
     options.elementId : "gitGraph";
-  this.author = (typeof options.author === 'string') ?
-    options.author : 'Sergio Flores <saxo-guy@epic.com>';
+  this.author = (typeof options.author === "string") ?
+    options.author : "Sergio Flores <saxo-guy@epic.com>";
 
   // Template gestion
-  if (typeof options.template === 'string') options.template =  new Template().get(options.template);
+  if (typeof options.template === "string") options.template =  new Template().get(options.template);
   this.template = (options.template instanceof Template) ?
     options.template : new Template();
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
-  this.context = this.canvas.getContext('2d');
+  this.context = this.canvas.getContext("2d");
 
   // Navigations vars
   this.HEAD = null;
@@ -38,9 +38,9 @@ function GitGraph(options) {
   this.commitOffsetY = 0;
 
   // Error: no render()
-  this.context.fillStyle = 'red';
-  this.context.font = 'bold 15pt Calibri';
-  this.context.fillText('Error: No render() at the end', 150, 100);
+  this.context.fillStyle = "red";
+  this.context.font = "bold 15pt Calibri";
+  this.context.fillText("Error: No render() at the end", 150, 100);
 }
 
 /**
@@ -52,13 +52,13 @@ function GitGraph(options) {
  **/
 GitGraph.prototype.branch = function (options) {
   // Options
-  if (typeof (options) == 'string') {
+  if (typeof (options) == "string") {
     var name = options;
     options = {};
     options.name = name;
   }
 
-  options = (typeof options === 'object') ? options : {};
+  options = (typeof options === "object") ? options : {};
   options.parent = this;
   options.parentBranch = options.parentBranch || this.HEAD;
 
@@ -143,12 +143,12 @@ function Branch(options) {
   if (options.parent instanceof GitGraph === false) return;
 
   // Options
-  options = (typeof options === 'object') ? options : {};
+  options = (typeof options === "object") ? options : {};
   this.parent = options.parent;
   this.parentBranch = options.parentBranch;
-  this.originX = (typeof options.originX === 'number') ? options.originX : 0;
-  this.originY = (typeof options.originY === 'number') ? options.originY : 0;
-  this.name = (typeof options.name === 'string') ? options.name : "no-name";
+  this.originX = (typeof options.originX === "number") ? options.originX : 0;
+  this.originY = (typeof options.originY === "number") ? options.originY : 0;
+  this.name = (typeof options.name === "string") ? options.name : "no-name";
   this.targetBranch = null;
   this.context = this.parent.context;
   this.template = this.parent.template;
@@ -184,7 +184,7 @@ Branch.prototype.render = function () {
   if (this.parentBranch) {
     this.context.beginPath();
     this.context.moveTo(this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
-    if (this.template.branch.mergeStyle == 'bezier') {
+    if (this.template.branch.mergeStyle == "bezier") {
       this.context.bezierCurveTo(
         this.parentBranch.offsetX + this.originX + this.template.commit.spacingX / 2, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY / 2,
         this.offsetX + this.originX + this.template.commit.spacingX / 2, this.offsetY + this.originY + this.template.commit.spacingY / 2,
@@ -209,7 +209,7 @@ Branch.prototype.render = function () {
 
   // Merge part
   if (this.targetBranch) {
-    if (this.template.branch.mergeStyle === 'bezier') {
+    if (this.template.branch.mergeStyle === "bezier") {
       this.context.bezierCurveTo(
         this.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
         this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
@@ -240,12 +240,12 @@ Branch.prototype.commit = function (options) {
   if (this.targetBranch) return;
 
   // Options
-  if (typeof (options) === 'string') {
+  if (typeof (options) === "string") {
     var message = options;
     options = {};
     options.message = message;
   }
-  if (typeof (options) !== 'object') options = {};
+  if (typeof (options) !== "object") options = {};
 
   options.parent = this.parent;
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
@@ -253,7 +253,7 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX - this.parent.commitOffsetX;
   options.y = this.offsetY - this.parent.commitOffsetY;
-  options.arrowDisplay = (this.commits.length === 0 || options.type == 'mergeCommit') ? false : this.template.arrow.active;
+  options.arrowDisplay = (this.commits.length === 0 || options.type == "mergeCommit") ? false : this.template.arrow.active;
 
   var commit = new Commit(options);
   this.commits.push(commit);
@@ -302,11 +302,11 @@ Branch.prototype.merge = function (target, mergeCommit) {
   this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
 
   // Optionnal Merge commit
-  mergeCommit = (typeof mergeCommit == 'boolean') ? mergeCommit : this.template.branch.mergeCommit;
+  mergeCommit = (typeof mergeCommit == "boolean") ? mergeCommit : this.template.branch.mergeCommit;
   if (mergeCommit) {
     this.targetBranch.commit({
       message: "Merge branch '" + this.name + "' into " + this.targetBranch.name,
-      type: 'mergeCommit'
+      type: "mergeCommit"
     });
   }
 
@@ -382,7 +382,7 @@ function Commit(options) {
   if (options.parent instanceof GitGraph === false) return;
 
   // Options
-  options = (typeof options === 'object') ? options : {};
+  options = (typeof options === "object") ? options : {};
   this.parent = options.parent;
   this.template = this.parent.template;
   this.context = this.parent.context;
@@ -413,7 +413,7 @@ Commit.prototype.render = function () {
   this.context.fillStyle = this.dotColor;
   this.context.strokeStyle = this.dotStrokeColor;
   this.context.lineWidth = this.dotStrokeWidth;
-  if (typeof (this.dotStrokeWidth) == 'number') this.context.stroke();
+  if (typeof (this.dotStrokeWidth) == "number") this.context.stroke();
   this.context.fill();
   this.context.closePath();
 
@@ -428,7 +428,7 @@ Commit.prototype.render = function () {
 
   // Message
   if (this.messageDisplay) {
-    var message = this.sha1 + ' ' + this.message + ' - ' + this.author;
+    var message = this.sha1 + " " + this.message + " - " + this.author;
     this.context.font = this.template.commit.message.font;
     this.context.fillStyle = this.messageColor;
     this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.spacingX, this.y + 3);
@@ -460,7 +460,7 @@ Commit.prototype.render = function () {
  **/
 function Arrow(options) {
   // Options
-  options = (typeof options === 'object') ? options : {};
+  options = (typeof options === "object") ? options : {};
   this.parent = options.parent;
   this.context = this.parent.context;
   this.template = this.parent.template;
@@ -515,7 +515,7 @@ function Arrow(options) {
  * @param {Number} [options.arrow.size] - Arrow size
  * @param {String} [options.branch.color] - Branch color
  * @param {Number} [options.branch.linewidth] - Branch line width
- * @param {String} [options.branch.mergeStyle = ('bezier'|'straight')] - Branch merge style
+ * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
  * @param {Boolean} [options.branch.mergeCommit] - Do a commit on merge
  * @param {Number} [options.branch.spacingX] - Space between branchs
  * @param {Number} [options.branch.spacingY] - Space between branchs
@@ -528,13 +528,13 @@ function Arrow(options) {
  * @param {Number} [options.commit.dot.strokeColor] - Commit dot stroke color
  * @param {String} [options.commit.message.color] - Commit message color
  * @param {Boolean} [options.commit.message.display] - Commit display policy
- * @param {String} [options.commit.message.font = 'normal 12pt Calibri'] - Commit message font
+ * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
  *
  * @this Template
  **/
 function Template(options) {
   // Options
-  options = (typeof options === 'object') ? options : {};
+  options = (typeof options === "object") ? options : {};
   options.branch = options.branch || {};
   options.arrow = options.arrow || {};
   options.commit = options.commit || {};
@@ -547,23 +547,23 @@ function Template(options) {
   this.branch = {};
   this.branch.color = options.branch.color || null; // Only one color
   this.branch.lineWidth = options.branch.lineWidth || 2;
-  this.branch.mergeStyle = options.branch.mergeStyle || 'bezier'; // 'bezier' | 'straight'
-  this.branch.mergeCommit = (typeof options.branch.mergeCommit === 'boolean') ? options.branch.mergeCommit : true;
-  this.branch.spacingX = (typeof options.branch.spacingX === 'number') ? options.branch.spacingX : 20; // Space between branchs
+  this.branch.mergeStyle = options.branch.mergeStyle || "bezier"; // "bezier" | "straight"
+  this.branch.mergeCommit = (typeof options.branch.mergeCommit === "boolean") ? options.branch.mergeCommit : true;
+  this.branch.spacingX = (typeof options.branch.spacingX === "number") ? options.branch.spacingX : 20; // Space between branchs
   this.branch.spacingY = options.branch.spacingY || 0; // Space between branchs
 
   // Arrow style
   this.arrow = {};
   this.arrow.size = options.arrow.size || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
-  this.arrow.active = typeof (this.arrow.size) == 'number';
+  this.arrow.active = typeof (this.arrow.size) == "number";
   this.arrow.offsetX = options.arrow.offsetX || null;
   this.arrow.offsetY = options.arrow.offsetY || 2;
 
   // Commit style
   this.commit = {};
   this.commit.spacingX = options.commit.spacingX || 0;
-  this.commit.spacingY = (typeof options.commit.spacingY === 'number') ? options.commit.spacingY : 25;
+  this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
   this.commit.color = options.commit.color || null; // Only one color, if null message takes branch color (full commit)
 
   this.commit.dot = {};
@@ -573,9 +573,9 @@ function Template(options) {
   this.commit.dot.strokeColor = options.commit.dot.strokeColor || null;
 
   this.commit.message = {};
-  this.commit.message.display = (typeof options.commit.message.display === 'boolean') ? options.commit.message.display : true;
+  this.commit.message.display = (typeof options.commit.message.display === "boolean") ? options.commit.message.display : true;
   this.commit.message.color = options.commit.message.color || null; // Only one color, if null message takes commit color (only message)
-  this.commit.message.font = options.commit.message.font || 'normal 12pt Calibri';
+  this.commit.message.font = options.commit.message.font || "normal 12pt Calibri";
 }
 
 /**
@@ -587,23 +587,23 @@ function Template(options) {
  **/
 Template.prototype.get = function (name) {
   switch (name) {
-  case 'blackarrow':
+  case "blackarrow":
     return new Template({
       branch: {
-        color: '#000000',
+        color: "#000000",
         lineWidth: 4,
         spacingX: 50,
-        mergeStyle: 'straight'
+        mergeStyle: "straight"
       },
       commit: {
         spacingY: -60,
         dot: {
           size: 12,
-          strokeColor: '#000000',
+          strokeColor: "#000000",
           strokeWidth: 7
         },
         message: {
-          color: 'black'
+          color: "black"
         }
       },
       arrow: {
@@ -612,9 +612,9 @@ Template.prototype.get = function (name) {
       }
     });
 
-  case 'metro':
+  case "metro":
     return new Template({
-      colors: ['#979797', '#008fb5', 'f1c109'],
+      colors: ["#979797", "#008fb5", "f1c109"],
       branch: {
         lineWidth: 10,
         spacingX: 50
@@ -625,7 +625,7 @@ Template.prototype.get = function (name) {
           size: 14
         },
         message: {
-          font: 'normal 14pt Arial',
+          font: "normal 14pt Arial",
         }
       },
     });
