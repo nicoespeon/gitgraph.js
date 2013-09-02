@@ -17,6 +17,37 @@ Please have a look at [the Issue Guidelines](https://github.com/necolas/issue-gu
 
 The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
 
+## Contributing
+
+Editor preferences are available in [the editor config](https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
+
+The project uses [Grunt](http://gruntjs.com) with convenient methods for our workflow. It's how we lint our code, run tests, generate documentation, etc. To use it, install the required dependencies as directed and then run the following Grunt commands.
+
+### Install Grunt
+
+From the command line:
+
+- Install `grunt-cli` globally with `npm install -g grunt-cli`.
+- Install [the necessary local dependencies](https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig) with `npm install`.
+
+When completed, you'll be able to run the various Grunt commands provided from the command line.
+
+[> Need more information about how to get started with Grunt?](http://gruntjs.com/getting-started)
+
+### Available Grunt commands
+
+#### lint code - `grunt lint`
+
+Check source code against [JSHint](http://www.jshint.com/) then runs unit tests with [Jasmine](http://pivotal.github.io/jasmine/).
+
+#### generate documentation - `grunt docs`
+
+Generate source code documentation into `dist/docs` (not versioned) with [JSDoc](http://usejsdoc.org/).
+
+#### compile a new release - `grunt release`
+
+Clean `dist/` directory, lint code, output the minified release into `dist/js/gitgraph.min.js` and generate the official documentation into `docs/`.
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) as a guideline for our versioning here.
