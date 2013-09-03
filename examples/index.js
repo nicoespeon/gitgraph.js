@@ -34,7 +34,7 @@ master.commit(); // Default commit on master (you can see the new author)
 master.checkout(); // Checkout on master branch
 dev.merge(); // Merge dev into HEAD (master) (automatic merge commit)
 test.commit("Final commit");
-test.merge(null, false); // Merge into HEAD without merge commit
+test.merge(master, "My special merge commit message"); // Merge into HEAD with special merge commit message
 
 test.commit("error"); // Error: You can't commit on merged branch
 

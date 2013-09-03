@@ -317,14 +317,13 @@ Branch.prototype.merge = function (target, mergeCommit) {
   this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
   this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
 
-  // Optionnal Merge commit
-  mergeCommit = (typeof mergeCommit === "boolean") ? mergeCommit : this.template.branch.mergeCommit;
-  if (mergeCommit) {
-    this.targetBranch.commit({
-      message: "Merge branch '" + this.name + "' into " + this.targetBranch.name,
-      type: "mergeCommit"
-    });
-  }
+  // Merge commit
+  mergeCommit = (typeof mergeCommit === "string") ?
+    mergeCommit : "Merge branch `" + this.name + "` into `" + this.targetBranch.name + "`";
+  this.targetBranch.commit({
+    message: mergeCommit,
+    type: "mergeCommit"
+  });
 
   // Checkout on target
   this.parent.HEAD = this.targetBranch;
