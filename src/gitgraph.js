@@ -4,9 +4,9 @@
  * @constructor
  *
  * @param {Object} options - GitGraph options
- * @param {String} [options.elementId = 'gitGraph'] - Id of <canvas> container
- * @param {Template} [options.template] - Template, default template if nothing here
- * @param {String} [options.author = 'Sergio Flores <saxo-guy@epic.com>'] - Default author for commits
+ * @param {String} [options.elementId = "gitGraph"] - Id of the canvas container
+ * @param {Template} [options.template] - Template of the graph
+ * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
  *
  * @this GitGraph
  **/
@@ -19,7 +19,7 @@ function GitGraph(options) {
   this.author = (typeof options.author === "string") ?
     options.author : "Sergio Flores <saxo-guy@epic.com>";
 
-  // Template gestion
+  // Template management
   if (typeof options.template === "string") {
     options.template =  new Template().get(options.template);
   }
@@ -66,8 +66,9 @@ GitGraph.prototype.branch = function (options) {
 
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
-    options.originX = options.parentBranch.commits[options.parentBranch.commits.length - 1].x - this.template.commit.spacingX - options.parentBranch.offsetX;
-    options.originY = options.parentBranch.commits[options.parentBranch.commits.length - 1].y - this.template.commit.spacingY - options.parentBranch.offsetY;
+    var lastCommit = options.parentBranch.commits[options.parentBranch.commits.length - 1];
+    options.originX = lastCommit.x - this.template.commit.spacingX - options.parentBranch.offsetX;
+    options.originY = lastCommit.y - this.template.commit.spacingY - options.parentBranch.offsetY;
   }
 
   // Add branch
@@ -645,7 +646,7 @@ Template.prototype.get = function (name) {
         message: {
           font: "normal 14pt Arial",
         }
-      },
+      }
     });
   }
 };
