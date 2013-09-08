@@ -1,4 +1,4 @@
-gitgraph.js [![devDependency Status](https://david-dm.org/twbs/bootstrap/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
+gitgraph.js [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js) [![devDependency Status](https://david-dm.org/twbs/bootstrap/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
 ===========
 
 A JavaScript library to draw pretty git graphs in the browser.
