@@ -44,9 +44,13 @@ Check source code against [JSHint](http://www.jshint.com/) then runs unit tests 
 
 Generate source code documentation into `dist/docs` (not versioned) with [JSDoc](http://usejsdoc.org/).
 
+#### compile a non-versioned release - `grunt dist`
+
+Clean `dist/` directory, lint code, output the minified release into `dist/gitgraph.min.js` and generate the documentation into `dist/docs/`.
+
 #### compile a new release - `grunt release`
 
-Clean `dist/` directory, lint code, output the minified release into `dist/js/gitgraph.min.js` and generate the official documentation into `docs/`.
+Lint code, output the source and minified releases into `build/` and generate the official documentation into `docs/`.
 
 ## Versioning
 
