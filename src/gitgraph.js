@@ -119,7 +119,7 @@ GitGraph.prototype.render = function () {
   }
 
   // Render
-  for (var i = this.branchs.length - 1, branch; branch = this.branchs[i]; i--) {
+  for (var i = this.branchs.length - 1, branch; !!(branch = this.branchs[i]); i--) {
     branch.updateSize();
     branch.render();
   }
@@ -231,7 +231,7 @@ Branch.prototype.render = function () {
   }
 
   // Commits part
-  for (var i = 0, commit; commit = this.commits[i]; i++) {
+  for (var i = 0, commit; !!(commit = this.commits[i]); i++) {
     commit.render();
   }
 };
@@ -355,7 +355,7 @@ Branch.prototype.updateSize = function () {
  * @this Branch
  **/
 Branch.prototype.calculColumn = function () {
-  for (var i = 0, branch; branch = this.parent.branchs[i]; i++) {
+  for (var i = 0, branch; !!(branch = this.parent.branchs[i]); i++) {
     branch.updateSize();
     if (branch.originY - branch.size <= this.originY) {
       this.column++;
