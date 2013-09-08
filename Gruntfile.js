@@ -76,9 +76,19 @@ module.exports = function ( grunt ) {
       options: {
         banner: "<%= banner %>"
       },
-      gitgraph: {
+      dist: {
         src: [ "src/gitgraph.js" ],
-        dest: "dist/js/gitgraph.min.js"
+        dest: "dist/gitgraph.min.js",
+        options: {
+          report: "min"
+        }
+      },
+      release: {
+        src: [ "src/gitgraph.js" ],
+        dest: "build/gitgraph.min.js",
+        options: {
+          report: "min"
+        }
       }
     }
 
@@ -94,5 +104,10 @@ module.exports = function ( grunt ) {
   grunt.registerTask( "docs", [ "jsdoc:dist" ] );
 
   // `grunt release` will create a new release of the source code.
-  grunt.registerTask( "release", [ "clean", "lint", "uglify", "jsdoc:release" ] );
+  grunt.registerTask( "release", [
+    "lint",
+    "concat:release",
+    "uglify:release",
+    "jsdoc:release"
+  ] );
 };
