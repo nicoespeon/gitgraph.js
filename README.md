@@ -1,12 +1,85 @@
-gitgraph.js
+gitgraph.js [![devDependency Status](https://david-dm.org/twbs/bootstrap/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
 ===========
 
 A JavaScript library to draw pretty git graphs in the browser.
 
+## How to start
+
+The project is not stable so far but you still can download [the latest release](https://github.com/nicoespeon/gitgraph.js/releases/tag/v0.2.0).
+
+## Report a bug / Ask for a feature
+
+You found some nasty bug or have a cool feature request? [Just open a new issue](https://github.com/nicoespeon/gitgraph.js/issues).
+
+Please have a look at [the Issue Guidelines](https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md) from [Nicolas Gallagher](https://github.com/necolas) before doing so.
+
 ## Documentation
 
-The JavaScript source code is documented with [JSDoc](http://en.wikipedia.org/wiki/JSDoc).
+The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
+
+## Contributing
+
+Editor preferences are available in [the editor config](https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
+
+The project uses [Grunt](http://gruntjs.com) with convenient methods for our workflow. It's how we lint our code, run tests, generate documentation, etc. To use it, install the required dependencies as directed and then run the following Grunt commands.
+
+### Install Grunt
+
+From the command line:
+
+- Install `grunt-cli` globally with `npm install -g grunt-cli`.
+- Install [the necessary local dependencies](https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig) with `npm install`.
+
+When completed, you'll be able to run the various Grunt commands provided from the command line.
+
+[> Need more information about how to get started with Grunt?](http://gruntjs.com/getting-started)
+
+### Available Grunt commands
+
+#### lint code - `grunt lint`
+
+Check source code against [JSHint](http://www.jshint.com/) then runs unit tests with [Jasmine](http://pivotal.github.io/jasmine/).
+
+#### generate documentation - `grunt docs`
+
+Generate source code documentation into `dist/docs` (not versioned) with [JSDoc](http://usejsdoc.org/).
+
+#### compile a new release - `grunt release`
+
+Clean `dist/` directory, lint code, output the minified release into `dist/js/gitgraph.min.js` and generate the official documentation into `docs/`.
 
 ## Versioning
 
 We use [SemVer](http://semver.org/) as a guideline for our versioning here.
+
+### What does that mean?
+
+Releases will be numbered with the following format:
+
+```
+<major>.<minor>.<patch>
+```
+
+And constructed with the following guidelines:
+
+- Breaking backward compatibility bumps the `<major>` (and resets the `<minor>` and `<patch>`)
+- New additions without breaking backward compatibility bumps the `<minor>` (and resets the `<patch>`)
+- Bug fixes and misc. changes bumps the `<patch>`
+
+### Development version
+
+Please note that until we pass `v1.0.0` we are in **development version**.
+
+That means you're using this code at your own risk until then, but we already love you =)
+
+## Authors and contributors
+
+**Nicolas Carlo** - [@nicoespeon](https://twitter.com/nicoespeon) } <http://nicoespeon.com>
+
+**Fabien Bernard** - [@fabien0102](https://twitter.com/fabien0102)
+
+## Copyright and License
+
+Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under [the MIT license](https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md).
+
+[> What does that mean?](http://choosealicense.com/licenses/mit/)
