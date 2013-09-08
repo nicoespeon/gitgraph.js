@@ -23,6 +23,18 @@ module.exports = function ( grunt ) {
     // so that no files linger from previous builds.
     clean: [ "dist/" ],
 
+    // The `concat` task copies the source file into the `build/` directory with
+    // the compiled banner for release use.
+    concat: {
+      options: {
+        banner: "<%= banner %>\n"
+      },
+      release: {
+        src: [ "src/gitgraph.js" ],
+        dest: "build/gitgraph.js"
+      }
+    },
+
     // The `jsdoc` task will produce the code documentation for the whole project.
     jsdoc: {
       dist: {
@@ -64,9 +76,19 @@ module.exports = function ( grunt ) {
       options: {
         banner: "<%= banner %>"
       },
-      gitgraph: {
+      dist: {
         src: [ "src/gitgraph.js" ],
-        dest: "dist/js/gitgraph.min.js"
+        dest: "dist/gitgraph.min.js",
+        options: {
+          report: "min"
+        }
+      },
+      release: {
+        src: [ "src/gitgraph.js" ],
+        dest: "build/gitgraph.min.js",
+        options: {
+          report: "min"
+        }
       }
     }
 
@@ -81,6 +103,19 @@ module.exports = function ( grunt ) {
   // `grunt docs` will create non-versioned documentation for development use.
   grunt.registerTask( "docs", [ "jsdoc:dist" ] );
 
+  // `grunt dist` will create a non-versioned new release for development use.
+  grunt.registerTask( "dist", [
+    "clean",
+    "lint",
+    "uglify:dist",
+    "jsdoc:dist"
+  ] );
+
   // `grunt release` will create a new release of the source code.
-  grunt.registerTask( "release", [ "clean", "lint", "uglify", "jsdoc:release" ] );
+  grunt.registerTask( "release", [
+    "lint",
+    "concat:release",
+    "uglify:release",
+    "jsdoc:release"
+  ] );
 };
