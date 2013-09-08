@@ -295,7 +295,7 @@ Branch.prototype.checkout = function () {
  * Merge branch
  *
  * @param {Branch} [target = this.parent.HEAD]
- * @param {boolean} [mergeCommit = this.template.branch.mergeCommit]
+ * @param {string} [mergeCommit]
  * @this Branch
  **/
 Branch.prototype.merge = function (target, mergeCommit) {
@@ -536,7 +536,6 @@ function Arrow(options) {
  * @param {String} [options.branch.color] - Branch color
  * @param {Number} [options.branch.linewidth] - Branch line width
  * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
- * @param {Boolean} [options.branch.mergeCommit] - Do a commit on merge
  * @param {Number} [options.branch.spacingX] - Space between branchs
  * @param {Number} [options.branch.spacingY] - Space between branchs
  * @param {Number} [options.commit.spacingX] - Space between commits
@@ -568,7 +567,6 @@ function Template(options) {
   this.branch.color = options.branch.color || null; // Only one color
   this.branch.lineWidth = options.branch.lineWidth || 2;
   this.branch.mergeStyle = options.branch.mergeStyle || "bezier"; // "bezier" | "straight"
-  this.branch.mergeCommit = (typeof options.branch.mergeCommit === "boolean") ? options.branch.mergeCommit : true;
   this.branch.spacingX = (typeof options.branch.spacingX === "number") ? options.branch.spacingX : 20; // Space between branchs
   this.branch.spacingY = options.branch.spacingY || 0; // Space between branchs
 
