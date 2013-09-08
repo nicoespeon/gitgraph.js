@@ -23,6 +23,18 @@ module.exports = function ( grunt ) {
     // so that no files linger from previous builds.
     clean: [ "dist/" ],
 
+    // The `concat` task copies the source file into the `build/` directory with
+    // the compiled banner for release use.
+    concat: {
+      options: {
+        banner: "<%= banner %>\n"
+      },
+      release: {
+        src: [ "src/gitgraph.js" ],
+        dest: "build/gitgraph.js"
+      }
+    },
+
     // The `jsdoc` task will produce the code documentation for the whole project.
     jsdoc: {
       dist: {
