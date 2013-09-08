@@ -29,6 +29,6 @@
   },
   "scripts": {
     "test": "grunt release"
-    },
+  },
   "license": "MIT"
 }
