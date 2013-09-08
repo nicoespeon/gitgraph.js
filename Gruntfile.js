@@ -103,6 +103,14 @@ module.exports = function ( grunt ) {
   // `grunt docs` will create non-versioned documentation for development use.
   grunt.registerTask( "docs", [ "jsdoc:dist" ] );
 
+  // `grunt dist` will create a non-versioned new release for development use.
+  grunt.registerTask( "dist", [
+    "clean",
+    "lint",
+    "uglify:dist",
+    "jsdoc:dist"
+  ] );
+
   // `grunt release` will create a new release of the source code.
   grunt.registerTask( "release", [
     "lint",
