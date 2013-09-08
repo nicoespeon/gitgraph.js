@@ -27,5 +27,8 @@
     "grunt-jsdoc": "~0.4.0",
     "load-grunt-tasks": "~0.1.0"
   },
+  "scripts": {
+    "test": "grunt release"
+    },
   "license": "MIT"
 }
