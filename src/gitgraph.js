@@ -141,7 +141,7 @@ GitGraph.prototype.render = function () {
  * @param {Number} [options.originX] - Branch origin X
  * @param {Number} [options.originY] - Branch origin Y
  * @param {Branch} [options.parentBranch] - Parent branch
- * @param {String} [options.name = 'no-name'] - Branch name
+ * @param {String} [options.name = "no-name"] - Branch name
  *
  * @this Branch
  **/
@@ -389,7 +389,7 @@ Branch.prototype.calculColumn = function () {
  * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
  * @param {String} [options.messageColor = options.color] - Specific message color
  * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
- * @param {String} [options.type = ('mergeCommit'|null)] - Type of commit
+ * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
  *
  * @this Commit
  **/
@@ -502,7 +502,7 @@ function Arrow(options) {
                        this.commit.branch.offsetX + this.commit.branch.originX - this.commit.x);
   }
   // Merge case
-  if (this.commit.type === 'mergeCommit') {
+  if (this.commit.type === "mergeCommit") {
     alpha = Math.atan2(this.template.branch.spacingY * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingY,
                        this.template.branch.spacingX * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingX);
   }
