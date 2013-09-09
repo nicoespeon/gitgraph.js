@@ -30,7 +30,7 @@ function GitGraph(options) {
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext("2d");
 
-  // Navigations vars
+  // Navigation vars
   this.HEAD = null;
   this.branchs = [];
 
@@ -54,7 +54,7 @@ function GitGraph(options) {
  **/
 GitGraph.prototype.branch = function (options) {
   // Options
-  if (typeof (options) === "string") {
+  if (typeof options === "string") {
     var name = options;
     options = {};
     options.name = name;
@@ -245,7 +245,7 @@ Branch.prototype.render = function () {
  * @this Branch
  **/
 Branch.prototype.commit = function (options) {
-  // Check integrity
+  // Check integrity : TO DELETE FOR MULTIPLE MERGE FEATURE
   if (this.targetBranch) {
     return;
   }
@@ -266,7 +266,14 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX - this.parent.commitOffsetX;
   options.y = this.offsetY - this.parent.commitOffsetY;
-  options.arrowDisplay = (this.commits.length === 0 || options.type === "mergeCommit") ? false : this.template.arrow.active;
+  options.arrowDisplay = this.template.arrow.active;
+  options.parentCommit = options.parentCommit || this.commits[this.commits.length - 1];
+  options.branch = this;
+  
+  // Fork case : Parent commit from parent branch
+  if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
+    options.parentCommit = this.parentBranch.commits[this.parentBranch.commits.length - 1];
+  }
 
   var commit = new Commit(options);
   this.commits.push(commit);
@@ -323,7 +330,8 @@ Branch.prototype.merge = function (target, mergeCommit) {
     mergeCommit : "Merge branch `" + this.name + "` into `" + this.targetBranch.name + "`";
   this.targetBranch.commit({
     message: mergeCommit,
-    type: "mergeCommit"
+    type: "mergeCommit",
+    parentCommit: this.commits[this.commits.length - 1]
   });
 
   // Checkout on target
@@ -388,6 +396,7 @@ Branch.prototype.calculColumn = function () {
  * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
  * @param {Number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
  * @param {Number} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
+ * @param {Commit} [options.parentCommit] - Parent commit
  * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
  * @param {String} [options.messageColor = options.color] - Specific message color
  * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
@@ -405,6 +414,7 @@ function Commit(options) {
   this.parent = options.parent;
   this.template = this.parent.template;
   this.context = this.parent.context;
+  this.branch = options.branch;
   this.author = options.author || this.parent.author;
   this.date = options.date || new Date().toUTCString();
   this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
@@ -416,6 +426,7 @@ function Commit(options) {
   this.dotSize = options.dotSize || this.template.commit.dot.size;
   this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
   this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor;
+  this.parentCommit = options.parentCommit;
   this.x = options.x;
   this.y = options.y;
 }
@@ -439,11 +450,9 @@ Commit.prototype.render = function () {
   this.context.closePath();
 
   // Arrow
-  if (this.arrowDisplay) {
+  if (this.arrowDisplay && this.parentCommit instanceof Commit) {
     this.arrow = new Arrow({
-      parent: this.parent,
-      x: this.x,
-      y: this.y
+      commit: this
     });
   }
 
@@ -467,31 +476,51 @@ Commit.prototype.render = function () {
  * @constructor
  *
  * @param {Object} options - Arrow Options
- * @param {GitGraph} options.parent - GitGraph constructor
- * @param {Number} options.x - Position X
- * @param {Number} options.y - Position Y
+ * @param {Commit} options.commit - Commit constructor
  * @param {String} [options.color = this.template.color] - Arrow color
  * @param {Number} [options.height = this.template.height] - Arrow height
  * @param {Number} [options.width = this.template.width] - Arrow width
  * @param {Number} [options.rotation] - Arrow rotation : 1 => up, -1 =>down
- *
- * @todo Implement rotation
  *
  * @this Arrow
  **/
 function Arrow(options) {
   // Options
   options = (typeof options === "object") ? options : {};
-  this.parent = options.parent;
+  this.commit = options.commit;
+  this.parent = this.commit.parent;
   this.context = this.parent.context;
   this.template = this.parent.template;
   this.size = options.size || this.template.arrow.size;
   this.color = options.color || this.template.arrow.color;
-  this.x = options.x + this.template.arrow.offsetX;
-  this.y = options.y + this.template.arrow.offsetY;
+  this.x = this.commit.x + this.template.arrow.offsetX;
+  this.y = this.commit.y + this.template.arrow.offsetY;
 
+  // Commit number
+  var commitNumber = typeof(this.commit.y / this.parent.template.commit.spacingY) === "number" ? this.commit.y / this.parent.template.commit.spacingY : this.commit.x / this.parent.template.commit.spacingX;
+  
+  var parentCommitNumber = typeof(this.commit.parentCommit.y / this.parent.template.commit.spacingY) === "number" ? this.commit.parentCommit.y / this.parent.template.commit.spacingY : this.commit.parentCommit.x / this.parent.template.commit.spacingX;
+  
+  
+  console.log(
+    '(' + this.commit.branch.name + ')' + this.commit.sha1 + ' x:' + (this.commit.x) + ' y:' + this.commit.y
+  );
+  
   // Angles calcul
-  var alpha = Math.atan2(this.template.commit.spacingY, this.template.commit.spacingX);
+  var alpha = Math.atan2(
+    this.commit.parentCommit.y - this.commit.y, 
+    this.commit.parentCommit.x - this.commit.x);
+  
+  // Fork case
+  if (this.commit === this.commit.branch.commits[0] /* First commit */ &&
+      this.commit.y + this.commit.x !== this.commit.branch.offsetY + this.commit.branch.originY + this.commit.branch.offsetX + this.commit.branch.originX /* Not same as branch origin */ 
+     ) {
+      // Parent commit -> branch origin 
+       alpha = Math.atan2(
+        (this.commit.branch.offsetY + this.commit.branch.originY) - this.commit.y, 
+        (this.commit.branch.offsetX + this.commit.branch.originX) - this.commit.x);
+  }
+  
   var delta = Math.PI / 7; // Delta between left & right (radian)
 
   // Top
@@ -575,7 +604,7 @@ function Template(options) {
   this.arrow = {};
   this.arrow.size = options.arrow.size || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
-  this.arrow.active = typeof (this.arrow.size) === "number";
+  this.arrow.active = typeof(this.arrow.size) === "number";
   this.arrow.offsetX = options.arrow.offsetX || null;
   this.arrow.offsetY = options.arrow.offsetY || 2;
 
