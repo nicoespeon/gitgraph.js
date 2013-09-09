@@ -211,7 +211,7 @@ Branch.prototype.render = function () {
     this.context.beginPath();
     this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
   }
-  this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
+  this.context.lineTo(this.commits.slice(-1)[0].x, this.commits.slice(-1)[0].y);
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke();
