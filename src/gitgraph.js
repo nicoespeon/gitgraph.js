@@ -218,6 +218,7 @@ Branch.prototype.render = function () {
 
   // Merge part
   if (this.targetBranch) {
+    this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
     if (this.template.branch.mergeStyle === "bezier") {
       this.context.bezierCurveTo(
         this.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
