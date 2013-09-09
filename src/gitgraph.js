@@ -101,7 +101,7 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  this.canvas.height = this.branchs[0].updateSize().height + 1000|| this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
+  this.canvas.height = this.branchs[0].updateSize().height + 1000 || this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
   this.canvas.width = this.branchs[0].updateSize().width || 1000;
 
   // Clear All
@@ -120,7 +120,7 @@ GitGraph.prototype.render = function () {
   }
 
   // Render
-  for (var i = this.branchs.length - 1, branch; !!(branch = this.branchs[i]); i--) {
+  for (var i = this.branchs.length - 1, branch; !! (branch = this.branchs[i]); i--) {
     branch.updateSize();
     branch.render();
   }
@@ -232,7 +232,7 @@ Branch.prototype.render = function () {
   }
 
   // Commits part
-  for (var i = 0, commit; !!(commit = this.commits[i]); i++) {
+  for (var i = 0, commit; !! (commit = this.commits[i]); i++) {
     commit.render();
   }
 };
@@ -286,11 +286,6 @@ Branch.prototype.commit = function (options) {
  * @this Branch
  **/
 Branch.prototype.checkout = function () {
-  // Check integrity
-  if (this.targetBranch) {
-    return;
-  }
-
   this.parent.HEAD = this;
 };
 
@@ -498,13 +493,13 @@ function Arrow(options) {
   if (this.commit === this.commit.branch.commits[0] /* First commit */ &&
     this.commit.y + this.commit.x !== this.commit.branch.offsetY + this.commit.branch.originY + this.commit.branch.offsetX + this.commit.branch.originX /* Not same as branch origin */ ) {
     // Parent commit -> branch origin 
-    alpha = Math.atan2(this.commit.branch.offsetY + this.commit.branch.originY - this.commit.y, 
-                       this.commit.branch.offsetX + this.commit.branch.originX - this.commit.x);
+    alpha = Math.atan2(this.commit.branch.offsetY + this.commit.branch.originY - this.commit.y,
+      this.commit.branch.offsetX + this.commit.branch.originX - this.commit.x);
   }
   // Merge case
   if (this.commit.type === "mergeCommit") {
     alpha = Math.atan2(this.template.branch.spacingY * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingY,
-                       this.template.branch.spacingX * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingX);
+      this.template.branch.spacingX * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingX);
   }
 
   var delta = Math.PI / 7; // Delta between left & right (radian)
