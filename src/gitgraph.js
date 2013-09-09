@@ -364,7 +364,7 @@ Branch.prototype.updateSize = function () {
  * @this Branch
  **/
 Branch.prototype.calculColumn = function () {
-  for (var i = 0, branch; !!(branch = this.parent.branchs[i]); i++) {
+  for (var i = 0, branch; branch = this.parent.branchs[i]; i++) {
     branch.updateSize();
     if (branch.originY - branch.size <= this.originY) {
       this.column++;
