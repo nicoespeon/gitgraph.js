@@ -66,7 +66,7 @@ GitGraph.prototype.branch = function (options) {
 
   // Calcul origin of branch
   if (options.parentBranch instanceof Branch) {
-    var lastCommit = options.parentBranch.commits[options.parentBranch.commits.length - 1];
+    var lastCommit = options.parentBranch.commits.slice(-1)[0];
     options.originX = lastCommit.x - this.template.commit.spacingX - options.parentBranch.offsetX;
     options.originY = lastCommit.y - this.template.commit.spacingY - options.parentBranch.offsetY;
   }
@@ -101,7 +101,7 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  this.canvas.height = this.branchs[0].updateSize().height || this.branchs[this.branchs.length - 1].offsetY + this.template.commit.dot.size * 3;
+  this.canvas.height = this.branchs[0].updateSize().height || this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
   this.canvas.width = this.branchs[0].updateSize().width || 1000;
 
   // Clear All
@@ -267,12 +267,12 @@ Branch.prototype.commit = function (options) {
   options.x = this.offsetX - this.parent.commitOffsetX;
   options.y = this.offsetY - this.parent.commitOffsetY;
   options.arrowDisplay = this.template.arrow.active;
-  options.parentCommit = options.parentCommit || this.commits[this.commits.length - 1];
+  options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
   options.branch = this;
 
   // Fork case : Parent commit from parent branch
   if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
-    options.parentCommit = this.parentBranch.commits[this.parentBranch.commits.length - 1];
+    options.parentCommit = this.parentBranch.commits.slice(-1)[0];
   }
 
   var commit = new Commit(options);
@@ -331,7 +331,7 @@ Branch.prototype.merge = function (target, mergeCommit) {
   this.targetBranch.commit({
     message: mergeCommit,
     type: "mergeCommit",
-    parentCommit: this.commits[this.commits.length - 1]
+    parentCommit: this.commits.slice(-1)[0]
   });
 
   // Checkout on target
