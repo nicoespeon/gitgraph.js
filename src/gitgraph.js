@@ -101,7 +101,7 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  this.canvas.height = this.branchs[0].updateSize().height || this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
+  this.canvas.height = this.branchs[0].updateSize().height + 1000|| this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
   this.canvas.width = this.branchs[0].updateSize().width || 1000;
 
   // Clear All
@@ -158,7 +158,6 @@ function Branch(options) {
   this.originX = (typeof options.originX === "number") ? options.originX : 0;
   this.originY = (typeof options.originY === "number") ? options.originY : 0;
   this.name = (typeof options.name === "string") ? options.name : "no-name";
-  this.targetBranch = null;
   this.context = this.parent.context;
   this.template = this.parent.template;
   this.lineWidth = this.template.branch.lineWidth;
@@ -217,7 +216,7 @@ Branch.prototype.render = function () {
   this.context.stroke();
 
   // Merge part
-  if (this.targetBranch) {
+  if (false) {
     this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
     if (this.template.branch.mergeStyle === "bezier") {
       this.context.bezierCurveTo(
@@ -304,11 +303,10 @@ Branch.prototype.checkout = function () {
  **/
 Branch.prototype.merge = function (target, mergeCommit) {
   // Merge
-  this.targetBranch = target || this.parent.HEAD;
+  var targetBranch = target || this.parent.HEAD;
 
   // Check integrity of target
-  if (this.targetBranch instanceof Branch === false || this.targetBranch === this) {
-    this.targetBranch = null;
+  if (targetBranch instanceof Branch === false || targetBranch === this) {
     return;
   }
 
@@ -318,15 +316,15 @@ Branch.prototype.merge = function (target, mergeCommit) {
 
   // Merge commit
   mergeCommit = (typeof mergeCommit === "string") ?
-    mergeCommit : "Merge branch `" + this.name + "` into `" + this.targetBranch.name + "`";
-  this.targetBranch.commit({
+    mergeCommit : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
+  targetBranch.commit({
     message: mergeCommit,
     type: "mergeCommit",
     parentCommit: this.commits.slice(-1)[0]
   });
 
   // Checkout on target
-  this.parent.HEAD = this.targetBranch;
+  this.parent.HEAD = targetBranch;
 };
 
 /**
