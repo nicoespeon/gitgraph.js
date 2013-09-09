@@ -464,9 +464,7 @@ Commit.prototype.render = function () {
  * @param {Object} options - Arrow Options
  * @param {Commit} options.commit - Commit constructor
  * @param {String} [options.color = this.template.color] - Arrow color
- * @param {Number} [options.height = this.template.height] - Arrow height
- * @param {Number} [options.width = this.template.width] - Arrow width
- * @param {Number} [options.rotation] - Arrow rotation : 1 => up, -1 =>down
+ * @param {Number} [options.size = this.template.height] - Arrow size
  *
  * @this Arrow
  **/
