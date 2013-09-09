@@ -21,7 +21,7 @@ function GitGraph(options) {
 
   // Template management
   if (typeof options.template === "string") {
-    options.template =  new Template().get(options.template);
+    options.template = new Template().get(options.template);
   }
   this.template = (options.template instanceof Template) ?
     options.template : new Template();
@@ -269,7 +269,7 @@ Branch.prototype.commit = function (options) {
   options.arrowDisplay = this.template.arrow.active;
   options.parentCommit = options.parentCommit || this.commits[this.commits.length - 1];
   options.branch = this;
-  
+
   // Fork case : Parent commit from parent branch
   if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
     options.parentCommit = this.parentBranch.commits[this.parentBranch.commits.length - 1];
@@ -498,31 +498,26 @@ function Arrow(options) {
   this.x = this.commit.x + this.template.arrow.offsetX;
   this.y = this.commit.y + this.template.arrow.offsetY;
 
-  // Commit number
-  var commitNumber = typeof(this.commit.y / this.parent.template.commit.spacingY) === "number" ? this.commit.y / this.parent.template.commit.spacingY : this.commit.x / this.parent.template.commit.spacingX;
-  
-  var parentCommitNumber = typeof(this.commit.parentCommit.y / this.parent.template.commit.spacingY) === "number" ? this.commit.parentCommit.y / this.parent.template.commit.spacingY : this.commit.parentCommit.x / this.parent.template.commit.spacingX;
-  
-  
-  console.log(
-    '(' + this.commit.branch.name + ')' + this.commit.sha1 + ' x:' + (this.commit.x) + ' y:' + this.commit.y
-  );
-  
+  console.log('(' + this.commit.branch.name + ')' + this.commit.sha1 + ' x:' + (this.commit.x) + ' y:' + this.commit.y);
+
   // Angles calcul
   var alpha = Math.atan2(
-    this.commit.parentCommit.y - this.commit.y, 
+    this.commit.parentCommit.y - this.commit.y,
     this.commit.parentCommit.x - this.commit.x);
-  
+
   // Fork case
   if (this.commit === this.commit.branch.commits[0] /* First commit */ &&
-      this.commit.y + this.commit.x !== this.commit.branch.offsetY + this.commit.branch.originY + this.commit.branch.offsetX + this.commit.branch.originX /* Not same as branch origin */ 
-     ) {
-      // Parent commit -> branch origin 
-       alpha = Math.atan2(
-        (this.commit.branch.offsetY + this.commit.branch.originY) - this.commit.y, 
-        (this.commit.branch.offsetX + this.commit.branch.originX) - this.commit.x);
+    this.commit.y + this.commit.x !== this.commit.branch.offsetY + this.commit.branch.originY + this.commit.branch.offsetX + this.commit.branch.originX /* Not same as branch origin */ ) {
+    // Parent commit -> branch origin 
+    alpha = Math.atan2(this.commit.branch.offsetY + this.commit.branch.originY - this.commit.y, 
+                       this.commit.branch.offsetX + this.commit.branch.originX - this.commit.x);
   }
-  
+  // Merge case
+  if (this.commit.type === 'mergeCommit') {
+    alpha = Math.atan2(this.template.branch.spacingY * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingY,
+                       this.template.branch.spacingX * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingX);
+  }
+
   var delta = Math.PI / 7; // Delta between left & right (radian)
 
   // Top
@@ -606,7 +601,7 @@ function Template(options) {
   this.arrow = {};
   this.arrow.size = options.arrow.size || null;
   this.arrow.color = options.arrow.color || this.branch.color || null;
-  this.arrow.active = typeof(this.arrow.size) === "number";
+  this.arrow.active = typeof (this.arrow.size) === "number";
   this.arrow.offsetX = options.arrow.offsetX || null;
   this.arrow.offsetY = options.arrow.offsetY || 2;
 
