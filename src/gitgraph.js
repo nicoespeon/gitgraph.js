@@ -486,8 +486,6 @@ Commit.prototype.arrow = function Arrow() {
   options = (typeof options === "object") ? options : {};
   var size = this.template.arrow.size;
   var color = this.template.arrow.color || this.branch.color;
-  var x = this.x + this.template.arrow.offsetX;
-  var y = this.y + this.template.arrow.offsetY;
 
   // Angles calculation
   var alpha = Math.atan2(
@@ -512,21 +510,21 @@ Commit.prototype.arrow = function Arrow() {
   var delta = Math.PI / 7; // Delta between left & right (radian)
 
   // Top
-  var h = this.template.commit.dot.size;
-  var x1 = h * Math.cos(alpha) + x;
-  var y1 = h * Math.sin(alpha) + y;
+  var h = this.template.commit.dot.size + this.template.arrow.offset;
+  var x1 = h * Math.cos(alpha) + this.x;
+  var y1 = h * Math.sin(alpha) + this.y;
 
   // Bottom left
-  var x2 = (h + size) * Math.cos(alpha - delta) + x;
-  var y2 = (h + size) * Math.sin(alpha - delta) + y;
+  var x2 = (h + size) * Math.cos(alpha - delta) + this.x;
+  var y2 = (h + size) * Math.sin(alpha - delta) + this.y;
 
   // Bottom center
-  var x3 = (h + size / 2) * Math.cos(alpha) + x;
-  var y3 = (h + size / 2) * Math.sin(alpha) + y;
+  var x3 = (h + size / 2) * Math.cos(alpha) + this.x;
+  var y3 = (h + size / 2) * Math.sin(alpha) + this.y;
 
   // Bottom right
-  var x4 = (h + size) * Math.cos(alpha + delta) + x;
-  var y4 = (h + size) * Math.sin(alpha + delta) + y;
+  var x4 = (h + size) * Math.cos(alpha + delta) + this.x;
+  var y4 = (h + size) * Math.sin(alpha + delta) + this.y;
 
   this.context.beginPath();
   this.context.fillStyle = color;
@@ -551,6 +549,7 @@ Commit.prototype.arrow = function Arrow() {
  * @param {Array} [options.colors] - Colors scheme: One color for each column
  * @param {String} [options.arrow.color] - Arrow color
  * @param {Number} [options.arrow.size] - Arrow size
+ * @param {Number} [options.arrow.offser] - Arrow offset
  * @param {String} [options.branch.color] - Branch color
  * @param {Number} [options.branch.linewidth] - Branch line width
  * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
@@ -598,8 +597,7 @@ function Template(options) {
   this.arrow.size = options.arrow.size || null;
   this.arrow.color = options.arrow.color || null;
   this.arrow.active = typeof (this.arrow.size) === "number";
-  this.arrow.offsetX = options.arrow.offsetX || null;
-  this.arrow.offsetY = options.arrow.offsetY || 2;
+  this.arrow.offset = options.arrow.offset || 2;
 
   // Commit style
   this.commit = {};
@@ -655,7 +653,7 @@ Template.prototype.get = function (name) {
       },
       arrow: {
         size: 16,
-        offsetY: -3
+        offset: 2.5
       }
     });
 
