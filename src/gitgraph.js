@@ -33,6 +33,7 @@ function GitGraph(options) {
   // Navigation vars
   this.HEAD = null;
   this.branchs = [];
+  this.commits = [];
 
   // Utilities
   this.columnMax = 0; // nb of column for message position
@@ -124,10 +125,8 @@ GitGraph.prototype.render = function () {
     branch.render();
   }
   // Render commits (After for put them to foreground)
-  for (var i = this.branchs.length - 1, branch; !! (branch = this.branchs[i]); i--) {
-    for (var j = 0, commit; !! (commit = branch.commits[j]); j++) {
-      commit.render();
-    }
+  for (var i = 0, commit; !! (commit = this.commits[i]); i++) {
+    commit.render();
   }
 };
 
@@ -433,6 +432,8 @@ function Commit(options) {
   this.parentCommit = options.parentCommit;
   this.x = options.x;
   this.y = options.y;
+  
+  this.parent.commits.push(this);
 }
 
 /**
