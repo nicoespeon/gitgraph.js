@@ -484,8 +484,8 @@ Commit.prototype.render = function () {
 Commit.prototype.arrow = function Arrow() {
   // Options
   options = (typeof options === "object") ? options : {};
-  var size = options.size || this.template.arrow.size;
-  var color = options.color || this.template.arrow.color;
+  var size = this.template.arrow.size;
+  var color = this.template.arrow.color || this.branch.color;
   var x = this.x + this.template.arrow.offsetX;
   var y = this.y + this.template.arrow.offsetY;
 
@@ -506,6 +506,7 @@ Commit.prototype.arrow = function Arrow() {
   if (this.type === "mergeCommit") {
     alpha = Math.atan2(this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
       this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX);
+    color = this.parentCommit.branch.color;
   }
 
   var delta = Math.PI / 7; // Delta between left & right (radian)
@@ -595,7 +596,7 @@ function Template(options) {
   // Arrow style
   this.arrow = {};
   this.arrow.size = options.arrow.size || null;
-  this.arrow.color = options.arrow.color || this.branch.color || null;
+  this.arrow.color = options.arrow.color || null;
   this.arrow.active = typeof (this.arrow.size) === "number";
   this.arrow.offsetX = options.arrow.offsetX || null;
   this.arrow.offsetY = options.arrow.offsetY || 2;
@@ -646,7 +647,7 @@ Template.prototype.get = function (name) {
         dot: {
           size: 12,
           strokeColor: "#000000",
-          strokeWidth: 7
+          strokeWidth: 7,
         },
         message: {
           color: "black"
@@ -654,7 +655,7 @@ Template.prototype.get = function (name) {
       },
       arrow: {
         size: 16,
-        offsetY: -2
+        offsetY: -3
       }
     });
 
