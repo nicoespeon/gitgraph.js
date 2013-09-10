@@ -483,7 +483,6 @@ Commit.prototype.render = function () {
  **/
 Commit.prototype.arrow = function Arrow() {
   // Options
-  options = (typeof options === "object") ? options : {};
   var size = this.template.arrow.size;
   var color = this.template.arrow.color || this.branch.color;
 
