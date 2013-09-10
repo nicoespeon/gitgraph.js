@@ -7,6 +7,7 @@
  * @param {String} [options.elementId = "gitGraph"] - Id of the canvas container
  * @param {Template|String} [options.template] - Template of the graph
  * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
+ * @param {String} [options.mode = (null|"compact")]  - Display mode
  *
  * @this GitGraph
  **/
@@ -25,6 +26,8 @@ function GitGraph(options) {
   }
   this.template = (options.template instanceof Template) ?
     options.template : new Template();
+  this.mode = options.mode || null;
+  if (this.mode === "compact") {this.template.commit.message.display = false}
   this.marginX = this.template.commit.dot.size * 2;
   this.marginY = this.template.commit.dot.size * 2;
 
@@ -257,16 +260,34 @@ Branch.prototype.commit = function (options) {
     options = {};
   }
 
+  options.arrowDisplay = this.template.arrow.active;
+  options.branch = this;
+  options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.parent = this.parent;
+  options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
+  
+  // Special compact mode
+  if (this.parent.mode === "compact"
+      && this.parent.commits.slice(-1)[0] 
+      && this.parent.commits.slice(-1)[0].branch !== options.branch 
+      && options.branch.commits.length) {
+    this.parent.commitOffsetX -= this.template.commit.spacingX;
+    this.parent.commitOffsetY -= this.template.commit.spacingY;
+  }
+  
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
   options.dotColor = options.dotColor || options.color || this.template.commit.dot.color || null;
-  options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.x = this.offsetX - this.parent.commitOffsetX;
   options.y = this.offsetY - this.parent.commitOffsetY;
-  options.arrowDisplay = this.template.arrow.active;
-  options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
-  options.branch = this;
 
+  // Check collision (Cause of special compact mode)
+  if (options.branch.commits.slice(-1)[0] && options.x + options.y === options.branch.commits.slice(-1)[0].x + options.branch.commits.slice(-1)[0].y) {
+    this.parent.commitOffsetX += this.template.commit.spacingX;
+    this.parent.commitOffsetY += this.template.commit.spacingY;
+    options.x = this.offsetX - this.parent.commitOffsetX;
+    options.y = this.offsetY - this.parent.commitOffsetY;
+  }
+  
   // Fork case: Parent commit from parent branch
   if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
     options.parentCommit = this.parentBranch.commits.slice(-1)[0];
