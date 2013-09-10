@@ -4,8 +4,8 @@ var gitGraph = new GitGraph({
 
 var master = gitGraph.branch("master"); // Create branch named "master"
 gitGraph.commit("Initial commit") // Commit on HEAD Branch (here this is master)
-.commit("My second commit")
-.commit("Add awesome feature");
+  .commit("My second commit")
+  .commit("Add awesome feature");
 
 var dev = gitGraph.branch("dev"); // Create branch named "dev" (a HEAD fork)
 dev.commit("Youhou \\o/"); // Commit on dev
