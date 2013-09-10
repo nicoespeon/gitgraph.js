@@ -5,7 +5,7 @@
  *
  * @param {Object} options - GitGraph options
  * @param {String} [options.elementId = "gitGraph"] - Id of the canvas container
- * @param {Template} [options.template] - Template of the graph
+ * @param {Template|String} [options.template] - Template of the graph
  * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
  *
  * @this GitGraph
