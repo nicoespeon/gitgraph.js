@@ -25,6 +25,8 @@ function GitGraph(options) {
   }
   this.template = (options.template instanceof Template) ?
     options.template : new Template();
+  this.marginX = this.template.commit.dot.size * 2;
+  this.marginY = this.template.commit.dot.size * 2;
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
@@ -39,11 +41,18 @@ function GitGraph(options) {
   this.columnMax = 0; // nb of column for message position
   this.commitOffsetX = 0;
   this.commitOffsetY = 0;
+  this.lasthover = null;
 
   // Error: no render()
   this.context.fillStyle = "red";
   this.context.font = "bold 15pt Calibri";
   this.context.fillText("Error: No render() at the end", 150, 100);
+
+  // Event listener
+  this.canvas.addEventListener("mousemove", {
+    handleEvent: this.hover,
+    gitgraph: this
+  }, false);
 }
 
 /**
@@ -109,15 +118,17 @@ GitGraph.prototype.render = function () {
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
   // Add some margin
-  this.context.translate(this.template.commit.dot.size * 2, this.template.commit.dot.size * 2);
+  this.context.translate(this.marginX, this.marginY);
 
   // Translate for inverse orientation
   if (this.template.commit.spacingY > 0) {
     this.context.translate(0, this.canvas.height - this.template.commit.dot.size * 3);
+    this.marginY += this.canvas.height - this.template.commit.dot.size * 3;
   }
 
   if (this.template.commit.spacingX > 0) {
     this.context.translate(this.canvas.width - this.template.commit.dot.size * 3, 0);
+    this.marginX += this.canvas.width - this.template.commit.dot.size * 3;
   }
 
   // Render branchs
@@ -128,6 +139,17 @@ GitGraph.prototype.render = function () {
   // Render commits after to put them on the foreground
   for (var j = 0, commit; !! (commit = this.commits[j]); j++) {
     commit.render();
+  }
+};
+
+GitGraph.prototype.hover = function (event) {
+  var test = 0;
+  for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
+    test = Math.sqrt((commit.x + this.gitgraph.marginX - event.x) * (commit.x + this.gitgraph.marginX - event.x) + (commit.y + this.gitgraph.marginY - event.y) * (commit.y + this.gitgraph.marginY - event.y)); // Distance between commit and mouse (Pythagore)
+    if (test < this.gitgraph.template.commit.dot.size && commit.sha1 !== this.gitgraph.lasthover) {
+      console.log(commit.sha1);
+      this.gitgraph.lasthover = commit.sha1;
+    }
   }
 };
 
@@ -203,10 +225,9 @@ Branch.prototype.render = function () {
     } else {
       if (this.template.branch.mergeStyle === "bezier") {
         this.context.bezierCurveTo(
-          this.path[i-1].x - this.template.commit.spacingX / 2, this.path[i-1].y - this.template.commit.spacingY / 2,
+          this.path[i - 1].x - this.template.commit.spacingX / 2, this.path[i - 1].y - this.template.commit.spacingY / 2,
           point.x + this.template.commit.spacingX / 2, point.y + this.template.commit.spacingY / 2,
-          point.x, point.y
-        );
+          point.x, point.y);
       } else {
         this.context.lineTo(point.x, point.y);
       }
@@ -262,9 +283,7 @@ Branch.prototype.commit = function (options) {
   };
 
   // First commit ?
-  if (commit.parentCommit instanceof Commit
-      && commit.parentCommit.branch !== commit.branch /* Parent commit in another branch */
-      && this.path.length === 0 /* Path begin */ ) {
+  if (commit.parentCommit instanceof Commit && commit.parentCommit.branch !== commit.branch /* Parent commit in another branch */ && this.path.length === 0 /* Path begin */ ) {
     var parent = {
       x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
       y: commit.parentCommit.branch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -370,7 +389,7 @@ Branch.prototype.updateSize = function () {
  * @this Branch
  **/
 Branch.prototype.calculColumn = function () {
-  for (var i = 0, branch; !!(branch = this.parent.branchs[i]); i++) {
+  for (var i = 0, branch; !! (branch = this.parent.branchs[i]); i++) {
     branch.updateSize();
     if (branch.originY - branch.size <= this.originY) {
       this.column++;
@@ -634,7 +653,7 @@ Template.prototype.get = function (name) {
   case "blackarrow":
     return new Template({
       branch: {
-      color: "#000000",
+        color: "#000000",
         lineWidth: 4,
         spacingX: 50,
         mergeStyle: "straight"
