@@ -145,7 +145,7 @@ GitGraph.prototype.render = function () {
 GitGraph.prototype.hover = function (event) {
   var test = 0;
   for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
-    test = Math.sqrt((commit.x + this.gitgraph.marginX - event.x) * (commit.x + this.gitgraph.marginX - event.x) + (commit.y + this.gitgraph.marginY - event.y) * (commit.y + this.gitgraph.marginY - event.y)); // Distance between commit and mouse (Pythagore)
+    test = Math.sqrt((commit.x + this.gitgraph.marginX - event.offsetX) * (commit.x + this.gitgraph.marginX - event.offsetX) + (commit.y + this.gitgraph.marginY - event.offsetY) * (commit.y + this.gitgraph.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
     if (test < this.gitgraph.template.commit.dot.size && commit.sha1 !== this.gitgraph.lasthover) {
       console.log(commit.sha1);
       this.gitgraph.lasthover = commit.sha1;
