@@ -114,7 +114,7 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  this.canvas.height = this.branchs[0].updateSize().height + 1000 || this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
+  this.canvas.height = this.branchs[0].updateSize().height || this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
   this.canvas.width = this.branchs[0].updateSize().width || 1000;
 
   // Clear All
