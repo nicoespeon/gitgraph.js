@@ -119,10 +119,15 @@ GitGraph.prototype.render = function () {
     this.context.translate(this.canvas.width - this.template.commit.dot.size * 3, 0);
   }
 
-  // Render
+  // Render branchs
   for (var i = this.branchs.length - 1, branch; !! (branch = this.branchs[i]); i--) {
-    branch.updateSize();
     branch.render();
+  }
+  // Render commits (After for put them to foreground)
+  for (var i = this.branchs.length - 1, branch; !! (branch = this.branchs[i]); i--) {
+    for (var j = 0, commit; !! (commit = branch.commits[j]); j++) {
+      commit.render();
+    }
   }
 };
 
@@ -167,6 +172,7 @@ function Branch(options) {
   this.height = 0;
   this.width = 0;
   this.commits = [];
+  this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"join"|"end")}
 
   // Calcul column number for auto-color & auto-offset
   this.column = 0;
@@ -188,53 +194,27 @@ function Branch(options) {
  * @this Branch
  **/
 Branch.prototype.render = function () {
-  // Fork part
-  if (this.parentBranch) {
-    this.context.beginPath();
-    this.context.moveTo(this.parentBranch.offsetX + this.originX + this.template.commit.spacingX, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY);
-    if (this.template.branch.mergeStyle === "bezier") {
-      this.context.bezierCurveTo(
-        this.parentBranch.offsetX + this.originX + this.template.commit.spacingX / 2, this.parentBranch.offsetY + this.originY + this.template.commit.spacingY / 2,
-        this.offsetX + this.originX + this.template.commit.spacingX / 2, this.offsetY + this.originY + this.template.commit.spacingY / 2,
-        this.offsetX + this.originX, this.offsetY + this.originY);
+  this.context.beginPath();
+  this.context.moveTo(this.path[0].x, this.path[0].y);
+  for (var i = 0, point; !! (point = this.path[i]); i++) {
+    if (point.type === "start") {
+      this.context.moveTo(point.x, point.y);
     } else {
-      this.context.lineTo(this.offsetX + this.originX, this.offsetY + this.originY);
+      if (this.template.branch.mergeStyle === "bezier") {
+        this.context.bezierCurveTo(
+          this.path[i-1].x - this.template.commit.spacingX / 2, this.path[i-1].y - this.template.commit.spacingY / 2,
+          point.x + this.template.commit.spacingX / 2, point.y + this.template.commit.spacingY / 2,
+          point.x, point.y
+        );
+      } else {
+        this.context.lineTo(point.x, point.y);
+      }
     }
-    this.context.lineWidth = this.lineWidth;
-    this.context.strokeStyle = this.color;
-    this.context.stroke();
   }
-
-  // Main part
-  if (!this.parentBranch) {
-    this.context.beginPath();
-    this.context.moveTo(this.offsetX + this.originX, this.offsetY + this.originY);
-  }
-  this.context.lineTo(this.commits.slice(-1)[0].x, this.commits.slice(-1)[0].y);
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke();
-
-  // Merge part
-  if (false) {
-    this.context.lineTo(this.offsetX + this.originX - this.width, this.offsetY + this.originY - this.height);
-    if (this.template.branch.mergeStyle === "bezier") {
-      this.context.bezierCurveTo(
-        this.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
-        this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX / 2, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY / 2,
-        this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY);
-    } else {
-      this.context.lineTo(this.targetBranch.offsetX + this.originX - this.width - this.template.commit.spacingX, this.targetBranch.offsetY + this.originY - this.height - this.template.commit.spacingY);
-    }
-    this.context.lineWidth = this.lineWidth;
-    this.context.strokeStyle = this.color;
-    this.context.stroke();
-  }
-
-  // Commits part
-  for (var i = 0, commit; !! (commit = this.commits[i]); i++) {
-    commit.render();
-  }
+  this.context.closePath();
 };
 
 /**
@@ -273,6 +253,28 @@ Branch.prototype.commit = function (options) {
   var commit = new Commit(options);
   this.commits.push(commit);
 
+  // Add point(s) to path
+  var point = {
+    x: commit.x,
+    y: commit.y,
+    type: "join"
+  };
+  // First commit ?
+  if (commit.parentCommit instanceof Commit 
+      && commit.parentCommit.branch !== commit.branch /* Parent commit in another branch */ 
+      && this.path.length === 0 /* Path begin */ ) {
+    var parent = {
+      x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
+      y: commit.parentCommit.branch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
+      type: "start"
+    };
+    this.path.push(parent);
+  } else if (this.path.length === 0) {
+    point.type = "start";
+  }
+  this.path.push(point);
+
+  // Increment commitOffset for next commit position
   this.parent.commitOffsetX += this.template.commit.spacingX;
   this.parent.commitOffsetY += this.template.commit.spacingY;
 
@@ -293,10 +295,10 @@ Branch.prototype.checkout = function () {
  * Merge branch
  *
  * @param {Branch} [target = this.parent.HEAD]
- * @param {string} [mergeCommit]
+ * @param {string} [message]
  * @this Branch
  **/
-Branch.prototype.merge = function (target, mergeCommit) {
+Branch.prototype.merge = function (target, message) {
   // Merge
   var targetBranch = target || this.parent.HEAD;
 
@@ -310,13 +312,29 @@ Branch.prototype.merge = function (target, mergeCommit) {
   this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
 
   // Merge commit
-  mergeCommit = (typeof mergeCommit === "string") ?
-    mergeCommit : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
+  message = (typeof message === "string") ?
+    message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
   targetBranch.commit({
-    message: mergeCommit,
+    message: message,
     type: "mergeCommit",
     parentCommit: this.commits.slice(-1)[0]
   });
+
+  // Add points to path
+  var endOfBranch = {
+    x: this.offsetX + this.originX - this.width,
+    y: this.offsetY + this.originY - this.height,
+    type: "join"
+  };
+  this.path.push(JSON.parse(JSON.stringify(endOfBranch))); // Elegant way for cloning an object
+  var mergeCommit = {
+    x: targetBranch.commits.slice(-1)[0].x,
+    y: targetBranch.commits.slice(-1)[0].y,
+    type: "end"
+  }
+  this.path.push(mergeCommit);
+  endOfBranch.type = "start";
+  this.path.push(endOfBranch); // End of branch for futur commits
 
   // Checkout on target
   this.parent.HEAD = targetBranch;
@@ -410,7 +428,7 @@ function Commit(options) {
   this.dotColor = options.dotColor || options.color;
   this.dotSize = options.dotSize || this.template.commit.dot.size;
   this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
-  this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor;
+  this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
   this.type = options.type || null;
   this.parentCommit = options.parentCommit;
   this.x = options.x;
