@@ -36,6 +36,6 @@ dev.merge(); // Merge dev into HEAD (master) (automatic merge commit)
 test.commit("Final commit");
 test.merge(master, "My special merge commit message"); // Merge into HEAD with special merge commit message
 
-test.commit("error"); // Error: You can't commit on merged branch
+test.commit("It's works !");
 
 gitGraph.render(); // Render gitGraph
