@@ -124,8 +124,9 @@ GitGraph.prototype.render = function () {
   for (var i = this.branchs.length - 1, branch; !! (branch = this.branchs[i]); i--) {
     branch.render();
   }
-  // Render commits (After for put them to foreground)
-  for (var i = 0, commit; !! (commit = this.commits[i]); i++) {
+
+  // Render commits after to put them on the foreground
+  for (var j = 0, commit; !! (commit = this.commits[j]); j++) {
     commit.render();
   }
 };
@@ -173,7 +174,7 @@ function Branch(options) {
   this.commits = [];
   this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"join"|"end")}
 
-  // Calcul column number for auto-color & auto-offset
+  // Column number calculation for auto-color & auto-offset
   this.column = 0;
   this.calculColumn();
 
@@ -195,6 +196,7 @@ function Branch(options) {
 Branch.prototype.render = function () {
   this.context.beginPath();
   this.context.moveTo(this.path[0].x, this.path[0].y);
+
   for (var i = 0, point; !! (point = this.path[i]); i++) {
     if (point.type === "start") {
       this.context.moveTo(point.x, point.y);
@@ -210,6 +212,7 @@ Branch.prototype.render = function () {
       }
     }
   }
+
   this.context.lineWidth = this.lineWidth;
   this.context.strokeStyle = this.color;
   this.context.stroke();
@@ -229,8 +232,7 @@ Branch.prototype.commit = function (options) {
     var message = options;
     options = {};
     options.message = message;
-  }
-  if (typeof (options) !== "object") {
+  } else if (typeof (options) !== "object") {
     options = {};
   }
 
@@ -244,7 +246,7 @@ Branch.prototype.commit = function (options) {
   options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
   options.branch = this;
 
-  // Fork case : Parent commit from parent branch
+  // Fork case: Parent commit from parent branch
   if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
     options.parentCommit = this.parentBranch.commits.slice(-1)[0];
   }
@@ -258,9 +260,10 @@ Branch.prototype.commit = function (options) {
     y: commit.y,
     type: "join"
   };
+
   // First commit ?
-  if (commit.parentCommit instanceof Commit 
-      && commit.parentCommit.branch !== commit.branch /* Parent commit in another branch */ 
+  if (commit.parentCommit instanceof Commit
+      && commit.parentCommit.branch !== commit.branch /* Parent commit in another branch */
       && this.path.length === 0 /* Path begin */ ) {
     var parent = {
       x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
@@ -298,7 +301,7 @@ Branch.prototype.checkout = function () {
  * @this Branch
  **/
 Branch.prototype.merge = function (target, message) {
-  // Merge
+  // Merge target
   var targetBranch = target || this.parent.HEAD;
 
   // Check integrity of target
@@ -326,12 +329,14 @@ Branch.prototype.merge = function (target, message) {
     type: "join"
   };
   this.path.push(JSON.parse(JSON.stringify(endOfBranch))); // Elegant way for cloning an object
+
   var mergeCommit = {
     x: targetBranch.commits.slice(-1)[0].x,
     y: targetBranch.commits.slice(-1)[0].y,
     type: "end"
-  }
+  };
   this.path.push(mergeCommit);
+
   endOfBranch.type = "start";
   this.path.push(endOfBranch); // End of branch for futur commits
 
@@ -365,12 +370,13 @@ Branch.prototype.updateSize = function () {
  * @this Branch
  **/
 Branch.prototype.calculColumn = function () {
-  for (var i = 0, branch; branch = this.parent.branchs[i]; i++) {
+  for (var i = 0, branch; !!(branch = this.parent.branchs[i]); i++) {
     branch.updateSize();
     if (branch.originY - branch.size <= this.originY) {
       this.column++;
     }
   }
+
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
 };
 
@@ -432,7 +438,7 @@ function Commit(options) {
   this.parentCommit = options.parentCommit;
   this.x = options.x;
   this.y = options.y;
-  
+
   this.parent.commits.push(this);
 }
 
@@ -448,9 +454,11 @@ Commit.prototype.render = function () {
   this.context.fillStyle = this.dotColor;
   this.context.strokeStyle = this.dotStrokeColor;
   this.context.lineWidth = this.dotStrokeWidth;
+
   if (typeof (this.dotStrokeWidth) === "number") {
     this.context.stroke();
   }
+
   this.context.fill();
   this.context.closePath();
 
@@ -499,9 +507,7 @@ function Arrow(options) {
   this.x = this.commit.x + this.template.arrow.offsetX;
   this.y = this.commit.y + this.template.arrow.offsetY;
 
-  console.log('(' + this.commit.branch.name + ')' + this.commit.sha1 + ' x:' + (this.commit.x) + ' y:' + this.commit.y);
-
-  // Angles calcul
+  // Angles calculation
   var alpha = Math.atan2(
     this.commit.parentCommit.y - this.commit.y,
     this.commit.parentCommit.x - this.commit.x);
@@ -509,10 +515,11 @@ function Arrow(options) {
   // Fork case
   if (this.commit === this.commit.branch.commits[0] /* First commit */ &&
     this.commit.y + this.commit.x !== this.commit.branch.offsetY + this.commit.branch.originY + this.commit.branch.offsetX + this.commit.branch.originX /* Not same as branch origin */ ) {
-    // Parent commit -> branch origin 
+    // Parent commit -> branch origin
     alpha = Math.atan2(this.commit.branch.offsetY + this.commit.branch.originY - this.commit.y,
       this.commit.branch.offsetX + this.commit.branch.originX - this.commit.x);
   }
+
   // Merge case
   if (this.commit.type === "mergeCommit") {
     alpha = Math.atan2(this.template.branch.spacingY * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingY,
@@ -588,15 +595,20 @@ function Template(options) {
   options.commit.dot = options.commit.dot || {};
   options.commit.message = options.commit.message || {};
 
-  this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"]; // One color for each column
+  // One color per column
+  this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
 
   // Branch style
   this.branch = {};
   this.branch.color = options.branch.color || null; // Only one color
   this.branch.lineWidth = options.branch.lineWidth || 2;
-  this.branch.mergeStyle = options.branch.mergeStyle || "bezier"; // "bezier" | "straight"
-  this.branch.spacingX = (typeof options.branch.spacingX === "number") ? options.branch.spacingX : 20; // Space between branchs
-  this.branch.spacingY = options.branch.spacingY || 0; // Space between branchs
+
+  // Merge style = "bezier" | "straight"
+  this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
+
+  // Space between branchs
+  this.branch.spacingX = (typeof options.branch.spacingX === "number") ? options.branch.spacingX : 20;
+  this.branch.spacingY = options.branch.spacingY || 0;
 
   // Arrow style
   this.arrow = {};
@@ -610,17 +622,23 @@ function Template(options) {
   this.commit = {};
   this.commit.spacingX = options.commit.spacingX || 0;
   this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
-  this.commit.color = options.commit.color || null; // Only one color, if null message takes branch color (full commit)
+
+  // Only one color, if null message takes branch color (full commit)
+  this.commit.color = options.commit.color || null;
 
   this.commit.dot = {};
-  this.commit.dot.color = options.commit.dot.color || null; // // Only one color, if null message takes branch color (only dot)
+
+  // Only one color, if null message takes branch color (only dot)
+  this.commit.dot.color = options.commit.dot.color || null;
   this.commit.dot.size = options.commit.dot.size || 3;
   this.commit.dot.strokeWidth = options.commit.dot.strokeWidth || null;
   this.commit.dot.strokeColor = options.commit.dot.strokeColor || null;
 
   this.commit.message = {};
   this.commit.message.display = (typeof options.commit.message.display === "boolean") ? options.commit.message.display : true;
-  this.commit.message.color = options.commit.message.color || null; // Only one color, if null message takes commit color (only message)
+
+  // Only one color, if null message takes commit color (only message)
+  this.commit.message.color = options.commit.message.color || null;
   this.commit.message.font = options.commit.message.font || "normal 12pt Calibri";
 }
 

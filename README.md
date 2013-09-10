@@ -42,7 +42,7 @@ Check source code against [JSHint](http://www.jshint.com/) then runs unit tests 
 
 #### generate documentation - `grunt docs`
 
-Generate source code documentation into `dist/docs` (not versioned) with [JSDoc](http://usejsdoc.org/).
+Generate source code documentation into `dist/docs/` (not versioned) with [JSDoc](http://usejsdoc.org/).
 
 #### compile a non-versioned release - `grunt dist`
 
