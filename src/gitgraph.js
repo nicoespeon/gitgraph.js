@@ -464,9 +464,7 @@ Commit.prototype.render = function () {
 
   // Arrow
   if (this.arrowDisplay && this.parentCommit instanceof Commit) {
-    this.arrow = new Arrow({
-      commit: this
-    });
+    this.arrow();
   }
 
   // Message
@@ -478,81 +476,65 @@ Commit.prototype.render = function () {
   }
 };
 
-
-// --------------------------------------------------------------------
-// -----------------------       Arrow         ------------------------
-// --------------------------------------------------------------------
-
 /**
- * Arrow
+ * Render a arrow before commit
  *
- * @constructor
- *
- * @param {Object} options - Arrow Options
- * @param {Commit} options.commit - Commit constructor
- * @param {String} [options.color = this.template.color] - Arrow color
- * @param {Number} [options.size = this.template.height] - Arrow size
- *
- * @this Arrow
+ * @this Commit
  **/
-function Arrow(options) {
+Commit.prototype.arrow = function Arrow() {
   // Options
   options = (typeof options === "object") ? options : {};
-  this.commit = options.commit;
-  this.parent = this.commit.parent;
-  this.context = this.parent.context;
-  this.template = this.parent.template;
-  this.size = options.size || this.template.arrow.size;
-  this.color = options.color || this.template.arrow.color;
-  this.x = this.commit.x + this.template.arrow.offsetX;
-  this.y = this.commit.y + this.template.arrow.offsetY;
+  var size = options.size || this.template.arrow.size;
+  var color = options.color || this.template.arrow.color;
+  var x = this.x + this.template.arrow.offsetX;
+  var y = this.y + this.template.arrow.offsetY;
 
   // Angles calculation
   var alpha = Math.atan2(
-    this.commit.parentCommit.y - this.commit.y,
-    this.commit.parentCommit.x - this.commit.x);
+    this.parentCommit.y - this.y,
+    this.parentCommit.x - this.x);
 
   // Fork case
-  if (this.commit === this.commit.branch.commits[0] /* First commit */ &&
-    this.commit.y + this.commit.x !== this.commit.branch.offsetY + this.commit.branch.originY + this.commit.branch.offsetX + this.commit.branch.originX /* Not same as branch origin */ ) {
-    // Parent commit -> branch origin
-    alpha = Math.atan2(this.commit.branch.offsetY + this.commit.branch.originY - this.commit.y,
-      this.commit.branch.offsetX + this.commit.branch.originX - this.commit.x);
+  if (this === this.branch.commits[0] /* First commit */ &&
+    this.y + this.x !== this.branch.offsetY + this.branch.originY + this.branch.offsetX + this.branch.originX /* Not same as branch origin */ ) {
+    // Parent commit -> branch origin 
+    alpha = Math.atan2(this.branch.offsetY + this.branch.originY - this.y,
+      this.branch.offsetX + this.branch.originX - this.x);
   }
 
   // Merge case
-  if (this.commit.type === "mergeCommit") {
-    alpha = Math.atan2(this.template.branch.spacingY * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingY,
-      this.template.branch.spacingX * (this.commit.parentCommit.branch.column - this.commit.branch.column) + this.template.commit.spacingX);
+  if (this.type === "mergeCommit") {
+    alpha = Math.atan2(this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
+      this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX);
   }
 
   var delta = Math.PI / 7; // Delta between left & right (radian)
 
   // Top
   var h = this.template.commit.dot.size;
-  var x1 = h * Math.cos(alpha) + this.x;
-  var y1 = h * Math.sin(alpha) + this.y;
+  var x1 = h * Math.cos(alpha) + x;
+  var y1 = h * Math.sin(alpha) + y;
 
   // Bottom left
-  var x2 = (h + this.size) * Math.cos(alpha - delta) + this.x;
-  var y2 = (h + this.size) * Math.sin(alpha - delta) + this.y;
+  var x2 = (h + size) * Math.cos(alpha - delta) + x;
+  var y2 = (h + size) * Math.sin(alpha - delta) + y;
 
   // Bottom center
-  var x3 = (h + this.size / 2) * Math.cos(alpha) + this.x;
-  var y3 = (h + this.size / 2) * Math.sin(alpha) + this.y;
+  var x3 = (h + size / 2) * Math.cos(alpha) + x;
+  var y3 = (h + size / 2) * Math.sin(alpha) + y;
 
   // Bottom right
-  var x4 = (h + this.size) * Math.cos(alpha + delta) + this.x;
-  var y4 = (h + this.size) * Math.sin(alpha + delta) + this.y;
+  var x4 = (h + size) * Math.cos(alpha + delta) + x;
+  var y4 = (h + size) * Math.sin(alpha + delta) + y;
 
   this.context.beginPath();
-  this.context.fillStyle = this.color;
+  this.context.fillStyle = color;
   this.context.moveTo(x1, y1); // Top
   this.context.lineTo(x2, y2); // Bottom left
   this.context.quadraticCurveTo(x3, y3, x4, y4); // Bottom center
   this.context.lineTo(x4, y4); // Bottom right
   this.context.fill();
-}
+};
 
 
 // --------------------------------------------------------------------
@@ -654,7 +636,7 @@ Template.prototype.get = function (name) {
   case "blackarrow":
     return new Template({
       branch: {
-        color: "#000000",
+      color: "#000000",
         lineWidth: 4,
         spacingX: 50,
         mergeStyle: "straight"
