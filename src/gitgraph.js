@@ -265,16 +265,17 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.parent = this.parent;
   options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
-  
+
   // Special compact mode
-  if (this.parent.mode === "compact"
+  if (this.parent.mode === "compact" 
       && this.parent.commits.slice(-1)[0] 
       && this.parent.commits.slice(-1)[0].branch !== options.branch 
-      && options.branch.commits.length) {
+      && options.branch.commits.length
+      && options.type !== "mergeCommit") {
     this.parent.commitOffsetX -= this.template.commit.spacingX;
     this.parent.commitOffsetY -= this.template.commit.spacingY;
   }
-  
+
   options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
   options.dotColor = options.dotColor || options.color || this.template.commit.dot.color || null;
   options.x = this.offsetX - this.parent.commitOffsetX;
