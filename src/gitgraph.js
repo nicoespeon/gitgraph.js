@@ -330,13 +330,16 @@ Branch.prototype.commit = function (options) {
   };
 
   // First commit ?
-  if (commit.parentCommit instanceof Commit && commit.parentCommit.branch !== commit.branch /* Parent commit in another branch */ && this.path.length === 0 /* Path begin */ ) {
+  if (commit.parentCommit instanceof Commit /* First branch case */
+      && this.path.length === 0 /* Path begin */ ) {
     var parent = {
       x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
       y: commit.parentCommit.branch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
       type: "start"
     };
-    this.path.push(parent);
+    this.path.push(JSON.parse(JSON.stringify(parent))); // Elegant way for cloning an object
+    parent.type = "join";
+    this.parentBranch.path.push(parent);
   } else if (this.path.length === 0) {
     point.type = "start";
   }
