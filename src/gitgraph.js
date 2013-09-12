@@ -55,11 +55,6 @@ function GitGraph(options) {
   this.commitOffsetY = 0;
   this.lasthover = null;
 
-  // Error: no render()
-  this.context.fillStyle = "red";
-  this.context.font = "bold 15pt Calibri";
-  this.context.fillText("Error: No render() at the end", 150, 100);
-
   // Add tooltip if message aren't display
   if (!this.template.commit.message.display) {
     this.canvas.addEventListener("mousemove", {
@@ -350,6 +345,9 @@ Branch.prototype.commit = function (options) {
   // Increment commitOffset for next commit position
   this.parent.commitOffsetX += this.template.commit.spacingX;
   this.parent.commitOffsetY += this.template.commit.spacingY;
+  
+  // Auto-render
+  this.parent.render();
 
   // Return the main object so we can chain
   return this;
@@ -411,6 +409,9 @@ Branch.prototype.merge = function (target, message) {
   endOfBranch.type = "start";
   this.path.push(endOfBranch); // End of branch for futur commits
 
+   // Auto-render
+  this.parent.render();
+  
   // Checkout on target
   this.parent.HEAD = targetBranch;
 };
