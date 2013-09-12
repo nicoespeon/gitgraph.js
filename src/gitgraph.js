@@ -168,8 +168,8 @@ GitGraph.prototype.hover = function (event) {
     test = Math.sqrt((commit.x + self.marginX - event.offsetX) * (commit.x + this.gitgraph.marginX - event.offsetX) + (commit.y + self.marginY - event.offsetY) * (commit.y + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
     if (test < self.template.commit.dot.size) {
       // Show tooltip
-      self.tooltip.style.top = commit.y + 5 + "px";
-      self.tooltip.style.left = commit.x + 60 + "px";
+      self.tooltip.style.top = commit.y + 5 + "px"; // TODO Scroll bug
+      self.tooltip.style.left = commit.x + 60 + "px"; // TODO Scroll bug
       self.tooltip.textContent = commit.sha1 + " - " + commit.message;
       self.tooltip.style.display = "block";
       
@@ -561,19 +561,13 @@ Commit.prototype.arrow = function Arrow() {
   // Angles calculation
   var alpha = Math.atan2(
     this.parentCommit.y - this.y,
-    this.parentCommit.x - this.x);
+    this.parentCommit.x - this.x
+  );
 
-  // Fork case
-  if (this === this.branch.commits[0] /* First commit */
-      && this.y + this.x !== this.branch.offsetY + this.branch.originY + this.branch.offsetX + this.branch.originX /* Not same as branch origin */ ) {
-    // Parent commit -> branch origin 
-    alpha = Math.atan2(this.branch.offsetY + this.branch.originY - this.y,
-      this.branch.offsetX + this.branch.originX - this.x);
-  }
-
-  // Merge case
-  if (this.type === "mergeCommit") {
-    alpha = Math.atan2(this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
+  // Merge & Fork case
+  if (this.type === "mergeCommit" || this === this.branch.commits[0] /* First commit */) {
+    alpha = Math.atan2(
+      this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
       this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX);
     color = this.parentCommit.branch.color;
   }
