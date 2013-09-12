@@ -27,13 +27,22 @@ function GitGraph(options) {
   this.template = (options.template instanceof Template) ?
     options.template : new Template();
   this.mode = options.mode || null;
-  if (this.mode === "compact") {this.template.commit.message.display = false}
+  if (this.mode === "compact") {
+    this.template.commit.message.display = false;
+  }
   this.marginX = this.template.commit.dot.size * 2;
   this.marginY = this.template.commit.dot.size * 2;
 
   // Canvas init
   this.canvas = document.getElementById(this.elementId);
   this.context = this.canvas.getContext("2d");
+  
+  // Tooltip layer
+  this.tooltip = document.createElement("div");
+  this.tooltip.className = "gitgraph-tooltip";
+  this.tooltip.style.position = "fixed";
+  this.tooltip.style.display = "none";
+  document.body.appendChild(this.tooltip);
 
   // Navigation vars
   this.HEAD = null;
@@ -51,11 +60,13 @@ function GitGraph(options) {
   this.context.font = "bold 15pt Calibri";
   this.context.fillText("Error: No render() at the end", 150, 100);
 
-  // Event listener
-  this.canvas.addEventListener("mousemove", {
-    handleEvent: this.hover,
-    gitgraph: this
-  }, false);
+  // Add tooltip if message aren't display
+  if (!this.template.commit.message.display) {
+    this.canvas.addEventListener("mousemove", {
+      handleEvent: this.hover,
+      gitgraph: this
+    }, false);
+  }
 }
 
 /**
@@ -145,14 +156,33 @@ GitGraph.prototype.render = function () {
   }
 };
 
+/**
+ * Hover event on commit dot
+ *
+ * @param {MouseEvent} event - Mouse event
+ *
+ * @self Gitgraph
+ *
+ **/
 GitGraph.prototype.hover = function (event) {
+  var self = this.gitgraph;
   var test = 0;
+  var out = true; // Flag for hide tooltip
+  
   for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
-    test = Math.sqrt((commit.x + this.gitgraph.marginX - event.offsetX) * (commit.x + this.gitgraph.marginX - event.offsetX) + (commit.y + this.gitgraph.marginY - event.offsetY) * (commit.y + this.gitgraph.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
-    if (test < this.gitgraph.template.commit.dot.size && commit.sha1 !== this.gitgraph.lasthover) {
-      console.log(commit.sha1);
-      this.gitgraph.lasthover = commit.sha1;
+    test = Math.sqrt((commit.x + self.marginX - event.offsetX) * (commit.x + this.gitgraph.marginX - event.offsetX) + (commit.y + self.marginY - event.offsetY) * (commit.y + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
+    if (test < self.template.commit.dot.size) {
+      // Show tooltip
+      self.tooltip.style.top = commit.y + 5 + "px";
+      self.tooltip.style.left = commit.x + 60 + "px";
+      self.tooltip.textContent = commit.sha1 + " - " + commit.message;
+      self.tooltip.style.display = "block";
+      
+      out = false;
     }
+  }
+  if (out) {
+    self.tooltip.style.display = "none";
   }
 };
 
@@ -267,9 +297,9 @@ Branch.prototype.commit = function (options) {
   options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
 
   // Special compact mode
-  if (this.parent.mode === "compact" 
-      && this.parent.commits.slice(-1)[0] 
-      && this.parent.commits.slice(-1)[0].branch !== options.branch 
+  if (this.parent.mode === "compact"
+      && this.parent.commits.slice(-1)[0]
+      && this.parent.commits.slice(-1)[0].branch !== options.branch
       && options.branch.commits.length
       && options.type !== "mergeCommit") {
     this.parent.commitOffsetX -= this.template.commit.spacingX;
@@ -288,7 +318,7 @@ Branch.prototype.commit = function (options) {
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
   }
-  
+
   // Fork case: Parent commit from parent branch
   if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
     options.parentCommit = this.parentBranch.commits.slice(-1)[0];
@@ -533,8 +563,8 @@ Commit.prototype.arrow = function Arrow() {
     this.parentCommit.x - this.x);
 
   // Fork case
-  if (this === this.branch.commits[0] /* First commit */ &&
-    this.y + this.x !== this.branch.offsetY + this.branch.originY + this.branch.offsetX + this.branch.originX /* Not same as branch origin */ ) {
+  if (this === this.branch.commits[0] /* First commit */
+      && this.y + this.x !== this.branch.offsetY + this.branch.originY + this.branch.offsetX + this.branch.originX /* Not same as branch origin */ ) {
     // Parent commit -> branch origin 
     alpha = Math.atan2(this.branch.offsetY + this.branch.originY - this.y,
       this.branch.offsetX + this.branch.originX - this.x);

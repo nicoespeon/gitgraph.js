@@ -1,21 +1,45 @@
 <!DOCTYPE HTML>
 <html lang="en">
+  
   <head>
     <meta charset="UTF-8">
     <title>GitGraph.js example page</title>
-
     <style>
       body {
         margin: 0;
         padding: 0;
       }
+      .gitgraph-tooltip {
+        position: absolute;
+        width: 400px;
+        height: 20px;
+        line-height: 20px;
+        padding: 10px;
+        font-size: 14px;
+        text-align: center;
+        color: #333;
+        background: #EEE;
+        border-radius: 5px;
+        transition: all 0.2s;
+      }
+      .gitgraph-tooltip:after {
+        content:"";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent #EEEEEE transparent transparent;
+        top: 10px;
+        left: -20px;
+      }
     </style>
   </head>
-
+  
   <body>
     <canvas id="gitGraph"></canvas>
-
     <script src="../src/gitgraph.js"></script>
     <script src="index.js"></script>
   </body>
+
 </html>

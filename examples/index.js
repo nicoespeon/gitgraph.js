@@ -1,6 +1,6 @@
 var gitGraph = new GitGraph({
-  template: "blackarrow", // "blackarrow" or "metro" or Template Object
-  //mode: "compact" // Special compact mode : hide messages & compact graph
+  template: "metro", // "blackarrow" or "metro" or Template Object
+  mode: "compact" // Special compact mode : hide messages & compact graph
 });
 
 var master = gitGraph.branch("master"); // Create branch named "master"
