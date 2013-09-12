@@ -417,6 +417,9 @@ Branch.prototype.merge = function (target, message) {
   
   // Checkout on target
   this.parent.HEAD = targetBranch;
+  
+  // Return the main object so we can chain
+  return this;
 };
 
 /**
