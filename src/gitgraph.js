@@ -170,8 +170,14 @@
    **/
   GitGraph.prototype.render = function () {
     // Resize canvas
-    this.canvas.height = Math.abs(this.commits.slice(-1)[0].y) + this.marginY * 2;
-    this.canvas.width = Math.abs(this.commits.slice(-1)[0].x) + this.marginX * 2;
+    this.canvas.height = Math.abs(this.columnMax * this.template.branch.spacingY)
+      +  Math.abs(this.commitOffsetY)
+      + this.marginY * 2;
+    
+    this.canvas.width = Math.abs(this.columnMax * this.template.branch.spacingX)
+      +  Math.abs(this.commitOffsetX)
+      + this.marginX * 2;
+    
     if (this.template.commit.message.display) {
       this.canvas.width += 800;
     }
