@@ -114,14 +114,25 @@
     options.parent = this;
     options.parentBranch = options.parentBranch || this.HEAD;
   
-    // Calcul origin of branch
-    if (options.parentBranch instanceof Branch
-       && options.parentBranch.commits.length) {
-      var lastCommit = options.parentBranch.commits.slice(-1)[0];
-      options.originX = lastCommit.x - this.template.commit.spacingX - options.parentBranch.offsetX;
-      options.originY = lastCommit.y - this.template.commit.spacingY - options.parentBranch.offsetY;
+    // Add branch
+    var branch = new Branch(options);
+    this.branchs.push(branch);
+  
+    // Return
+    return branch;
+  };
+  
+  GitGraph.prototype.orphanBranch = function (options) {
+    // Options
+    if (typeof options === "string") {
+      var name = options;
+      options = {};
+      options.name = name;
     }
   
+    options = (typeof options === "object") ? options : {};
+    options.parent = this;
+    
     // Add branch
     var branch = new Branch(options);
     this.branchs.push(branch);
@@ -207,7 +218,6 @@
     
     for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
       test = Math.sqrt((commit.x + self.offsetX + self.marginX - event.offsetX) * (commit.x + self.offsetX + self.marginX - event.offsetX) + (commit.y + self.offsetY +self.marginY - event.offsetY) * (commit.y + self.offsetY + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
-      if (i == 1) console.log(test);
       if (test < self.template.commit.dot.size) {
         // Show tooltip
         self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
@@ -235,8 +245,6 @@
    *
    * @param {Object} options - Options of branch
    * @param {GitGraph} options.parent - GitGraph constructor
-   * @param {Number} [options.originX] - Branch origin X
-   * @param {Number} [options.originY] - Branch origin Y
    * @param {Branch} [options.parentBranch] - Parent branch
    * @param {String} [options.name = "no-name"] - Branch name
    *
@@ -252,8 +260,6 @@
     options = (typeof options === "object") ? options : {};
     this.parent = options.parent;
     this.parentBranch = options.parentBranch;
-    this.originX = (typeof options.originX === "number") ? options.originX : 0;
-    this.originY = (typeof options.originY === "number") ? options.originY : 0;
     this.name = (typeof options.name === "string") ? options.name : "no-name";
     this.context = this.parent.context;
     this.template = this.parent.template;
@@ -287,8 +293,7 @@
    **/
   Branch.prototype.render = function () {
     this.context.beginPath();
-    this.context.moveTo(this.path[0].x, this.path[0].y);
-  
+
     for (var i = 0, point; !! (point = this.path[i]); i++) {
       if (point.type === "start") {
         this.context.moveTo(point.x, point.y);
@@ -461,33 +466,16 @@
   };
   
   /**
-   * Update size of branchs not merged
-   *
-   * @return {int} size
-   * @this Branch
-   **/
-  Branch.prototype.updateSize = function () {
-    this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
-    this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
-  
-    this.size = Math.sqrt(this.height * this.height + this.width * this.width); // Pythagore powaaa
-  
-    return {
-      width: Math.abs(this.width),
-      height: Math.abs(this.height - 100)
-    };
-  };
-  
-  /**
    * Calcul column
    *
    * @this Branch
    **/
   Branch.prototype.calculColumn = function () {
     for (var i = 0, branch; !! (branch = this.parent.branchs[i]); i++) {
-      branch.updateSize();
-      if (!branch.isfinish || branch.originY - branch.size <= this.originY) {
+      if (!branch.isfinish) {
         this.column++;
+      } else {
+        break;
       }
     }
   
