@@ -1,4 +1,4 @@
-(function(){
+(function () {
   /**
    * GitGraph
    *
@@ -410,6 +410,15 @@
    **/
   Branch.prototype.checkout = function () {
     this.parent.HEAD = this;
+  };
+  
+  /**
+   * Delete this branch
+   *
+   * @this
+   **/
+  Branch.prototype.delete = function () {
+    this.isfinish = true;
   };
   
   /**
