@@ -8,6 +8,8 @@
  * @param {Template|String} [options.template] - Template of the graph
  * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
  * @param {String} [options.mode = (null|"compact")]  - Display mode
+ * @param {DOM} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
+ * @param {Boolean} [options.testMode] - Active test mode for Jasmine
  *
  * @this GitGraph
  **/
@@ -34,7 +36,7 @@ function GitGraph(options) {
   this.marginY = this.template.commit.dot.size * 2;
 
   // Canvas init
-  this.canvas = document.getElementById(this.elementId);
+  this.canvas = document.getElementById(this.elementId) || options.canvas;
   this.context = this.canvas.getContext("2d");
   
   // Tooltip layer
@@ -42,7 +44,10 @@ function GitGraph(options) {
   this.tooltip.className = "gitgraph-tooltip";
   this.tooltip.style.position = "fixed";
   this.tooltip.style.display = "none";
-  document.body.appendChild(this.tooltip);
+  
+  if (!options.testMode) {
+    document.body.appendChild(this.tooltip);
+  }
 
   // Navigation vars
   this.HEAD = null;
