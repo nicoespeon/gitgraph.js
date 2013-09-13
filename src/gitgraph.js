@@ -120,8 +120,11 @@ GitGraph.prototype.commit = function (options) {
  **/
 GitGraph.prototype.render = function () {
   // Resize canvas
-  this.canvas.height = this.branchs[0].updateSize().height || this.branchs.slice(-1)[0].offsetY + this.template.commit.dot.size * 3;
-  this.canvas.width = this.branchs[0].updateSize().width || 1000;
+  this.canvas.height = Math.abs(this.commits.slice(-1)[0].y) + this.marginY * 2;
+  this.canvas.width = Math.abs(this.commits.slice(-1)[0].x) + this.marginX * 2;
+  if (this.template.commit.message.display) {
+    this.canvas.width += 800;
+  }
 
   // Clear All
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -131,15 +134,12 @@ GitGraph.prototype.render = function () {
 
   // Translate for inverse orientation
   if (this.template.commit.spacingY > 0) {
-    this.context.translate(0, this.canvas.height - this.template.commit.dot.size * 3);
-    this.marginY += this.canvas.height - this.template.commit.dot.size * 3;
+    this.context.translate(0, this.canvas.height - this.marginY * 2);
   }
-
   if (this.template.commit.spacingX > 0) {
-    this.context.translate(this.canvas.width - this.template.commit.dot.size * 3, 0);
-    this.marginX += this.canvas.width - this.template.commit.dot.size * 3;
+    this.context.translate(this.canvas.width - this.marginX * 2, 0);
   }
-
+  
   // Render branchs
   for (var i = this.branchs.length - 1, branch; !! (branch = this.branchs[i]); i--) {
     branch.render();
@@ -290,7 +290,7 @@ Branch.prototype.commit = function (options) {
   options.color = options.color || this.template.commit.color || this.template.colors[this.column];
   options.parent = this.parent;
   options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
-
+  
   // Special compact mode
   if (this.parent.mode === "compact"
       && this.parent.commits.slice(-1)[0]
@@ -348,7 +348,7 @@ Branch.prototype.commit = function (options) {
   // Increment commitOffset for next commit position
   this.parent.commitOffsetX += this.template.commit.spacingX;
   this.parent.commitOffsetY += this.template.commit.spacingY;
-  
+
   // Auto-render
   this.parent.render();
 
@@ -381,10 +381,6 @@ Branch.prototype.merge = function (target, message) {
     return;
   }
 
-  // Update size of branch
-  this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
-  this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
-
   // Merge commit
   message = (typeof message === "string") ?
     message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
@@ -396,8 +392,8 @@ Branch.prototype.merge = function (target, message) {
 
   // Add points to path
   var endOfBranch = {
-    x: this.offsetX + this.originX - this.width,
-    y: this.offsetY + this.originY - this.height,
+    x:  this.offsetX + this.template.commit.spacingX * 2 - this.parent.commitOffsetX,
+    y:  this.offsetY + this.template.commit.spacingY * 2 - this.parent.commitOffsetY,
     type: "join"
   };
   this.path.push(JSON.parse(JSON.stringify(endOfBranch))); // Elegant way for cloning an object
@@ -429,16 +425,14 @@ Branch.prototype.merge = function (target, message) {
  * @this Branch
  **/
 Branch.prototype.updateSize = function () {
-  if (this.targetBranch instanceof Branch === false) {
-    this.width = this.parent.commitOffsetX + this.template.commit.spacingX;
-    this.height = this.parent.commitOffsetY + this.template.commit.spacingY;
-  }
+  this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
+  this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
 
   this.size = Math.sqrt(this.height * this.height + this.width * this.width); // Pythagore powaaa
 
   return {
     width: Math.abs(this.width),
-    height: Math.abs(this.height)
+    height: Math.abs(this.height - 100)
   };
 };
 
@@ -450,7 +444,7 @@ Branch.prototype.updateSize = function () {
 Branch.prototype.calculColumn = function () {
   for (var i = 0, branch; !! (branch = this.parent.branchs[i]); i++) {
     branch.updateSize();
-    if (branch.originY - branch.size <= this.originY) {
+    if (!branch.isfinish || branch.originY - branch.size <= this.originY) {
       this.column++;
     }
   }
