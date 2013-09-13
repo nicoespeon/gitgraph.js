@@ -25,7 +25,7 @@ describe("Gitgraph", function () {
 
   it("should load the right template", function () {
     expect(gitGraph.template)
-      .toEqual(new Template().get("metro"));
+      .toEqual(gitGraph.newTemplate("metro"));
   });
   
   it("should load the default template", function () {
@@ -35,7 +35,7 @@ describe("Gitgraph", function () {
       template: "wrongInput"
     });
     expect(gitGraph.template)
-      .toEqual(new Template());
+      .toEqual(gitGraph.newTemplate());
   });
 });
 
