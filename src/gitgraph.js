@@ -36,6 +36,8 @@
     }
     this.marginX = this.template.commit.dot.size * 2;
     this.marginY = this.template.commit.dot.size * 2;
+    this.offsetX = 0;
+    this.offsetY = 0;
     
     // Orientation
     switch (options.orientation) {
@@ -185,9 +187,11 @@
     // Translate for inverse orientation
     if (this.template.commit.spacingY > 0) {
       this.context.translate(0, this.canvas.height - this.marginY * 2);
+      this.offsetY = this.canvas.height - this.marginY * 2;
     }
     if (this.template.commit.spacingX > 0) {
       this.context.translate(this.canvas.width - this.marginX * 2, 0);
+      this.offsetX = this.canvas.width - this.marginX * 2;
     }
     
     // Render branchs
@@ -215,11 +219,12 @@
     var out = true; // Flag for hide tooltip
     
     for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
-      test = Math.sqrt((commit.x + self.marginX - event.offsetX) * (commit.x + this.gitgraph.marginX - event.offsetX) + (commit.y + self.marginY - event.offsetY) * (commit.y + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
+      test = Math.sqrt((commit.x + self.offsetX + self.marginX - event.offsetX) * (commit.x + self.offsetX + self.marginX - event.offsetX) + (commit.y + self.offsetY +self.marginY - event.offsetY) * (commit.y + self.offsetY + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
+      if (i == 1) console.log(test);
       if (test < self.template.commit.dot.size) {
         // Show tooltip
-        self.tooltip.style.top = commit.y + 5 + "px"; // TODO Scroll bug
-        self.tooltip.style.left = commit.x + 60 + "px"; // TODO Scroll bug
+        self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
+        self.tooltip.style.top = event.y + "px"; // TODO Scroll bug
         self.tooltip.textContent = commit.sha1 + " - " + commit.message;
         self.tooltip.style.display = "block";
         
