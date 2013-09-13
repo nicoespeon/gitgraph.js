@@ -382,8 +382,7 @@ Branch.prototype.merge = function (target, message) {
   }
 
   // Update size of branch
-  this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
-  this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
+  this.updateSize();
 
   // Merge commit
   message = (typeof message === "string") ?
@@ -396,8 +395,10 @@ Branch.prototype.merge = function (target, message) {
 
   // Add points to path
   var endOfBranch = {
-    x: this.offsetX + this.originX - this.width,
-    y: this.offsetY + this.originY - this.height,
+    //x: this.offsetX + this.originX - this.width,
+    //y: this.offsetY + this.originY - this.height,
+    x:  this.offsetX + this.template.commit.spacingX * 2 - this.parent.commitOffsetX,
+    y:  this.offsetY + this.template.commit.spacingY * 2 - this.parent.commitOffsetY,
     type: "join"
   };
   this.path.push(JSON.parse(JSON.stringify(endOfBranch))); // Elegant way for cloning an object
@@ -429,16 +430,14 @@ Branch.prototype.merge = function (target, message) {
  * @this Branch
  **/
 Branch.prototype.updateSize = function () {
-  if (this.targetBranch instanceof Branch === false) {
-    this.width = this.parent.commitOffsetX + this.template.commit.spacingX;
-    this.height = this.parent.commitOffsetY + this.template.commit.spacingY;
-  }
+  this.width = this.originX + this.parent.commitOffsetX - this.template.commit.spacingX;
+  this.height = this.originY + this.parent.commitOffsetY - this.template.commit.spacingY;
 
   this.size = Math.sqrt(this.height * this.height + this.width * this.width); // Pythagore powaaa
 
   return {
     width: Math.abs(this.width),
-    height: Math.abs(this.height)
+    height: Math.abs(this.height - 100)
   };
 };
 
