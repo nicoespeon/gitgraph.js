@@ -11,6 +11,7 @@
    * @param {String} [options.mode = (null|"compact")]  - Display mode
    * @param {DOM} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
    * @param {Boolean} [options.testMode] - Active test mode for Jasmine
+   * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    *
    * @this GitGraph
    **/
@@ -35,6 +36,27 @@
     }
     this.marginX = this.template.commit.dot.size * 2;
     this.marginY = this.template.commit.dot.size * 2;
+    
+    // Orientation
+    switch (options.orientation) {
+    case "vertical-reverse" :
+      this.template.commit.spacingY *= -1;
+      break;
+    case "horizontal" :
+      this.template.commit.message.display = false;
+      this.template.commit.spacingX = this.template.commit.spacingY;
+      this.template.branch.spacingY = this.template.branch.spacingX;
+      this.template.commit.spacingY = 0;
+      this.template.branch.spacingX = 0;
+      break;
+    case "horizontal-reverse" :
+      this.template.commit.message.display = false;
+      this.template.commit.spacingX = - this.template.commit.spacingY;
+      this.template.branch.spacingY = this.template.branch.spacingX;
+      this.template.commit.spacingY = 0;
+      this.template.branch.spacingX = 0;
+      break;
+    }
   
     // Canvas init
     this.canvas = document.getElementById(this.elementId) || options.canvas;
