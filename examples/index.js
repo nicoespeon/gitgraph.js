@@ -38,5 +38,3 @@ test.commit("Final commit");
 test.merge(master, "My special merge commit message"); // Merge into HEAD with special merge commit message
 
 test.commit("It's works !");
-
-gitGraph.render(); // Render gitGraph
