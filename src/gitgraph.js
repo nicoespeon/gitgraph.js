@@ -73,19 +73,6 @@
     if (!options.testMode) {
       // Add tooltip div into body
       document.body.appendChild(this.tooltip);
-      // Find path
-      var path;
-      for (var i = 0, lenght = document.scripts.length; i<lenght; i++) {
-        if (document.scripts[i].src.indexOf("gitgraph") !== -1) {
-          path = document.scripts[i].src.split("gitgraph")[0];
-        }
-      }
-      // Add css into head
-      var css = document.createElement("link");
-      css.setAttribute("rel", "stylesheet");
-      css.setAttribute("type", "text/css");
-      css.setAttribute("href", path + "gitgraph.css");
-      document.head.appendChild(css);
     }
   
     // Navigation vars
