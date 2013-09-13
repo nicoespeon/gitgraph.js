@@ -9,6 +9,8 @@
   color: #333;
   background: #EEE;
   border-radius: 5px;
+  margin-left: 25px;
+  margin-top: -15px;
 }
 .gitgraph-tooltip:after {
   content:"";
