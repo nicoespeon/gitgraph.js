@@ -121,7 +121,7 @@ GitGraph.prototype.commit = function (options) {
 GitGraph.prototype.render = function () {
   // Resize canvas
   this.canvas.height = Math.abs(this.commits.slice(-1)[0].y) + this.marginY * 2;
-  this.canvas.width = Math.abs(this.commits.slice(-1)[0].x) + this.marginX * 2; 
+  this.canvas.width = Math.abs(this.commits.slice(-1)[0].x) + this.marginX * 2;
   if (this.template.commit.message.display) {
     this.canvas.width += 800;
   }
@@ -137,7 +137,7 @@ GitGraph.prototype.render = function () {
     this.context.translate(0, this.canvas.height - this.marginY * 2);
   }
   if (this.template.commit.spacingX > 0) {
-   this.context.translate(this.canvas.width - this.marginX * 2, 0);
+    this.context.translate(this.canvas.width - this.marginX * 2, 0);
   }
   
   // Render branchs
@@ -443,10 +443,10 @@ Branch.prototype.updateSize = function () {
  **/
 Branch.prototype.calculColumn = function () {
   for (var i = 0, branch; !! (branch = this.parent.branchs[i]); i++) {
-    //branch.updateSize();
-    //if (branch.originY - branch.size <= this.originY) {
+    branch.updateSize();
+    if (!branch.isfinish || branch.originY - branch.size <= this.originY) {
       this.column++;
-    //}
+    }
   }
 
   this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
