@@ -38,14 +38,16 @@ module.exports = function ( grunt ) {
     // The `jsdoc` task will produce the code documentation for the whole project.
     jsdoc: {
       dist: {
-        src: [ "src/*.js" ],
+        src: [ "src/*.js", "README.md" ],
         options: {
+          configure: '.jsdocrc',
           destination: "dist/docs"
         }
       },
       release: {
-        src: [ "src/*.js" ],
+        src: [ "src/*.js", "README.md" ],
         options: {
+          configure: '.jsdocrc',
           destination: "docs"
         }
       }
