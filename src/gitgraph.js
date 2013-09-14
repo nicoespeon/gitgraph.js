@@ -421,7 +421,7 @@
   /**
    * Delete this branch
    *
-   * @this
+   * @this Branch
    **/
   Branch.prototype.delete = function () {
     this.isfinish = true;
