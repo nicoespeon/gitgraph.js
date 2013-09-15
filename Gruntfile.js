@@ -42,22 +42,27 @@ module.exports = function ( grunt ) {
         dest: "build/gitgraph.js"
       }
     },
+
+    // The `copy` task copies the CSS into the target directory.
     copy: {
       dist: {
-        files: [
-          {src: ["src/gitgraph.css"], dest: "dist/gitgraph.css"}
-        ]
+        files: [ {
+          src: [ "src/gitgraph.css" ],
+          dest: "dist/gitgraph.css"
+        } ]
       },
       release: {
-        files: [
-          {src: ["src/gitgraph.css"], dest: "build/gitgraph.css"}
-        ]
+        files: [ {
+          src: [ "src/gitgraph.css" ],
+          dest: "build/gitgraph.css"
+        } ]
       },
       server: {
-        files: [
-          {cwd: "src/", src: "*", dest: "server/", flatten: true, expand: true},
-          {cwd: "examples/", src: ["*.js", "*.css"], dest: "server/", flatten: true, expand: true}
-        ]
+        files: [ {
+          "dist/server/": "src/*",
+          "dist/server/index.html": "examples/index.html",
+          "dist/server/index.js": "examples/index.js"
+        } ]
       }
     },
 
