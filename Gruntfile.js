@@ -5,27 +5,26 @@ module.exports = function ( grunt ) {
   grunt.initConfig( {
 
     // Metadata
-    pkg: grunt.file.readJSON("package.json"),
-    banner: "/* ==========================================================\n" +
-            " *                  GitGraph v<%= pkg.version %>\n" +
-            " *      <%= pkg.repository.url %>\n" +
-            " * ==========================================================\n" +
-            " * Copyright (c) <%= grunt.template.today('yyyy') %>" +
-            " Nicolas CARLO (@nicoespeon) ٩(^‿^)۶\n" +
-            " * Copyright (c) <%= grunt.template.today('yyyy') %>" +
-            " Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌\n" +
-            " *\n" +
-            " * GitGraph.js may be freely distributed under the" +
-            " <%= pkg.license %> Licence\n" +
-            " * ========================================================== */\n",
+    pkg: grunt.file.readJSON( "package.json" ),
+    banner: "/* ==========================================================\n"
+          + " *                  GitGraph v<%= pkg.version %>\n"
+          + " *      <%= pkg.repository.url %>\n"
+          + " * ==========================================================\n"
+          + " * Copyright (c) <%= grunt.template.today('yyyy') %>"
+          + " Nicolas CARLO (@nicoespeon) ٩(^‿^)۶\n"
+          + " * Copyright (c) <%= grunt.template.today('yyyy') %>"
+          + " Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌\n"
+          + " *\n"
+          + " * GitGraph.js may be freely distributed under the"
+          + " <%= pkg.license %> Licence\n"
+          + " * ========================================================== */\n",
 
-    // The `clean` task ensures all files are removed from the `dist/`, `server/`, `temp/` directories
+    // The `clean` task ensures all files are removed from the misc. directories
     // so that no files linger from previous builds.
     clean: {
-      options: {force: true},
       dist: [ "dist/" ],
-      server: ["server/"],
-      temp: ["temp/"]
+      jsdoc: [ "dist/jsdoc/" ],
+      release: [ "build/", "docs/" ]
     },
 
     // The `concat` task copies the source file into the `build/` directory with
