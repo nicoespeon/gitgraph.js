@@ -11,7 +11,6 @@
    * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
    * @param {String} [options.mode = (null|"compact")]  - Display mode
    * @param {DOM} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
-   * @param {Boolean} [options.testMode] - Active test mode for Jasmine
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    *
    * @this GitGraph
@@ -71,10 +70,8 @@
     this.tooltip.style.position = "fixed";
     this.tooltip.style.display = "none";
 
-    if (!options.testMode) {
-      // Add tooltip div into body
-      document.body.appendChild(this.tooltip);
-    }
+    // Add tooltip div into body
+    document.body.appendChild(this.tooltip);
 
     // Navigation vars
     this.HEAD = null;

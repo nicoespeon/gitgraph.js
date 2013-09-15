@@ -3,9 +3,11 @@ describe("Gitgraph", function () {
 
   // Scenario - basic variables for tests
   // TO BE REFACTOR for proper testing (beforeEach / afterEach)
+  var body = document.createElement("body");
+  document.body = body;
+  
   var gitGraph = new GitGraph({
     canvas: document.createElement("canvas"),
-    testMode: true,
     template: "metro"
   });
 
@@ -17,7 +19,6 @@ describe("Gitgraph", function () {
   it("should hide messages in compact mode", function () {
     var gitGraph = new GitGraph({
       canvas: document.createElement("canvas"),
-      testMode: true,
       mode: "compact"
     });
 
@@ -33,7 +34,6 @@ describe("Gitgraph", function () {
   it("should load the default template", function () {
     var gitGraph = new GitGraph({
       canvas: document.createElement("canvas"),
-      testMode: true,
       template: "wrongInput"
     });
     expect(gitGraph.template)
@@ -59,7 +59,6 @@ describe("Gitgraph", function () {
     it("should have the color of branch template", function () {
       var gitGraph = new GitGraph({
         canvas: document.createElement("canvas"),
-        testMode: true,
         template: "blackarrow"
       });
       var master = gitGraph.branch("master");
