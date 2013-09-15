@@ -769,7 +769,7 @@
   
     case "metro":
       return new Template({
-        colors: ["#979797", "#008fb5", "f1c109"],
+        colors: ["#979797", "#008fb5", "#f1c109"],
         branch: {
           lineWidth: 10,
           spacingX: 50
