@@ -22,6 +22,7 @@ module.exports = function ( grunt ) {
     // The `clean` task ensures all files are removed from the misc. directories
     // so that no files linger from previous builds.
     clean: {
+      options: {force: true},
       dist: [ "dist/" ],
       jsdoc: [ "dist/jsdoc/" ],
       release: [ "build/", "docs/" ]
