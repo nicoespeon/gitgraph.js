@@ -66,7 +66,18 @@ module.exports = function ( grunt ) {
       }
     },
 
-    // The `jsdoc` task will produce the code documentation for the whole project.
+    // The `express` task will launch a server for livereload purposes.
+    express: {
+      server: {
+        options: {
+          port: 9000,
+          hostname: "127.0.0.1",
+          bases: [ "dist/server/" ],
+          livereload: true
+        }
+      }
+    },
+
     jsdoc: {
       dist: {
         src: [ "temp/src/*.js", "README.md" ],
