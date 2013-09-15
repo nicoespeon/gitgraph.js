@@ -52,6 +52,12 @@ Clean `dist/` directory, lint code, output the minified release into `dist/gitgr
 
 Lint code, output the source and minified releases into `build/` and generate the official documentation into `docs/`.
 
+#### open a live reload server - `grunt server`
+
+For a better code experience, this grunt task open in your favorite browser a live server. This server is automatically reloaded when you save a project file.
+
+Please note that `examples/index.html` is the default file for testing ;)
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) as a guideline for our versioning here.

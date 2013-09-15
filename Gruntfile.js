@@ -21,7 +21,10 @@ module.exports = function ( grunt ) {
 
     // The `clean` task ensures all files are removed from the `dist/` directory
     // so that no files linger from previous builds.
-    clean: [ "dist/" ],
+    clean: {
+      dist: [ "dist/" ],
+      server: ["server/"]
+    },
 
     // The `concat` task copies the source file into the `build/` directory with
     // the compiled banner for release use.
@@ -32,6 +35,24 @@ module.exports = function ( grunt ) {
       release: {
         src: [ "src/gitgraph.js" ],
         dest: "build/gitgraph.js"
+      }
+    },
+    copy: {
+      dist: {
+        files: [
+          {src: ["src/gitgraph.css"], dest: "dist/gitgraph.css"}
+        ]
+      },
+      release: {
+        files: [
+          {src: ["src/gitgraph.css"], dest: "build/gitgraph.css"}
+        ]
+      },
+      server: {
+        files: [
+          {cwd: "src/", src: "*", dest: "server/", flatten: true, expand: true},
+          {cwd: "examples/", src: ["*.js", "*.css"], dest: "server/", flatten: true, expand: true}
+        ]
       }
     },
 
@@ -92,7 +113,50 @@ module.exports = function ( grunt ) {
           report: "min"
         }
       }
-    }
+    },
+                   
+    // The `watch` task will monitor the projects files
+    watch: {
+     server: {
+       options: { livereload: true },
+       files: ["src/*", "examples/*"],
+       tasks: ["copy:server"]
+     }
+    },
+    express: {
+      server: {
+        options: {
+          port: 9000,
+          hostname: "0.0.0.0", // localhost|127.0.0.0
+          bases: ["server"],
+          livereload: true
+        }
+      }
+    },
+    open: {
+      server: {
+        path: "http://127.0.0.1:<%= express.server.options.port %>"
+      }
+    },
+    "string-replace": {
+     server: {
+       files: {
+         "server/index.html": "examples/index.html"
+       },
+       options: {
+         replacements: [
+           {
+             pattern: "../src/gitgraph.css",
+             replacement: "gitgraph.css"
+           },
+           {
+             pattern: "../src/gitgraph.js",
+             replacement: "gitgraph.js"
+           },
+         ]
+       }
+     }
+   }
 
   } );
 
@@ -107,8 +171,9 @@ module.exports = function ( grunt ) {
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
-    "clean",
+    "clean:dist",
     "lint",
+    "copy:dist",
     "uglify:dist",
     "jsdoc:dist"
   ] );
@@ -116,8 +181,18 @@ module.exports = function ( grunt ) {
   // `grunt release` will create a new release of the source code.
   grunt.registerTask( "release", [
     "lint",
+    "copy:release",
     "concat:release",
     "uglify:release",
     "jsdoc:release"
   ] );
+  
+  // `grunt server` will open a live reload server on your favorite browser
+  grunt.registerTask('server', [
+    "copy:server",
+    "string-replace:server",
+    "express:server",
+    "open",
+    "watch:server"
+  ]);
 };
