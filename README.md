@@ -5,7 +5,7 @@ A JavaScript library to draw pretty git graphs in the browser.
 
 ## How to start
 
-The project is not stable so far but you still can download [the latest release](https://github.com/nicoespeon/gitgraph.js/releases/tag/v0.2.0).
+The project is not stable so far but you still can download [the latest release](https://github.com/nicoespeon/gitgraph.js/releases/tag/v0.3.0).
 
 ## Report a bug / Ask for a feature
 
