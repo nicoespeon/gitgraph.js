@@ -1,11 +1,12 @@
 var gitGraph = new GitGraph({
-  template: "blackarrow" // "blackarrow" or "metro" or Template Object
+  template: "metro", // "blackarrow" or "metro" or Template Object
+  mode: "compact" // Special compact mode : hide messages & compact graph
 });
 
 var master = gitGraph.branch("master"); // Create branch named "master"
 gitGraph.commit("Initial commit") // Commit on HEAD Branch (here this is master)
-.commit("My second commit")
-.commit("Add awesome feature");
+  .commit("My second commit")
+  .commit("Add awesome feature");
 
 var dev = gitGraph.branch("dev"); // Create branch named "dev" (a HEAD fork)
 dev.commit("Youhou \\o/"); // Commit on dev
@@ -36,6 +37,4 @@ dev.merge(); // Merge dev into HEAD (master) (automatic merge commit)
 test.commit("Final commit");
 test.merge(master, "My special merge commit message"); // Merge into HEAD with special merge commit message
 
-test.commit("error"); // Error: You can't commit on merged branch
-
-gitGraph.render(); // Render gitGraph
+test.commit("It's works !");

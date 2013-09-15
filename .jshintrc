@@ -5,6 +5,7 @@
   "forin": false,
   "indent": 2,
   "latedef": true,
+  "laxbreak": true,
   "newcap": true,
   "quotmark": "double",
   "trailing": true

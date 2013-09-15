@@ -47,7 +47,7 @@
     
     
     <div class="description">
-        GitGraph
+        <p>GitGraph</p>
     </div>
     
 
@@ -100,7 +100,7 @@
             
             
             
-            <td class="description last">GitGraph options
+            <td class="description last"><p>GitGraph options</p>
                 <h6>Properties</h6>
                 
 
@@ -157,12 +157,12 @@
             
                 <td class="default">
                 
-                    'gitGraph'
+                    "gitGraph"
                 
                 </td>
             
             
-            <td class="description last">Id of <canvas> container</td>
+            <td class="description last"><p>Id of the canvas container</p></td>
         </tr>
 	
 	
@@ -176,6 +176,9 @@
             
                 
 <span class="param-type"><a href="Template.html">Template</a></span>
+|
+
+<span class="param-type">String</span>
 
 
             
@@ -199,7 +202,7 @@
                 </td>
             
             
-            <td class="description last">Template, default template if nothing here</td>
+            <td class="description last"><p>Template of the graph</p></td>
         </tr>
 	
 	
@@ -233,12 +236,164 @@
             
                 <td class="default">
                 
-                    'Sergio Flores &lt;saxo-guy@epic.com>'
+                    "Sergio Flores &lt;saxo-guy@epic.com>"
                 
                 </td>
             
             
-            <td class="description last">Default author for commits</td>
+            <td class="description last"><p>Default author for commits</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    (null|"compact")
+                
+                </td>
+            
+            
+            <td class="description last"><p>Display mode</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>canvas</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">DOM</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>DOM canvas (ex: document.getElementById(&quot;id&quot;))</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>testMode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>Active test mode for Jasmine</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>orientation</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    ("vertical-reverse"|"horizontal"|"horizontal-reverse")
+                
+                </td>
+            
+            
+            <td class="description last"><p>Graph orientation</p></td>
         </tr>
 	
 	
@@ -275,7 +430,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line13">line 13</a>
+        gitgraph.js, line 18
     </li></ul></dd>
     
     
@@ -329,7 +484,7 @@
     
     
     <div class="description">
-        Create new branch
+        <p>Create new branch</p>
     </div>
     
 
@@ -385,7 +540,7 @@
             
             
             
-            <td class="description last">Branch name | Options of Branch</td>
+            <td class="description last"><p>Branch name | Options of Branch</p></td>
         </tr>
 	
 	
@@ -416,7 +571,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line55">line 55</a>
+        gitgraph.js, line 105
     </li></ul></dd>
     
     
@@ -459,7 +614,7 @@
     
     
     <div class="description">
-        Commit on HEAD
+        <p>Commit on HEAD</p>
     </div>
     
 
@@ -512,7 +667,7 @@
             
             
             
-            <td class="description last">Options of commit</td>
+            <td class="description last"><p>Options of commit</p></td>
         </tr>
 	
 	
@@ -543,7 +698,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line89">line 89</a>
+        gitgraph.js, line 152
     </li></ul></dd>
     
     
@@ -575,7 +730,7 @@
     
             
 <div class="param-desc">
-    this - Return the main object so we can chain
+    <p>this - Return the main object so we can chain</p>
 </div>
 
 
@@ -600,6 +755,123 @@
         
             
 <dt>
+    <h4 class="name" id="hover"><span class="type-signature"></span>hover<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Hover event on commit dot</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">MouseEvent</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Mouse event</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        gitgraph.js, line 220
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -608,7 +880,7 @@
     
     
     <div class="description">
-        Render the canvas
+        <p>Render the canvas</p>
     </div>
     
 
@@ -644,7 +916,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line101">line 101</a>
+        gitgraph.js, line 171
     </li></ul></dd>
     
     
@@ -685,13 +957,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Arrow.html">Arrow</a></li><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sun Sep 08 2013 19:32:03 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sun Sep 15 2013 19:04:46 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

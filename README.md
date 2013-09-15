@@ -1,11 +1,11 @@
-gitgraph.js [![devDependency Status](https://david-dm.org/twbs/bootstrap/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
+gitgraph.js [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js) [![devDependency Status](https://david-dm.org/nicoespeon/gitgraph.js/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
 ===========
 
 A JavaScript library to draw pretty git graphs in the browser.
 
 ## How to start
 
-The project is not stable so far but you still can download [the latest release](https://github.com/nicoespeon/gitgraph.js/releases/tag/v0.2.0).
+The project is not stable so far but you still can download [the latest release](https://github.com/nicoespeon/gitgraph.js/releases/tag/v0.3.0).
 
 ## Report a bug / Ask for a feature
 
@@ -42,11 +42,21 @@ Check source code against [JSHint](http://www.jshint.com/) then runs unit tests 
 
 #### generate documentation - `grunt docs`
 
-Generate source code documentation into `dist/docs` (not versioned) with [JSDoc](http://usejsdoc.org/).
+Generate source code documentation into `dist/docs/` (not versioned) with [JSDoc](http://usejsdoc.org/).
+
+#### compile a non-versioned release - `grunt dist`
+
+Clean `dist/` directory, lint code, output the minified release into `dist/gitgraph.min.js` and generate the documentation into `dist/docs/`.
 
 #### compile a new release - `grunt release`
 
-Clean `dist/` directory, lint code, output the minified release into `dist/js/gitgraph.min.js` and generate the official documentation into `docs/`.
+Lint code, output the source and minified releases into `build/` and generate the official documentation into `docs/`.
+
+#### open a live reload server - `grunt server`
+
+For a better code experience, this grunt task opens a live server in your favorite browser. This server is automatically reloaded when you save a project file.
+
+Please note that `examples/index.html` is the default file for testing ;)
 
 ## Versioning
 
