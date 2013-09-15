@@ -19,11 +19,13 @@ module.exports = function ( grunt ) {
             " <%= pkg.license %> Licence\n" +
             " * ========================================================== */\n",
 
-    // The `clean` task ensures all files are removed from the `dist/` directory
+    // The `clean` task ensures all files are removed from the `dist/`, `server/`, `temp/` directories
     // so that no files linger from previous builds.
     clean: {
+      options: {force: true},
       dist: [ "dist/" ],
-      server: ["server/"]
+      server: ["server/"],
+      temp: ["temp/"]
     },
 
     // The `concat` task copies the source file into the `build/` directory with
@@ -59,14 +61,14 @@ module.exports = function ( grunt ) {
     // The `jsdoc` task will produce the code documentation for the whole project.
     jsdoc: {
       dist: {
-        src: [ "src/*.js", "README.md" ],
+        src: [ "temp/src/*.js", "README.md" ],
         options: {
           configure: '.jsdocrc',
           destination: "dist/docs"
         }
       },
       release: {
-        src: [ "src/*.js", "README.md" ],
+        src: [ "temp/src/*.js", "README.md" ],
         options: {
           configure: '.jsdocrc',
           destination: "docs"
@@ -139,24 +141,41 @@ module.exports = function ( grunt ) {
       }
     },
     "string-replace": {
-     server: {
-       files: {
-         "server/index.html": "examples/index.html"
+       server: {
+         files: {
+           "server/index.html": "examples/index.html"
+         },
+         options: {
+           replacements: [
+             {
+               pattern: "../src/gitgraph.css",
+               replacement: "gitgraph.css"
+             },
+             {
+               pattern: "../src/gitgraph.js",
+               replacement: "gitgraph.js"
+             },
+           ]
+         }
        },
-       options: {
-         replacements: [
-           {
-             pattern: "../src/gitgraph.css",
-             replacement: "gitgraph.css"
-           },
-           {
-             pattern: "../src/gitgraph.js",
-             replacement: "gitgraph.js"
-           },
-         ]
-       }
-     }
-   }
+       jsdoc: {
+         files: {
+           "temp/": "src/*.js"
+          },
+          options: {
+            replacements: [
+              {
+                pattern: "(function () {",
+                replacement: ""
+              },
+              {
+                pattern: "})();",
+                replacement: ""
+              },
+            ]
+          }
+        }
+      }
 
   } );
 
@@ -167,7 +186,7 @@ module.exports = function ( grunt ) {
   grunt.registerTask( "lint", [ "jshint", "jasmine" ] );
 
   // `grunt docs` will create non-versioned documentation for development use.
-  grunt.registerTask( "docs", [ "jsdoc:dist" ] );
+  grunt.registerTask( "docs", [ "string-replace:jsdoc", "jsdoc:dist", "clean:temp" ] );
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
@@ -175,7 +194,9 @@ module.exports = function ( grunt ) {
     "lint",
     "copy:dist",
     "uglify:dist",
-    "jsdoc:dist"
+    "string-replace:jsdoc",
+    "jsdoc:dist",
+    "clean:temp"
   ] );
 
   // `grunt release` will create a new release of the source code.
@@ -184,7 +205,9 @@ module.exports = function ( grunt ) {
     "copy:release",
     "concat:release",
     "uglify:release",
-    "jsdoc:release"
+    "string-replace:jsdoc",
+    "jsdoc:release",
+    "clean:temp"
   ] );
   
   // `grunt server` will open a live reload server on your favorite browser
