@@ -54,7 +54,7 @@ Lint code, output the source and minified releases into `build/` and generate th
 
 #### open a live reload server - `grunt server`
 
-For a better code experience, this grunt task open in your favorite browser a live server. This server is automatically reloaded when you save a project file.
+For a better code experience, this grunt task opens a live server in your favorite browser. This server is automatically reloaded when you save a project file.
 
 Please note that `examples/index.html` is the default file for testing ;)
 
