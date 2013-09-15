@@ -164,6 +164,19 @@ module.exports = function ( grunt ) {
           } ]
         }
       }
+    },
+
+    // The `watch` task will monitor the projects files and launch tasks when
+    // they are modified.
+    watch: {
+      server: {
+        options: {
+          livereload: true
+        },
+        files: [ "src/*", "examples/*" ],
+        tasks: [ "copy:server" ]
+      }
+    }
 
   } );
 
