@@ -137,28 +137,11 @@ module.exports = function ( grunt ) {
         }
       }
     },
-                   
-    // The `watch` task will monitor the projects files
-    watch: {
-     server: {
-       options: { livereload: true },
-       files: ["src/*", "examples/*"],
-       tasks: ["copy:server"]
-     }
-    },
-    express: {
-      server: {
-        options: {
-          port: 9000,
-          hostname: "0.0.0.0", // localhost|127.0.0.0
-          bases: ["server"],
-          livereload: true
-        }
-      }
-    },
+
+    // The `open` task will open the livereload page in your favorite browser.
     open: {
       server: {
-        path: "http://127.0.0.1:<%= express.server.options.port %>"
+        path: "http://<%= express.server.options.hostname %>:<%= express.server.options.port %>"
       }
     },
     "string-replace": {
