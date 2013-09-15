@@ -33,6 +33,10 @@ module.exports = function ( grunt ) {
       options: {
         banner: "<%= banner %>\n"
       },
+      dist: {
+        src: [ "src/gitgraph.js" ],
+        dest: "dist/gitgraph.js"
+      },
       release: {
         src: [ "src/gitgraph.js" ],
         dest: "build/gitgraph.js"
