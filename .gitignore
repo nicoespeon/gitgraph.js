@@ -7,7 +7,6 @@ Thumbs.db
 
 # Folders
 dist/
-server/
 
 node_modules/*
 !node_modules/README.md
