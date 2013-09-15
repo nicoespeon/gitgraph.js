@@ -187,36 +187,39 @@ module.exports = function ( grunt ) {
   grunt.registerTask( "lint", [ "jshint", "jasmine" ] );
 
   // `grunt docs` will create non-versioned documentation for development use.
-  grunt.registerTask( "docs", [ "string-replace:jsdoc", "jsdoc:dist", "clean:temp" ] );
+  grunt.registerTask( "docs", [
+    "string-replace:jsdoc",
+    "jsdoc:dist",
+    "clean:jsdoc"
+  ] );
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
-    "clean:dist",
     "lint",
+    "clean:dist",
     "copy:dist",
+    "concat:dist",
     "uglify:dist",
-    "string-replace:jsdoc",
-    "jsdoc:dist",
-    "clean:temp"
+    "docs"
   ] );
 
   // `grunt release` will create a new release of the source code.
   grunt.registerTask( "release", [
     "lint",
+    "clean:release",
     "copy:release",
     "concat:release",
     "uglify:release",
     "string-replace:jsdoc",
     "jsdoc:release",
-    "clean:temp"
+    "clean:jsdoc"
   ] );
-  
-  // `grunt server` will open a live reload server on your favorite browser
-  grunt.registerTask('server', [
+
+  // `grunt server` will open a live reload server in your favorite browser.
+  grunt.registerTask( "server", [
     "copy:server",
-    "string-replace:server",
     "express:server",
-    "open",
+    "open:server",
     "watch:server"
-  ]);
+  ] );
 };
