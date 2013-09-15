@@ -144,40 +144,24 @@ module.exports = function ( grunt ) {
         path: "http://<%= express.server.options.hostname %>:<%= express.server.options.port %>"
       }
     },
+
+    // The `string-replace` task will remove the closure around the source code
+    // so we can properly generate the documentation.
+    //
+    // JSDoc currently doesn't handle properly IIFE for now: [Github issue](https://github.com/jsdoc3/jsdoc/issues/456)
     "string-replace": {
-       server: {
-         files: {
-           "server/index.html": "examples/index.html"
-         },
-         options: {
-           replacements: [
-             {
-               pattern: "../src/gitgraph.css",
-               replacement: "gitgraph.css"
-             },
-             {
-               pattern: "../src/gitgraph.js",
-               replacement: "gitgraph.js"
-             },
-           ]
-         }
-       },
-       jsdoc: {
-         files: {
-           "temp/": "src/*.js"
-          },
-          options: {
-            replacements: [
-              {
-                pattern: "(function () {",
-                replacement: ""
-              },
-              {
-                pattern: "})();",
-                replacement: ""
-              },
-            ]
-          }
+      jsdoc: {
+        files: {
+          "dist/jsdoc/": "src/*.js"
+        },
+        options: {
+          replacements: [ {
+            pattern: "(function () {",
+            replacement: ""
+          }, {
+            pattern: "})();",
+            replacement: ""
+          } ]
         }
       }
 
