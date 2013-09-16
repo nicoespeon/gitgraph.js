@@ -220,6 +220,12 @@
     var test = 0;
     var out = true; // Flag for hide tooltip
 
+    // Fix firefox MouseEvent
+    event.offsetX = event.offsetX ? event.offsetX : event.layerX;
+    event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+    event.x = event.x ? event.x : event.clientX;
+    event.y = event.y ? event.y : event.clientY;
+    
     for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
       test = Math.sqrt((commit.x + self.offsetX + self.marginX - event.offsetX) * (commit.x + self.offsetX + self.marginX - event.offsetX) + (commit.y + self.offsetY +self.marginY - event.offsetY) * (commit.y + self.offsetY + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
       if (test < self.template.commit.dot.size) {

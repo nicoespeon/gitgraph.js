@@ -14,7 +14,7 @@
 .gitgraph-tooltip:after {
   position: absolute;
   top: 10px;
-  left: -20px;
+  left: -18px;
   width: 0;
   height: 0;
   border-width: 10px;
