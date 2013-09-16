@@ -536,6 +536,7 @@
    * @param {Boolean} options.arrowDisplay - Add a arrow under commit dot
    * @param {String} [options.author = this.parent.author] - Author name & email
    * @param {String} [options.date] - Date of commit, default is now
+   * @param {String} [options.detail] - Element id of detail part
    * @param {String} [options.sha1] - Sha1, default is a random short sha1
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
@@ -563,6 +564,7 @@
     this.branch = options.branch;
     this.author = options.author || this.parent.author;
     this.date = options.date || new Date().toUTCString();
+    this.detail = options.detail;
     this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
