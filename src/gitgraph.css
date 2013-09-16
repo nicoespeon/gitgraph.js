@@ -23,3 +23,11 @@
   border-right-color: #EEE;
   content: "";
 }
+
+.gitgraph-detail {
+  position: absolute;
+  padding: 10px;
+  text-align: justify;
+  border-radius: 5px;
+  width: 600px;
+}

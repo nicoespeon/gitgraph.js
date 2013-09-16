@@ -405,6 +405,19 @@
     // Increment commitOffset for next commit position
     this.parent.commitOffsetX += this.template.commit.spacingX;
     this.parent.commitOffsetY += this.template.commit.spacingY;
+    
+    // Add detail (normal vertical mode only)
+    if (this.parent.commitOffsetX === 0 && this.parent.commitOffsetY < 0 && options.detail) {
+      var detail = document.getElementById(options.detail);
+      
+      if (detail) {
+        detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 2) * this.template.branch.spacingX + 30 + "px";
+        detail.style.top = this.parent.canvas.offsetTop + commit.y + 40  + "px";
+        detail.width = 30;
+  
+        this.parent.commitOffsetY -= detail.clientHeight;
+      }
+    }
 
     // Auto-render
     this.parent.render();
