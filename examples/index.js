@@ -1,6 +1,6 @@
 var gitGraph = new GitGraph({
   template: "metro", // "blackarrow" or "metro" or Template Object
-  mode: "compact" // Special compact mode : hide messages & compact graph
+  //mode: "compact" // Special compact mode : hide messages & compact graph
 });
 
 var master = gitGraph.branch("master"); // Create branch named "master"
@@ -24,7 +24,8 @@ gitGraph.commit({
 //master.checkout(); // Checkout on master branch for create "test" since master
 var test = gitGraph.branch("test");
 gitGraph.commit({
-  message: "test"
+  message: "test",
+  detail: "detail" // Id of detail div (available in normal vertical mode only)
 });
 gitGraph.commit();
 dev.commit().commit(); // 2 default Commit on "dev"
