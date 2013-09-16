@@ -414,8 +414,12 @@
         detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 2) * this.template.branch.spacingX + 30 + "px";
         detail.style.top = this.parent.canvas.offsetTop + commit.y + 40  + "px";
         detail.width = 30;
-  
-        this.parent.commitOffsetY -= detail.clientHeight;
+        
+        if (this.parent.mode !== "compact") {
+          this.parent.commitOffsetY -= detail.clientHeight;
+        } else {
+          detail.style.display = "none";
+        }
       }
     }
 
