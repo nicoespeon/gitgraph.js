@@ -411,7 +411,7 @@
       var detail = document.getElementById(options.detail);
       
       if (detail) {
-        detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 2) * this.template.branch.spacingX + 30 + "px";
+        detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 1) * this.template.branch.spacingX + 30 + "px";
         detail.style.top = this.parent.canvas.offsetTop + commit.y + 40  + "px";
         detail.width = 30;
         
@@ -612,7 +612,7 @@
       var message = this.sha1 + " " + this.message + " - " + this.author;
       this.context.font = this.template.commit.message.font;
       this.context.fillStyle = this.messageColor;
-      this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.spacingX, this.y + 3);
+      this.context.fillText(message, (this.parent.columnMax + 1) * this.template.branch.spacingX, this.y + 3);
     }
   };
 
