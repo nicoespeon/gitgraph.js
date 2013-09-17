@@ -43,7 +43,7 @@
     switch (options.orientation) {
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
-        this.orientation = "verticale-reverse";
+      this.orientation = "verticale-reverse";
       break;
     case "horizontal" :
       this.template.commit.message.display = false;
@@ -59,11 +59,11 @@
       this.template.branch.spacingY = this.template.branch.spacingX;
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
-      this.orientation = "horizontale-reverse"
+      this.orientation = "horizontale-reverse";
       break;
     default:
-        this.orientation = "vertical";
-        break;
+      this.orientation = "vertical";
+      break;
     }
 
     // Canvas init
