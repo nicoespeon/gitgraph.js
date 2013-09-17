@@ -43,6 +43,7 @@
     switch (options.orientation) {
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
+        this.orientation = "verticale-reverse";
       break;
     case "horizontal" :
       this.template.commit.message.display = false;
@@ -50,6 +51,7 @@
       this.template.branch.spacingY = this.template.branch.spacingX;
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
+      this.orientation = "horizontal";
       break;
     case "horizontal-reverse" :
       this.template.commit.message.display = false;
@@ -57,7 +59,11 @@
       this.template.branch.spacingY = this.template.branch.spacingX;
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
+      this.orientation = "horizontale-reverse"
       break;
+    default:
+        this.orientation = "vertical";
+        break;
     }
 
     // Canvas init
@@ -363,6 +369,15 @@
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
 
+    // Detail
+    if (typeof options.detail === "string"
+       && this.parent.orientation === "vertical"
+       && this.parent.mode !== "compact") {
+      options.detail = document.getElementById(options.detail);
+    } else {
+      options.detail = null;
+    }
+    
     // Check collision (Cause of special compact mode)
     if (options.branch.commits.slice(-1)[0] && options.x + options.y === options.branch.commits.slice(-1)[0].x + options.branch.commits.slice(-1)[0].y) {
       this.parent.commitOffsetX += this.template.commit.spacingX;
@@ -406,23 +421,12 @@
     this.parent.commitOffsetX += this.template.commit.spacingX;
     this.parent.commitOffsetY += this.template.commit.spacingY;
     
-    // Add detail (normal vertical mode only)
-    if (this.parent.commitOffsetX === 0 && this.parent.commitOffsetY < 0 && options.detail) {
-      var detail = document.getElementById(options.detail);
-      
-      if (detail) {
-        detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 1) * this.template.branch.spacingX + 30 + "px";
-        detail.style.top = this.parent.canvas.offsetTop + commit.y + 40  + "px";
-        detail.width = 30;
-        
-        if (this.parent.mode !== "compact") {
-          this.parent.commitOffsetY -= detail.clientHeight;
-        } else {
-          detail.style.display = "none";
-        }
-      }
+    // Add height of detail div (normal vertical mode only)
+    if (commit.detail !== null) {
+      commit.detail.style.display = "block";
+      this.parent.commitOffsetY -= commit.detail.clientHeight;
     }
-
+    
     // Auto-render
     this.parent.render();
 
@@ -564,7 +568,7 @@
     this.branch = options.branch;
     this.author = options.author || this.parent.author;
     this.date = options.date || new Date().toUTCString();
-    this.detail = options.detail;
+    this.detail = options.detail || null;
     this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -607,6 +611,13 @@
       this.arrow();
     }
 
+    // Detail
+    if (this.detail !== null) {
+      this.detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 1) * this.template.branch.spacingX + 30 + "px";
+      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40  + "px";
+      this.detail.width = 30;
+    }
+        
     // Message
     if (this.messageDisplay) {
       var message = this.sha1 + " " + this.message + " - " + this.author;
