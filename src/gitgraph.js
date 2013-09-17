@@ -456,10 +456,10 @@
    * Merge branch
    *
    * @param {Branch} [target = this.parent.HEAD]
-   * @param {string} [message]
+   * @param {(String | Object)} [commitOptions] - Message | Options of commit
    * @this Branch
    **/
-  Branch.prototype.merge = function (target, message) {
+  Branch.prototype.merge = function (target, commitOptions) {
     // Merge target
     var targetBranch = target || this.parent.HEAD;
 
@@ -469,13 +469,14 @@
     }
 
     // Merge commit
-    message = (typeof message === "string") ?
-      message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
-    targetBranch.commit({
-      message: message,
-      type: "mergeCommit",
-      parentCommit: this.commits.slice(-1)[0]
-    });
+    var message = commitOptions;
+    commitOptions = commitOptions || {};
+    commitOptions.message = commitOptions.message 
+      || ((typeof message === "string") ?  message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`");
+    commitOptions.type = "mergeCommit";
+    commitOptions.parentCommit = this.commits.slice(-1)[0];
+    
+    targetBranch.commit(commitOptions);
 
     // Add points to path
     var endOfBranch = {
