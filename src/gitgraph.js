@@ -620,7 +620,7 @@
         
     // Message
     if (this.messageDisplay) {
-      var message = this.sha1 + " " + this.message + " - " + this.author;
+      var message = this.sha1 + " " + this.message + (this.author ? " - " + this.author : "");
       this.context.font = this.template.commit.message.font;
       this.context.fillStyle = this.messageColor;
       this.context.fillText(message, (this.parent.columnMax + 1) * this.template.branch.spacingX, this.y + 3);
