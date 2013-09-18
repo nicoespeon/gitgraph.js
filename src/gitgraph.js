@@ -97,6 +97,13 @@
         gitgraph: this
       }, false);
     }
+    
+    // Render on window resize
+    var self = this;
+    window.onresize = function (event) {
+      self.render();
+    };
+    
   }
 
   /**
@@ -471,7 +478,7 @@
     // Merge commit
     var message = commitOptions;
     commitOptions = commitOptions || {};
-    commitOptions.message = commitOptions.message 
+    commitOptions.message = commitOptions.message
       || ((typeof message === "string") ?  message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`");
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = this.commits.slice(-1)[0];
