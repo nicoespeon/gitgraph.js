@@ -111,6 +111,7 @@
    *
    * @param {(String | Object)} options - Branch name | Options of Branch
    * @see Branch
+   * @return {Branch} New branch
    * @this GitGraph
    **/
   GitGraph.prototype.branch = function (options) {
@@ -133,6 +134,14 @@
     return branch;
   };
 
+  /**
+   * Create new orphan branch
+   *
+   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @return {Branch} New branch
+   * @see Branch
+   * @this GitGraph
+  **/
   GitGraph.prototype.orphanBranch = function (options) {
     // Options
     if (typeof options === "string") {
@@ -310,6 +319,34 @@
   }
 
   /**
+   * Create new branch
+   *
+   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @see Branch
+   * @return {Branch} New Branch
+   * @this Branch
+   **/
+  Branch.prototype.branch = function (options) {
+    // Options
+    if (typeof options === "string") {
+      var name = options;
+      options = {};
+      options.name = name;
+    }
+
+    options = (typeof options === "object") ? options : {};
+    options.parent = this.parent;
+    options.parentBranch = options.parentBranch || this;
+
+    // Add branch
+    var branch = new Branch(options);
+    this.parent.branchs.push(branch);
+
+    // Return
+    return branch;
+  };
+
+  /**
    * Render the branch
    *
    * @this Branch
@@ -464,6 +501,7 @@
    *
    * @param {Branch} [target = this.parent.HEAD]
    * @param {(String | Object)} [commitOptions] - Message | Options of commit
+   * @return {Branch} this
    * @this Branch
    **/
   Branch.prototype.merge = function (target, commitOptions) {
