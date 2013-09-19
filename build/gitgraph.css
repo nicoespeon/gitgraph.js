@@ -14,7 +14,7 @@
 .gitgraph-tooltip:after {
   position: absolute;
   top: 10px;
-  left: -20px;
+  left: -18px;
   width: 0;
   height: 0;
   border-width: 10px;
@@ -22,4 +22,12 @@
   border-color: transparent;
   border-right-color: #EEE;
   content: "";
+}
+
+.gitgraph-detail {
+  position: absolute;
+  padding: 10px;
+  text-align: justify;
+  width: 600px;
+  display: none;
 }
