@@ -63,7 +63,7 @@ var sergio = gitgraph.branch("sergio")
 // ----------------------- NAV ----------------------- //
 $(function(){
   $("nav a").click(function(event){
-    var margintop = parseInt($("section").css("marginTop"));
+    var margintop = parseInt($("section").css("marginTop"), 10);
     var position = $("#detail-"+event.target.id.split("-")[1]).position().top - margintop - 30;
     $('html, body').animate({scrollTop: position});
   });
