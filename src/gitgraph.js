@@ -29,7 +29,7 @@
       options.template = this.newTemplate(options.template);
     }
     this.template = (options.template instanceof Template) ?
-      options.template : this.newTemplate();
+      options.template : this.newTemplate("metro");
     this.mode = options.mode || null;
     if (this.mode === "compact") {
       this.template.commit.message.display = false;
