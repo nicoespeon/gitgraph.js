@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gitgraph.js</title>
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="css/gitgraph.css" />
+</head>
+<body>
+  <header>
+    <img src="img/gitgraph-logo.png" alt="gitgraph-logo" class="logo">
+    <!-- github ribbon -->
+    <a href="https://github.com/nicoespeon/gitgraph.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <nav>
+      <a href="#" id="nav-presentation">Presentation</a>
+      <a href="#" id="nav-init">Quick start</a>
+      <a href="#" id="nav-base">Basics</a>
+      <a href="#" id="nav-branch">Branchs</a>
+      <a href="#" id="nav-commit">Commits</a>
+      <a href="#" id="nav-checkout">Checkout</a>
+      <a href="#" id="nav-merge">Merge</a>
+    </nav>
+  </header>
+  
+  
+  <section>
+    <!-- gitgraph canvas -->
+    <canvas id="gitGraph"></canvas>
+  
+    <!-- details divs -->
+    <div id="detail-presentation" class="gitgraph-detail">
+    <p>Git is a powerful tool, sometimes hard to handle.</p>
+    <p><strong>Gitgraph.js</strong> is a simple JavaScript library which is meant to help you visually presenting git branching stuff like a git workflow, a tricky git command or whatever git tree you'd have in mind.</p>
+    <p>We use canvas so you don't have to draw your branching illustrations into Photoshop nor Keynote to present something cool. Just <strong>code it</strong> directly in the browser.</p>
+    <p><em>One does not simply illustrate git branching models. This library is the one to draw them all.</em></p>
+    </div>
+    
+    <div id="detail-init" class="gitgraph-detail">
+    <p>This is very straightforward:</p>
+      <h3>1. Download gitgraph.js</h3>
+      <p>With git <img src="img/github-logo.png" alt="github logo"> : </p><pre class="prettyprint">git clone http://github.com/nicoespeon/gitgraph.js.git</pre>     
+      <p>With Bower <img src="img/bower-logo.png" alt="bower logo"> : </p><pre class="prettyprint">bower install gitgraph.js</pre>
+      <h3>2. Prepare the HTML</h3>
+      <p>Load the library: </p><pre class="prettyprint">&lt;script src="js/gitgraph.min.js"&gt;&lt;/script/&gt;</pre>
+      <p>Add the stylesheet: </p><pre class="prettyprint">&lt;link rel="stylesheet" type="text/css" href="css/gitgraph.css" /&gt;</pre>
+      <p>Then, just add a canvas container: </p><pre class="prettyprint">&lt;canvas id="gitGraph"&gt;&lt;/canvas&gt;</pre>
+      <h3>3. Unleash the graph!</h3>
+      <p>Now you're all set, ready to commit and draw a nice git graph in JavaScript \o/</p>
+    </div>
+    
+    <div id="detail-base" class="gitgraph-detail">
+      <p>Once files are loaded and canvas is created, you could use the <code>GitGraph</code> object.</p>
+      <pre class="prettyprint">var gitgraph = new GitGraph();</pre>
+      <p>Eventually, you could add some options here: </p>
+      <ul>
+        <li>a specific<code>template</code>: <code>"blackarrow"</code> or <code>"metro"</code> (default)</li>
+        <li>the graph <code>orientation</code>: <code>"vertical-reverse"</code>, <code>"horizontal"</code>, <code>"horizontal-reverse"</code> or even <code>"vertical"</code> (default)</li>
+        <li>the display <code>mode</code>: <code>"compact"</code> for a compact mode, or <code>"extended"</code> (default)</li>
+        <li>the <code>elementId</code>: the canvas ID (<code>"gitGraph"</code> is the default)</li>
+        <li>a default <code>author</code> for commits</li>
+      </ul>
+      <p>For instance:</p>
+      <pre class="prettyprint">var gitgraph = new GitGraph({
+  template: "blackarrow",
+  orientation: "horizontal",
+  mode: "compact"
+});</pre>
+    <canvas id="gitgraph-template-blackarrow"></canvas>
+    <p>Or with another template:</p>
+    <pre class="prettyprint">var gitgraph = new GitGraph({
+  template: "metro",
+  orientation: "horizontal",
+  mode: "compact"
+});</pre>
+    <canvas id="gitgraph-template-metro" height="50px"></canvas>
+    </div>
+    
+    <div id="detail-branch" class="gitgraph-detail">
+      <p>Let's create our first branch. We give the branch name as a parameter.</p>
+      <pre class="prettyprint">var master = gitgraph.branch("master");</pre>
+      <p>Now, <code>gitgraph.HEAD</code> is set to <code>master</code> so we can add some commits on the fly and create a new branch:</p>
+      <pre class="prettyprint">gitgraph.commit().commit().commit(); // 3 commits upon HEAD
+var develop = gitgraph.branch("develop"); // New branch from HEAD
+var myfeature = develop.branch("myfeature"); // New branch from develop</pre>
+      <p>The <code>develop</code> branch is based from <code>HEAD</code>, which was on <code>master</code>.</p>
+      <p>It does exactly what you'd expect!</p>
+    </div>
+    
+    <div id="detail-commit" class="gitgraph-detail">
+    <p>Let's do some custom commits.</p>
+    <p>Basically, define your commit message:</p>
+    <pre class="prettyprint">master.commit("This commit is mine"); // Add a commit on master branch</pre>
+    <p>Or you may want to go a bit further:</p>
+    <pre class="prettyprint">develop.commit({
+  dotColor: "white",
+  dotSize: 10,
+  dotStrokeWidth: 10,
+  sha1: "666",
+  message: "Pimp dat commit",
+  author: "Jacky &lt;prince@dutunning.com&gt;" 
+});</pre>
+    <p>Note that I can choose either to commit on any existing branch, either on the <code>HEAD</code> with <code>gitgraph.commit()</code>.</p>
+    </div>
+    
+    <div id="detail-checkout" class="gitgraph-detail">
+    <p>Even though it's not indispensable, we introduced the <code>HEAD</code> principle in <strong>Gitgraph.js</strong>. Except that our tag is just a reference to a branch for the library.</p>
+    <p>That way you could eventually checkout to another branch:</p>
+    <pre class="prettyprint">master.checkout();</pre>
+    <p>And so create a <code>feature-of-death</code> from the <code>develop</code> branch that way:</p>
+    <pre class="prettyprint">develop.checkout();
+var featureOfDeath = gitgraph.branch("feature-of-death");</pre>
+    </div>
+    
+    <div id="detail-merge" class="gitgraph-detail">
+      <p>You can merge a branch into another, that simply:</p>
+      <pre class="prettyprint">master.merge(develop); // Merge master into develop</pre>
+      <p>But wait, there's more! Customize the merge commit, your way, just like any other commit:</p>
+      <pre class="prettyprint">master.merge(develop, "Epic merge commit");
+master.merge(develop, { dotColor: "red" }); // The commit will be red, 'coz red is fashion!</pre>
+      <p>And you can delete a branch to create another one on the same column:</p>
+      <pre class="prettyprint">master.delete();</pre>
+    </div>
+    
+    <div id="detail-contribute" class="gitgraph-detail">
+    <p>You get some fuckingood features ideas, or spotted some nasty bugs? Just come and open an issue or a Pull-Request on the <a href="http://github.com/nicoespeon/gitgraph.js">project repo</a>.</p>
+    <p>Looking for some technical documentation? Here you go, in the <a href="http://github.com/nicoespeon/gitgraph.js/tree/master/docs"><code>/docs</code></a> folder.</p>
+    </div>
+    
+    <div id="detail-examples" class="gitgraph-detail">
+      <p>You'll find <a href="http://github.com/nicoespeon/gitgraph.js/tree/master/examples">some use cases</a> for inspiration.</p>
+      <p>Well, you also can check the source code of this page ;)</p>
+    </div>
+    
+    <div id="detail-sergio" class="gitgraph-detail">
+      <iframe width="560" height="315" src="//www.youtube.com/embed/GaoLU6zKaws?rel=0" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </section>
+  
+  <!-- scripts -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+  <script src="js/gitgraph.min.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
