@@ -379,6 +379,7 @@
    * Add a commit
    *
    * @param {(String | Object)} [options] - Message | Options of commit
+   * @param {String} [options.detailId] - Id of detail DOM Element 
    * @see Commit
    * @this Branch
    **/
@@ -414,10 +415,10 @@
     options.y = this.offsetY - this.parent.commitOffsetY;
 
     // Detail
-    if (typeof options.detail === "string"
+    if (typeof options.detailId === "string"
        && this.parent.orientation === "vertical"
        && this.parent.mode !== "compact") {
-      options.detail = document.getElementById(options.detail);
+      options.detail = document.getElementById(options.detailId);
     } else {
       options.detail = null;
     }
@@ -586,7 +587,7 @@
    * @param {Boolean} options.arrowDisplay - Add a arrow under commit dot
    * @param {String} [options.author = this.parent.author] - Author name & email
    * @param {String} [options.date] - Date of commit, default is now
-   * @param {String} [options.detail] - Element id of detail part
+   * @param {String} [options.detail] - DOM Element of detail part
    * @param {String} [options.sha1] - Sha1, default is a random short sha1
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
