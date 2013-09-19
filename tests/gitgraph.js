@@ -37,7 +37,7 @@ describe("Gitgraph", function () {
       template: "wrongInput"
     });
     expect(gitGraph.template)
-      .toEqual(gitGraph.newTemplate());
+      .toEqual(gitGraph.newTemplate("metro"));
   });
 
   describe("Branch", function () {
