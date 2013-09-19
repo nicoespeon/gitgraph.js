@@ -72,7 +72,7 @@ header {
 section {
   width: 1000px;
   margin: auto;
-  margin-top: 220px;
+  margin-top: 260px;
   padding: 30px;
   background-color: #fff;
   box-shadow: 10px 10px 30px #b4b4b4;
@@ -80,11 +80,11 @@ section {
 }
 
 nav {
-  position: fixed;
-  display: inline-block;
   width: 550px;
-  top: 150px;
-  left: 510px;
+  top: 0px;
+  left: 0px;
+  margin: auto;
+  margin-bottom: 20px;
   font-family: verdana;
 }
 
@@ -94,21 +94,6 @@ nav a:after {
 
 nav a:last-child:after {
   content: "";
-}
-
-@media screen and (max-width: 1090px) {
-  nav {
-    position: relative;
-    display: block;
-    top: 0px;
-    left: 0px;
-    margin: auto;
-    margin-bottom: 20px;
-  }
-  
-  section {
-    margin-top: 260px;
-  }
 }
 
 @media screen and (max-width: 600px) {
