@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v0.3.0
+ *                  GitGraph v1.0.0
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2013 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -9,6 +9,7 @@
  * ========================================================== */
 
 (function () {
+  "use strict";
   /**
    * GitGraph
    *
@@ -20,7 +21,6 @@
    * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
    * @param {String} [options.mode = (null|"compact")]  - Display mode
    * @param {DOM} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
-   * @param {Boolean} [options.testMode] - Active test mode for Jasmine
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    *
    * @this GitGraph
@@ -39,7 +39,7 @@
       options.template = this.newTemplate(options.template);
     }
     this.template = (options.template instanceof Template) ?
-      options.template : this.newTemplate();
+      options.template : this.newTemplate("metro");
     this.mode = options.mode || null;
     if (this.mode === "compact") {
       this.template.commit.message.display = false;
@@ -53,6 +53,7 @@
     switch (options.orientation) {
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
+      this.orientation = "verticale-reverse";
       break;
     case "horizontal" :
       this.template.commit.message.display = false;
@@ -60,6 +61,7 @@
       this.template.branch.spacingY = this.template.branch.spacingX;
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
+      this.orientation = "horizontal";
       break;
     case "horizontal-reverse" :
       this.template.commit.message.display = false;
@@ -67,6 +69,10 @@
       this.template.branch.spacingY = this.template.branch.spacingX;
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
+      this.orientation = "horizontale-reverse";
+      break;
+    default:
+      this.orientation = "vertical";
       break;
     }
 
@@ -80,10 +86,8 @@
     this.tooltip.style.position = "fixed";
     this.tooltip.style.display = "none";
 
-    if (!options.testMode) {
-      // Add tooltip div into body
-      document.body.appendChild(this.tooltip);
-    }
+    // Add tooltip div into body
+    document.body.appendChild(this.tooltip);
 
     // Navigation vars
     this.HEAD = null;
@@ -103,6 +107,13 @@
         gitgraph: this
       }, false);
     }
+    
+    // Render on window resize
+    var self = this;
+    window.onresize = function (event) {
+      self.render();
+    };
+    
   }
 
   /**
@@ -110,6 +121,7 @@
    *
    * @param {(String | Object)} options - Branch name | Options of Branch
    * @see Branch
+   * @return {Branch} New branch
    * @this GitGraph
    **/
   GitGraph.prototype.branch = function (options) {
@@ -132,6 +144,14 @@
     return branch;
   };
 
+  /**
+   * Create new orphan branch
+   *
+   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @return {Branch} New branch
+   * @see Branch
+   * @this GitGraph
+  **/
   GitGraph.prototype.orphanBranch = function (options) {
     // Options
     if (typeof options === "string") {
@@ -232,6 +252,12 @@
     var test = 0;
     var out = true; // Flag for hide tooltip
 
+    // Fix firefox MouseEvent
+    event.offsetX = event.offsetX ? event.offsetX : event.layerX;
+    event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+    event.x = event.x ? event.x : event.clientX;
+    event.y = event.y ? event.y : event.clientY;
+    
     for (var i = 0, commit; !! (commit = this.gitgraph.commits[i]); i++) {
       test = Math.sqrt((commit.x + self.offsetX + self.marginX - event.offsetX) * (commit.x + self.offsetX + self.marginX - event.offsetX) + (commit.y + self.offsetY +self.marginY - event.offsetY) * (commit.y + self.offsetY + self.marginY - event.offsetY)); // Distance between commit and mouse (Pythagore)
       if (test < self.template.commit.dot.size) {
@@ -303,6 +329,34 @@
   }
 
   /**
+   * Create new branch
+   *
+   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @see Branch
+   * @return {Branch} New Branch
+   * @this Branch
+   **/
+  Branch.prototype.branch = function (options) {
+    // Options
+    if (typeof options === "string") {
+      var name = options;
+      options = {};
+      options.name = name;
+    }
+
+    options = (typeof options === "object") ? options : {};
+    options.parent = this.parent;
+    options.parentBranch = options.parentBranch || this;
+
+    // Add branch
+    var branch = new Branch(options);
+    this.parent.branchs.push(branch);
+
+    // Return
+    return branch;
+  };
+
+  /**
    * Render the branch
    *
    * @this Branch
@@ -335,6 +389,7 @@
    * Add a commit
    *
    * @param {(String | Object)} [options] - Message | Options of commit
+   * @param {String} [options.detailId] - Id of detail DOM Element 
    * @see Commit
    * @this Branch
    **/
@@ -369,6 +424,15 @@
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
 
+    // Detail
+    if (typeof options.detailId === "string"
+       && this.parent.orientation === "vertical"
+       && this.parent.mode !== "compact") {
+      options.detail = document.getElementById(options.detailId);
+    } else {
+      options.detail = null;
+    }
+    
     // Check collision (Cause of special compact mode)
     if (options.branch.commits.slice(-1)[0] && options.x + options.y === options.branch.commits.slice(-1)[0].x + options.branch.commits.slice(-1)[0].y) {
       this.parent.commitOffsetX += this.template.commit.spacingX;
@@ -411,7 +475,13 @@
     // Increment commitOffset for next commit position
     this.parent.commitOffsetX += this.template.commit.spacingX;
     this.parent.commitOffsetY += this.template.commit.spacingY;
-
+    
+    // Add height of detail div (normal vertical mode only)
+    if (commit.detail !== null) {
+      commit.detail.style.display = "block";
+      this.parent.commitOffsetY -= commit.detail.clientHeight - 40;
+    }
+    
     // Auto-render
     this.parent.render();
 
@@ -441,10 +511,11 @@
    * Merge branch
    *
    * @param {Branch} [target = this.parent.HEAD]
-   * @param {string} [message]
+   * @param {(String | Object)} [commitOptions] - Message | Options of commit
+   * @return {Branch} this
    * @this Branch
    **/
-  Branch.prototype.merge = function (target, message) {
+  Branch.prototype.merge = function (target, commitOptions) {
     // Merge target
     var targetBranch = target || this.parent.HEAD;
 
@@ -454,13 +525,14 @@
     }
 
     // Merge commit
-    message = (typeof message === "string") ?
-      message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
-    targetBranch.commit({
-      message: message,
-      type: "mergeCommit",
-      parentCommit: this.commits.slice(-1)[0]
-    });
+    var message = commitOptions;
+    commitOptions = commitOptions || {};
+    commitOptions.message = commitOptions.message
+      || ((typeof message === "string") ?  message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`");
+    commitOptions.type = "mergeCommit";
+    commitOptions.parentCommit = this.commits.slice(-1)[0];
+    
+    targetBranch.commit(commitOptions);
 
     // Add points to path
     var endOfBranch = {
@@ -525,6 +597,7 @@
    * @param {Boolean} options.arrowDisplay - Add a arrow under commit dot
    * @param {String} [options.author = this.parent.author] - Author name & email
    * @param {String} [options.date] - Date of commit, default is now
+   * @param {String} [options.detail] - DOM Element of detail part
    * @param {String} [options.sha1] - Sha1, default is a random short sha1
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
@@ -552,6 +625,7 @@
     this.branch = options.branch;
     this.author = options.author || this.parent.author;
     this.date = options.date || new Date().toUTCString();
+    this.detail = options.detail || null;
     this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -594,12 +668,19 @@
       this.arrow();
     }
 
+    // Detail
+    if (this.detail !== null) {
+      this.detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 1) * this.template.branch.spacingX + 30 + "px";
+      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40  + "px";
+      this.detail.width = 30;
+    }
+        
     // Message
     if (this.messageDisplay) {
-      var message = this.sha1 + " " + this.message + " - " + this.author;
+      var message = this.sha1 + " " + this.message + (this.author ? " - " + this.author : "");
       this.context.font = this.template.commit.message.font;
       this.context.fillStyle = this.messageColor;
-      this.context.fillText(message, (this.parent.columnMax + 2) * this.template.branch.spacingX, this.y + 3);
+      this.context.fillText(message, (this.parent.columnMax + 1) * this.template.branch.spacingX, this.y + 3);
     }
   };
 

@@ -271,7 +271,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 259
+        gitgraph.js, line 285
     </li></ul></dd>
     
     
@@ -315,6 +315,158 @@
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
+            
+<dt>
+    <h4 class="name" id="branch"><span class="type-signature"></span>branch<span class="signature">(options)</span><span class="type-signature"> &rarr; {<a href="Branch.html">Branch</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Create new branch</p>
+    </div>
+    
+
+    
+    
+    
+        <h5>This:</h5>
+        <ul><li><a href="Branch.html">Branch</a></li></ul>
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Branch name | Options of Branch</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        gitgraph.js, line 329
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Branch.html">Branch</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>New Branch</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Branch.html">Branch</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="calculColumn"><span class="type-signature"></span>calculColumn<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -361,7 +513,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 488
+        gitgraph.js, line 560
     </li></ul></dd>
     
     
@@ -433,7 +585,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 417
+        gitgraph.js, line 487
     </li></ul></dd>
     
     
@@ -537,7 +689,67 @@
             
             
             
-            <td class="description last"><p>Message | Options of commit</p></td>
+            <td class="description last"><p>Message | Options of commit</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>detailId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Id of detail DOM Element</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -568,7 +780,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 331
+        gitgraph.js, line 386
     </li></ul></dd>
     
     
@@ -647,7 +859,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 426
+        gitgraph.js, line 496
     </li></ul></dd>
     
     
@@ -675,7 +887,7 @@
         
             
 <dt>
-    <h4 class="name" id="merge"><span class="type-signature"></span>merge<span class="signature">(<span class="optional">target</span>, <span class="optional">message</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="merge"><span class="type-signature"></span>merge<span class="signature">(<span class="optional">target</span>, <span class="optional">commitOptions</span>)</span><span class="type-signature"> &rarr; {<a href="Branch.html">Branch</a>}</span></h4>
     
     
 </dt>
@@ -763,13 +975,16 @@
 	
         <tr>
             
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>commitOptions</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
 
 
             
@@ -793,7 +1008,7 @@
                 </td>
             
             
-            <td class="description last"></td>
+            <td class="description last"><p>Message | Options of commit</p></td>
         </tr>
 	
 	
@@ -824,7 +1039,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 437
+        gitgraph.js, line 508
     </li></ul></dd>
     
     
@@ -845,6 +1060,28 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Branch.html">Branch</a></span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -896,7 +1133,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 300
+        gitgraph.js, line 354
     </li></ul></dd>
     
     
@@ -943,7 +1180,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sun Sep 15 2013 19:04:46 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Fri Sep 20 2013 00:07:55 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
