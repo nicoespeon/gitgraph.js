@@ -87,14 +87,15 @@
 
     // Add tooltip if message aren't display
     if ( !this.template.commit.message.display ) {
-      this.canvas.addEventListener( "mousemove", {
+      var mouseMoveOptions = {
         handleEvent: this.hover,
         gitgraph: this
-      }, false );
+      };
+      this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
     }
 
     // Render on window resize
-    window.onresize = this.render;
+    window.onresize = this.render.bind( this );
   }
 
   /**
@@ -260,8 +261,8 @@
    **/
   GitGraph.prototype.hover = function ( event ) {
     var self = this.gitgraph;
-    var test = 0;
-    var out = true; // Flag to hide tooltip
+    var distanceBetweenCommitCenterAndMouse = 0;
+    var isOut = true;
 
     // Fix firefox MouseEvent
     event.offsetX = event.offsetX ? event.offsetX : event.layerX;
@@ -270,18 +271,22 @@
     event.y = event.y ? event.y : event.clientY;
 
     for ( var i = 0, commit; !!(commit = this.gitgraph.commits[i]); i++ ) {
-      test = Math.sqrt( (commit.x + self.offsetX + self.marginX - event.offsetX) * (commit.x + self.offsetX + self.marginX - event.offsetX) + (commit.y + self.offsetY + self.marginY - event.offsetY) * (commit.y + self.offsetY + self.marginY - event.offsetY) ); // Distance between commit and mouse (Pythagore)
-      if ( test < self.template.commit.dot.size ) {
+      var distanceX = (commit.x + self.offsetX + self.marginX - event.offsetX);
+      var distanceY = (commit.y + self.offsetY + self.marginY - event.offsetY);
+      distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
+
+      if ( distanceBetweenCommitCenterAndMouse < self.template.commit.dot.size ) {
         // Show tooltip
         self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
-        self.tooltip.style.top = event.y + "px"; // TODO Scroll bug
+        self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
         self.tooltip.textContent = commit.sha1 + " - " + commit.message;
         self.tooltip.style.display = "block";
 
-        out = false;
+        isOut = false;
       }
     }
-    if ( out ) {
+
+    if ( isOut ) {
       self.tooltip.style.display = "none";
     }
   };
@@ -381,10 +386,13 @@
         this.context.moveTo( point.x, point.y );
       } else {
         if ( this.template.branch.mergeStyle === "bezier" ) {
+          var path = this.path[i - 1];
+
           this.context.bezierCurveTo(
-              this.path[i - 1].x - this.template.commit.spacingX / 2, this.path[i - 1].y - this.template.commit.spacingY / 2,
+              path.x - this.template.commit.spacingX / 2, path.y - this.template.commit.spacingY / 2,
               point.x + this.template.commit.spacingX / 2, point.y + this.template.commit.spacingY / 2,
-            point.x, point.y );
+              point.x, point.y
+          );
         } else {
           this.context.lineTo( point.x, point.y );
         }
@@ -408,11 +416,9 @@
    * @this Branch
    **/
   Branch.prototype.commit = function ( options ) {
-    // Options
     if ( typeof (options) === "string" ) {
       var message = options;
-      options = {};
-      options.message = message;
+      options = { message: message };
     } else if ( typeof (options) !== "object" ) {
       options = {};
     }
@@ -439,16 +445,21 @@
     options.y = this.offsetY - this.parent.commitOffsetY;
 
     // Detail
-    if ( typeof options.detailId === "string"
-           && this.parent.orientation === "vertical"
-      && this.parent.mode !== "compact" ) {
+    var isVertical = this.parent.orientation === "vertical";
+    var isNotCompact = this.parent.mode !== "compact";
+    if ( typeof options.detailId === "string" && isVertical && isNotCompact ) {
       options.detail = document.getElementById( options.detailId );
     } else {
       options.detail = null;
     }
 
     // Check collision (Cause of special compact mode)
-    if ( options.branch.commits.slice( -1 )[0] && options.x + options.y === options.branch.commits.slice( -1 )[0].x + options.branch.commits.slice( -1 )[0].y ) {
+    var previousCommit = options.branch.commits.slice( -1 )[0] || {};
+    var commitPosition = options.x + options.y;
+    var previousCommitPosition = previousCommit.x + previousCommit.y;
+    var isCommitAtSamePlaceThanPreviousOne = (commitPosition === previousCommitPosition);
+
+    if ( isCommitAtSamePlaceThanPreviousOne ) {
       this.parent.commitOffsetX += this.template.commit.spacingX;
       this.parent.commitOffsetY += this.template.commit.spacingY;
       options.x = this.offsetX - this.parent.commitOffsetX;
@@ -470,9 +481,10 @@
       type: "join"
     };
 
-    // First commit ?
-    if ( commit.parentCommit instanceof Commit /* First branch case */
-      && this.path.length === 0 /* Path begin */ ) {
+    // First commit
+    var isFirstBranch = commit.parentCommit instanceof Commit;
+    var isPathBeginning = this.path.length === 0;
+    if ( isFirstBranch && isPathBeginning ) {
       var parent = {
         x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
         y: commit.parentCommit.branch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -481,7 +493,7 @@
       this.path.push( JSON.parse( JSON.stringify( parent ) ) ); // Elegant way for cloning an object
       parent.type = "join";
       this.parentBranch.path.push( parent );
-    } else if ( this.path.length === 0 ) {
+    } else if ( isPathBeginning ) {
       point.type = "start";
     }
     this.path.push( point );
@@ -542,9 +554,9 @@
 
     // Merge commit
     var message = commitOptions;
+    var defaultMessage = "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
     commitOptions = commitOptions || {};
-    commitOptions.message = commitOptions.message
-      || ((typeof message === "string") ? message : "Merge branch `" + this.name + "` into `" + targetBranch.name + "`");
+    commitOptions.message = commitOptions.message || ((typeof message === "string") ? message : defaultMessage);
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = this.commits.slice( -1 )[0];
 
@@ -719,7 +731,8 @@
     if ( this.type === "mergeCommit" || this === this.branch.commits[0] /* First commit */ ) {
       alpha = Math.atan2(
           this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
-          this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX );
+          this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX
+      );
       color = this.parentCommit.branch.color;
     }
 
@@ -846,9 +859,11 @@
    * @return {Template} [template] - Template if exist
    **/
   Template.prototype.get = function ( name ) {
+    var template = {};
+
     switch ( name ) {
     case "blackarrow":
-      return new Template( {
+      template = {
         branch: {
           color: "#000000",
           lineWidth: 4,
@@ -870,10 +885,11 @@
           size: 16,
           offset: 2.5
         }
-      } );
+      };
+      break;
 
     case "metro":
-      return new Template( {
+      template = {
         colors: ["#979797", "#008fb5", "#f1c109"],
         branch: {
           lineWidth: 10,
@@ -888,8 +904,11 @@
             font: "normal 14pt Arial"
           }
         }
-      } );
+      };
+      break;
     }
+
+    return new Template( template );
   };
 
   // Expose GitGraph object
