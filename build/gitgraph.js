@@ -1,9 +1,9 @@
 /* ==========================================================
- *                  GitGraph v1.0.0
+ *                  GitGraph v1.0.1
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
- * Copyright (c) 2013 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
- * Copyright (c) 2013 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
+ * Copyright (c) 2014 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
+ * Copyright (c) 2014 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
  *
  * GitGraph.js may be freely distributed under the MIT Licence
  * ========================================================== */
@@ -199,18 +199,43 @@
    * @this GitGraph
    **/
   GitGraph.prototype.render = function () {
-    // Resize canvas
-    this.canvas.height = Math.abs(this.columnMax * this.template.branch.spacingY)
-      +  Math.abs(this.commitOffsetY)
-      + this.marginY * 2;
+    var backingStorePixelRatio;
+    var scalingFactor;
 
-    this.canvas.width = Math.abs(this.columnMax * this.template.branch.spacingX)
-      +  Math.abs(this.commitOffsetX)
-      + this.marginX * 2;
+    // Account for high-resolution displays
+    scalingFactor = 1;
+
+    if (window.devicePixelRatio) {
+      backingStorePixelRatio = this.context.webkitBackingStorePixelRatio ||
+        this.context.mozBackingStorePixelRatio ||
+        this.context.msBackingStorePixelRatio ||
+        this.context.oBackingStorePixelRatio ||
+        this.context.backingStorePixelRatio || 1;
+
+      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
+    }
+
+    // Resize canvas
+    var unscaledResolution = {
+      x: Math.abs(this.columnMax * this.template.branch.spacingX)
+        +  Math.abs(this.commitOffsetX)
+        + this.marginX * 2,
+      y: Math.abs(this.columnMax * this.template.branch.spacingY)
+        +  Math.abs(this.commitOffsetY)
+        + this.marginY * 2
+    };
 
     if (this.template.commit.message.display) {
-      this.canvas.width += 800;
+      unscaledResolution.x += 800;
     }
+
+    this.canvas.style.width = unscaledResolution.x + "px";
+    this.canvas.style.height = unscaledResolution.y + "px";
+
+    this.canvas.width = unscaledResolution.x * scalingFactor;
+    this.canvas.height = unscaledResolution.y * scalingFactor;
+
+    this.context.scale(scalingFactor, scalingFactor);
 
     // Clear All
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
