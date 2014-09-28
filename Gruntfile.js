@@ -185,10 +185,10 @@ module.exports = function ( grunt ) {
   require( "load-grunt-tasks" )( grunt, [ "grunt-*" ] );
 
   // `grunt lint` will check code by running JSHint and unit tests over it.
-  grunt.registerTask( "lint", [ "jshint", "jasmine" ] );
+  grunt.registerTask( "test", [ "jshint", "jasmine" ] );
 
   // `grunt docs` will create non-versioned documentation for development use.
-  grunt.registerTask( "docs", [
+  grunt.registerTask( "doc", [
     "string-replace:jsdoc",
     "jsdoc:dist",
     "clean:jsdoc"
@@ -196,17 +196,17 @@ module.exports = function ( grunt ) {
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
-    "lint",
+    "test",
     "clean:dist",
     "copy:dist",
     "concat:dist",
     "uglify:dist",
-    "docs"
+    "doc"
   ] );
 
   // `grunt release` will create a new release of the source code.
   grunt.registerTask( "release", [
-    "lint",
+    "test",
     "clean:release",
     "copy:release",
     "concat:release",
