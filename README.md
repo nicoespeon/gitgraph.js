@@ -44,11 +44,11 @@ When completed, you'll be able to run the various Grunt commands provided from t
 
 ### Available Grunt commands
 
-#### lint code - `grunt lint`
+#### test code - `grunt test`
 
 Check source code against [JSHint](http://www.jshint.com/) then runs unit tests with [Jasmine](http://pivotal.github.io/jasmine/).
 
-#### generate documentation - `grunt docs`
+#### generate documentation - `grunt doc`
 
 Generate source code documentation into `dist/docs/` (not versioned) with [JSDoc](http://usejsdoc.org/).
 
