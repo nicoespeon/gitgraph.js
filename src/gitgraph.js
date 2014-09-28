@@ -84,7 +84,6 @@
     this.columnMax = 0; // nb of column for message position
     this.commitOffsetX = 0;
     this.commitOffsetY = 0;
-    this.lasthover = null;
 
     // Add tooltip if message aren't display
     if ( !this.template.commit.message.display ) {
@@ -95,20 +94,18 @@
     }
 
     // Render on window resize
-    var self = this;
-    window.onresize = function ( event ) {
-      self.render();
-    };
-
+    window.onresize = this.render;
   }
 
   /**
    * Create new branch
    *
    * @param {(String | Object)} options - Branch name | Options of Branch
+   *
    * @see Branch
-   * @return {Branch} New branch
    * @this GitGraph
+   *
+   * @return {Branch} New branch
    **/
   GitGraph.prototype.branch = function ( options ) {
     // Options
@@ -134,9 +131,11 @@
    * Create new orphan branch
    *
    * @param {(String | Object)} options - Branch name | Options of Branch
-   * @return {Branch} New branch
+   *
    * @see Branch
    * @this GitGraph
+   *
+   * @return {Branch} New branch
    **/
   GitGraph.prototype.orphanBranch = function ( options ) {
     // Options
@@ -161,9 +160,11 @@
    * Commit on HEAD
    *
    * @param {Object} options - Options of commit
-   * @return {GitGraph} this - Return the main object so we can chain
+   *
    * @see Commit
    * @this GitGraph
+   *
+   * @return {GitGraph} this - Return the main object so we can chain
    **/
   GitGraph.prototype.commit = function ( options ) {
     this.HEAD.commit( options );
@@ -256,12 +257,11 @@
    * @param {MouseEvent} event - Mouse event
    *
    * @self Gitgraph
-   *
    **/
   GitGraph.prototype.hover = function ( event ) {
     var self = this.gitgraph;
     var test = 0;
-    var out = true; // Flag for hide tooltip
+    var out = true; // Flag to hide tooltip
 
     // Fix firefox MouseEvent
     event.offsetX = event.offsetX ? event.offsetX : event.layerX;
@@ -342,9 +342,11 @@
    * Create new branch
    *
    * @param {(String | Object)} options - Branch name | Options of Branch
+   *
    * @see Branch
-   * @return {Branch} New Branch
    * @this Branch
+   *
+   * @return {Branch} New Branch
    **/
   Branch.prototype.branch = function ( options ) {
     // Options
@@ -400,7 +402,9 @@
    *
    * @param {(String | Object)} [options] - Message | Options of commit
    * @param {String} [options.detailId] - Id of detail DOM Element
+   *
    * @see Commit
+   *
    * @this Branch
    **/
   Branch.prototype.commit = function ( options ) {
@@ -522,8 +526,10 @@
    *
    * @param {Branch} [target = this.parent.HEAD]
    * @param {(String | Object)} [commitOptions] - Message | Options of commit
-   * @return {Branch} this
+   *
    * @this Branch
+   *
+   * @return {Branch} this
    **/
   Branch.prototype.merge = function ( target, commitOptions ) {
     // Merge target
@@ -560,7 +566,7 @@
     this.path.push( mergeCommit );
 
     endOfBranch.type = "start";
-    this.path.push( endOfBranch ); // End of branch for futur commits
+    this.path.push( endOfBranch ); // End of branch for future commits
 
     // Auto-render
     this.parent.render();
@@ -836,8 +842,8 @@
    * Get a default template from library
    *
    * @param {String} name - Template name
-   * @return {Template} [template] - Template if exist
    *
+   * @return {Template} [template] - Template if exist
    **/
   Template.prototype.get = function ( name ) {
     switch ( name ) {
@@ -854,7 +860,7 @@
           dot: {
             size: 12,
             strokeColor: "#000000",
-            strokeWidth: 7,
+            strokeWidth: 7
           },
           message: {
             color: "black"
@@ -879,7 +885,7 @@
             size: 14
           },
           message: {
-            font: "normal 14pt Arial",
+            font: "normal 14pt Arial"
           }
         }
       } );
