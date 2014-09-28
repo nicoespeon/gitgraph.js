@@ -889,6 +889,7 @@
       break;
 
     case "metro":
+    default:
       template = {
         colors: ["#979797", "#008fb5", "#f1c109"],
         branch: {
