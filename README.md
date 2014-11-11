@@ -5,6 +5,8 @@
 
 A JavaScript library to draw pretty git graphs in the browser.
 
+Project page: <http://gitgraphjs.com/>
+
 ## How to start
 
 You have different options to start with the library:
