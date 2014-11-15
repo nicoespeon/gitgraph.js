@@ -39,7 +39,7 @@ describe( "Gitgraph.js", function () {
     } );
 
     it( "shoud have a name", function () {
-      expect( gitGraph.branchs[0].name ).toEqual( "master" );
+      expect( gitGraph.branchs[ 0 ].name ).toEqual( "master" );
     } );
 
     it( "should be HEAD on develop", function () {
@@ -47,7 +47,7 @@ describe( "Gitgraph.js", function () {
     } );
 
     it( "should have the first color of template theme", function () {
-      expect( master.color ).toEqual( gitGraph.template.colors[0] );
+      expect( master.color ).toEqual( gitGraph.template.colors[ 0 ] );
     } );
 
     it( "should have the color of branch template", function () {
@@ -84,22 +84,22 @@ describe( "Gitgraph.js", function () {
     } );
 
     it( "should have the right message", function () {
-      expect( master.commits[2].message ).toEqual( "message" );
+      expect( master.commits[ 2 ].message ).toEqual( "message" );
     } );
 
     it( "should have a pretty color", function () {
-      expect( master.commits[2].dotColor ).toEqual( gitGraph.template.colors[0] );
-      expect( master.commits[2].messageColor ).toEqual( gitGraph.template.colors[0] );
+      expect( master.commits[ 2 ].dotColor ).toEqual( gitGraph.template.colors[ 0 ] );
+      expect( master.commits[ 2 ].messageColor ).toEqual( gitGraph.template.colors[ 0 ] );
     } );
 
     it( "should have the right position", function () {
       // Commit on master
-      expect( master.commits[2].x ).toEqual( 0 );
-      expect( master.commits[2].y ).toEqual( 240 );
+      expect( master.commits[ 2 ].x ).toEqual( 0 );
+      expect( master.commits[ 2 ].y ).toEqual( 240 );
 
       // Commit on develop
-      expect( develop.commits[1].x ).toEqual( 50 );
-      expect( develop.commits[1].y ).toEqual( 320 );
+      expect( develop.commits[ 1 ].x ).toEqual( 50 );
+      expect( develop.commits[ 1 ].y ).toEqual( 320 );
     } );
 
   } );

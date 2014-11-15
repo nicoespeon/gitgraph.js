@@ -206,11 +206,11 @@
     // Resize canvas
     var unscaledResolution = {
       x: Math.abs( this.columnMax * this.template.branch.spacingX )
-           + Math.abs( this.commitOffsetX )
-        + this.marginX * 2,
+         + Math.abs( this.commitOffsetX )
+         + this.marginX * 2,
       y: Math.abs( this.columnMax * this.template.branch.spacingY )
-           + Math.abs( this.commitOffsetY )
-        + this.marginY * 2
+         + Math.abs( this.commitOffsetY )
+         + this.marginY * 2
     };
 
     if ( this.template.commit.message.display ) {
@@ -242,12 +242,12 @@
     }
 
     // Render branchs
-    for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[i]); i-- ) {
+    for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[ i ]); i-- ) {
       branch.render();
     }
 
     // Render commits after to put them on the foreground
-    for ( var j = 0, commit; !!(commit = this.commits[j]); j++ ) {
+    for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
       commit.render();
     }
   };
@@ -270,7 +270,7 @@
     event.x = event.x ? event.x : event.clientX;
     event.y = event.y ? event.y : event.clientY;
 
-    for ( var i = 0, commit; !!(commit = this.gitgraph.commits[i]); i++ ) {
+    for ( var i = 0, commit; !!(commit = this.gitgraph.commits[ i ]); i++ ) {
       var distanceX = (commit.x + self.offsetX + self.marginX - event.offsetX);
       var distanceY = (commit.y + self.offsetY + self.marginY - event.offsetY);
       distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
@@ -337,7 +337,7 @@
     this.offsetX = this.column * this.spacingX;
     this.offsetY = this.column * this.spacingY;
 
-    this.color = options.color || this.template.branch.color || this.template.colors[this.column];
+    this.color = options.color || this.template.branch.color || this.template.colors[ this.column ];
 
     // Checkout on this new branch
     this.checkout();
@@ -381,17 +381,17 @@
   Branch.prototype.render = function () {
     this.context.beginPath();
 
-    for ( var i = 0, point; !!(point = this.path[i]); i++ ) {
+    for ( var i = 0, point; !!(point = this.path[ i ]); i++ ) {
       if ( point.type === "start" ) {
         this.context.moveTo( point.x, point.y );
       } else {
         if ( this.template.branch.mergeStyle === "bezier" ) {
-          var path = this.path[i - 1];
+          var path = this.path[ i - 1 ];
 
           this.context.bezierCurveTo(
-              path.x - this.template.commit.spacingX / 2, path.y - this.template.commit.spacingY / 2,
-              point.x + this.template.commit.spacingX / 2, point.y + this.template.commit.spacingY / 2,
-              point.x, point.y
+            path.x - this.template.commit.spacingX / 2, path.y - this.template.commit.spacingY / 2,
+            point.x + this.template.commit.spacingX / 2, point.y + this.template.commit.spacingY / 2,
+            point.x, point.y
           );
         } else {
           this.context.lineTo( point.x, point.y );
@@ -425,16 +425,16 @@
 
     options.arrowDisplay = this.template.arrow.active;
     options.branch = this;
-    options.color = options.color || this.template.commit.color || this.template.colors[this.column];
+    options.color = options.color || this.template.commit.color || this.template.colors[ this.column ];
     options.parent = this.parent;
-    options.parentCommit = options.parentCommit || this.commits.slice( -1 )[0];
+    options.parentCommit = options.parentCommit || this.commits.slice( -1 )[ 0 ];
 
     // Special compact mode
     if ( this.parent.mode === "compact"
-           && this.parent.commits.slice( -1 )[0]
-           && this.parent.commits.slice( -1 )[0].branch !== options.branch
-           && options.branch.commits.length
-      && options.type !== "mergeCommit" ) {
+         && this.parent.commits.slice( -1 )[ 0 ]
+         && this.parent.commits.slice( -1 )[ 0 ].branch !== options.branch
+         && options.branch.commits.length
+         && options.type !== "mergeCommit" ) {
       this.parent.commitOffsetX -= this.template.commit.spacingX;
       this.parent.commitOffsetY -= this.template.commit.spacingY;
     }
@@ -454,7 +454,7 @@
     }
 
     // Check collision (Cause of special compact mode)
-    var previousCommit = options.branch.commits.slice( -1 )[0] || {};
+    var previousCommit = options.branch.commits.slice( -1 )[ 0 ] || {};
     var commitPosition = options.x + options.y;
     var previousCommitPosition = previousCommit.x + previousCommit.y;
     var isCommitAtSamePlaceThanPreviousOne = (commitPosition === previousCommitPosition);
@@ -468,7 +468,7 @@
 
     // Fork case: Parent commit from parent branch
     if ( options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch ) {
-      options.parentCommit = this.parentBranch.commits.slice( -1 )[0];
+      options.parentCommit = this.parentBranch.commits.slice( -1 )[ 0 ];
     }
 
     var commit = new Commit( options );
@@ -558,7 +558,7 @@
     commitOptions = commitOptions || {};
     commitOptions.message = commitOptions.message || ((typeof message === "string") ? message : defaultMessage);
     commitOptions.type = "mergeCommit";
-    commitOptions.parentCommit = this.commits.slice( -1 )[0];
+    commitOptions.parentCommit = this.commits.slice( -1 )[ 0 ];
 
     targetBranch.commit( commitOptions );
 
@@ -571,8 +571,8 @@
     this.path.push( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
 
     var mergeCommit = {
-      x: targetBranch.commits.slice( -1 )[0].x,
-      y: targetBranch.commits.slice( -1 )[0].y,
+      x: targetBranch.commits.slice( -1 )[ 0 ].x,
+      y: targetBranch.commits.slice( -1 )[ 0 ].y,
       type: "end"
     };
     this.path.push( mergeCommit );
@@ -596,7 +596,7 @@
    * @this Branch
    **/
   Branch.prototype.calculColumn = function () {
-    for ( var i = 0, branch; !!(branch = this.parent.branchs[i]); i++ ) {
+    for ( var i = 0, branch; !!(branch = this.parent.branchs[ i ]); i++ ) {
       if ( !branch.isfinish ) {
         this.column++;
       } else {
@@ -723,15 +723,15 @@
 
     // Angles calculation
     var alpha = Math.atan2(
-        this.parentCommit.y - this.y,
-        this.parentCommit.x - this.x
+      this.parentCommit.y - this.y,
+      this.parentCommit.x - this.x
     );
 
     // Merge & Fork case
-    if ( this.type === "mergeCommit" || this === this.branch.commits[0] /* First commit */ ) {
+    if ( this.type === "mergeCommit" || this === this.branch.commits[ 0 ] /* First commit */ ) {
       alpha = Math.atan2(
-          this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
-          this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX
+        this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
+        this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX
       );
       color = this.parentCommit.branch.color;
     }
@@ -806,7 +806,7 @@
     options.commit.message = options.commit.message || {};
 
     // One color per column
-    this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
+    this.colors = options.colors || [ "#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657" ];
 
     // Branch style
     this.branch = {};
@@ -891,7 +891,7 @@
     case "metro":
     default:
       template = {
-        colors: ["#979797", "#008fb5", "#f1c109"],
+        colors: [ "#979797", "#008fb5", "#f1c109" ],
         branch: {
           lineWidth: 10,
           spacingX: 50
