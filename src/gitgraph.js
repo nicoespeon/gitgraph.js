@@ -2,6 +2,34 @@
   "use strict";
 
   /**
+   * Emit an event on the given element.
+   * @param {HTMLElement} element - DOM element to trigger the event on.
+   * @param {String} eventName - Name of the triggered event.
+   * @param {Object} [data={}] - Custom data to attach to the event.
+   * @private
+   */
+  function _emitEvent ( element, eventName, data ) {
+    var event;
+
+    if ( document.createEvent ) {
+      event = document.createEvent( "HTMLEvents" );
+      event.initEvent( eventName, true, true );
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+    }
+
+    event.eventName = eventName;
+    event.data = data || {};
+
+    if ( document.createEvent ) {
+      element.dispatchEvent( event );
+    } else {
+      element.fireEvent( "on" + event.eventType, event );
+    }
+  }
+
+  /**
    * GitGraph
    *
    * @constructor
@@ -260,7 +288,6 @@
    **/
   GitGraph.prototype.hover = function ( event ) {
     var self = this.gitgraph;
-    var distanceBetweenCommitCenterAndMouse = 0;
     var isOut = true;
 
     // Fix firefox MouseEvent
@@ -276,17 +303,36 @@
       self.tooltip.style.display = "block";
     }
 
+    function emitMouseoverEvent () {
+      var mouseoverEventOptions = {
+        author: commit.author,
+        message: commit.message,
+        date: commit.date,
+        sha1: commit.sha1
+      };
+
+      _emitEvent( self.canvas, "commit:mouseover", mouseoverEventOptions );
+    }
+
     for ( var i = 0, commit; !!(commit = this.gitgraph.commits[ i ]); i++ ) {
       var distanceX = (commit.x + self.offsetX + self.marginX - event.offsetX);
       var distanceY = (commit.y + self.offsetY + self.marginY - event.offsetY);
-      distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
+      var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
+      var isOverCommit = distanceBetweenCommitCenterAndMouse < self.template.commit.dot.size;
 
-      if ( distanceBetweenCommitCenterAndMouse < self.template.commit.dot.size ) {
-        if ( !this.template.commit.message.display ) {
+      if ( isOverCommit ) {
+        if ( !self.template.commit.message.display ) {
           showCommitTooltip();
         }
 
+        if ( !commit.isMouseover ) {
+          emitMouseoverEvent();
+        }
+
         isOut = false;
+        commit.isMouseover = true;
+      } else {
+        commit.isMouseover = false;
       }
     }
 
