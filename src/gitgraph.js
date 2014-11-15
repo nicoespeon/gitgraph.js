@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+
   /**
    * GitGraph
    *
@@ -10,7 +11,7 @@
    * @param {Template|String} [options.template] - Template of the graph
    * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
    * @param {String} [options.mode = (null|"compact")]  - Display mode
-   * @param {DOM} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
+   * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    *
    * @this GitGraph
@@ -85,14 +86,12 @@
     this.commitOffsetX = 0;
     this.commitOffsetY = 0;
 
-    // Add tooltip if message aren't display
-    if ( !this.template.commit.message.display ) {
-      var mouseMoveOptions = {
-        handleEvent: this.hover,
-        gitgraph: this
-      };
-      this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
-    }
+    // Bindings
+    var mouseMoveOptions = {
+      handleEvent: this.hover,
+      gitgraph: this
+    };
+    this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
 
     // Render on window resize
     window.onresize = this.render.bind( this );
@@ -270,17 +269,22 @@
     event.x = event.x ? event.x : event.clientX;
     event.y = event.y ? event.y : event.clientY;
 
+    function showCommitTooltip () {
+      self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
+      self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
+      self.tooltip.textContent = commit.sha1 + " - " + commit.message;
+      self.tooltip.style.display = "block";
+    }
+
     for ( var i = 0, commit; !!(commit = this.gitgraph.commits[ i ]); i++ ) {
       var distanceX = (commit.x + self.offsetX + self.marginX - event.offsetX);
       var distanceY = (commit.y + self.offsetY + self.marginY - event.offsetY);
       distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
 
       if ( distanceBetweenCommitCenterAndMouse < self.template.commit.dot.size ) {
-        // Show tooltip
-        self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
-        self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
-        self.tooltip.textContent = commit.sha1 + " - " + commit.message;
-        self.tooltip.style.display = "block";
+        if ( !this.template.commit.message.display ) {
+          showCommitTooltip();
+        }
 
         isOut = false;
       }
