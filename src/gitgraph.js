@@ -603,10 +603,14 @@
     }
 
     // Merge commit
-    var message = commitOptions;
     var defaultMessage = "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
-    commitOptions = commitOptions || {};
-    commitOptions.message = commitOptions.message || ((typeof message === "string") ? message : defaultMessage);
+    if ( typeof commitOptions !== "object" ) {
+      var message = commitOptions;
+      commitOptions = {};
+      commitOptions.message = (typeof message === "string") ? message : defaultMessage;
+    } else {
+      commitOptions.message = commitOptions.message || defaultMessage;
+    }
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = this.commits.slice( -1 )[ 0 ];
 
