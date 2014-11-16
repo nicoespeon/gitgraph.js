@@ -79,3 +79,11 @@ test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
 test.commit( "It's works !" );
+
+/***********************
+ *       EVENTS        *
+ ***********************/
+
+gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
+  console.log( "You're over a commit.", "Here is a bunch of data ->", event.data );
+} );
