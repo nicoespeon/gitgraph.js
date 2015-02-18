@@ -466,7 +466,9 @@
 
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
-    this.context.setLineDash(this.lineDash);
+    if ( this.context.setLineDash !== undefined ) {
+      this.context.setLineDash(this.lineDash);
+    }
     this.context.stroke();
     this.context.closePath();
   };
