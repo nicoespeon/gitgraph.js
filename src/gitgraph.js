@@ -384,7 +384,8 @@
     this.name = (typeof options.name === "string") ? options.name : "no-name";
     this.context = this.parent.context;
     this.template = this.parent.template;
-    this.lineWidth = this.template.branch.lineWidth;
+    this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
+    this.lineDash = options.lineDash || this.template.branch.lineDash;
     this.spacingX = this.template.branch.spacingX;
     this.spacingY = this.template.branch.spacingY;
     this.size = 0;
@@ -465,6 +466,7 @@
 
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
+    this.context.setLineDash(this.lineDash);
     this.context.stroke();
     this.context.closePath();
   };
@@ -894,6 +896,7 @@
     this.branch = {};
     this.branch.color = options.branch.color || null; // Only one color
     this.branch.lineWidth = options.branch.lineWidth || 2;
+    this.branch.lineDash = options.branch.lineDash || [];
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
