@@ -702,6 +702,8 @@
    * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
    * @param {String} [options.messageColor = options.color] - Specific message color
    * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
+   * @param {Boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
+   * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
    *
    * @this Commit
@@ -725,7 +727,10 @@
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
     this.messageDisplay = booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
+    this.messageAuthorDisplay = booleanOptionOr(options.messageAuthorDisplay, this.template.commit.message.displayAuthor);
+    this.messageHashDisplay = booleanOptionOr(options.messageHashDisplay, this.template.commit.message.displayHash);
     this.messageColor = options.messageColor || options.color;
+    this.messageFont = options.messageFont || this.template.commit.message.font;
     this.dotColor = options.dotColor || options.color;
     this.dotSize = options.dotSize || this.template.commit.dot.size;
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
@@ -772,8 +777,15 @@
 
     // Message
     if ( this.messageDisplay ) {
-      var message = this.sha1 + " " + this.message + (this.author ? " - " + this.author : "");
-      this.context.font = this.template.commit.message.font;
+      var message = this.message;
+      if ( this.messageHashDisplay ) {
+        message = this.sha1 + " " + message;
+      }
+      if ( this.messageAuthorDisplay ) {
+        message = message + (this.author ? " - " + this.author : "");
+      }
+
+      this.context.font = this.messageFont;
       this.context.fillStyle = this.messageColor;
       this.context.fillText( message, (this.parent.columnMax + 1) * this.template.branch.spacingX, this.y + 3 );
     }
@@ -860,6 +872,8 @@
    * @param {Number} [options.commit.dot.strokeColor] - Commit dot stroke color
    * @param {String} [options.commit.message.color] - Commit message color
    * @param {Boolean} [options.commit.message.display] - Commit display policy
+   * @param {Boolean} [options.commit.message.displayAuthor] - Commit message author policy
+   * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    *
    * @this Template
@@ -913,6 +927,8 @@
 
     this.commit.message = {};
     this.commit.message.display = booleanOptionOr(options.commit.message.display, true);
+    this.commit.message.displayAuthor = booleanOptionOr(options.commit.message.displayAuthor, true);
+    this.commit.message.displayHash = booleanOptionOr(options.commit.message.displayHash, true);
 
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
