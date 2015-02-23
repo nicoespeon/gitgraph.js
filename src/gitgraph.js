@@ -724,7 +724,7 @@
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
-    this.messageDisplay = options.messageDisplay || this.template.commit.message.display;
+    this.messageDisplay = booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
     this.messageColor = options.messageColor || options.color;
     this.dotColor = options.dotColor || options.color;
     this.dotSize = options.dotSize || this.template.commit.dot.size;
@@ -912,7 +912,7 @@
     this.commit.dot.strokeColor = options.commit.dot.strokeColor || null;
 
     this.commit.message = {};
-    this.commit.message.display = (typeof options.commit.message.display === "boolean") ? options.commit.message.display : true;
+    this.commit.message.display = booleanOptionOr(options.commit.message.display, true);
 
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
@@ -979,6 +979,14 @@
 
     return new Template( template );
   };
+
+  // --------------------------------------------------------------------
+  // -----------------------      Utilities       -----------------------
+  // --------------------------------------------------------------------
+
+  function booleanOptionOr(booleanOption, defaultOption){
+    return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
+  }
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
