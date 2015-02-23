@@ -36,7 +36,7 @@
    *
    * @param {Object} options - GitGraph options
    * @param {String} [options.elementId = "gitGraph"] - Id of the canvas container
-   * @param {Template|String} [options.template] - Template of the graph
+   * @param {Template|String|Object} [options.template] - Template of the graph
    * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
    * @param {String} [options.mode = (null|"compact")]  - Display mode
    * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
@@ -51,10 +51,17 @@
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
 
     // Template management
-    if ( typeof options.template === "string" ) {
-      options.template = this.newTemplate( options.template );
+    if ( (typeof options.template === "string")
+      || (typeof options.template === "object")) {
+      this.template = this.newTemplate( options.template );
     }
-    this.template = (options.template instanceof Template) ? options.template : this.newTemplate( "metro" );
+    else if (options.template instanceof Template) {
+      this.template = options.template;
+    }
+    else {
+      this.template = this.newTemplate( "metro" );
+    }
+
     this.mode = options.mode || null;
     if ( this.mode === "compact" ) {
       this.template.commit.message.display = false;
@@ -201,6 +208,13 @@
     return this;
   };
 
+  /**
+   * Create a new template
+   *
+   * @param {(String|Object)} options - The template name, or the template options
+   *
+   * @return {Template}
+   **/
   GitGraph.prototype.newTemplate = function ( options ) {
     if ( typeof options === "string" ) {
       return new Template().get( options );
@@ -968,4 +982,5 @@
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
+  window.GitGraphTemplate = Template;
 })();
