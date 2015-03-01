@@ -978,6 +978,7 @@
       break;
 
     case "metro":
+    /* falls through */
     default:
       template = {
         colors: [ "#979797", "#008fb5", "#f1c109" ],
