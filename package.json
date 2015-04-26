@@ -1,6 +1,6 @@
 {
   "name": "gitgraph.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "description": "A JavaScript library to draw pretty git graphs in the browser",
   "contributors": [

@@ -1012,5 +1012,7 @@
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
-  window.GitGraphTemplate = Template;
+  window.GitGraph.Branch = Branch;
+  window.GitGraph.Commit = Commit;
+  window.GitGraph.Template = Template;
 })();
