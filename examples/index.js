@@ -20,7 +20,7 @@ var myTemplateConfig = {
     }
   }
 };
-var myTemplate = new GitGraphTemplate( myTemplateConfig );
+var myTemplate = new GitGraph.Template( myTemplateConfig );
 
 /***********************
  *    INITIALIZATION   *
