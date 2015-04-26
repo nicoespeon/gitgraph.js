@@ -1,6 +1,6 @@
 {
   "name": "gitgraph.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": [ "./build/gitgraph.js", "./build/gitgraph.css" ],
   "ignore": [
     "**/.*"

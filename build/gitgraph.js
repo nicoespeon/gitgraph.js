@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.0.2
+ *                  GitGraph v1.0.3
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2015 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -1022,5 +1022,7 @@
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
-  window.GitGraphTemplate = Template;
+  window.GitGraph.Branch = Branch;
+  window.GitGraph.Commit = Commit;
+  window.GitGraph.Template = Template;
 })();
