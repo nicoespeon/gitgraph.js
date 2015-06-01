@@ -44,6 +44,7 @@
       <h3>1. Download gitgraph.js</h3>
       <p>With git <img src="img/github-logo.png" alt="github logo"> : </p><pre class="prettyprint">git clone http://github.com/nicoespeon/gitgraph.js.git</pre>
       <p>With Bower <img src="img/bower-logo.png" alt="bower logo"> : </p><pre class="prettyprint">bower install gitgraph.js</pre>
+      <p>With your browser : <a href="https://github.com/nicoespeon/gitgraph.js/releases/latest">download the zip / tar.gz source code</a></p>
       <h3>2. Prepare the HTML</h3>
       <p>Load the library: </p><pre class="prettyprint">&lt;script src="js/gitgraph.min.js"&gt;&lt;/script&gt;</pre>
       <p>Add the stylesheet: </p><pre class="prettyprint">&lt;link rel="stylesheet" type="text/css" href="css/gitgraph.css" /&gt;</pre>
@@ -58,7 +59,14 @@
       <p>Eventually, you could add some options here: </p>
       <ul>
         <li>a specific<code>template</code>: <code>"blackarrow"</code> or <code>"metro"</code> (default)</li>
-        <li>the graph <code>orientation</code>: <code>"vertical-reverse"</code>, <code>"horizontal"</code>, <code>"horizontal-reverse"</code> or even <code>"vertical"</code> (default)</li>
+        <li>the graph <code>orientation</code>:
+          <ul>
+            <li><code>"vertical-reverse"</code></li>
+            <li><code>"horizontal"</code></li>
+            <li><code>"horizontal-reverse"</code></li>
+            <li><code>"vertical"</code> (default)</li>
+          </ul>
+        </li>
         <li>the display <code>mode</code>: <code>"compact"</code> for a compact mode, or <code>"extended"</code> (default)</li>
         <li>the <code>elementId</code>: the canvas ID (<code>"gitGraph"</code> is the default)</li>
         <li>a default <code>author</code> for commits</li>
@@ -120,7 +128,10 @@ var featureOfDeath = gitgraph.branch("feature-of-death");</pre>
       <pre class="prettyprint">master.merge(develop); // Merge master into develop</pre>
       <p>But wait, there's more! Customize the merge commit, your way, just like any other commit:</p>
       <pre class="prettyprint">master.merge(develop, "Epic merge commit");
-master.merge(develop, { dotColor: "red" }); // The commit will be red, 'coz red is fashion!</pre>
+// —> Custom merge message FTW \o/
+
+master.merge(develop, { dotColor: "red" });
+// —> The commit will be red, 'coz red is fashion!</pre>
       <p>And you can delete a branch to create another one on the same column:</p>
       <pre class="prettyprint">master.delete();</pre>
     </div>
