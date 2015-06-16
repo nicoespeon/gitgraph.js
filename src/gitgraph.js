@@ -305,11 +305,13 @@
     var isOut = true;
 
     // Fix firefox MouseEvent
-    event.offsetX = event.offsetX ? event.offsetX : event.layerX;
-    event.offsetY = event.offsetY ? event.offsetY : event.layerY;
-    event.x = event.x ? event.x : event.clientX;
-    event.y = event.y ? event.y : event.clientY;
-
+    if (typeof InstallTrigger !== 'undefined')/* == (is Firefox) */ { 
+      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
+      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+      event.x = event.x ? event.x : event.clientX;
+      event.y = event.y ? event.y : event.clientY;
+    }
+    
     function showCommitTooltip () {
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
