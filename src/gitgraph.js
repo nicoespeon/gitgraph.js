@@ -305,11 +305,13 @@
     var isOut = true;
 
     // Fix firefox MouseEvent
-    event.offsetX = event.offsetX ? event.offsetX : event.layerX;
-    event.offsetY = event.offsetY ? event.offsetY : event.layerY;
-    event.x = event.x ? event.x : event.clientX;
-    event.y = event.y ? event.y : event.clientY;
-
+    if (typeof InstallTrigger !== 'undefined')/* == (is Firefox) */ { 
+      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
+      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+      event.x = event.x ? event.x : event.clientX;
+      event.y = event.y ? event.y : event.clientY;
+    }
+    
     function showCommitTooltip () {
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
@@ -707,6 +709,7 @@
    * @param {String} [options.messageColor = options.color] - Specific message color
    * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
    * @param {Boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
+   * @param {Boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
    * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
    *
@@ -732,6 +735,7 @@
     this.arrowDisplay = options.arrowDisplay;
     this.messageDisplay = booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
     this.messageAuthorDisplay = booleanOptionOr(options.messageAuthorDisplay, this.template.commit.message.displayAuthor);
+    this.messageBranchDisplay = booleanOptionOr(options.messageBranchDisplay, this.template.commit.message.displayBranch);
     this.messageHashDisplay = booleanOptionOr(options.messageHashDisplay, this.template.commit.message.displayHash);
     this.messageColor = options.messageColor || options.color;
     this.messageFont = options.messageFont || this.template.commit.message.font;
@@ -787,6 +791,9 @@
       }
       if ( this.messageAuthorDisplay ) {
         message = message + (this.author ? " - " + this.author : "");
+      }
+      if ( this.messageBranchDisplay ) {
+        message = (this.branch.name ? "[" + this.branch.name + "] ": "") + message;
       }
 
       this.context.font = this.messageFont;
@@ -877,6 +884,7 @@
    * @param {String} [options.commit.message.color] - Commit message color
    * @param {Boolean} [options.commit.message.display] - Commit display policy
    * @param {Boolean} [options.commit.message.displayAuthor] - Commit message author policy
+   * @param {Boolean} [options.commit.message.displayBranch] - Commit message branch policy
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    *
@@ -933,6 +941,7 @@
     this.commit.message = {};
     this.commit.message.display = booleanOptionOr(options.commit.message.display, true);
     this.commit.message.displayAuthor = booleanOptionOr(options.commit.message.displayAuthor, true);
+    this.commit.message.displayBranch = booleanOptionOr(options.commit.message.displayBranch, true);
     this.commit.message.displayHash = booleanOptionOr(options.commit.message.displayHash, true);
 
     // Only one color, if null message takes commit color (only message)

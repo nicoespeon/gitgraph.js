@@ -15,6 +15,7 @@ var myTemplateConfig = {
     },
     message: {
       displayAuthor: true,
+      displayBranch: false,
       displayHash: false,
       font: "normal 12pt Arial"
     }
