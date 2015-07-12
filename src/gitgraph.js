@@ -674,7 +674,11 @@
       if ( !branch.isfinish ) {
         this.column++;
       } else {
-        break;
+        if ( !branch.isdead ) {
+          this.column = branch.column;
+          branch.isdead = true;
+          break;
+        }
       }
     }
 
