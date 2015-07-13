@@ -101,6 +101,7 @@
     // Canvas init
     this.canvas = document.getElementById( this.elementId ) || options.canvas;
     this.context = this.canvas.getContext( "2d" );
+    this.context.textBaseline = 'bottom';
 
     // Tooltip layer
     this.tooltip = document.createElement( "div" );
@@ -738,6 +739,8 @@
     this.author = options.author || this.parent.author;
     this.date = options.date || new Date().toUTCString();
     this.detail = options.detail || null;
+    this.marker = options.marker || null;
+    this.markerColor = options.markerColor || 'yellow';
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -791,6 +794,16 @@
       this.detail.width = 30;
     }
 
+    this.context.font = this.messageFont;
+
+    // Marker
+    var markerWidth = this.template.branch.spacingX;
+    if ( this.marker !== null ) {
+      drawTextBG( this.context, (this.parent.columnMax + 1) * this.template.branch.spacingX - (this.template.branch.spacingX/2), this.y + 3, this.marker, "black", this.markerColor );
+      var textWidth = this.context.measureText(this.marker).width;
+      markerWidth = (markerWidth < textWidth) ? textWidth : markerWidth;
+    }
+
     // Message
     if ( this.messageDisplay ) {
       var message = this.message;
@@ -804,9 +817,8 @@
         message = (this.branch.name ? "[" + this.branch.name + "] ": "") + message;
       }
 
-      this.context.font = this.messageFont;
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, (this.parent.columnMax + 1) * this.template.branch.spacingX, this.y + 3 );
+      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + markerWidth, this.y + 3 );
     }
   };
 
@@ -1025,6 +1037,24 @@
 
   function booleanOptionOr(booleanOption, defaultOption){
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
+  }
+
+  function drawTextBG( context, x, y, text, fgcolor, bgcolor ) {
+    context.save();
+    var width = context.measureText(text).width;
+    var height = parseInt(context.font, 10);
+
+    context.beginPath();
+    context.rect(x-2, y-height+2, width+4, height+2);
+    context.fillStyle = bgcolor;
+    context.fill();
+    context.lineWidth = 2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.fillStyle = fgcolor;
+    context.fillText(text, x, y);
+    context.restore();
   }
 
   // Expose GitGraph object
