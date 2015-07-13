@@ -515,7 +515,7 @@
       this.parent.commitOffsetY -= this.template.commit.spacingY;
     }
 
-    options.messageColor = options.messageColor || options.color || this.template.commit.message.color || null;
+    options.messageColor = options.messageColor || this.template.commit.message.color || options.color || null;
     options.dotColor = options.dotColor || options.color || this.template.commit.dot.color || null;
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
