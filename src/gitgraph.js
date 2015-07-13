@@ -397,8 +397,14 @@
     this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"join"|"end")}
 
     // Column number calculation for auto-color & auto-offset
-    this.column = 0;
-    this.calculColumn();
+    if ( typeof options.column === "number" ) {
+      this.column = options.column;
+    } else {
+      this.column = 0;
+      this.calculColumn();
+    }
+
+    this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
 
     // Options with auto value
     this.offsetX = this.column * this.spacingX;
@@ -681,8 +687,6 @@
         }
       }
     }
-
-    this.parent.columnMax = (this.column > this.parent.columnMax) ? this.column : this.parent.columnMax;
   };
 
   // --------------------------------------------------------------------
