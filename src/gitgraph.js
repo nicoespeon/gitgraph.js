@@ -826,7 +826,7 @@
     var tagWidth = this.template.branch.spacingX;
     if ( this.tag !== null ) {
       drawTextBG( this.context, (this.parent.columnMax + 1) * this.template.branch.spacingX - (this.template.branch.spacingX/2), this.y + 3, this.tag, "black", this.tagColor, this.tagFont );
-      var textWidth = this.context.measureText(this.tag).width;
+      var textWidth = this.context.measureText(this.tag).width - (this.template.branch.spacingX/2);
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
 
