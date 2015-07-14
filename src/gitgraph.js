@@ -66,8 +66,8 @@
     if ( this.mode === "compact" ) {
       this.template.commit.message.display = false;
     }
-    this.marginX = this.template.commit.dot.size * 2;
-    this.marginY = this.template.commit.dot.size * 2;
+    this.marginX = this.template.branch.spacingX + this.template.commit.dot.size * 2;
+    this.marginY = this.template.branch.spacingY + this.template.commit.dot.size * 2;
     this.offsetX = 0;
     this.offsetY = 0;
 
@@ -389,6 +389,7 @@
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
     this.lineDash = options.lineDash || this.template.branch.lineDash;
+    this.showLabel = booleanOptionOr(options.showLabel, this.template.branch.showLabel);
     this.spacingX = this.template.branch.spacingX;
     this.spacingY = this.template.branch.spacingY;
     this.size = 0;
@@ -453,6 +454,7 @@
    * @this Branch
    **/
   Branch.prototype.render = function () {
+
     this.context.beginPath();
 
     for ( var i = 0, point; !!(point = this.path[ i ]); i++ ) {
@@ -517,7 +519,9 @@
     }
 
     options.messageColor = options.messageColor || this.template.commit.message.color || options.color || null;
-    options.dotColor = options.dotColor || options.color || this.template.commit.dot.color || null;
+    options.labelColor = options.labelColor || this.template.branch.labelColor || options.color || null;
+    options.tagColor = options.tagColor || this.template.commit.tag.color || options.color || null;
+    options.dotColor = options.dotColor || this.template.commit.dot.color || options.color || null;
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
 
@@ -548,6 +552,17 @@
       options.parentCommit = this.parentBranch.commits.slice( -1 )[ 0 ];
     }
 
+    // First commit
+    var isFirstBranch = options.parentCommit instanceof Commit;
+    var isPathBeginning = this.path.length === 0;
+
+    options.showLabel = (isPathBeginning && this.showLabel) ? true : false;
+
+    if ( options.showLabel ) {
+        options.x -= this.template.commit.spacingX;
+        options.y -= this.template.commit.spacingY;
+    }
+
     var commit = new Commit( options );
     this.commits.push( commit );
 
@@ -558,9 +573,6 @@
       type: "join"
     };
 
-    // First commit
-    var isFirstBranch = commit.parentCommit instanceof Commit;
-    var isPathBeginning = this.path.length === 0;
     if ( isFirstBranch && isPathBeginning ) {
       var parent = {
         x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
@@ -573,11 +585,12 @@
     } else if ( isPathBeginning ) {
       point.type = "start";
     }
-    this.path.push( point );
 
     // Increment commitOffset for next commit position
-    this.parent.commitOffsetX += this.template.commit.spacingX;
-    this.parent.commitOffsetY += this.template.commit.spacingY;
+    this.path.push( point );
+
+    this.parent.commitOffsetX += this.template.commit.spacingX * (options.showLabel ? 2 : 1);
+    this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
 
     // Add height of detail div (normal vertical mode only)
     if ( commit.detail !== null ) {
@@ -644,16 +657,17 @@
     targetBranch.commit( commitOptions );
 
     // Add points to path
+    var targetCommit = targetBranch.commits.slice( -1 )[ 0 ];
     var endOfBranch = {
-      x: this.offsetX + this.template.commit.spacingX * 2 - this.parent.commitOffsetX,
-      y: this.offsetY + this.template.commit.spacingY * 2 - this.parent.commitOffsetY,
+      x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
+      y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
       type: "join"
     };
     this.path.push( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
 
     var mergeCommit = {
-      x: targetBranch.commits.slice( -1 )[ 0 ].x,
-      y: targetBranch.commits.slice( -1 )[ 0 ].y,
+      x: targetCommit.x,
+      y: targetCommit.y,
       type: "end"
     };
     this.path.push( mergeCommit );
@@ -739,8 +753,9 @@
     this.author = options.author || this.parent.author;
     this.date = options.date || new Date().toUTCString();
     this.detail = options.detail || null;
-    this.marker = options.marker || null;
-    this.markerColor = options.markerColor || 'yellow';
+    this.tag = options.tag || null;
+    this.tagColor = options.tagColor || options.color;
+    this.tagFont = options.tagFont || this.template.commit.tag.font;
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -758,6 +773,9 @@
     this.parentCommit = options.parentCommit;
     this.x = options.x;
     this.y = options.y;
+    this.showLabel = options.showLabel;
+    this.labelColor = options.labelColor || options.color;
+    this.labelFont = options.labelFont || this.template.branch.labelFont;
 
     this.parent.commits.push( this );
   }
@@ -768,6 +786,14 @@
    * @this Commit
    **/
   Commit.prototype.render = function () {
+
+    // Label
+    if ( this.showLabel ) {
+        var width = this.context.measureText(this.parent.name).width;
+        var height = parseInt(this.context.font, 10);
+        drawTextBG(this.context, this.x - width/2, (this.y + (height/2)) + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont);
+    }
+
     // Dot
     this.context.beginPath();
     this.context.arc( this.x, this.y, this.dotSize, 0, 2 * Math.PI, false );
@@ -796,12 +822,12 @@
 
     this.context.font = this.messageFont;
 
-    // Marker
-    var markerWidth = this.template.branch.spacingX;
-    if ( this.marker !== null ) {
-      drawTextBG( this.context, (this.parent.columnMax + 1) * this.template.branch.spacingX - (this.template.branch.spacingX/2), this.y + 3, this.marker, "black", this.markerColor );
-      var textWidth = this.context.measureText(this.marker).width;
-      markerWidth = (markerWidth < textWidth) ? textWidth : markerWidth;
+    // Tag
+    var tagWidth = this.template.branch.spacingX;
+    if ( this.tag !== null ) {
+      drawTextBG( this.context, (this.parent.columnMax + 1) * this.template.branch.spacingX - (this.template.branch.spacingX/2), this.y + 3, this.tag, "black", this.tagColor, this.tagFont );
+      var textWidth = this.context.measureText(this.tag).width;
+      tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
 
     // Message
@@ -818,7 +844,7 @@
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + markerWidth, this.y + 3 );
+      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + tagWidth, this.y + 3 );
     }
   };
 
@@ -841,8 +867,8 @@
     // Merge & Fork case
     if ( this.type === "mergeCommit" || this === this.branch.commits[ 0 ] /* First commit */ ) {
       alpha = Math.atan2(
-        this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY,
-        this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX
+        this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY * (this.showLabel ? 2 : 1),
+        this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX * (this.showLabel ? 2 : 1)
       );
       color = this.parentCommit.branch.color;
     }
@@ -917,6 +943,7 @@
     options.arrow = options.arrow || {};
     options.commit = options.commit || {};
     options.commit.dot = options.commit.dot || {};
+    options.commit.tag = options.commit.tag || {};
     options.commit.message = options.commit.message || {};
 
     // One color per column
@@ -927,6 +954,9 @@
     this.branch.color = options.branch.color || null; // Only one color
     this.branch.lineWidth = options.branch.lineWidth || 2;
     this.branch.lineDash = options.branch.lineDash || [];
+    this.branch.showLabel = options.branch.showLabel || false;
+    this.branch.labelColor = options.branch.labelColor || null;
+    this.branch.labelFont = options.branch.labelFont || "normal 8pt Calibri";
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
@@ -957,6 +987,10 @@
     this.commit.dot.size = options.commit.dot.size || 3;
     this.commit.dot.strokeWidth = options.commit.dot.strokeWidth || null;
     this.commit.dot.strokeColor = options.commit.dot.strokeColor || null;
+
+    this.commit.tag = {};
+    this.commit.tag.color = options.commit.tag.color || this.commit.dot.color;
+    this.commit.tag.font = options.commit.tag.font || options.commit.message.font || "normal 10pt Calibri";
 
     this.commit.message = {};
     this.commit.message.display = booleanOptionOr(options.commit.message.display, true);
@@ -1035,21 +1069,34 @@
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
 
+  var getFontHeight = function(fontStyle) {
+    var body = document.getElementsByTagName("body")[0];
+    var dummy = document.createElement("div");
+    var dummyText = document.createTextNode("Mg");
+    dummy.appendChild(dummyText);
+    dummy.setAttribute("style", fontStyle);
+    body.appendChild(dummy);
+    var result = dummy.offsetHeight;
+    body.removeChild(dummy);
+    return result;
+  };
+
   function booleanOptionOr(booleanOption, defaultOption){
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
-  function drawTextBG( context, x, y, text, fgcolor, bgcolor ) {
+  function drawTextBG( context, x, y, text, fgcolor, bgcolor, font ) {
     context.save();
+    context.font = font;
     var width = context.measureText(text).width;
-    var height = parseInt(context.font, 10);
+    var height = getFontHeight("font: " + font + ";");
 
     context.beginPath();
     context.rect(x-2, y-height+2, width+4, height+2);
     context.fillStyle = bgcolor;
     context.fill();
     context.lineWidth = 2;
-    context.strokeStyle = 'black';
+    context.strokeStyle = "black";
     context.stroke();
 
     context.fillStyle = fgcolor;
