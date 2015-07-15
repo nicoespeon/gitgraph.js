@@ -257,10 +257,10 @@
 
     // Resize canvas
     var unscaledResolution = {
-      x: Math.abs( this.columnMax * this.template.branch.spacingX )
+      x: Math.abs( (this.columnMax + 1 ) * this.template.branch.spacingX )
          + Math.abs( this.commitOffsetX )
          + this.marginX * 2,
-      y: Math.abs( this.columnMax * this.template.branch.spacingY )
+      y: Math.abs( (this.columnMax + 1 ) * this.template.branch.spacingY )
          + Math.abs( this.commitOffsetY )
          + this.marginY * 2
     };
@@ -297,6 +297,8 @@
     for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[ i ]); i-- ) {
       branch.render();
     }
+
+    this.tagNum = 0;
 
     // Render commits after to put them on the foreground
     for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
@@ -833,12 +835,14 @@
     // Tag
     var tagWidth = this.template.commit.tag.spacingX;
     if ( this.tag !== null ) {
+      this.parent.tagNum++;
       var textWidth = this.context.measureText(this.tag).width;
       if ( this.template.branch.labelRotation !== 0 ) {
+        var textHeight = getFontHeight(this.tagFont);
         drawTextBG( this.context,
           this.x - this.dotSize/2,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2,
-          this.tag, "red", this.tagColor, this.tagFont, 0 );
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2 + (this.parent.tagNum % 2) * textHeight * 1.5,
+          this.tag, "black", this.tagColor, this.tagFont, 0 );
       } else {
         drawTextBG( this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX/2 + textWidth/2,
@@ -1090,12 +1094,12 @@
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
 
-  var getFontHeight = function(fontStyle) {
+  var getFontHeight = function(font) {
     var body = document.getElementsByTagName("body")[0];
     var dummy = document.createElement("div");
     var dummyText = document.createTextNode("Mg");
     dummy.appendChild(dummyText);
-    dummy.setAttribute("style", fontStyle);
+    dummy.setAttribute("style", "font: " + font + ";");
     body.appendChild(dummy);
     var result = dummy.offsetHeight;
     body.removeChild(dummy);
@@ -1114,7 +1118,7 @@
 
     context.font = font;
     var width = context.measureText(text).width;
-    var height = getFontHeight("font: " + font + ";");
+    var height = getFontHeight(font);
 
     context.beginPath();
     context.rect(-(width/2)-4, -(height/2)+2, width+8, height+2);
