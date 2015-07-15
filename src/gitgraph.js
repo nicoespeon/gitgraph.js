@@ -975,6 +975,7 @@
     this.branch.showLabel = options.branch.showLabel || false;
     this.branch.labelColor = options.branch.labelColor || null;
     this.branch.labelFont = options.branch.labelFont || "normal 8pt Calibri";
+    this.branch.labelRotation = options.branch.labelRotation || 0;
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
