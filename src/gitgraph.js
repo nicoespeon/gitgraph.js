@@ -404,7 +404,8 @@
     this.offsetX = this.column * this.spacingX;
     this.offsetY = this.column * this.spacingY;
 
-    this.color = options.color || this.template.branch.color || this.template.colors[ this.column ];
+    var columnIndex = (this.column % this.template.colors.length);
+    this.color = options.color || this.template.branch.color || this.template.colors[ columnIndex ];
 
     // Checkout on this new branch
     this.checkout();
@@ -495,7 +496,8 @@
 
     options.arrowDisplay = this.template.arrow.active;
     options.branch = this;
-    options.color = options.color || this.template.commit.color || this.template.colors[ this.column ];
+    var columnIndex = (this.column % this.template.colors.length);
+    options.color = options.color || this.template.commit.color || this.template.colors[ columnIndex ];
     options.parent = this.parent;
     options.parentCommit = options.parentCommit || this.commits.slice( -1 )[ 0 ];
 
