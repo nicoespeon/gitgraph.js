@@ -52,10 +52,10 @@
 
     // Template management
     if ( (typeof options.template === "string")
-      || (typeof options.template === "object")) {
+         || (typeof options.template === "object") ) {
       this.template = this.newTemplate( options.template );
     }
-    else if (options.template instanceof Template) {
+    else if ( options.template instanceof Template ) {
       this.template = options.template;
     }
     else {
@@ -305,13 +305,13 @@
     var isOut = true;
 
     // Fix firefox MouseEvent
-    if (typeof InstallTrigger !== 'undefined')/* == (is Firefox) */ { 
+    if ( typeof InstallTrigger !== 'undefined' )/* == (is Firefox) */ {
       event.offsetX = event.offsetX ? event.offsetX : event.layerX;
       event.offsetY = event.offsetY ? event.offsetY : event.layerY;
       event.x = event.x ? event.x : event.clientX;
       event.y = event.y ? event.y : event.clientY;
     }
-    
+
     function showCommitTooltip () {
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
@@ -470,7 +470,7 @@
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
     if ( this.context.setLineDash !== undefined ) {
-      this.context.setLineDash(this.lineDash);
+      this.context.setLineDash( this.lineDash );
     }
     this.context.stroke();
     this.context.closePath();
@@ -681,7 +681,7 @@
         candidates[ branch.column ]++;
       }
     }
-    
+
     this.column = 0;
     for ( ; ; this.column++ ) {
       if ( !( this.column in candidates ) || candidates[ this.column ] == 0 ) {
@@ -744,10 +744,10 @@
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
-    this.messageDisplay = booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
-    this.messageAuthorDisplay = booleanOptionOr(options.messageAuthorDisplay, this.template.commit.message.displayAuthor);
-    this.messageBranchDisplay = booleanOptionOr(options.messageBranchDisplay, this.template.commit.message.displayBranch);
-    this.messageHashDisplay = booleanOptionOr(options.messageHashDisplay, this.template.commit.message.displayHash);
+    this.messageDisplay = booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
+    this.messageAuthorDisplay = booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
+    this.messageBranchDisplay = booleanOptionOr( options.messageBranchDisplay, this.template.commit.message.displayBranch );
+    this.messageHashDisplay = booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
     this.messageColor = options.messageColor || options.color;
     this.messageFont = options.messageFont || this.template.commit.message.font;
     this.dotColor = options.dotColor || options.color;
@@ -804,7 +804,7 @@
         message = message + (this.author ? " - " + this.author : "");
       }
       if ( this.messageBranchDisplay ) {
-        message = (this.branch.name ? "[" + this.branch.name + "] ": "") + message;
+        message = (this.branch.name ? "[" + this.branch.name + "] " : "") + message;
       }
 
       this.context.font = this.messageFont;
@@ -950,10 +950,10 @@
     this.commit.dot.strokeColor = options.commit.dot.strokeColor || null;
 
     this.commit.message = {};
-    this.commit.message.display = booleanOptionOr(options.commit.message.display, true);
-    this.commit.message.displayAuthor = booleanOptionOr(options.commit.message.displayAuthor, true);
-    this.commit.message.displayBranch = booleanOptionOr(options.commit.message.displayBranch, true);
-    this.commit.message.displayHash = booleanOptionOr(options.commit.message.displayHash, true);
+    this.commit.message.display = booleanOptionOr( options.commit.message.display, true );
+    this.commit.message.displayAuthor = booleanOptionOr( options.commit.message.displayAuthor, true );
+    this.commit.message.displayBranch = booleanOptionOr( options.commit.message.displayBranch, true );
+    this.commit.message.displayHash = booleanOptionOr( options.commit.message.displayHash, true );
 
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
@@ -998,7 +998,7 @@
       break;
 
     case "metro":
-    /* falls through */
+      /* falls through */
     default:
       template = {
         colors: [ "#979797", "#008fb5", "#f1c109" ],
@@ -1026,7 +1026,7 @@
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
 
-  function booleanOptionOr(booleanOption, defaultOption){
+  function booleanOptionOr ( booleanOption, defaultOption ) {
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
