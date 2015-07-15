@@ -316,7 +316,7 @@
     var isOut = true;
 
     // Fix firefox MouseEvent
-    if (typeof InstallTrigger !== 'undefined')/* == (is Firefox) */ { 
+    if (typeof InstallTrigger !== "undefined")/* == (is Firefox) */ { 
       event.offsetX = event.offsetX ? event.offsetX : event.layerX;
       event.offsetY = event.offsetY ? event.offsetY : event.layerY;
       event.x = event.x ? event.x : event.clientX;
@@ -834,7 +834,7 @@
     var tagWidth = this.template.commit.tag.spacingX;
     if ( this.tag !== null ) {
       var textWidth = this.context.measureText(this.tag).width;
-      if ( this.template.branch.labelRotation != 0 ) {
+      if ( this.template.branch.labelRotation !== 0 ) {
         drawTextBG( this.context,
           this.x - this.dotSize/2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2,
@@ -1109,7 +1109,7 @@
     context.save();
     context.translate(x, y);
     context.rotate(angle*(Math.PI/180));
-    context.textAlign = 'center';
+    context.textAlign = "center";
 
     context.font = font;
     var width = context.measureText(text).width;
