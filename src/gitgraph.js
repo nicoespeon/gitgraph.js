@@ -715,9 +715,8 @@
     
     this.column = 0;
     for ( ; ; this.column++ ) {
-      if ( !( this.column in candidates ) || candidates[ this.column ] == 0 ) {
+      if ( !( this.column in candidates ) || candidates[ this.column ] === 0 ) {
           break;
-        }
       }
     }
   };
