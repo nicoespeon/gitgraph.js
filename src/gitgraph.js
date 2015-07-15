@@ -66,16 +66,14 @@
     if ( this.mode === "compact" ) {
       this.template.commit.message.display = false;
     }
-    this.marginX = this.template.branch.spacingX + this.template.commit.dot.size * 2;
-    this.marginY = this.template.branch.spacingY + this.template.commit.dot.size * 2;
-    this.offsetX = 0;
-    this.offsetY = 0;
 
     // Orientation
     switch ( options.orientation ) {
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
       this.orientation = "vertical-reverse";
+      this.template.branch.labelRotation = 0;
+      this.template.commit.tag.spacingY *= -1;
       break;
     case "horizontal" :
       this.template.commit.message.display = false;
@@ -84,6 +82,9 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal";
+      this.template.branch.labelRotation = -90;
+      this.template.commit.tag.spacingX = -this.template.commit.spacingX;
+      this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     case "horizontal-reverse" :
       this.template.commit.message.display = false;
@@ -92,16 +93,25 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal-reverse";
+      this.template.branch.labelRotation = 90;
+      this.template.commit.tag.spacingX = -this.template.commit.spacingY;
+      this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     default:
       this.orientation = "vertical";
+      this.template.branch.labelRotation = 0;
       break;
     }
+
+    this.marginX = this.template.branch.spacingX + this.template.commit.dot.size * 2;
+    this.marginY = this.template.branch.spacingY + this.template.commit.dot.size * 2;
+    this.offsetX = 0;
+    this.offsetY = 0;
 
     // Canvas init
     this.canvas = document.getElementById( this.elementId ) || options.canvas;
     this.context = this.canvas.getContext( "2d" );
-    this.context.textBaseline = 'bottom';
+    this.context.textBaseline = "center";
 
     // Tooltip layer
     this.tooltip = document.createElement( "div" );
@@ -789,9 +799,7 @@
 
     // Label
     if ( this.showLabel ) {
-        var width = this.context.measureText(this.parent.name).width;
-        var height = parseInt(this.context.font, 10);
-        drawTextBG(this.context, this.x - width/2, (this.y + (height/2)) + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont);
+        drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont, this.template.branch.labelRotation);
     }
 
     // Dot
@@ -823,10 +831,20 @@
     this.context.font = this.messageFont;
 
     // Tag
-    var tagWidth = this.template.branch.spacingX;
+    var tagWidth = this.template.commit.tag.spacingX;
     if ( this.tag !== null ) {
-      drawTextBG( this.context, (this.parent.columnMax + 1) * this.template.branch.spacingX - (this.template.branch.spacingX/2), this.y + 3, this.tag, "black", this.tagColor, this.tagFont );
-      var textWidth = this.context.measureText(this.tag).width - (this.template.branch.spacingX/2);
+      var textWidth = this.context.measureText(this.tag).width;
+      if ( this.template.branch.labelRotation != 0 ) {
+        drawTextBG( this.context,
+          this.x - this.dotSize/2,
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2,
+          this.tag, "red", this.tagColor, this.tagFont, 0 );
+      } else {
+        drawTextBG( this.context,
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX/2 + textWidth/2,
+          this.y - this.dotSize/2,
+          this.tag, "black", this.tagColor, this.tagFont, 0 );
+      }
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
 
@@ -844,7 +862,7 @@
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + tagWidth, this.y + 3 );
+      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + tagWidth, this.y + this.dotSize/2);
     }
   };
 
@@ -991,6 +1009,8 @@
     this.commit.tag = {};
     this.commit.tag.color = options.commit.tag.color || this.commit.dot.color;
     this.commit.tag.font = options.commit.tag.font || options.commit.message.font || "normal 10pt Calibri";
+    this.commit.tag.spacingX = this.branch.spacingX;
+    this.commit.tag.spacingY = this.commit.spacingY;
 
     this.commit.message = {};
     this.commit.message.display = booleanOptionOr(options.commit.message.display, true);
@@ -1085,14 +1105,18 @@
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
-  function drawTextBG( context, x, y, text, fgcolor, bgcolor, font ) {
+  function drawTextBG( context, x, y, text, fgcolor, bgcolor, font, angle ) {
     context.save();
+    context.translate(x, y);
+    context.rotate(angle*(Math.PI/180));
+    context.textAlign = 'center';
+
     context.font = font;
     var width = context.measureText(text).width;
     var height = getFontHeight("font: " + font + ";");
 
     context.beginPath();
-    context.rect(x-2, y-height+2, width+4, height+2);
+    context.rect(-(width/2)-4, -(height/2)+2, width+8, height+2);
     context.fillStyle = bgcolor;
     context.fill();
     context.lineWidth = 2;
@@ -1100,7 +1124,7 @@
     context.stroke();
 
     context.fillStyle = fgcolor;
-    context.fillText(text, x, y);
+    context.fillText(text, 0, height/2);
     context.restore();
   }
 
