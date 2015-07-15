@@ -703,13 +703,19 @@
    * @this Branch
    **/
   Branch.prototype.calculColumn = function () {
+    var candidates = [];
     for ( var i = 0, branch; !!(branch = this.parent.branchs[ i ]); i++ ) {
       if ( !branch.isfinish ) {
-        this.column++;
-      } else {
-        if ( !branch.isdead ) {
-          this.column = branch.column;
-          branch.isdead = true;
+        if ( !( branch.column in candidates ) ) {
+          candidates[ branch.column ] = 0;
+        }
+        candidates[ branch.column ]++;
+      }
+    }
+    
+    this.column = 0;
+    for ( ; ; this.column++ ) {
+      if ( !( this.column in candidates ) || candidates[ this.column ] == 0 ) {
           break;
         }
       }
