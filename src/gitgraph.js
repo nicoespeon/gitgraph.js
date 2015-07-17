@@ -66,8 +66,10 @@
     if ( this.mode === "compact" ) {
       this.template.commit.message.display = false;
     }
+
     this.marginX = this.template.commit.dot.size * 2;
     this.marginY = this.template.commit.dot.size * 2;
+    this.extraMarginForTag = 0;
     this.offsetX = 0;
     this.offsetY = 0;
 
@@ -116,6 +118,7 @@
     this.branchs = [];
     this.commits = [];
 
+    this.tags = [];
     // Utilities
     this.columnMax = 0; // nb of column for message position
     this.commitOffsetX = 0;
@@ -209,6 +212,48 @@
   };
 
   /**
+   * Create new tag on reference, default to HEAD
+   *
+   * @param {(String | Object)} options - Tag name | Options of Tag
+   *
+   * @see Tag
+   * @this GitGraph
+   *
+   * @return {Tag} New tag
+   **/
+  GitGraph.prototype.tag = function (options, reference) {
+    reference = reference || this.commits[this.commits.length-1];
+
+    // Options
+    if ( typeof options === "string" ) {
+      var name = options;
+      options = {};
+      options.name = name;
+    }
+
+    options = (typeof options === "object") ? options : {};
+    options.parent = this;
+
+    // Add Tag
+    var tag = new Tag( reference, options );
+    this.tags.push( tag );
+
+    // Add extra margin with biggest tag width when using horizontal orientation
+    if(this.orientation === "horizontal"){
+      var tagMargin = tag.nameWidth();
+      if(tagMargin > this.extraMarginForTag){
+        this.extraMarginForTag = tagMargin;
+      }
+    }
+
+    //Auto-render
+    this.render();
+
+    // Return
+    return tag;
+  };
+
+  /**
    * Create a new template
    *
    * @param {(String|Object)} options - The template name, or the template options
@@ -248,10 +293,12 @@
     var unscaledResolution = {
       x: Math.abs( this.columnMax * this.template.branch.spacingX )
          + Math.abs( this.commitOffsetX )
-         + this.marginX * 2,
+         + this.marginX * 2
+         + this.extraMarginForTag,
       y: Math.abs( this.columnMax * this.template.branch.spacingY )
          + Math.abs( this.commitOffsetY )
          + this.marginY * 2
+         + this.extraMarginForTag
     };
 
     if ( this.template.commit.message.display ) {
@@ -287,10 +334,17 @@
       branch.render();
     }
 
-    // Render commits after to put them on the foreground
+    // Render commits after to put them above everything but tags
     for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
       commit.render();
     }
+
+    // Render tags tooltips after everything to put them on the foreground
+    for ( var k = 0, tag; !!(tag = this.tags[ k ]); k++ ) {
+      tag.render();
+    }
+
+
   };
 
   /**
@@ -867,6 +921,107 @@
   };
 
   // --------------------------------------------------------------------
+  // -----------------------      Tag       -----------------------------
+  // --------------------------------------------------------------------
+
+  /**
+   * Tag
+   *
+   * @constructor
+   *
+   * @param {Object} reference - A Branch or Commit to reference
+   * @param {Object} options - Tag options
+   * @param {GitGraph} options.parent - GitGraph constructor
+   * @param {String} [options.name = "no-name"] - Tag name
+   * @param {String} options.color - Master color (message)
+   * @param {String} [options.bgColor = this.template.tag.bgColor] - Specific background color
+   * @param {String} [options.font = "normal 10pt Calibri"] - Tag display font
+   * @param {Boolean} options.display - Display/hide tag
+   *
+   * @this Tag
+   **/
+  function Tag ( reference, options ) {
+    // Check integrity
+    if ( options.parent instanceof GitGraph === false ) {
+      return;
+    }
+
+    this.reference = reference;
+
+    // Options
+    options = (typeof options === "object") ? options : {};
+    this.parent = options.parent;
+    this.template = this.parent.template;
+    this.context = this.parent.context;
+
+    this.name = (typeof options.name === "string") ? options.name : "no-name";
+
+    this.color = options.color || this.template.tag.color;
+    this.bgColor = options.bgColor || this.template.tag.bgColor;
+    this.font = options.font || this.template.tag.font;
+
+    this.display = options.display || (this.reference !== null) || true;
+
+    if( reference instanceof Commit){
+      this.x = reference.x;
+      this.y = reference.y;
+    }
+    else if(reference instanceof Branch) {
+      var lastCommit = reference.commits[reference.commits.lenght-1];
+      this.x = lastCommit.x;
+      this.y = lastCommit.y;
+    }
+  }
+
+  Tag.prototype.nameWidth = function () {
+    return Math.round(this.context.measureText(this.name).width);
+  };
+
+  Tag.prototype.render = function () {
+    if(!this.display){
+      return;
+    }
+
+    // Render square background
+    this.context.save();
+
+    // Rotate 45 degrees if git graph is displayed horizontally
+    if(this.parent.orientation === "horizontal"){
+      // translate context to center of canvas
+      this.context.translate(this.x, this.y);
+
+      // rotate 45 degrees clockwise
+      this.context.rotate(Math.PI / 4);
+
+      this.context.translate(-this.x, -this.y);
+    }
+
+    this.context.font = this.font;
+    this.context.fillStyle = this.bgColor;
+
+    var metrics = this.context.measureText(this.name);
+
+    if(this.parent.orientation === "horizontal"){
+      this.context.fillRect(this.x + 25, this.y - 12.5, metrics.width + 10, 25);
+    }
+    else {
+      this.context.fillRect(this.x + 18, this.y + 12.5, metrics.width + 10, 25);
+    }
+
+    // Render tag text
+    this.context.fillStyle = this.color;
+
+    if(this.parent.orientation === "horizontal"){
+      this.context.fillText( this.name, this.x + 29.5, this.y + 2.5 );
+    }
+    else{
+      this.context.fillText( this.name, this.x + 22.5, this.y + 28 );
+    }
+
+    this.context.restore();
+  };
+
+  // --------------------------------------------------------------------
   // -----------------------      Template       ------------------------
   // --------------------------------------------------------------------
 
@@ -909,6 +1064,7 @@
     options.commit = options.commit || {};
     options.commit.dot = options.commit.dot || {};
     options.commit.message = options.commit.message || {};
+    options.tag = options.tag || {};
 
     // One color per column
     this.colors = options.colors || [ "#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657" ];
@@ -958,6 +1114,12 @@
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
     this.commit.message.font = options.commit.message.font || "normal 12pt Calibri";
+
+    // Tag style
+    this.tag = {};
+    this.tag.color = options.tag.color || "rgba(0,0,0,0.7)";
+    this.tag.bgColor = options.tag.bgColor || "rgba(225,225,225,0.85)";
+    this.tag.font = options.tag.font || "normal 10pt Calibri";
   }
 
   /**
@@ -1034,5 +1196,6 @@
   window.GitGraph = GitGraph;
   window.GitGraph.Branch = Branch;
   window.GitGraph.Commit = Commit;
+  window.GitGraph.Tag = Tag;
   window.GitGraph.Template = Template;
 })();
