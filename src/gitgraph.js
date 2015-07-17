@@ -69,7 +69,7 @@
 
     this.marginX = this.template.commit.dot.size * 2;
     this.marginY = this.template.commit.dot.size * 2;
-    this.extraMarginForTag = 0;
+    this.extraMarginForTag = { w: 0, h: 0 };
     this.offsetX = 0;
     this.offsetY = 0;
 
@@ -119,6 +119,7 @@
     this.commits = [];
 
     this.tags = [];
+
     // Utilities
     this.columnMax = 0; // nb of column for message position
     this.commitOffsetX = 0;
@@ -238,11 +239,22 @@
     var tag = new Tag( reference, options );
     this.tags.push( tag );
 
-    // Add extra margin with biggest tag width when using horizontal orientation
-    if(this.orientation === "horizontal"){
-      var tagMargin = tag.nameWidth();
-      if(tagMargin > this.extraMarginForTag){
-        this.extraMarginForTag = tagMargin;
+    // Add extra margin to gitgraph with largest tag width
+    var tagMargin = tag.width();
+
+    if(this.orientation === "horizontal" || this.mode === "compact") {
+      var columnSize = this.orientation === "horizontal" ? this.template.branch.spacingY : this.template.branch.spacingX;
+      var columnsToRemove = this.orientation === "horizontal" ? 1 : -2;
+
+      if(tagMargin <= columnSize){
+        tagMargin = columnSize;
+        columnsToRemove = 0;
+      }
+      if(tagMargin > this.extraMarginForTag.w) {
+        this.extraMarginForTag.w = Math.floor((tagMargin/(columnSize || 1)) - columnsToRemove) * (columnSize || 1);
+      }
+      if(tagMargin > this.extraMarginForTag.h) {
+        this.extraMarginForTag.h = Math.floor(tagMargin/(columnSize || 1)) * (columnSize || 1);
       }
     }
 
@@ -289,16 +301,17 @@
       scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
     }
 
+
     // Resize canvas
     var unscaledResolution = {
       x: Math.abs( this.columnMax * this.template.branch.spacingX )
          + Math.abs( this.commitOffsetX )
          + this.marginX * 2
-         + this.extraMarginForTag,
+         + this.extraMarginForTag.w,
       y: Math.abs( this.columnMax * this.template.branch.spacingY )
          + Math.abs( this.commitOffsetY )
          + this.marginY * 2
-         + this.extraMarginForTag
+         + this.extraMarginForTag.h
     };
 
     if ( this.template.commit.message.display ) {
@@ -973,8 +986,8 @@
     }
   }
 
-  Tag.prototype.nameWidth = function () {
-    return Math.round(this.context.measureText(this.name).width);
+  Tag.prototype.width = function () {
+    return Math.round(this.context.measureText(this.name).width) + 9;
   };
 
   Tag.prototype.render = function () {
