@@ -986,10 +986,20 @@
     }
   }
 
+  /**
+   * Calculate tag width
+   *
+   * @return {Number} - The measured size of tag width, this.name size plus any margins
+   **/
   Tag.prototype.width = function () {
     return Math.round(this.context.measureText(this.name).width) + 9;
   };
 
+  /**
+   * Render the tag
+   *
+   * @this Tag
+   **/
   Tag.prototype.render = function () {
     if(!this.display){
       return;
