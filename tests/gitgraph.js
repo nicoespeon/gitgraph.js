@@ -104,4 +104,46 @@ describe( "Gitgraph.js", function () {
 
   } );
 
+  describe( "Tag", function () {
+    var latestCommit;
+
+    beforeEach( function () {
+      gitGraph = new GitGraph( { canvas: canvas, template: "metro" } );
+
+      master = gitGraph.branch( "master" );
+      master.commit().commit();
+      gitGraph.tag("this is a tag")
+
+      latestCommit = gitGraph.commits[ gitGraph.commits.length-1 ];
+    } );
+
+    it( "should have the right name", function () {
+      expect( gitGraph.tags[ 0 ].name ).toEqual( "this is a tag" );
+    } );
+
+    it( "should defaults to template pretty color", function () {
+      expect( gitGraph.tags[ 0 ].color ).toEqual( gitGraph.template.tag.color );
+      expect( gitGraph.tags[ 0 ].bgColor ).toEqual( gitGraph.template.tag.bgColor );
+    } );
+
+    it( "should defaults to template font", function () {
+      expect( gitGraph.tags[ 0 ].font ).toEqual( gitGraph.template.tag.font );
+    } );
+
+    it( "should have latest commit as reference", function () {
+      expect( gitGraph.tags[ 0 ].reference ).toEqual( latestCommit );
+    } );
+
+    it( "should be displayed by default", function () {
+      expect( gitGraph.tags[ 0 ].display ).toBe(true);
+    } );
+
+    it( "should have base position equals to reference position", function () {
+      expect( gitGraph.tags[ 0 ].x ).toEqual( latestCommit.x );
+      expect( gitGraph.tags[ 0 ].y ).toEqual( latestCommit.y );
+    } );
+
+  } );
+
+
 } );
