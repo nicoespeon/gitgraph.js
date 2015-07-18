@@ -372,7 +372,7 @@
     var isOut = true;
 
     // Fix firefox MouseEvent
-    if ( typeof InstallTrigger !== 'undefined' )/* == (is Firefox) */ {
+    if (typeof InstallTrigger !== "undefined")/* == (is Firefox) */ {
       event.offsetX = event.offsetX ? event.offsetX : event.layerX;
       event.offsetY = event.offsetY ? event.offsetY : event.layerY;
       event.x = event.x ? event.x : event.clientX;
