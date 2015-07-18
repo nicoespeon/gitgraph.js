@@ -98,6 +98,8 @@ master.checkout();
 
 // Merge "dev" branch into HEAD (which is "master"), with a default message
 dev.merge();
+// Creates First version tag
+gitGraph.tag( "v1.0.0" );
 
 // Create a "test" branch and merge in into "master" with a custom message.
 var test = gitGraph.branch( "test" );
@@ -106,6 +108,8 @@ test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
 test.commit( "It's works !" );
+// Creates another version tag
+gitGraph.tag( "v1.0.1" );
 
 /***********************
  *       EVENTS        *
