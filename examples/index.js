@@ -99,13 +99,24 @@ master.checkout();
 // Merge "dev" branch into HEAD (which is "master"), with a default message
 dev.merge();
 
-// Create a "test" branch and merge in into "master" with a custom message.
+// Create a "test" branch and merge in into "master" with a custom message and tag.
 var test = gitGraph.branch( "test" );
 test.commit( "Final commit" );
 test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
-test.commit( "It's works !" );
+test.commit( {message:"It's works !"} );
+
+/***********************
+ *        TAGS         *
+ ***********************/
+
+ // Add a tag to a commit
+ test.commit( {message:"Here you can see something", tag: "a-tag"} );
+
+ // Perform a merge, with a tag
+ test.merge(master, {message: "New release", tag: "v1.0.0"});
+
 
 /***********************
  *       EVENTS        *
