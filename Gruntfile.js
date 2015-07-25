@@ -62,7 +62,9 @@ module.exports = function ( grunt ) {
         files: [ {
           "dist/server/": "src/*",
           "dist/server/index.html": "examples/index.html",
-          "dist/server/index.js": "examples/index.js"
+          "dist/server/index.js": "examples/index.js",
+          "dist/server/gitflowsupport.html": "examples/gitflowsupport.html",
+          "dist/server/gitflowsupport.js": "examples/gitflowsupport.js"
         } ]
       }
     },

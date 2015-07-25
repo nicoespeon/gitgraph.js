@@ -4,7 +4,7 @@ var graphConfig = new GitGraph.Template({
         lineWidth: 3,
         spacingX: 60,
         mergeStyle: "straight",
-        showLabel: true,
+        showLabel: true,                // display branch names on graph
         labelFont: "normal 10pt Arial"
     },
     commit: {
@@ -52,6 +52,7 @@ var stablizationCommit = {
   message:"Release stablization commit(s)"
 };
 
+// You can manually fix columns to control the display.
 var featureCol = 0;
 var developCol = 1;
 var releaseCol = 2;
