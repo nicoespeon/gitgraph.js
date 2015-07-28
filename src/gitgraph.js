@@ -806,6 +806,7 @@
    * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
    * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
+   * @param {Object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
    * @this Commit
    **/
@@ -842,6 +843,7 @@
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
     this.type = options.type || null;
     this.onClick = options.onClick || null;
+    this.representedObject = options.representedObject || null;
     this.parentCommit = options.parentCommit;
     this.x = options.x;
     this.y = options.y;
