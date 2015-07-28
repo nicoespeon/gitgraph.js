@@ -362,7 +362,11 @@
     function showCommitTooltip (commit) {
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
-      self.tooltip.textContent = commit.sha1 + " - " + commit.message;
+      if (!(self.template.commit.tooltipHTMLFormatter === null)) {
+        self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
+      } else {
+        self.tooltip.textContent = commit.sha1 + " - " + commit.message;
+      }
       self.tooltip.style.display = "block";
     }
 
@@ -1012,6 +1016,7 @@
    * @param {Boolean} [options.commit.message.displayBranch] - Commit message branch policy
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
+   * @param {commitCallback} [options.commit.tooltipHTMLFormatter] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
@@ -1057,6 +1062,7 @@
     this.commit.spacingX = options.commit.spacingX || 0;
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
     this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
+    this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
