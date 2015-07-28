@@ -275,6 +275,8 @@
       unscaledResolution.x += 800;
     }
 
+    unscaledResolution.x += this.template.commit.widthExtension;
+
     this.canvas.style.width = unscaledResolution.x + "px";
     this.canvas.style.height = unscaledResolution.y + "px";
 
@@ -998,6 +1000,7 @@
    * @param {Number} [options.branch.spacingY] - Space between branchs
    * @param {Number} [options.commit.spacingX] - Space between commits
    * @param {Number} [options.commit.spacingY] - Space between commits
+   * @param {Number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
    * @param {String} [options.commit.color] - Master commit color (dot & message)
    * @param {String} [options.commit.dot.color] - Commit dot color
    * @param {Number} [options.commit.dot.size] - Commit dot size
@@ -1053,6 +1056,7 @@
     this.commit = {};
     this.commit.spacingX = options.commit.spacingX || 0;
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
+    this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
