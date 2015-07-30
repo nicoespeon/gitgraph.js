@@ -332,11 +332,12 @@
    **/
   GitGraph.prototype.applyCommits = function(event, callbackFn) {
     // Fix firefox MouseEvent
-    event.offsetX = event.offsetX ? event.offsetX : event.layerX;
-    event.offsetY = event.offsetY ? event.offsetY : event.layerY;
-    event.x = event.x ? event.x : event.clientX;
-    event.y = event.y ? event.y : event.clientY;
-
+    if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {  
+      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
+      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+      event.x = event.x ? event.x : event.clientX;
+      event.y = event.y ? event.y : event.clientY;
+    }
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
       var distanceX = (commit.x + this.offsetX + this.marginX - event.offsetX);
@@ -412,12 +413,10 @@
    * @self Gitgraph
    **/
   GitGraph.prototype.click = function ( event ) {
-    var self = this.gitgraph;
-    self.applyCommits(event, function(commit, isOverCommit) {
-      if (isOverCommit) {
-        if (!(commit.onClick === null)) {
-          commit.onClick(commit, true);
-        }
+    this.gitgraph.applyCommits(event, function(commit, isOverCommit) {
+      if (!isOverCommit) return;
+      if (!(commit.onClick === null)) {
+        commit.onClick(commit, true);
       }
     });
   };
