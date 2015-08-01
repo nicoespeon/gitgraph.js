@@ -275,13 +275,11 @@
     this.canvas.width = unscaledResolution.x * scalingFactor;
     this.canvas.height = unscaledResolution.y * scalingFactor;
 
-    this.context.scale( scalingFactor, scalingFactor );
-
     // Clear All
     this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
 
     // Add some margin
-    this.context.translate( this.marginX, this.marginY );
+    this.context.translate( this.marginX * scalingFactor, this.marginY * scalingFactor );
 
     // Translate for inverse orientation
     if ( this.template.commit.spacingY > 0 ) {
@@ -292,6 +290,8 @@
       this.context.translate( this.canvas.width - this.marginX * 2, 0 );
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
+
+    this.context.scale( scalingFactor, scalingFactor );
 
     // Render branchs
     for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[ i ]); i-- ) {
