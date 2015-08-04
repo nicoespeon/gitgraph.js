@@ -785,6 +785,7 @@
     this.messageHashDisplay = booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
     this.messageColor = options.messageColor || options.color;
     this.messageFont = options.messageFont || this.template.commit.message.font;
+    this.dotDisplay = booleanOptionOr( options.dotDisplay, true );
     this.dotColor = options.dotColor || options.color;
     this.dotSize = options.dotSize || this.template.commit.dot.size;
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
@@ -813,18 +814,20 @@
     }
 
     // Dot
-    this.context.beginPath();
-    this.context.arc( this.x, this.y, this.dotSize, 0, 2 * Math.PI, false );
-    this.context.fillStyle = this.dotColor;
-    this.context.strokeStyle = this.dotStrokeColor;
-    this.context.lineWidth = this.dotStrokeWidth;
+    if ( this.dotDisplay ) {
+        this.context.beginPath();
+        this.context.arc( this.x, this.y, this.dotSize, 0, 2 * Math.PI, false );
+        this.context.fillStyle = this.dotColor;
+        this.context.strokeStyle = this.dotStrokeColor;
+        this.context.lineWidth = this.dotStrokeWidth;
 
-    if ( typeof (this.dotStrokeWidth) === "number" ) {
-      this.context.stroke();
+        if ( typeof (this.dotStrokeWidth) === "number" ) {
+          this.context.stroke();
+        }
+
+        this.context.fill();
+        this.context.closePath();
     }
-
-    this.context.fill();
-    this.context.closePath();
 
     // Arrow
     if ( this.arrowDisplay && this.parentCommit instanceof Commit ) {
