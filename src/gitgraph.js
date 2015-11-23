@@ -138,7 +138,7 @@
       gitgraph: this
     };
     this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
-    
+
     var mouseDownOptions = {
       handleEvent: this.click,
       gitgraph: this
@@ -332,7 +332,7 @@
    **/
   GitGraph.prototype.applyCommits = function(event, callbackFn) {
     // Fix firefox MouseEvent
-    if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {  
+    if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
       event.offsetX = event.offsetX ? event.offsetX : event.layerX;
       event.offsetY = event.offsetY ? event.offsetY : event.layerY;
       event.x = event.x ? event.x : event.clientX;
@@ -363,7 +363,7 @@
     function showCommitTooltip (commit) {
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
-      if (!(self.template.commit.tooltipHTMLFormatter === null)) {
+      if (self.template.commit.tooltipHTMLFormatter !== null) {
         self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
       } else {
         self.tooltip.textContent = commit.sha1 + " - " + commit.message;
@@ -414,8 +414,11 @@
    **/
   GitGraph.prototype.click = function ( event ) {
     this.gitgraph.applyCommits(event, function(commit, isOverCommit) {
-      if (!isOverCommit) return;
-      if (!(commit.onClick === null)) {
+      if (!isOverCommit) {
+        return;
+      }
+
+      if (commit.onClick !== null) {
         commit.onClick(commit, true);
       }
     });
