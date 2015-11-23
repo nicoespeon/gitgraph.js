@@ -138,6 +138,12 @@
       gitgraph: this
     };
     this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
+    
+    var mouseDownOptions = {
+      handleEvent: this.click,
+      gitgraph: this
+    };
+    this.canvas.addEventListener( "mousedown", mouseDownOptions, false );
 
     // Render on window resize
     window.onresize = this.render.bind( this );
@@ -269,6 +275,8 @@
       unscaledResolution.x += 800;
     }
 
+    unscaledResolution.x += this.template.commit.widthExtension;
+
     this.canvas.style.width = unscaledResolution.x + "px";
     this.canvas.style.height = unscaledResolution.y + "px";
 
@@ -307,6 +315,41 @@
   };
 
   /**
+   * A callback for each commit
+   *
+   * @callback commitCallback
+   * @param {Commit} commit - A commit
+   * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   */
+
+  /**
+   * Hover event on commit dot
+   *
+   * @param {MouseEvent} event - Mouse event
+   * @param {commitCallback} callbackFn - A callback function that will be called for each commit
+   *
+   * @self Gitgraph
+   **/
+  GitGraph.prototype.applyCommits = function(event, callbackFn) {
+    // Fix firefox MouseEvent
+    if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {  
+      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
+      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+      event.x = event.x ? event.x : event.clientX;
+      event.y = event.y ? event.y : event.clientY;
+    }
+
+    for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
+      var distanceX = (commit.x + this.offsetX + this.marginX - event.offsetX);
+      var distanceY = (commit.y + this.offsetY + this.marginY - event.offsetY);
+      var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
+      var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
+
+      callbackFn(commit, isOverCommit);
+    }
+  };
+
+  /**
    * Hover event on commit dot
    *
    * @param {MouseEvent} event - Mouse event
@@ -317,22 +360,18 @@
     var self = this.gitgraph;
     var isOut = true;
 
-    // Fix firefox MouseEvent
-    if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ { 
-      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
-      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
-      event.x = event.x ? event.x : event.clientX;
-      event.y = event.y ? event.y : event.clientY;
-    }
-
-    function showCommitTooltip () {
+    function showCommitTooltip (commit) {
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
-      self.tooltip.textContent = commit.sha1 + " - " + commit.message;
+      if (!(self.template.commit.tooltipHTMLFormatter === null)) {
+        self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
+      } else {
+        self.tooltip.textContent = commit.sha1 + " - " + commit.message;
+      }
       self.tooltip.style.display = "block";
     }
 
-    function emitMouseoverEvent () {
+    function emitMouseoverEvent (commit) {
       var mouseoverEventOptions = {
         author: commit.author,
         message: commit.message,
@@ -343,19 +382,14 @@
       _emitEvent( self.canvas, "commit:mouseover", mouseoverEventOptions );
     }
 
-    for ( var i = 0, commit; !!(commit = this.gitgraph.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + self.offsetX + self.marginX - event.offsetX);
-      var distanceY = (commit.y + self.offsetY + self.marginY - event.offsetY);
-      var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
-      var isOverCommit = distanceBetweenCommitCenterAndMouse < self.template.commit.dot.size;
-
+    self.applyCommits(event, function(commit, isOverCommit) {
       if ( isOverCommit ) {
         if ( !self.template.commit.message.display ) {
-          showCommitTooltip();
+          showCommitTooltip(commit);
         }
 
         if ( !commit.isMouseover ) {
-          emitMouseoverEvent();
+          emitMouseoverEvent(commit);
         }
 
         isOut = false;
@@ -363,11 +397,28 @@
       } else {
         commit.isMouseover = false;
       }
-    }
+    });
 
     if ( isOut ) {
       self.tooltip.style.display = "none";
     }
+  };
+
+
+  /**
+   * Click event on commit dot
+   *
+   * @param {MouseEvent} event - Mouse event
+   *
+   * @self Gitgraph
+   **/
+  GitGraph.prototype.click = function ( event ) {
+    this.gitgraph.applyCommits(event, function(commit, isOverCommit) {
+      if (!isOverCommit) return;
+      if (!(commit.onClick === null)) {
+        commit.onClick(commit, true);
+      }
+    });
   };
 
   // --------------------------------------------------------------------
@@ -753,6 +804,8 @@
    * @param {Boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
    * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
+   * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
+   * @param {Object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
    * @this Commit
    **/
@@ -788,6 +841,8 @@
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
     this.type = options.type || null;
+    this.onClick = options.onClick || null;
+    this.representedObject = options.representedObject || null;
     this.parentCommit = options.parentCommit;
     this.x = options.x;
     this.y = options.y;
@@ -950,6 +1005,7 @@
    * @param {Number} [options.branch.spacingY] - Space between branchs
    * @param {Number} [options.commit.spacingX] - Space between commits
    * @param {Number} [options.commit.spacingY] - Space between commits
+   * @param {Number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
    * @param {String} [options.commit.color] - Master commit color (dot & message)
    * @param {String} [options.commit.dot.color] - Commit dot color
    * @param {Number} [options.commit.dot.size] - Commit dot size
@@ -961,6 +1017,7 @@
    * @param {Boolean} [options.commit.message.displayBranch] - Commit message branch policy
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
+   * @param {commitCallback} [options.commit.tooltipHTMLFormatter] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
@@ -1005,6 +1062,8 @@
     this.commit = {};
     this.commit.spacingX = options.commit.spacingX || 0;
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
+    this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
+    this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
