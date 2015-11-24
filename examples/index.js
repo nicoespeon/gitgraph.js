@@ -15,8 +15,12 @@ var myTemplateConfig = {
     },
     message: {
       displayAuthor: true,
+      displayBranch: false,
       displayHash: false,
       font: "normal 12pt Arial"
+    },
+    tooltipHTMLFormatter: function ( commit ) {
+      return "<b>" + commit.sha1 + "</b>" + ": " + commit.message;
     }
   }
 };
@@ -27,7 +31,7 @@ var myTemplate = new GitGraph.Template( myTemplateConfig );
  ***********************/
 
 var config = {
-  template: "metro"       // could be: "blackarrow" or "metro" or myTemplate (custom Template object)
+  template: "metro"       // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
   //, mode: "compact"     // special compact mode : hide messages & compact graph
 };
 var gitGraph = new GitGraph( config );
@@ -98,13 +102,24 @@ master.checkout();
 // Merge "dev" branch into HEAD (which is "master"), with a default message
 dev.merge();
 
-// Create a "test" branch and merge in into "master" with a custom message.
+// Create a "test" branch and merge in into "master" with a custom message and tag.
 var test = gitGraph.branch( "test" );
 test.commit( "Final commit" );
 test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
-test.commit( "It's works !" );
+test.commit( {message:"It works !"} );
+
+/***********************
+ *        TAGS         *
+ ***********************/
+
+ // Add a tag to a commit
+ test.commit( {message:"Here you can see something", tag: "a-tag"} );
+
+ // Perform a merge, with a tag
+ test.merge(master, {message: "New release", tag: "v1.0.0"});
+
 
 /***********************
  *       EVENTS        *
@@ -112,4 +127,13 @@ test.commit( "It's works !" );
 
 gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
   console.log( "You're over a commit.", "Here is a bunch of data ->", event.data );
+} );
+
+// Attach a handler to the commit
+test.commit( {
+  message: "Click me!",
+  author: "Nicolas <me@planee.fr>",
+  onClick: function ( commit ) {
+    console.log( "You just clicked my commit.", commit );
+  }
 } );
