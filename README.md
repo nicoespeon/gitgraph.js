@@ -1,4 +1,4 @@
-![gitgraph.js](/assets/logo/gitgraph-logo.png) 
+![gitgraph.js](/assets/logo/gitgraph-logo.png)
 
 [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js) [![devDependency Status](https://david-dm.org/nicoespeon/gitgraph.js/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
 ===========
@@ -85,12 +85,6 @@ And constructed with the following guidelines:
 - Breaking backward compatibility bumps the `<major>` (and resets the `<minor>` and `<patch>`)
 - New additions without breaking backward compatibility bumps the `<minor>` (and resets the `<patch>`)
 - Bug fixes and misc. changes bumps the `<patch>`
-
-### Development version
-
-Please note that until we pass `v1.0.0` we are in **development version**.
-
-That means you're using this code at your own risk until then, but we already love you =)
 
 ## Authors and contributors
 
