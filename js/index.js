@@ -46,7 +46,9 @@ var example = gitgraph.branch("how-to")
   .commit({ message: "Create a new branch", detailId: "detail-branch" })
   .commit({ message: "Add some commits", detailId: "detail-commit" })
   .commit({ message: "Checkout", detailId: "detail-checkout" })
-  .commit({ message: "Merge your branch", detailId: "detail-merge" });
+  .commit({ message: "Merge your branch", detailId: "detail-merge" })
+  .commit({ message: "Interact with the graph", detailId: "detail-interact" })
+  .commit({ message: "Define your own template", detailId: "detail-your-template" });
 
 var links = gitgraph.branch("contribution")
   .commit({ message: "Wanna contribute?", detailId: "detail-contribute" })
