@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  var maxTagWidth = 0;
+
   /**
    * Emit an event on the given element.
    * @param {HTMLElement} element - DOM element to trigger the event on.
@@ -283,13 +285,11 @@
     this.canvas.width = unscaledResolution.x * scalingFactor;
     this.canvas.height = unscaledResolution.y * scalingFactor;
 
-    this.context.scale( scalingFactor, scalingFactor );
-
     // Clear All
     this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
 
     // Add some margin
-    this.context.translate( this.marginX, this.marginY );
+    this.context.translate( this.marginX * scalingFactor, this.marginY * scalingFactor );
 
     // Translate for inverse orientation
     if ( this.template.commit.spacingY > 0 ) {
@@ -300,6 +300,8 @@
       this.context.translate( this.canvas.width - this.marginX * 2, 0 );
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
+
+    this.context.scale( scalingFactor, scalingFactor );
 
     // Render branchs
     for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[ i ]); i-- ) {
@@ -897,23 +899,21 @@
     this.context.font = this.messageFont;
 
     // Tag
-    var tagWidth = this.template.commit.tag.spacingX;
+    var tagWidth = maxTagWidth;
     if ( this.tag !== null ) {
       this.parent.tagNum++;
-      var textWidth = this.context.measureText(this.tag).width;
+
       if ( this.template.branch.labelRotation !== 0 ) {
-        var textHeight = getFontHeight(this.tagFont);
-        drawTextBG( this.context,
-          this.x - this.dotSize/2,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2 + (this.parent.tagNum % 2) * textHeight * 1.5,
-          this.tag, "black", this.tagColor, this.tagFont, 0 );
+        var tagHeight = getFontHeight(this.tagFont);
+        var tagY = ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2 + (this.parent.tagNum % 2) * tagHeight + 4;
+        drawTextBG( this.context, this.x - this.dotSize/2, tagY, this.tag, "black", this.tagColor, this.tagFont, 0 );
       } else {
-        drawTextBG( this.context,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX/2 + textWidth/2,
-          this.y - this.dotSize/2,
-          this.tag, "black", this.tagColor, this.tagFont, 0 );
+        tagWidth = getTextWidth( this.context, this.tagFont, this.tag );
+        var tagX = ((this.parent.columnMax) * this.template.commit.tag.spacingX) + (tagWidth/2) + this.dotSize*3;
+        drawTextBG( this.context, tagX, this.y - this.dotSize/2, this.tag, "black", this.tagColor, this.tagFont, 0 );
+
+        maxTagWidth = Math.max(maxTagWidth, tagWidth);
       }
-      tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
 
     // Message
@@ -930,7 +930,7 @@
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + tagWidth, this.y + this.dotSize/2);
+      this.context.fillText( message, ((this.parent.columnMax) * this.template.branch.spacingX) + maxTagWidth + this.dotSize*4, this.y + this.dotSize/2);
     }
   };
 
@@ -1174,6 +1174,14 @@
     return result;
   };
 
+  var getTextWidth = function ( context, font, text ) {
+    context.save();
+    context.font = font;
+    var width = context.measureText(text).width;
+    context.restore();
+    return width;
+  }
+
   function booleanOptionOr ( booleanOption, defaultOption ) {
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
@@ -1185,7 +1193,7 @@
     context.textAlign = "center";
 
     context.font = font;
-    var width = context.measureText(text).width;
+    var width = getTextWidth(context, font, text);
     var height = getFontHeight(font);
 
     context.beginPath();
