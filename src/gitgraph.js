@@ -477,7 +477,8 @@
    *
    * @param {Object} options - Options of branch
    * @param {GitGraph} options.parent - GitGraph constructor
-   * @param {Branch} [options.parentBranch] - Parent branch
+   * @param {Branch} [options.parentBranch = options.parentCommit.branch] - Parent branch
+   * @param {Commit} [options.parentCommit = options.parentBranch.commits.slice(-1)[0]] - Parent commit
    * @param {String} [options.name = "no-name"] - Branch name
    *
    * @this Branch
@@ -491,7 +492,22 @@
     // Options
     options = (typeof options === "object") ? options : {};
     this.parent = options.parent;
-    this.parentBranch = options.parentBranch;
+    if ( options.parentCommit && options.parentBranch ) {
+      if ( options.parentCommit.branch !== options.parentBranch ) {
+        return;
+      }
+      this.parentCommit = options.parentCommit;
+      this.parentBranch = options.parentBranch;
+    } else if ( options.parentCommit ) {
+      this.parentCommit = options.parentCommit;
+      this.parentBranch = options.parentCommit.branch;
+    } else if ( options.parentBranch ) {
+      this.parentCommit = options.parentBranch.commits.slice( -1 )[ 0 ];
+      this.parentBranch = options.parentBranch;
+    } else {
+      this.parentCommit = null;
+      this.parentBranch = null;
+    }
     this.name = (typeof options.name === "string") ? options.name : "no-name";
     this.context = this.parent.context;
     this.template = this.parent.template;
@@ -519,6 +535,17 @@
     // Options with auto value
     this.offsetX = this.column * this.spacingX;
     this.offsetY = this.column * this.spacingY;
+
+    // Add start point
+    if (this.parentBranch) {
+      this.startPoint = {
+        x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
+        y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
+        type: "start"
+      };
+    } else {
+      this.startPoint = null;
+    }
 
     var columnIndex = (this.column % this.template.colors.length);
     this.color = options.color || this.template.branch.color || this.template.colors[ columnIndex ];
@@ -666,11 +693,11 @@
 
     // Fork case: Parent commit from parent branch
     if ( options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch ) {
-      options.parentCommit = this.parentBranch.commits.slice( -1 )[ 0 ];
+      options.parentCommit = this.parentCommit;
     }
 
     // First commit
-    var isFirstBranch = options.parentCommit instanceof Commit;
+    var isFirstBranch = !( options.parentCommit instanceof Commit );
     var isPathBeginning = this.path.length === 0;
 
     options.showLabel = (isPathBeginning && this.showLabel) ? true : false;
@@ -690,21 +717,26 @@
       type: "join"
     };
 
-    if ( isFirstBranch && isPathBeginning ) {
-      var parent = {
-        x: commit.parentCommit.branch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
-        y: commit.parentCommit.branch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
-        type: "start"
-      };
-      this.path.push( JSON.parse( JSON.stringify( parent ) ) ); // Elegant way for cloning an object
+    if ( !isFirstBranch && isPathBeginning ) {
+      // Start point on parent branch
+      this.pushPath( this.startPoint );
+      // Move to this branch
+      this.pushPath( {
+        x: this.startPoint.x - this.parentBranch.offsetX + this.offsetX - this.template.commit.spacingX,
+        y: this.startPoint.y - this.parentBranch.offsetY + this.offsetY - this.template.commit.spacingY,
+        type: "join"
+      } );
+
+      // Extend parent branch
+      var parent = JSON.parse( JSON.stringify( this.startPoint ) ); // Elegant way for cloning an object
       parent.type = "join";
-      this.parentBranch.path.push( parent );
+      this.parentBranch.pushPath( parent );
     } else if ( isPathBeginning ) {
       point.type = "start";
     }
 
     // Increment commitOffset for next commit position
-    this.path.push( point );
+    this.pushPath( point );
 
     this.parent.commitOffsetX += this.template.commit.spacingX * (options.showLabel ? 2 : 1);
     this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
@@ -780,17 +812,17 @@
       y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
       type: "join"
     };
-    this.path.push( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
+    this.pushPath( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
 
     var mergeCommit = {
       x: targetCommit.x,
       y: targetCommit.y,
       type: "end"
     };
-    this.path.push( mergeCommit );
+    this.pushPath( mergeCommit );
 
     endOfBranch.type = "start";
-    this.path.push( endOfBranch ); // End of branch for future commits
+    this.pushPath( endOfBranch ); // End of branch for future commits
 
     // Auto-render
     this.parent.render();
@@ -822,6 +854,37 @@
     for ( ; ; this.column++ ) {
       if ( !( this.column in candidates ) || candidates[ this.column ] === 0 ) {
         break;
+      }
+    }
+  };
+
+  /**
+   * Push a new point to path.
+   * This method will combine duplicate points and reject reversed points.
+   * 
+   * @this Branch
+   */
+  Branch.prototype.pushPath = function (point) {
+    var lastPoint = this.path.slice( -1 )[ 0 ];
+    if ( !lastPoint ) {
+      this.path.push( point );
+    } else if ( lastPoint.x === point.x && lastPoint.y === point.y ) {
+      if ( lastPoint.type !== "start" && point.type === "end" ) {
+        lastPoint.type = "end";
+      } else if ( point.type === "join" ) {
+        
+      } else {
+        this.path.push( point );
+      }
+    } else {
+      if ( point.type === "join" ) {
+        if ( ( point.x - lastPoint.x ) * this.template.commit.spacingX < 0 ) {
+          this.path.push( point );
+        } else if ( ( point.y - lastPoint.y ) * this.template.commit.spacingY < 0 ) {
+          this.path.push( point );
+        }
+      } else {
+        this.path.push( point );
       }
     }
   };
