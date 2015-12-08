@@ -538,11 +538,19 @@
 
     // Add start point
     if (this.parentBranch) {
-      this.startPoint = {
-        x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
-        y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
-        type: "start"
-      };
+      if ( this.parentCommit === this.parentBranch.commits.slice( -1 )[ 0 ] ) {
+        this.startPoint = {
+          x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
+          y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
+          type: "start"
+        };
+      } else {
+        this.startPoint = {
+          x: this.parentCommit.x,
+          y: this.parentCommit.y,
+          type: "start"
+        };
+      }
     } else {
       this.startPoint = null;
     }
