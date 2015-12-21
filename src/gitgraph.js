@@ -124,7 +124,7 @@
 
     // Navigation vars
     this.HEAD = null;
-    this.branchs = [];
+    this.branches = [];
     this.commits = [];
 
     // Utilities
@@ -173,7 +173,7 @@
 
     // Add branch
     var branch = new Branch( options );
-    this.branchs.push( branch );
+    this.branches.push( branch );
 
     // Return
     return branch;
@@ -202,7 +202,7 @@
 
     // Add branch
     var branch = new Branch( options );
-    this.branchs.push( branch );
+    this.branches.push( branch );
 
     // Return
     return branch;
@@ -301,8 +301,8 @@
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
 
-    // Render branchs
-    for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[ i ]); i-- ) {
+    // Render branches
+    for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
       branch.render();
     }
 
@@ -509,7 +509,7 @@
 
     // Add branch
     var branch = new Branch( options );
-    this.parent.branchs.push( branch );
+    this.parent.branches.push( branch );
 
     // Return
     return branch;
@@ -759,7 +759,7 @@
    **/
   Branch.prototype.calculColumn = function () {
     var candidates = [];
-    for ( var i = 0, branch; !!(branch = this.parent.branchs[ i ]); i++ ) {
+    for ( var i = 0, branch; !!(branch = this.parent.branches[ i ]); i++ ) {
       if ( !branch.isfinish ) {
         if ( !( branch.column in candidates ) ) {
           candidates[ branch.column ] = 0;
@@ -1004,8 +1004,8 @@
    * @param {String} [options.branch.color] - Branch color
    * @param {Number} [options.branch.linewidth] - Branch line width
    * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
-   * @param {Number} [options.branch.spacingX] - Space between branchs
-   * @param {Number} [options.branch.spacingY] - Space between branchs
+   * @param {Number} [options.branch.spacingX] - Space between branches
+   * @param {Number} [options.branch.spacingY] - Space between branches
    * @param {Number} [options.commit.spacingX] - Space between commits
    * @param {Number} [options.commit.spacingY] - Space between commits
    * @param {Number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
@@ -1050,7 +1050,7 @@
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
 
-    // Space between branchs
+    // Space between branches
     this.branch.spacingX = (typeof options.branch.spacingX === "number") ? options.branch.spacingX : 20;
     this.branch.spacingY = options.branch.spacingY || 0;
 

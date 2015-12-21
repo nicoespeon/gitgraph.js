@@ -39,7 +39,7 @@ describe( "Gitgraph.js", function () {
     } );
 
     it( "shoud have a name", function () {
-      expect( gitGraph.branchs[ 0 ].name ).toEqual( "master" );
+      expect( gitGraph.branches[ 0 ].name ).toEqual( "master" );
     } );
 
     it( "should be HEAD on develop", function () {
