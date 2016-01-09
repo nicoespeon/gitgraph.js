@@ -404,7 +404,6 @@
     }
   };
 
-
   /**
    * Click event on commit dot
    *
@@ -887,13 +886,6 @@
       this.arrow();
     }
 
-    // Detail
-    if ( this.detail !== null ) {
-      this.detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 1) * this.template.branch.spacingX + 30 + "px";
-      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40 + "px";
-      this.detail.width = 30;
-    }
-
     this.context.font = this.messageFont;
 
     // Tag
@@ -916,6 +908,15 @@
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
 
+    var commitOffsetLeft = (this.parent.columnMax + 1) * this.template.branch.spacingX + tagWidth;
+
+    // Detail
+    if ( this.detail !== null ) {
+      this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + 30 + "px";
+      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40 + "px";
+      this.detail.width = 30;
+    }
+
     // Message
     if ( this.messageDisplay ) {
       var message = this.message;
@@ -930,7 +931,7 @@
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + tagWidth, this.y + this.dotSize/2);
+      this.context.fillText( message, commitOffsetLeft, this.y + this.dotSize / 2);
     }
   };
 
