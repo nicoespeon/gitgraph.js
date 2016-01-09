@@ -81,7 +81,7 @@ gitGraph.commit( commitConfig );
 
 var commitWithDetailsConfig = {
   message: "test",
-  detail: "detail" // Id of detail div (available in normal vertical mode only)
+  detailId: "detail" // Id of detail div (available in normal vertical mode only)
 };
 gitGraph.commit( commitWithDetailsConfig ).commit();
 dev.commit().commit(); // 2 default Commit on "dev"

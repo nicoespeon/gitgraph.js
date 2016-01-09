@@ -1,9 +1,9 @@
 /* ==========================================================
- *                  GitGraph v1.1.0
+ *                  GitGraph v1.1.1
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
- * Copyright (c) 2015 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
- * Copyright (c) 2015 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
+ * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
+ * Copyright (c) 2016 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
  *
  * GitGraph.js may be freely distributed under the MIT Licence
  * ========================================================== */
@@ -134,7 +134,7 @@
 
     // Navigation vars
     this.HEAD = null;
-    this.branchs = [];
+    this.branches = [];
     this.commits = [];
 
     // Utilities
@@ -183,7 +183,7 @@
 
     // Add branch
     var branch = new Branch( options );
-    this.branchs.push( branch );
+    this.branches.push( branch );
 
     // Return
     return branch;
@@ -212,7 +212,7 @@
 
     // Add branch
     var branch = new Branch( options );
-    this.branchs.push( branch );
+    this.branches.push( branch );
 
     // Return
     return branch;
@@ -311,8 +311,8 @@
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
 
-    // Render branchs
-    for ( var i = this.branchs.length - 1, branch; !!(branch = this.branchs[ i ]); i-- ) {
+    // Render branches
+    for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
       branch.render();
     }
 
@@ -413,7 +413,6 @@
       self.tooltip.style.display = "none";
     }
   };
-
 
   /**
    * Click event on commit dot
@@ -519,7 +518,7 @@
 
     // Add branch
     var branch = new Branch( options );
-    this.parent.branchs.push( branch );
+    this.parent.branches.push( branch );
 
     // Return
     return branch;
@@ -769,7 +768,7 @@
    **/
   Branch.prototype.calculColumn = function () {
     var candidates = [];
-    for ( var i = 0, branch; !!(branch = this.parent.branchs[ i ]); i++ ) {
+    for ( var i = 0, branch; !!(branch = this.parent.branches[ i ]); i++ ) {
       if ( !branch.isfinish ) {
         if ( !( branch.column in candidates ) ) {
           candidates[ branch.column ] = 0;
@@ -897,13 +896,6 @@
       this.arrow();
     }
 
-    // Detail
-    if ( this.detail !== null ) {
-      this.detail.style.left = this.parent.canvas.offsetLeft + (this.parent.columnMax + 1) * this.template.branch.spacingX + 30 + "px";
-      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40 + "px";
-      this.detail.width = 30;
-    }
-
     this.context.font = this.messageFont;
 
     // Tag
@@ -926,6 +918,15 @@
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
 
+    var commitOffsetLeft = (this.parent.columnMax + 1) * this.template.branch.spacingX + tagWidth;
+
+    // Detail
+    if ( this.detail !== null ) {
+      this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + 30 + "px";
+      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40 + "px";
+      this.detail.width = 30;
+    }
+
     // Message
     if ( this.messageDisplay ) {
       var message = this.message;
@@ -940,7 +941,7 @@
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, ((this.parent.columnMax + 1) * this.template.branch.spacingX) + tagWidth, this.y + this.dotSize/2);
+      this.context.fillText( message, commitOffsetLeft, this.y + this.dotSize / 2);
     }
   };
 
@@ -1014,8 +1015,8 @@
    * @param {String} [options.branch.color] - Branch color
    * @param {Number} [options.branch.linewidth] - Branch line width
    * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
-   * @param {Number} [options.branch.spacingX] - Space between branchs
-   * @param {Number} [options.branch.spacingY] - Space between branchs
+   * @param {Number} [options.branch.spacingX] - Space between branches
+   * @param {Number} [options.branch.spacingY] - Space between branches
    * @param {Number} [options.commit.spacingX] - Space between commits
    * @param {Number} [options.commit.spacingY] - Space between commits
    * @param {Number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
@@ -1060,7 +1061,7 @@
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
 
-    // Space between branchs
+    // Space between branches
     this.branch.spacingX = (typeof options.branch.spacingX === "number") ? options.branch.spacingX : 20;
     this.branch.spacingY = options.branch.spacingY || 0;
 
