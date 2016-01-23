@@ -332,16 +332,17 @@
    **/
   GitGraph.prototype.applyCommits = function(event, callbackFn) {
     // Fix firefox MouseEvent
+    var offsetX = event.offsetX, offsetY = event.offsetY, x, y;
     if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
-      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
-      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
-      event.x = event.x ? event.x : event.clientX;
-      event.y = event.y ? event.y : event.clientY;
+      offsetX = event.offsetX ? event.offsetX : event.layerX;
+      offsetY = event.offsetY ? event.offsetY : event.layerY;
+      x = event.x ? event.x : event.clientX;
+      y = event.y ? event.y : event.clientY;
     }
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + this.offsetX + this.marginX - event.offsetX);
-      var distanceY = (commit.y + this.offsetY + this.marginY - event.offsetY);
+      var distanceX = (commit.x + this.offsetX + this.marginX - offsetX);
+      var distanceY = (commit.y + this.offsetY + this.marginY - offsetY);
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
@@ -361,8 +362,11 @@
     var isOut = true;
 
     function showCommitTooltip (commit) {
-      self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
-      self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
+      let  x = event.x ? event.x : event.clientX;
+      let  y = event.y ? event.y : event.clientY;
+
+      self.tooltip.style.left = x + "px"; // TODO Scroll bug
+      self.tooltip.style.top = y + "px";  // TODO Scroll bug
       if (self.template.commit.tooltipHTMLFormatter !== null) {
         self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
       } else {
