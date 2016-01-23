@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.1.1
+ *                  GitGraph v1.1.2
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -342,9 +342,7 @@
    **/
   GitGraph.prototype.applyCommits = function(event, callbackFn) {
     // Fix firefox MouseEvent
-    if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
-      event.offsetX = event.offsetX ? event.offsetX : event.layerX;
-      event.offsetY = event.offsetY ? event.offsetY : event.layerY;
+		if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
       event.x = event.x ? event.x : event.clientX;
       event.y = event.y ? event.y : event.clientY;
     }
