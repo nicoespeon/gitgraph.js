@@ -362,8 +362,8 @@
     var isOut = true;
 
     function showCommitTooltip (commit) {
-      let  x = event.x ? event.x : event.clientX;
-      let  y = event.y ? event.y : event.clientY;
+      var  x = event.x ? event.x : event.clientX;
+      var  y = event.y ? event.y : event.clientY;
 
       self.tooltip.style.left = x + "px"; // TODO Scroll bug
       self.tooltip.style.top = y + "px";  // TODO Scroll bug
