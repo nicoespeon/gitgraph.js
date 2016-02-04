@@ -32,6 +32,7 @@ var myTemplate = new GitGraph.Template( myTemplateConfig );
 
 var config = {
   template: "metro"       // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
+  //, orientation: "vertical-reverse"
   //, mode: "compact"     // special compact mode : hide messages & compact graph
 };
 var gitGraph = new GitGraph( config );
@@ -114,11 +115,11 @@ test.commit( {message:"It works !"} );
  *        TAGS         *
  ***********************/
 
- // Add a tag to a commit
- test.commit( {message:"Here you can see something", tag: "a-tag"} );
+// Add a tag to a commit
+test.commit( {message:"Here you can see something", tag: "a-tag"} );
 
- // Perform a merge, with a tag
- test.merge(master, {message: "New release", tag: "v1.0.0"});
+// Perform a merge, with a tag
+test.merge(master, {message: "New release", tag: "v1.0.0"});
 
 
 /***********************
