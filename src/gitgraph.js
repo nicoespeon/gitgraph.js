@@ -351,10 +351,11 @@
       event.x = event.x ? event.x : event.clientX;
       event.y = event.y ? event.y : event.clientY;
     }
+    var scalingFactor = _getScale( this.context );
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + this.offsetX + this.marginX - event.offsetX);
-      var distanceY = (commit.y + this.offsetY + this.marginY - event.offsetY);
+      var distanceX = (commit.x + (this.offsetX + this.marginX) / scalingFactor - event.offsetX);
+      var distanceY = (commit.y + (this.offsetY + this.marginY) / scalingFactor - event.offsetY);
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
