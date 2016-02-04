@@ -30,6 +30,34 @@
   }
 
   /**
+   * Returns the scaling factor of given canvas `context`.
+   * Handles high-resolution displays.
+   *
+   * @param {Object} context
+   * @returns {Number}
+   * @private
+   */
+  function _getScale ( context ) {
+    var backingStorePixelRatio;
+    var scalingFactor;
+
+    // Account for high-resolution displays
+    scalingFactor = 1;
+
+    if ( window.devicePixelRatio ) {
+      backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
+                               context.mozBackingStorePixelRatio ||
+                               context.msBackingStorePixelRatio ||
+                               context.oBackingStorePixelRatio ||
+                               context.backingStorePixelRatio || 1;
+
+      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
+    }
+
+    return scalingFactor;
+  }
+
+  /**
    * GitGraph
    *
    * @constructor
@@ -245,21 +273,7 @@
    * @this GitGraph
    **/
   GitGraph.prototype.render = function () {
-    var backingStorePixelRatio;
-    var scalingFactor;
-
-    // Account for high-resolution displays
-    scalingFactor = 1;
-
-    if ( window.devicePixelRatio ) {
-      backingStorePixelRatio = this.context.webkitBackingStorePixelRatio ||
-                               this.context.mozBackingStorePixelRatio ||
-                               this.context.msBackingStorePixelRatio ||
-                               this.context.oBackingStorePixelRatio ||
-                               this.context.backingStorePixelRatio || 1;
-
-      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
-    }
+    var scalingFactor = _getScale( this.context );
 
     // Resize canvas
     var unscaledResolution = {
