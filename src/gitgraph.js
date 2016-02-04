@@ -283,8 +283,6 @@
     this.canvas.width = unscaledResolution.x * scalingFactor;
     this.canvas.height = unscaledResolution.y * scalingFactor;
 
-    this.context.scale( scalingFactor, scalingFactor );
-
     // Clear All
     this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
 
@@ -300,6 +298,9 @@
       this.context.translate( this.canvas.width - this.marginX * 2, 0 );
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
+
+    // Scale the context when every transformations have been made.
+    this.context.scale( scalingFactor, scalingFactor );
 
     // Render branches
     for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
