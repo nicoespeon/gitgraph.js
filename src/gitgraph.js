@@ -346,11 +346,6 @@
    * @self Gitgraph
    **/
   GitGraph.prototype.applyCommits = function(event, callbackFn) {
-    // Fix firefox MouseEvent
-		if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
-      event.x = event.x ? event.x : event.clientX;
-      event.y = event.y ? event.y : event.clientY;
-    }
     var scalingFactor = _getScale( this.context );
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
@@ -375,6 +370,12 @@
     var isOut = true;
 
     function showCommitTooltip (commit) {
+      // Fix firefox MouseEvent
+      if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
+        event.x = event.x ? event.x : event.clientX;
+        event.y = event.y ? event.y : event.clientY;
+      }
+
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
       if (self.template.commit.tooltipHTMLFormatter !== null) {
