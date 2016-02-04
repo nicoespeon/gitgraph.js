@@ -30,6 +30,34 @@
   }
 
   /**
+   * Returns the scaling factor of given canvas `context`.
+   * Handles high-resolution displays.
+   *
+   * @param {Object} context
+   * @returns {Number}
+   * @private
+   */
+  function _getScale ( context ) {
+    var backingStorePixelRatio;
+    var scalingFactor;
+
+    // Account for high-resolution displays
+    scalingFactor = 1;
+
+    if ( window.devicePixelRatio ) {
+      backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
+                               context.mozBackingStorePixelRatio ||
+                               context.msBackingStorePixelRatio ||
+                               context.oBackingStorePixelRatio ||
+                               context.backingStorePixelRatio || 1;
+
+      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
+    }
+
+    return scalingFactor;
+  }
+
+  /**
    * GitGraph
    *
    * @constructor
@@ -245,21 +273,7 @@
    * @this GitGraph
    **/
   GitGraph.prototype.render = function () {
-    var backingStorePixelRatio;
-    var scalingFactor;
-
-    // Account for high-resolution displays
-    scalingFactor = 1;
-
-    if ( window.devicePixelRatio ) {
-      backingStorePixelRatio = this.context.webkitBackingStorePixelRatio ||
-                               this.context.mozBackingStorePixelRatio ||
-                               this.context.msBackingStorePixelRatio ||
-                               this.context.oBackingStorePixelRatio ||
-                               this.context.backingStorePixelRatio || 1;
-
-      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
-    }
+    var scalingFactor = _getScale( this.context );
 
     // Resize canvas
     var unscaledResolution = {
@@ -283,8 +297,6 @@
     this.canvas.width = unscaledResolution.x * scalingFactor;
     this.canvas.height = unscaledResolution.y * scalingFactor;
 
-    this.context.scale( scalingFactor, scalingFactor );
-
     // Clear All
     this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
 
@@ -300,6 +312,9 @@
       this.context.translate( this.canvas.width - this.marginX * 2, 0 );
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
+
+    // Scale the context when every transformations have been made.
+    this.context.scale( scalingFactor, scalingFactor );
 
     // Render branches
     for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
@@ -336,10 +351,11 @@
       event.x = event.x ? event.x : event.clientX;
       event.y = event.y ? event.y : event.clientY;
     }
+    var scalingFactor = _getScale( this.context );
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + this.offsetX + this.marginX - event.offsetX);
-      var distanceY = (commit.y + this.offsetY + this.marginY - event.offsetY);
+      var distanceX = (commit.x + (this.offsetX + this.marginX) / scalingFactor - event.offsetX);
+      var distanceY = (commit.y + (this.offsetY + this.marginY) / scalingFactor - event.offsetY);
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
