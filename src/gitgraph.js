@@ -3,6 +3,7 @@
 
   /**
    * Emit an event on the given element.
+   *
    * @param {HTMLElement} element - DOM element to trigger the event on.
    * @param {String} eventName - Name of the triggered event.
    * @param {Object} [data={}] - Custom data to attach to the event.
@@ -343,9 +344,9 @@
    * @param {MouseEvent} event - Mouse event
    * @param {commitCallback} callbackFn - A callback function that will be called for each commit
    *
-   * @self Gitgraph
+   * @this GitGraph
    **/
-  GitGraph.prototype.applyCommits = function(event, callbackFn) {
+  GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
     var scalingFactor = _getScale( this.context );
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
@@ -354,7 +355,7 @@
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
-      callbackFn(commit, isOverCommit);
+      callbackFn( commit, isOverCommit );
     }
   };
 
@@ -363,13 +364,13 @@
    *
    * @param {MouseEvent} event - Mouse event
    *
-   * @self Gitgraph
+   * @this GitGraph
    **/
   GitGraph.prototype.hover = function ( event ) {
     var self = this.gitgraph;
     var isOut = true;
 
-    function showCommitTooltip (commit) {
+    function showCommitTooltip ( commit ) {
       // Fix firefox MouseEvent
       if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
         event.x = event.x ? event.x : event.clientX;
@@ -378,15 +379,15 @@
 
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
       self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
-      if (self.template.commit.tooltipHTMLFormatter !== null) {
-        self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
+      if ( self.template.commit.tooltipHTMLFormatter !== null ) {
+        self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter( commit );
       } else {
         self.tooltip.textContent = commit.sha1 + " - " + commit.message;
       }
       self.tooltip.style.display = "block";
     }
 
-    function emitMouseoverEvent (commit) {
+    function emitMouseoverEvent ( commit ) {
       var mouseoverEventOptions = {
         author: commit.author,
         message: commit.message,
@@ -397,14 +398,14 @@
       _emitEvent( self.canvas, "commit:mouseover", mouseoverEventOptions );
     }
 
-    self.applyCommits(event, function(commit, isOverCommit) {
+    self.applyCommits( event, function ( commit, isOverCommit ) {
       if ( isOverCommit ) {
         if ( !self.template.commit.message.display ) {
-          showCommitTooltip(commit);
+          showCommitTooltip( commit );
         }
 
         if ( !commit.isMouseover ) {
-          emitMouseoverEvent(commit);
+          emitMouseoverEvent( commit );
         }
 
         isOut = false;
@@ -412,7 +413,7 @@
       } else {
         commit.isMouseover = false;
       }
-    });
+    } );
 
     if ( isOut ) {
       self.tooltip.style.display = "none";
@@ -424,18 +425,18 @@
    *
    * @param {MouseEvent} event - Mouse event
    *
-   * @self Gitgraph
+   * @this GitGraph
    **/
   GitGraph.prototype.click = function ( event ) {
-    this.gitgraph.applyCommits(event, function(commit, isOverCommit) {
-      if (!isOverCommit) {
+    this.gitgraph.applyCommits( event, function ( commit, isOverCommit ) {
+      if ( !isOverCommit ) {
         return;
       }
 
-      if (commit.onClick !== null) {
-        commit.onClick(commit, true);
+      if ( commit.onClick !== null ) {
+        commit.onClick( commit, true );
       }
-    });
+    } );
   };
 
   // --------------------------------------------------------------------
@@ -469,7 +470,7 @@
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
     this.lineDash = options.lineDash || this.template.branch.lineDash;
-    this.showLabel = booleanOptionOr(options.showLabel, this.template.branch.showLabel);
+    this.showLabel = booleanOptionOr( options.showLabel, this.template.branch.showLabel );
     this.spacingX = this.template.branch.spacingX;
     this.spacingY = this.template.branch.spacingY;
     this.size = 0;
@@ -640,8 +641,8 @@
     options.showLabel = (isPathBeginning && this.showLabel) ? true : false;
 
     if ( options.showLabel ) {
-        options.x -= this.template.commit.spacingX;
-        options.y -= this.template.commit.spacingY;
+      options.x -= this.template.commit.spacingX;
+      options.y -= this.template.commit.spacingY;
     }
 
     var commit = new Commit( options );
@@ -785,7 +786,7 @@
     this.column = 0;
     for ( ; ; this.column++ ) {
       if ( !( this.column in candidates ) || candidates[ this.column ] === 0 ) {
-          break;
+        break;
       }
     }
   };
@@ -879,7 +880,7 @@
 
     // Label
     if ( this.showLabel ) {
-        drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont, this.template.branch.labelRotation);
+      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont, this.template.branch.labelRotation );
     }
 
     // Dot
@@ -907,17 +908,17 @@
     var tagWidth = this.template.commit.tag.spacingX;
     if ( this.tag !== null ) {
       this.parent.tagNum++;
-      var textWidth = this.context.measureText(this.tag).width;
+      var textWidth = this.context.measureText( this.tag ).width;
       if ( this.template.branch.labelRotation !== 0 ) {
-        var textHeight = getFontHeight(this.tagFont);
+        var textHeight = getFontHeight( this.tagFont );
         drawTextBG( this.context,
-          this.x - this.dotSize/2,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY/2 + (this.parent.tagNum % 2) * textHeight * 1.5,
+          this.x - this.dotSize / 2,
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
           this.tag, "black", this.tagColor, this.tagFont, 0 );
       } else {
         drawTextBG( this.context,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX/2 + textWidth/2,
-          this.y - this.dotSize/2,
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
+          this.y - this.dotSize / 2,
           this.tag, "black", this.tagColor, this.tagFont, 0 );
       }
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
@@ -946,7 +947,7 @@
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, commitOffsetLeft, this.y + this.dotSize / 2);
+      this.context.fillText( message, commitOffsetLeft, this.y + this.dotSize / 2 );
     }
   };
 
@@ -1179,14 +1180,14 @@
   // --------------------------------------------------------------------
 
   var getFontHeight = function ( font ) {
-    var body = document.getElementsByTagName("body")[0];
-    var dummy = document.createElement("div");
-    var dummyText = document.createTextNode("Mg");
-    dummy.appendChild(dummyText);
-    dummy.setAttribute("style", "font: " + font + ";");
-    body.appendChild(dummy);
+    var body = document.getElementsByTagName( "body" )[ 0 ];
+    var dummy = document.createElement( "div" );
+    var dummyText = document.createTextNode( "Mg" );
+    dummy.appendChild( dummyText );
+    dummy.setAttribute( "style", "font: " + font + ";" );
+    body.appendChild( dummy );
     var result = dummy.offsetHeight;
-    body.removeChild(dummy);
+    body.removeChild( dummy );
     return result;
   };
 
@@ -1196,16 +1197,16 @@
 
   function drawTextBG ( context, x, y, text, fgcolor, bgcolor, font, angle ) {
     context.save();
-    context.translate(x, y);
-    context.rotate(angle*(Math.PI/180));
+    context.translate( x, y );
+    context.rotate( angle * (Math.PI / 180) );
     context.textAlign = "center";
 
     context.font = font;
-    var width = context.measureText(text).width;
-    var height = getFontHeight(font);
+    var width = context.measureText( text ).width;
+    var height = getFontHeight( font );
 
     context.beginPath();
-    context.rect(-(width/2)-4, -(height/2)+2, width+8, height+2);
+    context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
     context.fillStyle = bgcolor;
     context.fill();
     context.lineWidth = 2;
@@ -1213,7 +1214,7 @@
     context.stroke();
 
     context.fillStyle = fgcolor;
-    context.fillText(text, 0, height/2);
+    context.fillText( text, 0, height / 2 );
     context.restore();
   }
 
