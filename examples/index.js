@@ -126,6 +126,10 @@ test.merge(master, {message: "New release", tag: "v1.0.0"});
  *       EVENTS        *
  ***********************/
 
+gitGraph.canvas.addEventListener( "graph:render", function ( event ) {
+  console.log( event.data.id, "has been rendered" );
+} );
+
 gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
   console.log( "You're over a commit.", "Here is a bunch of data ->", event.data );
 } );

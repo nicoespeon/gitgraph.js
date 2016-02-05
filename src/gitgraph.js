@@ -328,6 +328,8 @@
     for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
       commit.render();
     }
+
+    _emitEvent( this.canvas, "graph:render", { id: this.elementId } );
   };
 
   /**
