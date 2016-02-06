@@ -127,7 +127,7 @@ test.merge(master, {message: "New release", tag: "v1.0.0"});
  ***********************/
 
 gitGraph.canvas.addEventListener( "graph:render", function ( event ) {
-  console.log( event.data.id, "has been rendered" );
+  console.log( event.data.id, "has been rendered with a scaling factor of", gitGraph.scalingFactor );
 } );
 
 gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
