@@ -274,7 +274,7 @@
    * @this GitGraph
    **/
   GitGraph.prototype.render = function () {
-    var scalingFactor = _getScale( this.context );
+    this.scalingFactor = _getScale( this.context );
 
     // Resize canvas
     var unscaledResolution = {
@@ -295,8 +295,8 @@
     this.canvas.style.width = unscaledResolution.x + "px";
     this.canvas.style.height = unscaledResolution.y + "px";
 
-    this.canvas.width = unscaledResolution.x * scalingFactor;
-    this.canvas.height = unscaledResolution.y * scalingFactor;
+    this.canvas.width = unscaledResolution.x * this.scalingFactor;
+    this.canvas.height = unscaledResolution.y * this.scalingFactor;
 
     // Clear All
     this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
@@ -315,7 +315,7 @@
     }
 
     // Scale the context when every transformations have been made.
-    this.context.scale( scalingFactor, scalingFactor );
+    this.context.scale( this.scalingFactor, this.scalingFactor );
 
     // Render branches
     for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
@@ -328,6 +328,8 @@
     for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
       commit.render();
     }
+
+    _emitEvent( this.canvas, "graph:render", { id: this.elementId } );
   };
 
   /**
@@ -347,11 +349,9 @@
    * @this GitGraph
    **/
   GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
-    var scalingFactor = _getScale( this.context );
-
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + (this.offsetX + this.marginX) / scalingFactor - event.offsetX);
-      var distanceY = (commit.y + (this.offsetY + this.marginY) / scalingFactor - event.offsetY);
+      var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - event.offsetX);
+      var distanceY = (commit.y + (this.offsetY + this.marginY) / this.scalingFactor - event.offsetY);
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
