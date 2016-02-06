@@ -109,18 +109,17 @@ test.commit( "Final commit" );
 test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
-test.commit( {message:"It works !"} );
+test.commit( { message: "It works !" } );
 
 /***********************
  *        TAGS         *
  ***********************/
 
 // Add a tag to a commit
-test.commit( {message:"Here you can see something", tag: "a-tag"} );
+test.commit( { message: "Here you can see something", tag: "a-tag" } );
 
 // Perform a merge, with a tag
-test.merge(master, {message: "New release", tag: "v1.0.0"});
-
+test.merge( master, { message: "New release", tag: "v1.0.0" } );
 
 /***********************
  *       EVENTS        *
