@@ -107,11 +107,9 @@
     if ( (typeof options.template === "string")
          || (typeof options.template === "object") ) {
       this.template = this.newTemplate( options.template );
-    }
-    else if ( options.template instanceof Template ) {
+    } else if ( options.template instanceof Template ) {
       this.template = options.template;
-    }
-    else {
+    } else {
       this.template = this.newTemplate( "metro" );
     }
 
@@ -601,8 +599,7 @@
    **/
   Branch.prototype.commit = function ( options ) {
     if ( typeof (options) === "string" ) {
-      var message = options;
-      options = { message: message };
+      options = { message: options };
     } else if ( typeof (options) !== "object" ) {
       options = {};
     }
@@ -745,7 +742,7 @@
 
     // Check integrity of target
     if ( targetBranch instanceof Branch === false || targetBranch === this ) {
-      return;
+      return this;
     }
 
     // Merge commit
@@ -834,18 +831,29 @@
    * @param {String} [options.date] - Date of commit, default is now
    * @param {String} [options.detail] - DOM Element of detail part
    * @param {String} [options.sha1] - Sha1, default is a random short sha1
+   * @param {Commit} [options.parentCommit] - Parent commit
+   * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
+   *
+   * @param {String} [options.tag] - Tag of the commit
+   * @param {String} [options.tagColor = options.color] - Specific tag color
+   * @param {String} [options.tagFont = this.template.commit.tag.font] - Font of the tag
+   *
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
    * @param {Number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
    * @param {Number} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
-   * @param {Commit} [options.parentCommit] - Parent commit
+   *
    * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
    * @param {String} [options.messageColor = options.color] - Specific message color
+   * @param {String} [options.messageFont = this.template.commit.message.font] - Font of the message
    * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
    * @param {Boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
    * @param {Boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
    * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
-   * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
+   *
+   * @param {String} [options.labelColor = options.color] - Specific label color
+   * @param {String} [options.labelFont = this.template.branch.labelFont] - Font used for labels
+   *
    * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
    * @param {Object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
