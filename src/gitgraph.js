@@ -59,6 +59,28 @@
   }
 
   /**
+   * Returns `true` if `graph` has a vertical orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {boolean}
+   * @private
+   */
+  function _isVertical ( graph ) {
+    return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
+  }
+
+  /**
+   * Returns `true` if `graph` has an horizontal orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {boolean}
+   * @private
+   */
+  function _isHorizontal ( graph ) {
+    return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
+  }
+
+  /**
    * GitGraph
    *
    * @constructor
@@ -70,6 +92,7 @@
    * @param {String} [options.mode = (null|"compact")]  - Display mode
    * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
+   * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
    *
    * @this GitGraph
    **/
@@ -78,6 +101,7 @@
     options = (typeof options === "object") ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
+    this.reverseArrow = booleanOptionOr( options.reverseArrow, false );
 
     // Template management
     if ( (typeof options.template === "string")
@@ -960,40 +984,64 @@
     // Options
     var size = this.template.arrow.size;
     var color = this.template.arrow.color || this.branch.color;
+    var isReversed = this.parent.reverseArrow;
+
+    function rotate ( y, x ) {
+      var direction = (isReversed) ? -1 : 1;
+      return Math.atan2( direction * y, direction * x );
+    }
 
     // Angles calculation
-    var alpha = Math.atan2(
-      this.parentCommit.y - this.y,
-      this.parentCommit.x - this.x
-    );
+    var alpha = rotate( this.parentCommit.y - this.y, this.parentCommit.x - this.x );
 
     // Merge & Fork case
     if ( this.type === "mergeCommit" || this === this.branch.commits[ 0 ] /* First commit */ ) {
-      alpha = Math.atan2(
-        this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY * (this.showLabel ? 2 : 1),
-        this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX * (this.showLabel ? 2 : 1)
+      var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
+      var commitSpaceDelta = (this.showLabel ? 2 : 1);
+
+      var isArrowVertical = (
+        isReversed
+        && _isVertical( this.parent )
+        && Math.abs( this.y - this.parentCommit.y ) > Math.abs( this.template.commit.spacingY )
       );
+      var alphaX = (isArrowVertical)
+        ? 0
+        : this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
+
+      var isArrowHorizontal = (
+        isReversed
+        && _isHorizontal( this.parent )
+        && Math.abs( this.x - this.parentCommit.x ) > Math.abs( this.template.commit.spacingX )
+      );
+      var alphaY = (isArrowHorizontal)
+        ? 0
+        : this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
+
+      alpha = rotate( alphaY, alphaX );
       color = this.parentCommit.branch.color;
     }
 
     var delta = Math.PI / 7; // Delta between left & right (radian)
 
+    var arrowX = (isReversed) ? this.parentCommit.x : this.x;
+    var arrowY = (isReversed) ? this.parentCommit.y : this.y;
+
     // Top
     var h = this.template.commit.dot.size + this.template.arrow.offset;
-    var x1 = h * Math.cos( alpha ) + this.x;
-    var y1 = h * Math.sin( alpha ) + this.y;
+    var x1 = h * Math.cos( alpha ) + arrowX;
+    var y1 = h * Math.sin( alpha ) + arrowY;
 
     // Bottom left
-    var x2 = (h + size) * Math.cos( alpha - delta ) + this.x;
-    var y2 = (h + size) * Math.sin( alpha - delta ) + this.y;
+    var x2 = (h + size) * Math.cos( alpha - delta ) + arrowX;
+    var y2 = (h + size) * Math.sin( alpha - delta ) + arrowY;
 
     // Bottom center
-    var x3 = (h + size / 2) * Math.cos( alpha ) + this.x;
-    var y3 = (h + size / 2) * Math.sin( alpha ) + this.y;
+    var x3 = (h + size / 2) * Math.cos( alpha ) + arrowX;
+    var y3 = (h + size / 2) * Math.sin( alpha ) + arrowY;
 
     // Bottom right
-    var x4 = (h + size) * Math.cos( alpha + delta ) + this.x;
-    var y4 = (h + size) * Math.sin( alpha + delta ) + this.y;
+    var x4 = (h + size) * Math.cos( alpha + delta ) + arrowX;
+    var y4 = (h + size) * Math.sin( alpha + delta ) + arrowY;
 
     this.context.beginPath();
     this.context.fillStyle = color;
