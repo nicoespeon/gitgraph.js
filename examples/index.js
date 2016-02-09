@@ -132,7 +132,13 @@ gitGraph.canvas.addEventListener( "graph:render", function ( event ) {
 
 gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
   console.log( "You're over a commit.", "Here is a bunch of data ->", event.data );
+  this.style.cursor = "pointer";
 } );
+
+gitGraph.canvas.addEventListener("commit:mouseout", function (event) {
+  console.log( "You just left this commit ->", event.data );
+  this.style.cursor = "auto";
+});
 
 // Attach a handler to the commit
 test.commit( {
