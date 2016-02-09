@@ -409,23 +409,15 @@
       self.tooltip.style.display = "block";
     }
 
-    function getMouseOption(commit) {
-         return {
-              author: commit.author,
-              message: commit.message,
-              date: commit.date,
-              sha1: commit.sha1
-          };
-      }
+    function emitCommitEvent ( commit, event ) {
+      var mouseEventOptions = {
+        author: commit.author,
+        message: commit.message,
+        date: commit.date,
+        sha1: commit.sha1
+      };
 
-    function emitMouseoverEvent ( commit ) {
-      var mouseEventOptions = getMouseOption(commit);
-      _emitEvent(self.canvas, "commit:mouseover", mouseEventOptions);
-    }
-
-    function emitMouseoutEvent ( commit ) {
-      var mouseEventOptions = getMouseOption(commit);
-      _emitEvent(self.canvas, "commit:mouseout", mouseEventOptions);
+      _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
     }
 
     self.applyCommits( event, function ( commit, isOverCommit ) {
@@ -434,17 +426,19 @@
           showCommitTooltip( commit );
         }
 
-        if ( !commit.isMouseover ) {
-          emitMouseoverEvent( commit );
+        // Don't emit event if we already were over a commit.
+        if ( !commit.isMouseOver ) {
+          emitCommitEvent( commit, "mouseover" );
         }
 
         isOut = false;
-        commit.isMouseover = true;
+        commit.isMouseOver = true;
       } else {
-        if (commit.isMouseover) {
-            emitMouseoutEvent(commit);
+        // Don't emit event if we already were out of a commit.
+        if ( commit.isMouseOver ) {
+          emitCommitEvent( commit, "mouseout" );
         }
-        commit.isMouseover = false;
+        commit.isMouseOver = false;
       }
     } );
 
