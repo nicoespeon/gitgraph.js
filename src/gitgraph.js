@@ -409,15 +409,23 @@
       self.tooltip.style.display = "block";
     }
 
-    function emitMouseoverEvent ( commit ) {
-      var mouseoverEventOptions = {
-        author: commit.author,
-        message: commit.message,
-        date: commit.date,
-        sha1: commit.sha1
-      };
+    function getMouseOption(commit) {
+         return {
+              author: commit.author,
+              message: commit.message,
+              date: commit.date,
+              sha1: commit.sha1
+          };
+      }
 
-      _emitEvent( self.canvas, "commit:mouseover", mouseoverEventOptions );
+    function emitMouseoverEvent ( commit ) {
+      var mouseEventOptions = getMouseOption(commit);
+      _emitEvent(self.canvas, "commit:mouseover", mouseEventOptions);
+    }
+
+    function emitMouseoutEvent ( commit ) {
+      var mouseEventOptions = getMouseOption(commit);
+      _emitEvent(self.canvas, "commit:mouseout", mouseEventOptions);
     }
 
     self.applyCommits( event, function ( commit, isOverCommit ) {
@@ -433,6 +441,9 @@
         isOut = false;
         commit.isMouseover = true;
       } else {
+        if (commit.isMouseover) {
+            emitMouseoutEvent(commit);
+        }
         commit.isMouseover = false;
       }
     } );
