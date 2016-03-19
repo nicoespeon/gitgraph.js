@@ -74,6 +74,7 @@
       <p>For instance:</p>
       <pre class="prettyprint">var gitgraph = new GitGraph({
   template: "blackarrow",
+  reverseArrow: false,
   orientation: "horizontal",
   mode: "compact"
 });</pre>
@@ -153,9 +154,19 @@ master.merge(develop, { message: "New release", tag: "v1.0.0" });
 
     <div id="detail-interact" class="gitgraph-detail">
       <p>You can handle basic interactions with the generated graph:</p>
-      <pre class="prettyprint">gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
+      <pre class="prettyprint">gitGraph.canvas.addEventListener( "graph:render", function ( event ) {
+  console.log( event.data.id, "graph has been rendered" );
+} );
+
+gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
   console.log( "You're over a commit.", event.data );
-} );</pre>
+  this.style.cursor = "pointer";
+} );
+
+gitGraph.canvas.addEventListener("commit:mouseout", function (event) {
+  console.log( "You just left this commit ->", event.data );
+  this.style.cursor = "auto";
+});</pre>
       <p>Or you can be define that per-commit, remember:</p>
       <pre class="prettyprint">develop.commit({
   message: "Pimp dat commit",
@@ -186,6 +197,7 @@ master.merge(develop, { message: "New release", tag: "v1.0.0" });
       displayHash: false,
       font: "normal 12pt Arial"
     },
+    shouldDisplayTooltipsInCompactMode: false, // default = true
     tooltipHTMLFormatter: function ( commit ) {
       return "<strong>" + commit.sha1 + "</strong>" + ": " + commit.message;
     }
