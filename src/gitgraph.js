@@ -422,7 +422,7 @@
 
     self.applyCommits( event, function ( commit, isOverCommit ) {
       if ( isOverCommit ) {
-        if ( !self.template.commit.message.display ) {
+        if ( !self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode ) {
           showCommitTooltip( commit );
         }
 
@@ -1090,7 +1090,7 @@
    * @param {String} [options.commit.color] - Master commit color (dot & message)
    * @param {String} [options.commit.dot.color] - Commit dot color
    * @param {Number} [options.commit.dot.size] - Commit dot size
-   * @param {Number} [options.commit.dot.strokewidth] - Commit dot stroke width
+   * @param {Number} [options.commit.dot.strokeWidth] - Commit dot stroke width
    * @param {Number} [options.commit.dot.strokeColor] - Commit dot stroke color
    * @param {String} [options.commit.message.color] - Commit message color
    * @param {Boolean} [options.commit.message.display] - Commit display policy
@@ -1098,7 +1098,8 @@
    * @param {Boolean} [options.commit.message.displayBranch] - Commit message branch policy
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
-   * @param {commitCallback} [options.commit.tooltipHTMLFormatter] - Formatter for the tooltip contents.
+   * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
+   * @param {commitCallback} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
@@ -1145,6 +1146,7 @@
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
     this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
     this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
+    this.commit.shouldDisplayTooltipsInCompactMode = booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;

@@ -19,6 +19,7 @@ var myTemplateConfig = {
       displayHash: false,
       font: "normal 12pt Arial"
     },
+    shouldDisplayTooltipsInCompactMode: false, // default = true
     tooltipHTMLFormatter: function ( commit ) {
       return "<b>" + commit.sha1 + "</b>" + ": " + commit.message;
     }
