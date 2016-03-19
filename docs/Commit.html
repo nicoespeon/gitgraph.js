@@ -455,6 +455,197 @@
 	
         <tr>
             
+                <td class="name"><code>parentCommit</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Commit.html">Commit</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>Parent commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    ("mergeCommit"|null)
+                
+                </td>
+            
+            
+            <td class="description last"><p>Type of commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>Tag of the commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagColor</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    options.color
+                
+                </td>
+            
+            
+            <td class="description last"><p>Specific tag color</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.tag.font
+                
+                </td>
+            
+            
+            <td class="description last"><p>Font of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>dotColor</code></td>
             
             
@@ -611,43 +802,6 @@
 	
         <tr>
             
-                <td class="name"><code>parentCommit</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Commit.html">Commit</a></span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Parent commit</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>message</code></td>
             
             
@@ -720,6 +874,45 @@
             
             
             <td class="description last"><p>Specific message color</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>messageFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.message.font
+                
+                </td>
+            
+            
+            <td class="description last"><p>Font of the message</p></td>
         </tr>
 	
 	
@@ -882,7 +1075,7 @@
 	
         <tr>
             
-                <td class="name"><code>type</code></td>
+                <td class="name"><code>labelColor</code></td>
             
             
             <td class="type">
@@ -909,12 +1102,51 @@
             
                 <td class="default">
                 
-                    ("mergeCommit"|null)
+                    options.color
                 
                 </td>
             
             
-            <td class="description last"><p>Type of commit</p></td>
+            <td class="description last"><p>Specific label color</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.branch.labelFont
+                
+                </td>
+            
+            
+            <td class="description last"><p>Font used for labels</p></td>
         </tr>
 	
 	
@@ -1025,7 +1257,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line830">line 830</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line867">line 867</a>
     </li></ul></dd>
     
     
@@ -1115,7 +1347,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line959">line 959</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line996">line 996</a>
     </li></ul></dd>
     
     
@@ -1187,7 +1419,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line879">line 879</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line916">line 916</a>
     </li></ul></dd>
     
     
@@ -1228,13 +1460,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getScale">_getScale</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getScale">_getScale</a></li><li><a href="global.html#_isHorizontal">_isHorizontal</a></li><li><a href="global.html#_isVertical">_isVertical</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Feb 04 2016 11:54:00 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Mar 19 2016 10:02:47 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

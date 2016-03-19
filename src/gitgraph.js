@@ -59,6 +59,28 @@
   }
 
   /**
+   * Returns `true` if `graph` has a vertical orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {boolean}
+   * @private
+   */
+  function _isVertical ( graph ) {
+    return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
+  }
+
+  /**
+   * Returns `true` if `graph` has an horizontal orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {boolean}
+   * @private
+   */
+  function _isHorizontal ( graph ) {
+    return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
+  }
+
+  /**
    * GitGraph
    *
    * @constructor
@@ -70,6 +92,7 @@
    * @param {String} [options.mode = (null|"compact")]  - Display mode
    * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
+   * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
    *
    * @this GitGraph
    **/
@@ -78,16 +101,15 @@
     options = (typeof options === "object") ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
+    this.reverseArrow = booleanOptionOr( options.reverseArrow, false );
 
     // Template management
     if ( (typeof options.template === "string")
          || (typeof options.template === "object") ) {
       this.template = this.newTemplate( options.template );
-    }
-    else if ( options.template instanceof Template ) {
+    } else if ( options.template instanceof Template ) {
       this.template = options.template;
-    }
-    else {
+    } else {
       this.template = this.newTemplate( "metro" );
     }
 
@@ -274,7 +296,7 @@
    * @this GitGraph
    **/
   GitGraph.prototype.render = function () {
-    var scalingFactor = _getScale( this.context );
+    this.scalingFactor = _getScale( this.context );
 
     // Resize canvas
     var unscaledResolution = {
@@ -295,8 +317,8 @@
     this.canvas.style.width = unscaledResolution.x + "px";
     this.canvas.style.height = unscaledResolution.y + "px";
 
-    this.canvas.width = unscaledResolution.x * scalingFactor;
-    this.canvas.height = unscaledResolution.y * scalingFactor;
+    this.canvas.width = unscaledResolution.x * this.scalingFactor;
+    this.canvas.height = unscaledResolution.y * this.scalingFactor;
 
     // Clear All
     this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
@@ -315,7 +337,7 @@
     }
 
     // Scale the context when every transformations have been made.
-    this.context.scale( scalingFactor, scalingFactor );
+    this.context.scale( this.scalingFactor, this.scalingFactor );
 
     // Render branches
     for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
@@ -328,6 +350,8 @@
     for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
       commit.render();
     }
+
+    _emitEvent( this.canvas, "graph:render", { id: this.elementId } );
   };
 
   /**
@@ -347,11 +371,9 @@
    * @this GitGraph
    **/
   GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
-    var scalingFactor = _getScale( this.context );
-
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + (this.offsetX + this.marginX) / scalingFactor - event.offsetX);
-      var distanceY = (commit.y + (this.offsetY + this.marginY) / scalingFactor - event.offsetY);
+      var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - event.offsetX);
+      var distanceY = (commit.y + (this.offsetY + this.marginY) / this.scalingFactor - event.offsetY);
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
@@ -387,31 +409,36 @@
       self.tooltip.style.display = "block";
     }
 
-    function emitMouseoverEvent ( commit ) {
-      var mouseoverEventOptions = {
+    function emitCommitEvent ( commit, event ) {
+      var mouseEventOptions = {
         author: commit.author,
         message: commit.message,
         date: commit.date,
         sha1: commit.sha1
       };
 
-      _emitEvent( self.canvas, "commit:mouseover", mouseoverEventOptions );
+      _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
     }
 
     self.applyCommits( event, function ( commit, isOverCommit ) {
       if ( isOverCommit ) {
-        if ( !self.template.commit.message.display ) {
+        if ( !self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode ) {
           showCommitTooltip( commit );
         }
 
-        if ( !commit.isMouseover ) {
-          emitMouseoverEvent( commit );
+        // Don't emit event if we already were over a commit.
+        if ( !commit.isMouseOver ) {
+          emitCommitEvent( commit, "mouseover" );
         }
 
         isOut = false;
-        commit.isMouseover = true;
+        commit.isMouseOver = true;
       } else {
-        commit.isMouseover = false;
+        // Don't emit event if we already were out of a commit.
+        if ( commit.isMouseOver ) {
+          emitCommitEvent( commit, "mouseout" );
+        }
+        commit.isMouseOver = false;
       }
     } );
 
@@ -577,8 +604,7 @@
    **/
   Branch.prototype.commit = function ( options ) {
     if ( typeof (options) === "string" ) {
-      var message = options;
-      options = { message: message };
+      options = { message: options };
     } else if ( typeof (options) !== "object" ) {
       options = {};
     }
@@ -721,7 +747,7 @@
 
     // Check integrity of target
     if ( targetBranch instanceof Branch === false || targetBranch === this ) {
-      return;
+      return this;
     }
 
     // Merge commit
@@ -810,18 +836,29 @@
    * @param {String} [options.date] - Date of commit, default is now
    * @param {String} [options.detail] - DOM Element of detail part
    * @param {String} [options.sha1] - Sha1, default is a random short sha1
+   * @param {Commit} [options.parentCommit] - Parent commit
+   * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
+   *
+   * @param {String} [options.tag] - Tag of the commit
+   * @param {String} [options.tagColor = options.color] - Specific tag color
+   * @param {String} [options.tagFont = this.template.commit.tag.font] - Font of the tag
+   *
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
    * @param {Number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
    * @param {Number} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
-   * @param {Commit} [options.parentCommit] - Parent commit
+   *
    * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
    * @param {String} [options.messageColor = options.color] - Specific message color
+   * @param {String} [options.messageFont = this.template.commit.message.font] - Font of the message
    * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
    * @param {Boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
    * @param {Boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
    * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
-   * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
+   *
+   * @param {String} [options.labelColor = options.color] - Specific label color
+   * @param {String} [options.labelFont = this.template.branch.labelFont] - Font used for labels
+   *
    * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
    * @param {Object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
@@ -960,40 +997,64 @@
     // Options
     var size = this.template.arrow.size;
     var color = this.template.arrow.color || this.branch.color;
+    var isReversed = this.parent.reverseArrow;
+
+    function rotate ( y, x ) {
+      var direction = (isReversed) ? -1 : 1;
+      return Math.atan2( direction * y, direction * x );
+    }
 
     // Angles calculation
-    var alpha = Math.atan2(
-      this.parentCommit.y - this.y,
-      this.parentCommit.x - this.x
-    );
+    var alpha = rotate( this.parentCommit.y - this.y, this.parentCommit.x - this.x );
 
     // Merge & Fork case
     if ( this.type === "mergeCommit" || this === this.branch.commits[ 0 ] /* First commit */ ) {
-      alpha = Math.atan2(
-        this.template.branch.spacingY * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingY * (this.showLabel ? 2 : 1),
-        this.template.branch.spacingX * (this.parentCommit.branch.column - this.branch.column) + this.template.commit.spacingX * (this.showLabel ? 2 : 1)
+      var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
+      var commitSpaceDelta = (this.showLabel ? 2 : 1);
+
+      var isArrowVertical = (
+        isReversed
+        && _isVertical( this.parent )
+        && Math.abs( this.y - this.parentCommit.y ) > Math.abs( this.template.commit.spacingY )
       );
+      var alphaX = (isArrowVertical)
+        ? 0
+        : this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
+
+      var isArrowHorizontal = (
+        isReversed
+        && _isHorizontal( this.parent )
+        && Math.abs( this.x - this.parentCommit.x ) > Math.abs( this.template.commit.spacingX )
+      );
+      var alphaY = (isArrowHorizontal)
+        ? 0
+        : this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
+
+      alpha = rotate( alphaY, alphaX );
       color = this.parentCommit.branch.color;
     }
 
     var delta = Math.PI / 7; // Delta between left & right (radian)
 
+    var arrowX = (isReversed) ? this.parentCommit.x : this.x;
+    var arrowY = (isReversed) ? this.parentCommit.y : this.y;
+
     // Top
     var h = this.template.commit.dot.size + this.template.arrow.offset;
-    var x1 = h * Math.cos( alpha ) + this.x;
-    var y1 = h * Math.sin( alpha ) + this.y;
+    var x1 = h * Math.cos( alpha ) + arrowX;
+    var y1 = h * Math.sin( alpha ) + arrowY;
 
     // Bottom left
-    var x2 = (h + size) * Math.cos( alpha - delta ) + this.x;
-    var y2 = (h + size) * Math.sin( alpha - delta ) + this.y;
+    var x2 = (h + size) * Math.cos( alpha - delta ) + arrowX;
+    var y2 = (h + size) * Math.sin( alpha - delta ) + arrowY;
 
     // Bottom center
-    var x3 = (h + size / 2) * Math.cos( alpha ) + this.x;
-    var y3 = (h + size / 2) * Math.sin( alpha ) + this.y;
+    var x3 = (h + size / 2) * Math.cos( alpha ) + arrowX;
+    var y3 = (h + size / 2) * Math.sin( alpha ) + arrowY;
 
     // Bottom right
-    var x4 = (h + size) * Math.cos( alpha + delta ) + this.x;
-    var y4 = (h + size) * Math.sin( alpha + delta ) + this.y;
+    var x4 = (h + size) * Math.cos( alpha + delta ) + arrowX;
+    var y4 = (h + size) * Math.sin( alpha + delta ) + arrowY;
 
     this.context.beginPath();
     this.context.fillStyle = color;
@@ -1029,7 +1090,7 @@
    * @param {String} [options.commit.color] - Master commit color (dot & message)
    * @param {String} [options.commit.dot.color] - Commit dot color
    * @param {Number} [options.commit.dot.size] - Commit dot size
-   * @param {Number} [options.commit.dot.strokewidth] - Commit dot stroke width
+   * @param {Number} [options.commit.dot.strokeWidth] - Commit dot stroke width
    * @param {Number} [options.commit.dot.strokeColor] - Commit dot stroke color
    * @param {String} [options.commit.message.color] - Commit message color
    * @param {Boolean} [options.commit.message.display] - Commit display policy
@@ -1037,7 +1098,8 @@
    * @param {Boolean} [options.commit.message.displayBranch] - Commit message branch policy
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
-   * @param {commitCallback} [options.commit.tooltipHTMLFormatter] - Formatter for the tooltip contents.
+   * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
+   * @param {commitCallback} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
@@ -1084,6 +1146,7 @@
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
     this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
     this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
+    this.commit.shouldDisplayTooltipsInCompactMode = booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
