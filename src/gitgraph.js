@@ -939,12 +939,11 @@
       this.arrow();
     }
 
-    this.context.font = this.messageFont;
-
     // Tag
     var tagWidth = this.template.commit.tag.spacingX;
     if ( this.tag !== null ) {
       this.parent.tagNum++;
+      this.context.font = this.tagFont;
       var textWidth = this.context.measureText( this.tag ).width;
       if ( this.template.branch.labelRotation !== 0 ) {
         var textHeight = getFontHeight( this.tagFont );
@@ -960,6 +959,8 @@
       }
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
+
+    this.context.font = this.messageFont;
 
     var commitOffsetLeft = (this.parent.columnMax + 1) * this.template.branch.spacingX + tagWidth;
 
