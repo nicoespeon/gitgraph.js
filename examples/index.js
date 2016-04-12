@@ -19,6 +19,7 @@ var myTemplateConfig = {
       displayHash: false,
       font: "normal 12pt Arial"
     },
+    shouldDisplayTooltipsInCompactMode: false, // default = true
     tooltipHTMLFormatter: function ( commit ) {
       return "<b>" + commit.sha1 + "</b>" + ": " + commit.message;
     }
@@ -32,6 +33,8 @@ var myTemplate = new GitGraph.Template( myTemplateConfig );
 
 var config = {
   template: "metro"       // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
+  //, reverseArrow: true  // to make arrows point to ancestors, if displayed
+  //, orientation: "vertical-reverse"
   //, mode: "compact"     // special compact mode : hide messages & compact graph
 };
 var gitGraph = new GitGraph( config );
@@ -81,7 +84,7 @@ gitGraph.commit( commitConfig );
 
 var commitWithDetailsConfig = {
   message: "test",
-  detail: "detail" // Id of detail div (available in normal vertical mode only)
+  detailId: "detail" // Id of detail div (available in normal vertical mode only)
 };
 gitGraph.commit( commitWithDetailsConfig ).commit();
 dev.commit().commit(); // 2 default Commit on "dev"
@@ -108,26 +111,35 @@ test.commit( "Final commit" );
 test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
-test.commit( {message:"It works !"} );
+test.commit( { message: "It works !" } );
 
 /***********************
  *        TAGS         *
  ***********************/
 
- // Add a tag to a commit
- test.commit( {message:"Here you can see something", tag: "a-tag"} );
+// Add a tag to a commit
+test.commit( { message: "Here you can see something", tag: "a-tag" } );
 
- // Perform a merge, with a tag
- test.merge(master, {message: "New release", tag: "v1.0.0"});
-
+// Perform a merge, with a tag
+test.merge( master, { message: "New release", tag: "v1.0.0" } );
 
 /***********************
  *       EVENTS        *
  ***********************/
 
+gitGraph.canvas.addEventListener( "graph:render", function ( event ) {
+  console.log( event.data.id, "has been rendered with a scaling factor of", gitGraph.scalingFactor );
+} );
+
 gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
   console.log( "You're over a commit.", "Here is a bunch of data ->", event.data );
+  this.style.cursor = "pointer";
 } );
+
+gitGraph.canvas.addEventListener("commit:mouseout", function (event) {
+  console.log( "You just left this commit ->", event.data );
+  this.style.cursor = "auto";
+});
 
 // Attach a handler to the commit
 test.commit( {
