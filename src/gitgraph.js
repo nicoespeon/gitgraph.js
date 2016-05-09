@@ -585,19 +585,19 @@
 
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
-    
-    var prevLineDash = undefined;
+
+    var prevLineDash;
     if ( this.context.setLineDash !== undefined ) {
       prevLineDash = this.context.getLineDash();
-      this.context.setLineDash(this.lineDash);
+      this.context.setLineDash( this.lineDash );
     }
-    
+
     this.context.stroke();
     this.context.closePath();
-    
+
     //Restore previous line dash setting, if any
     if ( prevLineDash !== undefined ) {
-      this.context.setLineDash(prevLineDash);
+      this.context.setLineDash( prevLineDash );
     }
   };
 
