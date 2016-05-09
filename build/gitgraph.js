@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.2.1
+ *                  GitGraph v1.2.2
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -595,11 +595,20 @@
 
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
+
+    var prevLineDash;
     if ( this.context.setLineDash !== undefined ) {
+      prevLineDash = this.context.getLineDash();
       this.context.setLineDash( this.lineDash );
     }
+
     this.context.stroke();
     this.context.closePath();
+
+    //Restore previous line dash setting, if any
+    if ( prevLineDash !== undefined ) {
+      this.context.setLineDash( prevLineDash );
+    }
   };
 
   /**
