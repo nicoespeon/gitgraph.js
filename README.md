@@ -14,6 +14,7 @@ You have different options to start with the library:
 - [Download the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest).
 - Clone the repo: `git clone git://github.com/nicoespeon/gitgraph.js.git`.
 - Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
+- Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
 
 Production files are available under the `build/` directory.
 
