@@ -1097,6 +1097,9 @@
         isReversed
         && _isVertical( this.parent )
         && Math.abs( this.y - this.parentCommit.y ) > Math.abs( this.template.commit.spacingY )
+      ) || (
+        _isVertical( this.parent )
+        && commitSpaceDelta > 1
       );
       var alphaX = (isArrowVertical)
         ? 0
@@ -1106,6 +1109,9 @@
         isReversed
         && _isHorizontal( this.parent )
         && Math.abs( this.x - this.parentCommit.x ) > Math.abs( this.template.commit.spacingX )
+      ) || (
+        _isHorizontal( this.parent )
+        && commitSpaceDelta > 1
       );
       var alphaY = (isArrowHorizontal)
         ? 0
