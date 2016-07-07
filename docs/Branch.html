@@ -72,7 +72,11 @@
 		<th>Type</th>
 		
 		
+		<th>Argument</th>
 		
+		
+		
+		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -97,7 +101,19 @@
             </td>
             
             
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
             
+            
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last"><p>Options of branch</p>
@@ -192,6 +208,8 @@
             
                 <td class="default">
                 
+                    options.parentCommit.branch
+                
                 </td>
             
             
@@ -199,10 +217,51 @@
         </tr>
 	
 	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
 	
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>[options.parentCommit</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Commit.html">Commit</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>= options.parentBranch.commits.slice(-1)[0]] - Parent commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.name</code></td>
             
             
             <td class="type">
@@ -240,12 +299,6 @@
 	
 	</tbody>
 </table>
-            </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -271,7 +324,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line485">line 485</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line490">line 490</a>
     </li></ul></dd>
     
     
@@ -412,7 +465,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line540">line 540</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line579">line 579</a>
     </li></ul></dd>
     
     
@@ -513,7 +566,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line810">line 810</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line854">line 854</a>
     </li></ul></dd>
     
     
@@ -585,7 +638,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line730">line 730</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line774">line 774</a>
     </li></ul></dd>
     
     
@@ -780,7 +833,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line614">line 614</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line653">line 653</a>
     </li></ul></dd>
     
     
@@ -859,7 +912,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line739">line 739</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line783">line 783</a>
     </li></ul></dd>
     
     
@@ -1039,7 +1092,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line753">line 753</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line797">line 797</a>
     </li></ul></dd>
     
     
@@ -1082,6 +1135,79 @@
 </dl>
 
         
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pushPath"><span class="type-signature"></span>pushPath<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Push a new point to path.
+This method will combine duplicate points and reject reversed points.</p>
+    </div>
+    
+
+    
+    
+    
+        <h5>This:</h5>
+        <ul><li><a href="Branch.html">Branch</a></li></ul>
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line879">line 879</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -1133,7 +1259,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line565">line 565</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line604">line 604</a>
     </li></ul></dd>
     
     
@@ -1180,7 +1306,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon May 09 2016 13:34:54 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 07 2016 08:44:21 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
