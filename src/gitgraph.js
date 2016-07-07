@@ -371,9 +371,13 @@
    * @this GitGraph
    **/
   GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
+    // Fallback onto layerX/layerY for older versions of Firefox.
+    var offsetX = event.offsetX || event.layerX;
+    var offsetY = event.offsetY || event.layerY;
+
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
-      var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - event.offsetX);
-      var distanceY = (commit.y + (this.offsetY + this.marginY) / this.scalingFactor - event.offsetY);
+      var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - offsetX);
+      var distanceY = (commit.y + (this.offsetY + this.marginY) / this.scalingFactor - offsetY);
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
