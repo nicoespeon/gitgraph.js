@@ -62,6 +62,8 @@ var masterCol = 4;
 var gitgraph = new GitGraph(config);
 
 var master = gitgraph.branch({name:"master", column:masterCol});
+master.commit("Initial commit");
+
 var develop = gitgraph.branch({parentBranch:master, name: "develop", column:developCol});
 master.commit({messageDisplay:false}).merge(develop, {messageDisplay:false});
 develop.commit({messageDisplay:false});
