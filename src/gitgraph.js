@@ -180,8 +180,8 @@
 
     // Utilities
     this.columnMax = 0; // nb of column for message position
-    this.commitOffsetX = 0;
-    this.commitOffsetY = 0;
+    this.commitOffsetX = options.initCommitOffsetX || 0;
+    this.commitOffsetY = options.initCommitOffsetY || 0;
 
     // Bindings
     var mouseMoveOptions = {
