@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.2.3
+ *                  GitGraph v1.2.4
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -103,6 +103,8 @@
    * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
+   * @param {Number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
+   * @param {Number} [options.initCommitOffsetY= 0] - Add custom offsetY to initial commit.
    *
    * @this GitGraph
    **/
@@ -190,8 +192,8 @@
 
     // Utilities
     this.columnMax = 0; // nb of column for message position
-    this.commitOffsetX = 0;
-    this.commitOffsetY = 0;
+    this.commitOffsetX = options.initCommitOffsetX || 0;
+    this.commitOffsetY = options.initCommitOffsetY || 0;
 
     // Bindings
     var mouseMoveOptions = {
