@@ -968,6 +968,7 @@
     this.tag = options.tag || null;
     this.tagColor = options.tagColor || options.color;
     this.tagFont = options.tagFont || this.template.commit.tag.font;
+    this.noTagBlackBorder = options.noTagBlackBorder || false;  
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -1003,7 +1004,7 @@
 
     // Label
     if ( this.showLabel ) {
-      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont, this.template.branch.labelRotation );
+      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
     }
 
     // Dot
@@ -1036,12 +1037,12 @@
         drawTextBG( this.context,
           this.x - this.dotSize / 2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
-          this.tag, "black", this.tagColor, this.tagFont, 0 );
+          this.tag, this.tagColor, this.tagFont, 0, !this.noTagBlackBorder );
       } else {
         drawTextBG( this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
           this.y - this.dotSize / 2,
-          this.tag, "black", this.tagColor, this.tagFont, 0 );
+          this.tag, this.tagColor, this.tagFont, 0, !this.noTagBlackBorder );
       }
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
@@ -1351,7 +1352,7 @@
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
-  function drawTextBG ( context, x, y, text, fgcolor, bgcolor, font, angle ) {
+  function drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
@@ -1361,15 +1362,20 @@
     var width = context.measureText( text ).width;
     var height = getFontHeight( font );
 
-    context.beginPath();
-    context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
-    context.fillStyle = bgcolor;
-    context.fill();
-    context.lineWidth = 2;
-    context.strokeStyle = "black";
-    context.stroke();
+    if(useStroke){
+        context.beginPath();
+        context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
+        context.fillStyle = color;
+        context.fill();
+        context.lineWidth = 2;
+        context.strokeStyle = "black";
+        context.stroke();
 
-    context.fillStyle = fgcolor;
+        context.fillStyle = "black";
+    }else{
+        context.fillStyle = color;
+    }
+  
     context.fillText( text, 0, height / 2 );
     context.restore();
   }
