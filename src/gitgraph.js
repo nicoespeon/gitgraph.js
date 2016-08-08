@@ -928,6 +928,7 @@
    * @param {String} [options.tag] - Tag of the commit
    * @param {String} [options.tagColor = options.color] - Specific tag color
    * @param {String} [options.tagFont = this.template.commit.tag.font] - Font of the tag
+   * @param {String} [options.displayTagBox = true] - If true, display a box around tag
    *
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
@@ -968,7 +969,7 @@
     this.tag = options.tag || null;
     this.tagColor = options.tagColor || options.color;
     this.tagFont = options.tagFont || this.template.commit.tag.font;
-    this.noTagBlackBorder = options.noTagBlackBorder || false;  
+    this.displayTagBox = booleanOptionOr( options.displayTagBox, true );
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -1037,12 +1038,12 @@
         drawTextBG( this.context,
           this.x - this.dotSize / 2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
-          this.tag, this.tagColor, this.tagFont, 0, !this.noTagBlackBorder );
+          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       } else {
         drawTextBG( this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
           this.y - this.dotSize / 2,
-          this.tag, this.tagColor, this.tagFont, 0, !this.noTagBlackBorder );
+          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       }
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
