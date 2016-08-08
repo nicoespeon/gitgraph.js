@@ -120,6 +120,9 @@ test.commit( { message: "It works !" } );
 // Add a tag to a commit
 test.commit( { message: "Here you can see something", tag: "a-tag" } );
 
+// Don't display tag box
+test.commit( { message: "Here is a fresh new tag", tag: "my-tag", displayTagBox: false } );
+
 // Perform a merge, with a tag
 test.merge( master, { message: "New release", tag: "v1.0.0" } );
 

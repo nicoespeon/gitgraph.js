@@ -543,7 +543,7 @@
     this.offsetY = this.column * this.spacingY;
 
     // Add start point
-    if (this.parentBranch) {
+    if ( this.parentBranch ) {
       if ( this.parentCommit === this.parentBranch.commits.slice( -1 )[ 0 ] ) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
@@ -875,10 +875,10 @@
   /**
    * Push a new point to path.
    * This method will combine duplicate points and reject reversed points.
-   * 
+   *
    * @this Branch
    */
-  Branch.prototype.pushPath = function (point) {
+  Branch.prototype.pushPath = function ( point ) {
     var lastPoint = this.path.slice( -1 )[ 0 ];
     if ( !lastPoint ) {
       this.path.push( point );
@@ -886,7 +886,7 @@
       if ( lastPoint.type !== "start" && point.type === "end" ) {
         lastPoint.type = "end";
       } else if ( point.type === "join" ) {
-        
+
       } else {
         this.path.push( point );
       }
@@ -928,6 +928,7 @@
    * @param {String} [options.tag] - Tag of the commit
    * @param {String} [options.tagColor = options.color] - Specific tag color
    * @param {String} [options.tagFont = this.template.commit.tag.font] - Font of the tag
+   * @param {String} [options.displayTagBox = true] - If true, display a box around tag
    *
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
@@ -968,6 +969,7 @@
     this.tag = options.tag || null;
     this.tagColor = options.tagColor || options.color;
     this.tagFont = options.tagFont || this.template.commit.tag.font;
+    this.displayTagBox = booleanOptionOr( options.displayTagBox, true );
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -1003,7 +1005,7 @@
 
     // Label
     if ( this.showLabel ) {
-      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, "black", this.labelColor, this.labelFont, this.template.branch.labelRotation );
+      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
     }
 
     // Dot
@@ -1036,12 +1038,12 @@
         drawTextBG( this.context,
           this.x - this.dotSize / 2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
-          this.tag, "black", this.tagColor, this.tagFont, 0 );
+          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       } else {
         drawTextBG( this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
           this.y - this.dotSize / 2,
-          this.tag, "black", this.tagColor, this.tagFont, 0 );
+          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       }
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
     }
@@ -1351,7 +1353,7 @@
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
-  function drawTextBG ( context, x, y, text, fgcolor, bgcolor, font, angle ) {
+  function drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
@@ -1361,15 +1363,20 @@
     var width = context.measureText( text ).width;
     var height = getFontHeight( font );
 
-    context.beginPath();
-    context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
-    context.fillStyle = bgcolor;
-    context.fill();
-    context.lineWidth = 2;
-    context.strokeStyle = "black";
-    context.stroke();
+    if ( useStroke ) {
+      context.beginPath();
+      context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
+      context.fillStyle = color;
+      context.fill();
+      context.lineWidth = 2;
+      context.strokeStyle = "black";
+      context.stroke();
 
-    context.fillStyle = fgcolor;
+      context.fillStyle = "black";
+    } else {
+      context.fillStyle = color;
+    }
+
     context.fillText( text, 0, height / 2 );
     context.restore();
   }
