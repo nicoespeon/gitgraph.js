@@ -543,7 +543,7 @@
     this.offsetY = this.column * this.spacingY;
 
     // Add start point
-    if (this.parentBranch) {
+    if ( this.parentBranch ) {
       if ( this.parentCommit === this.parentBranch.commits.slice( -1 )[ 0 ] ) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
@@ -875,10 +875,10 @@
   /**
    * Push a new point to path.
    * This method will combine duplicate points and reject reversed points.
-   * 
+   *
    * @this Branch
    */
-  Branch.prototype.pushPath = function (point) {
+  Branch.prototype.pushPath = function ( point ) {
     var lastPoint = this.path.slice( -1 )[ 0 ];
     if ( !lastPoint ) {
       this.path.push( point );
@@ -886,7 +886,7 @@
       if ( lastPoint.type !== "start" && point.type === "end" ) {
         lastPoint.type = "end";
       } else if ( point.type === "join" ) {
-        
+
       } else {
         this.path.push( point );
       }
@@ -1363,20 +1363,20 @@
     var width = context.measureText( text ).width;
     var height = getFontHeight( font );
 
-    if(useStroke){
-        context.beginPath();
-        context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
-        context.fillStyle = color;
-        context.fill();
-        context.lineWidth = 2;
-        context.strokeStyle = "black";
-        context.stroke();
+    if ( useStroke ) {
+      context.beginPath();
+      context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
+      context.fillStyle = color;
+      context.fill();
+      context.lineWidth = 2;
+      context.strokeStyle = "black";
+      context.stroke();
 
-        context.fillStyle = "black";
-    }else{
-        context.fillStyle = color;
+      context.fillStyle = "black";
+    } else {
+      context.fillStyle = color;
     }
-  
+
     context.fillText( text, 0, height / 2 );
     context.restore();
   }
