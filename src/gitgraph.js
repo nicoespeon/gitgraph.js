@@ -374,8 +374,8 @@
    **/
   GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
     // Fallback onto layerX/layerY for older versions of Firefox.
-    var offsetX = event.offsetX || event.layerX;
-    var offsetY = event.offsetY || event.layerY;
+    var offsetX = event.offsetX || (event.pageX - $("#" + this.elementId).offset().left);
+    var offsetY = event.offsetY || (event.pageY - $("#" + this.elementId).offset().top);
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
       var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - offsetX);
