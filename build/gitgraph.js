@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.3.0
+ *                  GitGraph v1.3.1
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -384,8 +384,18 @@
    **/
   GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
     // Fallback onto layerX/layerY for older versions of Firefox.
-    var offsetX = event.offsetX || event.layerX;
-    var offsetY = event.offsetY || event.layerY;
+    function getOffsetById ( id ) {
+      var el = document.getElementById( id );
+      var rect = el.getBoundingClientRect();
+
+      return {
+        top: rect.top + document.body.scrollTop,
+        left: rect.left + document.body.scrollLeft
+      };
+    }
+
+    var offsetX = event.offsetX || (event.pageX - getOffsetById( this.elementId ).left);
+    var offsetY = event.offsetY || (event.pageY - getOffsetById( this.elementId ).top);
 
     for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
       var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - offsetX);
