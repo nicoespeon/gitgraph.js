@@ -409,6 +409,10 @@
     var isOut = true;
 
     function showCommitTooltip ( commit ) {
+      if ( !commit.tooltipDisplay ) {
+        return;
+      }
+
       // Fix firefox MouseEvent
       if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
         event.x = event.x ? event.x : event.clientX;
@@ -948,7 +952,7 @@
    * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
    * @param {String} [options.messageColor = options.color] - Specific message color
    * @param {String} [options.messageFont = this.template.commit.message.font] - Font of the message
-   * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message policy
+   * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message display policy
    * @param {Boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
    * @param {Boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
    * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
@@ -956,6 +960,7 @@
    * @param {String} [options.labelColor = options.color] - Specific label color
    * @param {String} [options.labelFont = this.template.branch.labelFont] - Font used for labels
    *
+   * @param {Boolean} [options.tooltipDisplay = true] - Tooltip message display policy
    * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
    * @param {Object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
@@ -994,6 +999,7 @@
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
     this.type = options.type || null;
+    this.tooltipDisplay = booleanOptionOr( options.tooltipDisplay, true );
     this.onClick = options.onClick || null;
     this.representedObject = options.representedObject || null;
     this.parentCommit = options.parentCommit;
