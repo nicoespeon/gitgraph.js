@@ -67,6 +67,7 @@ var commitConfig = {
   messageHashDisplay: false,
   messageAuthorDisplay: true,
   message: "Alors c'est qui le papa ?",
+  tooltipDisplay: false,
   author: "Me <me@planee.fr>"
 };
 gitGraph.commit( commitConfig );
