@@ -49,7 +49,7 @@ When completed, you'll be able to run the various Grunt commands provided from t
 
 #### test code - `grunt test`
 
-Check source code against [JSHint](http://www.jshint.com/) then runs unit tests with [Jasmine](http://pivotal.github.io/jasmine/).
+Check source code against [JSHint](http://www.jshint.com/) then runs unit tests with [Jasmine](https://jasmine.github.io/).
 
 #### generate documentation - `grunt doc`
 
