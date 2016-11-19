@@ -20,9 +20,13 @@ Production files are available under the `build/` directory.
 
 ## Report a bug / Ask for a feature
 
-You found some nasty bug or have a cool feature request? [Just open a new issue](https://github.com/nicoespeon/gitgraph.js/issues).
+You found some nasty bug or have a cool feature request? [Just open a new
+issue](https://github.com/nicoespeon/gitgraph.js/issues).
 
-Please have a look at [the Issue Guidelines](https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md) from [Nicolas Gallagher](https://github.com/necolas) before doing so.
+Please have a look at the [Issue Guidelines][] from [Nicolas Gallagher][] before
+doing so.
+[Issue Guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
+[Nicolas Gallagher]: https://github.com/necolas
 
 ## Documentation
 
@@ -30,18 +34,25 @@ The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
 
 ## Contributing
 
-Editor preferences are available in [the editor config](https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
+Editor preferences are available in for [the editor config][] easy use in common
+text editors. Read more and download plugins at <http://editorconfig.org>.
+[the editor config]: https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig
 
-The project uses [Grunt](http://gruntjs.com) with convenient methods for our workflow. It's how we lint our code, run tests, generate documentation, etc. To use it, install the required dependencies as directed and then run the following Grunt commands.
+The project uses [Grunt](http://gruntjs.com) with convenient methods for our
+workflow. It's how we lint our code, run tests, generate documentation, etc. To
+use it, install the required dependencies as directed and then run the following
+Grunt commands.
 
 ### Install Grunt
 
 From the command line:
 
 - Install `grunt-cli` globally with `npm install -g grunt-cli`.
-- Install [the necessary local dependencies](https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig) with `npm install`.
+- Install [the necessary local dependencies][] with `npm install`.
+[the necessary local dependencies]: https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig
 
-When completed, you'll be able to run the various Grunt commands provided from the command line.
+When completed, you'll be able to run the various Grunt commands provided from
+the command line.
 
 [> Need more information about how to get started with Grunt?](http://gruntjs.com/getting-started)
 
@@ -49,23 +60,30 @@ When completed, you'll be able to run the various Grunt commands provided from t
 
 #### test code - `grunt test`
 
-Check source code against [JSHint](http://www.jshint.com/) then runs unit tests with [Jasmine](https://jasmine.github.io/).
+Check source code against [JSHint][] then runs unit tests with [Jasmine][].
+[JSHint]: http://www.jshint.com/
+[Jasmine]: https://jasmine.github.io/
 
 #### generate documentation - `grunt doc`
 
-Generate source code documentation into `dist/docs/` (not versioned) with [JSDoc](http://usejsdoc.org/).
+Generate source code documentation into `dist/docs/` (not versioned) with
+[JSDoc](http://usejsdoc.org/).
 
 #### compile a non-versioned release - `grunt dist`
 
-Clean `dist/` directory, lint code, output the minified release into `dist/gitgraph.min.js` and generate the documentation into `dist/docs/`.
+Clean `dist/` directory, lint code, output the minified release into
+`dist/gitgraph.min.js` and generate the documentation into `dist/docs/`.
 
 #### compile a new release - `grunt release`
 
-Lint code, output the source and minified releases into `build/` and generate the official documentation into `docs/`.
+Lint code, output the source and minified releases into `build/` and generate
+the official documentation into `docs/`.
 
 #### open a live reload server - `grunt server`
 
-For a better code experience, this grunt task opens a live server in your favorite browser. This server is automatically reloaded when you save a project file.
+For a better code experience, this grunt task opens a live server in your
+favorite browser. This server is automatically reloaded when you save a project
+file.
 
 Please note that `examples/index.html` is the default file for testing ;)
 
@@ -83,8 +101,10 @@ Releases will be numbered with the following format:
 
 And constructed with the following guidelines:
 
-- Breaking backward compatibility bumps the `<major>` (and resets the `<minor>` and `<patch>`)
-- New additions without breaking backward compatibility bumps the `<minor>` (and resets the `<patch>`)
+- Breaking backward compatibility bumps the `<major>` (and resets the `<minor>`
+  and `<patch>`)
+- New additions without breaking backward compatibility bumps the `<minor>` (and
+  resets the `<patch>`)
 - Bug fixes and misc. changes bumps the `<patch>`
 
 ## Authors and contributors
@@ -95,6 +115,7 @@ And constructed with the following guidelines:
 
 ## Copyright and License
 
-Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under [the MIT license](https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md).
+Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][]
+[MIT license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
 
 [> What does that mean?](http://choosealicense.com/licenses/mit/)
