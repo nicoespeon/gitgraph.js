@@ -13,6 +13,7 @@ You have different options to start with the library:
 
 - [Download the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest).
 - Clone the repo: `git clone git://github.com/nicoespeon/gitgraph.js.git`.
+- Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
 - Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
 - Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
 
@@ -49,7 +50,7 @@ From the command line:
 
 - Install `grunt-cli` globally with `npm install -g grunt-cli`.
 - Install [the necessary local dependencies][] with `npm install`.
-[the necessary local dependencies]: https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig
+[the necessary local dependencies]: https://github.com/nicoespeon/gitgraph.js/blob/master/package.json
 
 When completed, you'll be able to run the various Grunt commands provided from
 the command line.
@@ -103,9 +104,9 @@ And constructed with the following guidelines:
 
 - Breaking backward compatibility bumps the `<major>` (and resets the `<minor>`
   and `<patch>`)
-- New additions without breaking backward compatibility bumps the `<minor>` (and
-  resets the `<patch>`)
-- Bug fixes and misc. changes bumps the `<patch>`
+- New additions without breaking backward compatibility bump the `<minor>` (and
+  reset the `<patch>`)
+- Bug fixes and misc. changes bump the `<patch>`
 
 ## Authors and contributors
 
