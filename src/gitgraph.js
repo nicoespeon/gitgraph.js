@@ -186,21 +186,29 @@
     this.commitOffsetY = options.initCommitOffsetY || 0;
 
     // Bindings
-    var mouseMoveOptions = {
+    this.mouseMoveOptions = {
       handleEvent: this.hover,
       gitgraph: this
     };
-    this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
+    this.canvas.addEventListener( "mousemove", this.mouseMoveOptions, false );
 
-    var mouseDownOptions = {
+    this.mouseDownOptions = {
       handleEvent: this.click,
       gitgraph: this
     };
-    this.canvas.addEventListener( "mousedown", mouseDownOptions, false );
+    this.canvas.addEventListener( "mousedown", this.mouseDownOptions, false );
 
     // Render on window resize
     window.onresize = this.render.bind( this );
   }
+
+  /**
+   * Disposing canvas event handlers
+   **/
+  GitGraph.prototype.dispose = function () {
+    this.canvas.removeEventListener( "mousemove", this.mouseMoveOptions, false );
+    this.canvas.removeEventListener( "mousedown", this.mouseDownOptions, false );
+  };
 
   /**
    * Create new branch
