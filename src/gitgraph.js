@@ -186,21 +186,31 @@
     this.commitOffsetY = options.initCommitOffsetY || 0;
 
     // Bindings
-    var mouseMoveOptions = {
+    this.mouseMoveOptions = {
       handleEvent: this.hover,
       gitgraph: this
     };
-    this.canvas.addEventListener( "mousemove", mouseMoveOptions, false );
+    this.canvas.addEventListener( "mousemove", this.mouseMoveOptions, false );
 
-    var mouseDownOptions = {
+    this.mouseDownOptions = {
       handleEvent: this.click,
       gitgraph: this
     };
-    this.canvas.addEventListener( "mousedown", mouseDownOptions, false );
+    this.canvas.addEventListener( "mousedown", this.mouseDownOptions, false );
 
     // Render on window resize
     window.onresize = this.render.bind( this );
   }
+
+  /**
+   * Disposing canvas event handlers
+   *
+   * @this GitGraph
+   **/
+  GitGraph.prototype.dispose = function () {
+    this.canvas.removeEventListener( "mousemove", this.mouseMoveOptions, false );
+    this.canvas.removeEventListener( "mousedown", this.mouseDownOptions, false );
+  };
 
   /**
    * Create new branch
@@ -362,6 +372,14 @@
    * @callback commitCallback
    * @param {Commit} commit - A commit
    * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   * @param {Event} event - The DOM event (e.g. a click event)
+   */
+
+  /**
+   * A formatter for commit
+   *
+   * @callback commitFormatter
+   * @param {Commit} commit - The commit to format
    */
 
   /**
@@ -393,7 +411,7 @@
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
-      callbackFn( commit, isOverCommit );
+      callbackFn( commit, isOverCommit, event );
     }
   };
 
@@ -440,7 +458,7 @@
       _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
     }
 
-    self.applyCommits( event, function ( commit, isOverCommit ) {
+    self.applyCommits( event, function ( commit, isOverCommit, event ) {
       if ( isOverCommit ) {
         if ( !self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode ) {
           showCommitTooltip( commit );
@@ -475,13 +493,13 @@
    * @this GitGraph
    **/
   GitGraph.prototype.click = function ( event ) {
-    this.gitgraph.applyCommits( event, function ( commit, isOverCommit ) {
+    this.gitgraph.applyCommits( event, function ( commit, isOverCommit, event ) {
       if ( !isOverCommit ) {
         return;
       }
 
       if ( commit.onClick !== null ) {
-        commit.onClick( commit, true );
+        commit.onClick( commit, true, event );
       }
     } );
   };
@@ -1210,7 +1228,7 @@
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
-   * @param {commitCallback} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
+   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
