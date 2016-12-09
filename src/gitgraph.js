@@ -204,6 +204,8 @@
 
   /**
    * Disposing canvas event handlers
+   *
+   * @this GitGraph
    **/
   GitGraph.prototype.dispose = function () {
     this.canvas.removeEventListener( "mousemove", this.mouseMoveOptions, false );
@@ -368,8 +370,16 @@
    * A callback for each commit
    *
    * @callback commitCallback
+   * @param {Event} event - The DOM event (e.g. a click event)
    * @param {Commit} commit - A commit
    * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   */
+
+  /**
+   * A formatter for commit
+   *
+   * @callback commitFormatter
+   * @param {Commit} commit - The commit to format
    */
 
   /**
@@ -1218,7 +1228,7 @@
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
-   * @param {commitCallback} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
+   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
