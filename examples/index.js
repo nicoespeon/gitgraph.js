@@ -140,7 +140,7 @@ gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
   this.style.cursor = "pointer";
 } );
 
-gitGraph.canvas.addEventListener("commit:mouseout", function (event) {
+gitGraph.canvas.addEventListener("commit:mouseout", function ( event ) {
   console.log( "You just left this commit ->", event.data );
   this.style.cursor = "auto";
 });
@@ -149,7 +149,7 @@ gitGraph.canvas.addEventListener("commit:mouseout", function (event) {
 test.commit( {
   message: "Click me!",
   author: "Nicolas <me@planee.fr>",
-  onClick: function ( commit ) {
-    console.log( "You just clicked my commit.", commit );
+  onClick: function ( event, commit ) {
+    console.log( "You just clicked my commit.", commit, event );
   }
 } );
