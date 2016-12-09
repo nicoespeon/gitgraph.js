@@ -370,9 +370,9 @@
    * A callback for each commit
    *
    * @callback commitCallback
-   * @param {Event} event - The DOM event (e.g. a click event)
    * @param {Commit} commit - A commit
    * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   * @param {Event} event - The DOM event (e.g. a click event)
    */
 
   /**
@@ -411,7 +411,7 @@
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
-      callbackFn( event, commit, isOverCommit );
+      callbackFn( commit, isOverCommit, event );
     }
   };
 
@@ -458,7 +458,7 @@
       _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
     }
 
-    self.applyCommits( event, function ( event, commit, isOverCommit ) {
+    self.applyCommits( event, function ( commit, isOverCommit, event ) {
       if ( isOverCommit ) {
         if ( !self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode ) {
           showCommitTooltip( commit );
@@ -493,13 +493,13 @@
    * @this GitGraph
    **/
   GitGraph.prototype.click = function ( event ) {
-    this.gitgraph.applyCommits( event, function ( event, commit, isOverCommit ) {
+    this.gitgraph.applyCommits( event, function ( commit, isOverCommit, event ) {
       if ( !isOverCommit ) {
         return;
       }
 
       if ( commit.onClick !== null ) {
-        commit.onClick( event, commit, true );
+        commit.onClick( commit, true, event );
       }
     } );
   };

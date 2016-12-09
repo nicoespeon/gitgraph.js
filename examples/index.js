@@ -149,7 +149,7 @@ gitGraph.canvas.addEventListener("commit:mouseout", function ( event ) {
 test.commit( {
   message: "Click me!",
   author: "Nicolas <me@planee.fr>",
-  onClick: function ( event, commit ) {
+  onClick: function ( commit, isOverCommit, event ) {
     console.log( "You just clicked my commit.", commit, event );
   }
 } );
