@@ -401,7 +401,7 @@
       var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
-      callbackFn( commit, isOverCommit );
+      callbackFn( event, commit, isOverCommit );
     }
   };
 
@@ -448,7 +448,7 @@
       _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
     }
 
-    self.applyCommits( event, function ( commit, isOverCommit ) {
+    self.applyCommits( event, function ( event, commit, isOverCommit ) {
       if ( isOverCommit ) {
         if ( !self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode ) {
           showCommitTooltip( commit );
@@ -483,13 +483,13 @@
    * @this GitGraph
    **/
   GitGraph.prototype.click = function ( event ) {
-    this.gitgraph.applyCommits( event, function ( commit, isOverCommit ) {
+    this.gitgraph.applyCommits( event, function ( event, commit, isOverCommit ) {
       if ( !isOverCommit ) {
         return;
       }
 
       if ( commit.onClick !== null ) {
-        commit.onClick( commit, true );
+        commit.onClick( event, commit, true );
       }
     } );
   };
