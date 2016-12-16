@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.6.0
+ *                  GitGraph v1.6.1
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -864,16 +864,30 @@
     var parentBranchLastCommit = targetBranch.commits.slice( -1 )[ 0 ];
     var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
+      var isGraphHorizontal  = _isHorizontal(this.parent);
       this.color = targetBranch.color;
 
       // Make branch path follow target branch ones
-      var targetBranchX = targetBranch.path[1].x;
-      this.path.forEach(function (point) {
-        point.x = targetBranchX;
-      });
+      if (isGraphHorizontal) {
+        var targetBranchY = targetBranch.path[1].y;
+        this.path.forEach(function(point) {
+          console.log(point.y, targetBranchY);
+          point.y = targetBranchY;
+        });
+      } else {
+        var targetBranchX = targetBranch.path[1].x;
+        this.path.forEach(function (point) {
+          point.x = targetBranchX;
+        });
+      }
 
-      this.commits.forEach(function (commit) {
-        commit.x = branchParentCommit.x;
+      this.commits.forEach(function(commit) {
+        if (isGraphHorizontal) {
+          commit.y = branchParentCommit.y;
+        } else {
+          commit.x = branchParentCommit.x;
+        }
+
         commit.labelColor = branchParentCommit.labelColor;
         commit.messageColor = branchParentCommit.messageColor;
         commit.dotColor = branchParentCommit.dotColor;
