@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.5.0
+ *                  GitGraph v1.6.0
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -833,6 +833,7 @@
    *
    * @param {Branch} [target = this.parent.HEAD]
    * @param {(String | Object)} [commitOptions] - Message | Options of commit
+   * @param {Boolean} [commitOptions.fastForward=false] - If true, merge should use fast-forward if possible
    *
    * @this Branch
    *
@@ -859,26 +860,47 @@
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = this.commits.slice( -1 )[ 0 ];
 
-    targetBranch.commit( commitOptions );
+    var branchParentCommit = this.commits[0].parentCommit;
+    var parentBranchLastCommit = targetBranch.commits.slice( -1 )[ 0 ];
+    var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
+    if (commitOptions.fastForward && isFastForwardPossible) {
+      this.color = targetBranch.color;
 
-    // Add points to path
-    var targetCommit = targetBranch.commits.slice( -1 )[ 0 ];
-    var endOfBranch = {
-      x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
-      y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
-      type: "join"
-    };
-    this.pushPath( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
+      // Make branch path follow target branch ones
+      var targetBranchX = targetBranch.path[1].x;
+      this.path.forEach(function (point) {
+        point.x = targetBranchX;
+      });
 
-    var mergeCommit = {
-      x: targetCommit.x,
-      y: targetCommit.y,
-      type: "end"
-    };
-    this.pushPath( mergeCommit );
+      this.commits.forEach(function (commit) {
+        commit.x = branchParentCommit.x;
+        commit.labelColor = branchParentCommit.labelColor;
+        commit.messageColor = branchParentCommit.messageColor;
+        commit.dotColor = branchParentCommit.dotColor;
+        commit.dotStrokeColor = branchParentCommit.dotStrokeColor;
+      });
+    } else {
+      targetBranch.commit( commitOptions );
 
-    endOfBranch.type = "start";
-    this.pushPath( endOfBranch ); // End of branch for future commits
+      // Add points to path
+      var targetCommit = targetBranch.commits.slice( -1 )[ 0 ];
+      var endOfBranch = {
+        x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
+        y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
+        type: "join"
+      };
+      this.pushPath( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
+
+      var mergeCommit = {
+        x: targetCommit.x,
+        y: targetCommit.y,
+        type: "end"
+      };
+      this.pushPath( mergeCommit );
+
+      endOfBranch.type = "start";
+      this.pushPath( endOfBranch ); // End of branch for future commits
+    }
 
     // Auto-render
     this.parent.render();
