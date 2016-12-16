@@ -850,7 +850,10 @@
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = this.commits.slice( -1 )[ 0 ];
 
-    if (commitOptions.fastForward) {
+    var branchParentCommit = this.commits[0].parentCommit;
+    var parentBranchLastCommit = targetBranch.commits.slice( -1 )[ 0 ];
+    var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
+    if (commitOptions.fastForward && isFastForwardPossible) {
       this.color = targetBranch.color;
 
       // Make branch path follow target branch ones
@@ -859,7 +862,6 @@
         point.x = targetBranchX;
       });
 
-      var branchParentCommit = this.commits[0].parentCommit;
       this.commits.forEach(function (commit) {
         commit.x = branchParentCommit.x;
         commit.labelColor = branchParentCommit.labelColor;

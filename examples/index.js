@@ -118,6 +118,9 @@ var fastForwardBranch = test.branch("fast-forward");
 fastForwardBranch.commit("First commit on FF branch");
 fastForwardBranch.commit("Second commit on FF branch");
 
+// If not commented, it will prevent fast-forward
+// test.commit("Make Fast Forward impossible");
+
 fastForwardBranch.merge(test, { fastForward: true });
 
 /***********************
