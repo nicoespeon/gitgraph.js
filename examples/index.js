@@ -112,7 +112,13 @@ test.commit( "Final commit" );
 test.merge( master, "My special merge commit message" );
 
 // Then, continue committing on the "test" branch
-test.commit( { message: "It works !" } );
+test.commit({ message: "It works !" });
+
+var fastForwardBranch = test.branch("fast-forward");
+fastForwardBranch.commit("First commit on FF branch");
+fastForwardBranch.commit("Second commit on FF branch");
+
+fastForwardBranch.merge(test, { fastForward: true });
 
 /***********************
  *        TAGS         *
