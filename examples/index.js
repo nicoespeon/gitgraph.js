@@ -52,8 +52,14 @@ gitGraph.commit( "Initial commit" );
 // Add few commits on master
 gitGraph.commit( "My second commit" ).commit( "Add awesome feature" );
 
-// Create a new "dev" branch from "master"
-var dev = gitGraph.branch( "dev" );
+// Create a new "dev" branch from "master" with some custom configuration
+var dev = gitGraph.branch({
+  name: "dev",
+  color: "#F00",
+  commitDefaultOptions: {
+    color: "#F00"
+  }
+});
 dev.commit( "Youhou \\o/" );
 
 // Commit again on "master"
