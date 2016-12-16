@@ -35,13 +35,13 @@ var config = {
   template: "metro"       // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
   //, reverseArrow: true  // to make arrows point to ancestors, if displayed
   //, orientation: "vertical-reverse"
-  //, mode: "compact"     // special compact mode : hide messages & compact graph
+  //, mode: "compact"     // special compact mode: hide messages & compact graph
 };
 var gitGraph = new GitGraph( config );
 
-/***********************
- * BRANCHS AND COMMITS *
- ***********************/
+/************************
+ * BRANCHES AND COMMITS *
+ ************************/
 
 // Create branch named "master"
 var master = gitGraph.branch( "master" );
@@ -49,7 +49,7 @@ var master = gitGraph.branch( "master" );
 // Commit on HEAD Branch which is "master"
 gitGraph.commit( "Initial commit" );
 
-// Add few commits on master.
+// Add few commits on master
 gitGraph.commit( "My second commit" ).commit( "Add awesome feature" );
 
 // Create a new "dev" branch from "master"
@@ -76,8 +76,8 @@ gitGraph.commit( commitConfig );
  *      CHECKOUT       *
  ***********************/
 
-// Checkout on master branch for create "test" since master
-//master.checkout();
+// Checkout to create "test" from "master" branch
+// master.checkout();
 
 /***********************
  *       DETAILS       *
@@ -88,7 +88,7 @@ var commitWithDetailsConfig = {
   detailId: "detail" // Id of detail div (available in normal vertical mode only)
 };
 gitGraph.commit( commitWithDetailsConfig ).commit();
-dev.commit().commit(); // 2 default Commit on "dev"
+dev.commit().commit(); // 2 default commits on "dev"
 
 /***********************
  *    CUSTOMIZATION    *
@@ -106,7 +106,7 @@ master.checkout();
 // Merge "dev" branch into HEAD (which is "master"), with a default message
 dev.merge();
 
-// Create a "test" branch and merge in into "master" with a custom message and tag.
+// Create a "test" branch and merge it into "master" with a custom message and tag
 var test = gitGraph.branch( "test" );
 test.commit( "Final commit" );
 test.merge( master, "My special merge commit message" );
