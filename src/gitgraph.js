@@ -518,6 +518,7 @@
    * @param {Branch} [options.parentBranch = options.parentCommit.branch] - Parent branch
    * @param {Commit} [options.parentCommit = options.parentBranch.commits.slice(-1)[0]] - Parent commit
    * @param {String} [options.name = "no-name"] - Branch name
+   * @param {Object} [options.commitDefaultOptions = {}] - Default options for commits
    *
    * @this Branch
    **/
@@ -547,6 +548,7 @@
       this.parentBranch = null;
     }
     this.name = (typeof options.name === "string") ? options.name : "no-name";
+    this.commitDefaultOptions = (typeof options.commitDefaultOptions === "object") ? options.commitDefaultOptions : {};
     this.context = this.parent.context;
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
@@ -694,7 +696,10 @@
     options.arrowDisplay = this.template.arrow.active;
     options.branch = this;
     var columnIndex = (this.column % this.template.colors.length);
-    options.color = options.color || this.template.commit.color || this.template.colors[ columnIndex ];
+    options.color = options.color
+        || this.commitDefaultOptions.color
+        || this.template.commit.color
+        || this.template.colors[columnIndex];
     options.parent = this.parent;
     options.parentCommit = options.parentCommit || this.commits.slice( -1 )[ 0 ];
 
@@ -708,10 +713,26 @@
       this.parent.commitOffsetY -= this.template.commit.spacingY;
     }
 
-    options.messageColor = options.messageColor || this.template.commit.message.color || options.color || null;
-    options.labelColor = options.labelColor || this.template.branch.labelColor || options.color || null;
-    options.tagColor = options.tagColor || this.template.commit.tag.color || options.color || null;
-    options.dotColor = options.dotColor || this.template.commit.dot.color || options.color || null;
+    options.messageColor = options.messageColor
+      || this.commitDefaultOptions.messageColor
+      || this.template.commit.message.color
+      || options.color
+      || null;
+    options.labelColor = options.labelColor
+      || this.commitDefaultOptions.labelColor
+      || this.template.branch.labelColor
+      || options.color
+      || null;
+    options.tagColor = options.tagColor
+      || this.commitDefaultOptions.tagColor
+      || this.template.commit.tag.color
+      || options.color
+      || null;
+    options.dotColor = options.dotColor
+      || this.commitDefaultOptions.dotColor
+      || this.template.commit.dot.color
+      || options.color
+      || null;
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
 
