@@ -6,7 +6,7 @@
    *
    * @param {HTMLElement} element - DOM element to trigger the event on.
    * @param {String} eventName - Name of the triggered event.
-   * @param {Object} [data={}] - Custom data to attach to the event.
+   * @param {Object} [data = {}] - Custom data to attach to the event.
    * @private
    */
   function _emitEvent ( element, eventName, data ) {
@@ -105,7 +105,7 @@
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
    * @param {Number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
-   * @param {Number} [options.initCommitOffsetY= 0] - Add custom offsetY to initial commit.
+   * @param {Number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.
    *
    * @this GitGraph
    **/
@@ -854,7 +854,7 @@
    *
    * @param {Branch} [target = this.parent.HEAD]
    * @param {(String | Object)} [commitOptions] - Message | Options of commit
-   * @param {Boolean} [commitOptions.fastForward=false] - If true, merge should use fast-forward if possible
+   * @param {Boolean} [commitOptions.fastForward = false] - If true, merge should use fast-forward if possible
    *
    * @this Branch
    *
@@ -1274,7 +1274,7 @@
    * @param {Array} [options.colors] - Colors scheme: One color for each column
    * @param {String} [options.arrow.color] - Arrow color
    * @param {Number} [options.arrow.size] - Arrow size
-   * @param {Number} [options.arrow.offser] - Arrow offset
+   * @param {Number} [options.arrow.offset] - Arrow offset
    * @param {String} [options.branch.color] - Branch color
    * @param {Number} [options.branch.linewidth] - Branch line width
    * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
@@ -1295,7 +1295,7 @@
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
-   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
+   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
