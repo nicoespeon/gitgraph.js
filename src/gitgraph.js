@@ -2,85 +2,6 @@
   "use strict";
 
   /**
-   * Emit an event on the given element.
-   *
-   * @param {HTMLElement} element - DOM element to trigger the event on.
-   * @param {String} eventName - Name of the triggered event.
-   * @param {Object} [data={}] - Custom data to attach to the event.
-   * @private
-   */
-  function _emitEvent ( element, eventName, data ) {
-    var event;
-
-    if ( document.createEvent ) {
-      event = document.createEvent( "HTMLEvents" );
-      event.initEvent( eventName, true, true );
-    } else {
-      event = document.createEventObject();
-      event.eventType = eventName;
-    }
-
-    event.eventName = eventName;
-    event.data = data || {};
-
-    if ( document.createEvent ) {
-      element.dispatchEvent( event );
-    } else {
-      element.fireEvent( "on" + event.eventType, event );
-    }
-  }
-
-  /**
-   * Returns the scaling factor of given canvas `context`.
-   * Handles high-resolution displays.
-   *
-   * @param {Object} context
-   * @returns {Number}
-   * @private
-   */
-  function _getScale ( context ) {
-    var backingStorePixelRatio;
-    var scalingFactor;
-
-    // Account for high-resolution displays
-    scalingFactor = 1;
-
-    if ( window.devicePixelRatio ) {
-      backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
-                               context.mozBackingStorePixelRatio ||
-                               context.msBackingStorePixelRatio ||
-                               context.oBackingStorePixelRatio ||
-                               context.backingStorePixelRatio || 1;
-
-      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
-    }
-
-    return scalingFactor;
-  }
-
-  /**
-   * Returns `true` if `graph` has a vertical orientation.
-   *
-   * @param {GitGraph} graph
-   * @returns {boolean}
-   * @private
-   */
-  function _isVertical ( graph ) {
-    return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
-  }
-
-  /**
-   * Returns `true` if `graph` has an horizontal orientation.
-   *
-   * @param {GitGraph} graph
-   * @returns {boolean}
-   * @private
-   */
-  function _isHorizontal ( graph ) {
-    return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
-  }
-
-  /**
    * GitGraph
    *
    * @constructor
@@ -94,20 +15,19 @@
    * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
    * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
    * @param {Number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
-   * @param {Number} [options.initCommitOffsetY= 0] - Add custom offsetY to initial commit.
+   * @param {Number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.
    *
    * @this GitGraph
    **/
   function GitGraph ( options ) {
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
-    this.reverseArrow = booleanOptionOr( options.reverseArrow, false );
+    this.reverseArrow = _booleanOptionOr( options.reverseArrow, false );
 
     // Template management
-    if ( (typeof options.template === "string")
-         || (typeof options.template === "object") ) {
+    if ( (typeof options.template === "string") || _isObject(options.template) ) {
       this.template = this.newTemplate( options.template );
     } else if ( options.template instanceof Template ) {
       this.template = options.template;
@@ -230,7 +150,7 @@
       options.name = name;
     }
 
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.parent = this;
     options.parentBranch = options.parentBranch || this.HEAD;
 
@@ -260,7 +180,7 @@
       options.name = name;
     }
 
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.parent = this;
 
     // Add branch
@@ -371,7 +291,7 @@
    *
    * @callback commitCallback
    * @param {Commit} commit - A commit
-   * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   * @param {Boolean} mouseOver - True, if the mouse is currently hovering over the commit
    * @param {Event} event - The DOM event (e.g. a click event)
    */
 
@@ -529,7 +449,7 @@
     }
 
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     this.parent = options.parent;
     if ( options.parentCommit && options.parentBranch ) {
       if ( options.parentCommit.branch !== options.parentBranch ) {
@@ -548,12 +468,12 @@
       this.parentBranch = null;
     }
     this.name = (typeof options.name === "string") ? options.name : "no-name";
-    this.commitDefaultOptions = (typeof options.commitDefaultOptions === "object") ? options.commitDefaultOptions : {};
+    this.commitDefaultOptions = _isObject(options.commitDefaultOptions) ? options.commitDefaultOptions : {};
     this.context = this.parent.context;
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
     this.lineDash = options.lineDash || this.template.branch.lineDash;
-    this.showLabel = booleanOptionOr( options.showLabel, this.template.branch.showLabel );
+    this.showLabel = _booleanOptionOr( options.showLabel, this.template.branch.showLabel );
     this.spacingX = this.template.branch.spacingX;
     this.spacingY = this.template.branch.spacingY;
     this.size = 0;
@@ -620,7 +540,7 @@
       options.name = name;
     }
 
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.parent = this.parent;
     options.parentBranch = options.parentBranch || this;
 
@@ -844,7 +764,7 @@
    *
    * @param {Branch} [target = this.parent.HEAD]
    * @param {(String | Object)} [commitOptions] - Message | Options of commit
-   * @param {Boolean} [commitOptions.fastForward=false] - If true, merge should use fast-forward if possible
+   * @param {Boolean} [commitOptions.fastForward = false] - If true, merge should use fast-forward if possible
    *
    * @this Branch
    *
@@ -1048,7 +968,7 @@
     }
 
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     this.parent = options.parent;
     this.template = this.parent.template;
     this.context = this.parent.context;
@@ -1059,14 +979,14 @@
     this.tag = options.tag || null;
     this.tagColor = options.tagColor || options.color;
     this.tagFont = options.tagFont || this.template.commit.tag.font;
-    this.displayTagBox = booleanOptionOr( options.displayTagBox, true );
+    this.displayTagBox = _booleanOptionOr( options.displayTagBox, true );
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
-    this.messageDisplay = booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
-    this.messageAuthorDisplay = booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
-    this.messageBranchDisplay = booleanOptionOr( options.messageBranchDisplay, this.template.commit.message.displayBranch );
-    this.messageHashDisplay = booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
+    this.messageDisplay = _booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
+    this.messageAuthorDisplay = _booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
+    this.messageBranchDisplay = _booleanOptionOr( options.messageBranchDisplay, this.template.commit.message.displayBranch );
+    this.messageHashDisplay = _booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
     this.messageColor = options.messageColor || options.color;
     this.messageFont = options.messageFont || this.template.commit.message.font;
     this.dotColor = options.dotColor || options.color;
@@ -1074,7 +994,7 @@
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
     this.type = options.type || null;
-    this.tooltipDisplay = booleanOptionOr( options.tooltipDisplay, true );
+    this.tooltipDisplay = _booleanOptionOr( options.tooltipDisplay, true );
     this.onClick = options.onClick || null;
     this.representedObject = options.representedObject || null;
     this.parentCommit = options.parentCommit;
@@ -1096,7 +1016,7 @@
 
     // Label
     if ( this.showLabel ) {
-      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+      _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
     }
 
     // Dot
@@ -1125,13 +1045,13 @@
       this.context.font = this.tagFont;
       var textWidth = this.context.measureText( this.tag ).width;
       if ( this.template.branch.labelRotation !== 0 ) {
-        var textHeight = getFontHeight( this.tagFont );
-        drawTextBG( this.context,
+        var textHeight = _getFontHeight( this.tagFont );
+        _drawTextBG( this.context,
           this.x - this.dotSize / 2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       } else {
-        drawTextBG( this.context,
+        _drawTextBG( this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
           this.y - this.dotSize / 2,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
@@ -1188,33 +1108,26 @@
     var alpha = rotate( this.parentCommit.y - this.y, this.parentCommit.x - this.x );
 
     // Merge & Fork case
-    if ( this.type === "mergeCommit" || this === this.branch.commits[ 0 ] /* First commit */ ) {
+    var isForkCommit = (this === this.branch.commits[0]);
+    if ( this.type === "mergeCommit" || isForkCommit ) {
       var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
       var commitSpaceDelta = (this.showLabel ? 2 : 1);
 
-      var isArrowVertical = (
-        isReversed
-        && _isVertical( this.parent )
-        && Math.abs( this.y - this.parentCommit.y ) > Math.abs( this.template.commit.spacingY )
-      ) || (
-        _isVertical( this.parent )
-        && commitSpaceDelta > 1
-      );
-      var alphaX = (isArrowVertical)
-        ? 0
-        : this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
+      var alphaX = this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
+      var isPushedInY = (isForkCommit || isReversed)
+          && Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
+      var isOnSameXThanParent = (this.x === this.parentCommit.x);
+      if (_isVertical(this.parent) && (isPushedInY || isOnSameXThanParent)) {
+        alphaX = 0;
+      }
 
-      var isArrowHorizontal = (
-        isReversed
-        && _isHorizontal( this.parent )
-        && Math.abs( this.x - this.parentCommit.x ) > Math.abs( this.template.commit.spacingX )
-      ) || (
-        _isHorizontal( this.parent )
-        && commitSpaceDelta > 1
-      );
-      var alphaY = (isArrowHorizontal)
-        ? 0
-        : this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
+      var alphaY = this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
+      var isPushedInX = (isForkCommit || isReversed)
+          && Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
+      var isOnSameYThanParent = (this.y === this.parentCommit.y);
+      if (_isHorizontal(this.parent) && (isPushedInX || isOnSameYThanParent)) {
+        alphaY = 0;
+      }
 
       alpha = rotate( alphaY, alphaX );
       color = this.parentCommit.branch.color;
@@ -1264,7 +1177,7 @@
    * @param {Array} [options.colors] - Colors scheme: One color for each column
    * @param {String} [options.arrow.color] - Arrow color
    * @param {Number} [options.arrow.size] - Arrow size
-   * @param {Number} [options.arrow.offser] - Arrow offset
+   * @param {Number} [options.arrow.offset] - Arrow offset
    * @param {String} [options.branch.color] - Branch color
    * @param {Number} [options.branch.linewidth] - Branch line width
    * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
@@ -1285,13 +1198,13 @@
    * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
-   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter=true] - Formatter for the tooltip contents.
+   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
   function Template ( options ) {
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.branch = options.branch || {};
     options.arrow = options.arrow || {};
     options.commit = options.commit || {};
@@ -1332,7 +1245,7 @@
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
     this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
     this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
-    this.commit.shouldDisplayTooltipsInCompactMode = booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
+    this.commit.shouldDisplayTooltipsInCompactMode = _booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
@@ -1352,10 +1265,10 @@
     this.commit.tag.spacingY = this.commit.spacingY;
 
     this.commit.message = {};
-    this.commit.message.display = booleanOptionOr( options.commit.message.display, true );
-    this.commit.message.displayAuthor = booleanOptionOr( options.commit.message.displayAuthor, true );
-    this.commit.message.displayBranch = booleanOptionOr( options.commit.message.displayBranch, true );
-    this.commit.message.displayHash = booleanOptionOr( options.commit.message.displayHash, true );
+    this.commit.message.display = _booleanOptionOr( options.commit.message.display, true );
+    this.commit.message.displayAuthor = _booleanOptionOr( options.commit.message.displayAuthor, true );
+    this.commit.message.displayBranch = _booleanOptionOr( options.commit.message.displayBranch, true );
+    this.commit.message.displayHash = _booleanOptionOr( options.commit.message.displayHash, true );
 
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
@@ -1428,23 +1341,53 @@
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
 
-  var getFontHeight = function ( font ) {
+  /**
+   * Returns the height of the given font when rendered.
+   *
+   * @param {String} font
+   * @returns {Number}
+   * @private
+   */
+  function _getFontHeight ( font ) {
     var body = document.getElementsByTagName( "body" )[ 0 ];
-    var dummy = document.createElement( "div" );
-    var dummyText = document.createTextNode( "Mg" );
+    var dummy = document.createElement("div");
+    var dummyText = document.createTextNode("Mg");
+
     dummy.appendChild( dummyText );
     dummy.setAttribute( "style", "font: " + font + ";" );
     body.appendChild( dummy );
-    var result = dummy.offsetHeight;
-    body.removeChild( dummy );
-    return result;
-  };
+    var fontHeight = dummy.offsetHeight;
+    body.removeChild(dummy);
 
-  function booleanOptionOr ( booleanOption, defaultOption ) {
+    return fontHeight;
+  }
+
+  /**
+   * Returns the `booleanOptions` if it's actually a boolean, returns `defaultOptions` otherwise.
+   *
+   * @param {*} booleanOption
+   * @param {Boolean} defaultOptions
+   * @returns {Boolean}
+   * @private
+   */
+  function _booleanOptionOr ( booleanOption, defaultOption ) {
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
-  function drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
+  /**
+   * Draw text background.
+   *
+   * @param {CanvasRenderingContext2D} context - Canvas 2D context in which to render text.
+   * @param {Number} x - Horizontal offset of the text.
+   * @param {Number} y - Vertical offset of the text.
+   * @param {String} text - Text content.
+   * @param {String} color - Text Colors.
+   * @param {String} font - Text font.
+   * @param {Number} angle - Angle of the text for rotation.
+   * @param {Boolean} useStroke - Name of the triggered event.
+   * @private
+   */
+  function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
@@ -1452,7 +1395,7 @@
 
     context.font = font;
     var width = context.measureText( text ).width;
-    var height = getFontHeight( font );
+    var height = _getFontHeight( font );
 
     if ( useStroke ) {
       context.beginPath();
@@ -1470,6 +1413,96 @@
 
     context.fillText( text, 0, height / 2 );
     context.restore();
+  }
+
+  /**
+   * Emit an event on the given element.
+   *
+   * @param {HTMLElement} element - DOM element to trigger the event on.
+   * @param {String} eventName - Name of the triggered event.
+   * @param {Object} [data = {}] - Custom data to attach to the event.
+   * @private
+   */
+  function _emitEvent ( element, eventName, data ) {
+    var event;
+
+    if ( document.createEvent ) {
+      event = document.createEvent( "HTMLEvents" );
+      event.initEvent( eventName, true, true );
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+    }
+
+    event.eventName = eventName;
+    event.data = data || {};
+
+    if ( document.createEvent ) {
+      element.dispatchEvent( event );
+    } else {
+      element.fireEvent( "on" + event.eventType, event );
+    }
+  }
+
+  /**
+   * Returns the scaling factor of given canvas `context`.
+   * Handles high-resolution displays.
+   *
+   * @param {Object} context
+   * @returns {Number}
+   * @private
+   */
+  function _getScale ( context ) {
+    var backingStorePixelRatio;
+    var scalingFactor;
+
+    // Account for high-resolution displays
+    scalingFactor = 1;
+
+    if ( window.devicePixelRatio ) {
+      backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
+                               context.mozBackingStorePixelRatio ||
+                               context.msBackingStorePixelRatio ||
+                               context.oBackingStorePixelRatio ||
+                               context.backingStorePixelRatio || 1;
+
+      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
+    }
+
+    return scalingFactor;
+  }
+
+  /**
+   * Returns `true` if `graph` has a vertical orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {Boolean}
+   * @private
+   */
+  function _isVertical ( graph ) {
+    return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
+  }
+
+  /**
+   * Returns `true` if `graph` has an horizontal orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {Boolean}
+   * @private
+   */
+  function _isHorizontal ( graph ) {
+    return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
+  }
+
+  /**
+   * Returns `true` if `object` is an object.
+   *
+   * @param {*} object
+   * @returns {Boolean}
+   * @private
+   */
+  function _isObject(object) {
+    return (typeof object === "object");
   }
 
   // Expose GitGraph object
