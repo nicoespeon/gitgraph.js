@@ -81,6 +81,17 @@
   }
 
   /**
+   * Returns `true` if `object` is an object.
+   *
+   * @param {*} object
+   * @returns {boolean}
+   * @private
+   */
+  function _isObject(object) {
+    return (typeof object === "object");
+  }
+
+  /**
    * GitGraph
    *
    * @constructor
@@ -100,14 +111,13 @@
    **/
   function GitGraph ( options ) {
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
     this.reverseArrow = booleanOptionOr( options.reverseArrow, false );
 
     // Template management
-    if ( (typeof options.template === "string")
-         || (typeof options.template === "object") ) {
+    if ( (typeof options.template === "string") || _isObject(options.template) ) {
       this.template = this.newTemplate( options.template );
     } else if ( options.template instanceof Template ) {
       this.template = options.template;
@@ -230,7 +240,7 @@
       options.name = name;
     }
 
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.parent = this;
     options.parentBranch = options.parentBranch || this.HEAD;
 
@@ -260,7 +270,7 @@
       options.name = name;
     }
 
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.parent = this;
 
     // Add branch
@@ -529,7 +539,7 @@
     }
 
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     this.parent = options.parent;
     if ( options.parentCommit && options.parentBranch ) {
       if ( options.parentCommit.branch !== options.parentBranch ) {
@@ -548,7 +558,7 @@
       this.parentBranch = null;
     }
     this.name = (typeof options.name === "string") ? options.name : "no-name";
-    this.commitDefaultOptions = (typeof options.commitDefaultOptions === "object") ? options.commitDefaultOptions : {};
+    this.commitDefaultOptions = _isObject(options.commitDefaultOptions) ? options.commitDefaultOptions : {};
     this.context = this.parent.context;
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
@@ -620,7 +630,7 @@
       options.name = name;
     }
 
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.parent = this.parent;
     options.parentBranch = options.parentBranch || this;
 
@@ -1048,7 +1058,7 @@
     }
 
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     this.parent = options.parent;
     this.template = this.parent.template;
     this.context = this.parent.context;
@@ -1291,7 +1301,7 @@
    **/
   function Template ( options ) {
     // Options
-    options = (typeof options === "object") ? options : {};
+    options = _isObject(options) ? options : {};
     options.branch = options.branch || {};
     options.arrow = options.arrow || {};
     options.commit = options.commit || {};
