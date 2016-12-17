@@ -2,96 +2,6 @@
   "use strict";
 
   /**
-   * Emit an event on the given element.
-   *
-   * @param {HTMLElement} element - DOM element to trigger the event on.
-   * @param {String} eventName - Name of the triggered event.
-   * @param {Object} [data = {}] - Custom data to attach to the event.
-   * @private
-   */
-  function _emitEvent ( element, eventName, data ) {
-    var event;
-
-    if ( document.createEvent ) {
-      event = document.createEvent( "HTMLEvents" );
-      event.initEvent( eventName, true, true );
-    } else {
-      event = document.createEventObject();
-      event.eventType = eventName;
-    }
-
-    event.eventName = eventName;
-    event.data = data || {};
-
-    if ( document.createEvent ) {
-      element.dispatchEvent( event );
-    } else {
-      element.fireEvent( "on" + event.eventType, event );
-    }
-  }
-
-  /**
-   * Returns the scaling factor of given canvas `context`.
-   * Handles high-resolution displays.
-   *
-   * @param {Object} context
-   * @returns {Number}
-   * @private
-   */
-  function _getScale ( context ) {
-    var backingStorePixelRatio;
-    var scalingFactor;
-
-    // Account for high-resolution displays
-    scalingFactor = 1;
-
-    if ( window.devicePixelRatio ) {
-      backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
-                               context.mozBackingStorePixelRatio ||
-                               context.msBackingStorePixelRatio ||
-                               context.oBackingStorePixelRatio ||
-                               context.backingStorePixelRatio || 1;
-
-      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
-    }
-
-    return scalingFactor;
-  }
-
-  /**
-   * Returns `true` if `graph` has a vertical orientation.
-   *
-   * @param {GitGraph} graph
-   * @returns {boolean}
-   * @private
-   */
-  function _isVertical ( graph ) {
-    return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
-  }
-
-  /**
-   * Returns `true` if `graph` has an horizontal orientation.
-   *
-   * @param {GitGraph} graph
-   * @returns {boolean}
-   * @private
-   */
-  function _isHorizontal ( graph ) {
-    return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
-  }
-
-  /**
-   * Returns `true` if `object` is an object.
-   *
-   * @param {*} object
-   * @returns {boolean}
-   * @private
-   */
-  function _isObject(object) {
-    return (typeof object === "object");
-  }
-
-  /**
    * GitGraph
    *
    * @constructor
@@ -114,7 +24,7 @@
     options = _isObject(options) ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
-    this.reverseArrow = booleanOptionOr( options.reverseArrow, false );
+    this.reverseArrow = _booleanOptionOr( options.reverseArrow, false );
 
     // Template management
     if ( (typeof options.template === "string") || _isObject(options.template) ) {
@@ -563,7 +473,7 @@
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
     this.lineDash = options.lineDash || this.template.branch.lineDash;
-    this.showLabel = booleanOptionOr( options.showLabel, this.template.branch.showLabel );
+    this.showLabel = _booleanOptionOr( options.showLabel, this.template.branch.showLabel );
     this.spacingX = this.template.branch.spacingX;
     this.spacingY = this.template.branch.spacingY;
     this.size = 0;
@@ -1069,14 +979,14 @@
     this.tag = options.tag || null;
     this.tagColor = options.tagColor || options.color;
     this.tagFont = options.tagFont || this.template.commit.tag.font;
-    this.displayTagBox = booleanOptionOr( options.displayTagBox, true );
+    this.displayTagBox = _booleanOptionOr( options.displayTagBox, true );
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
-    this.messageDisplay = booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
-    this.messageAuthorDisplay = booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
-    this.messageBranchDisplay = booleanOptionOr( options.messageBranchDisplay, this.template.commit.message.displayBranch );
-    this.messageHashDisplay = booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
+    this.messageDisplay = _booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
+    this.messageAuthorDisplay = _booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
+    this.messageBranchDisplay = _booleanOptionOr( options.messageBranchDisplay, this.template.commit.message.displayBranch );
+    this.messageHashDisplay = _booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
     this.messageColor = options.messageColor || options.color;
     this.messageFont = options.messageFont || this.template.commit.message.font;
     this.dotColor = options.dotColor || options.color;
@@ -1084,7 +994,7 @@
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
     this.type = options.type || null;
-    this.tooltipDisplay = booleanOptionOr( options.tooltipDisplay, true );
+    this.tooltipDisplay = _booleanOptionOr( options.tooltipDisplay, true );
     this.onClick = options.onClick || null;
     this.representedObject = options.representedObject || null;
     this.parentCommit = options.parentCommit;
@@ -1106,7 +1016,7 @@
 
     // Label
     if ( this.showLabel ) {
-      drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+      _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
     }
 
     // Dot
@@ -1135,13 +1045,13 @@
       this.context.font = this.tagFont;
       var textWidth = this.context.measureText( this.tag ).width;
       if ( this.template.branch.labelRotation !== 0 ) {
-        var textHeight = getFontHeight( this.tagFont );
-        drawTextBG( this.context,
+        var textHeight = _getFontHeight( this.tagFont );
+        _drawTextBG( this.context,
           this.x - this.dotSize / 2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       } else {
-        drawTextBG( this.context,
+        _drawTextBG( this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
           this.y - this.dotSize / 2,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
@@ -1342,7 +1252,7 @@
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
     this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
     this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
-    this.commit.shouldDisplayTooltipsInCompactMode = booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
+    this.commit.shouldDisplayTooltipsInCompactMode = _booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
@@ -1362,10 +1272,10 @@
     this.commit.tag.spacingY = this.commit.spacingY;
 
     this.commit.message = {};
-    this.commit.message.display = booleanOptionOr( options.commit.message.display, true );
-    this.commit.message.displayAuthor = booleanOptionOr( options.commit.message.displayAuthor, true );
-    this.commit.message.displayBranch = booleanOptionOr( options.commit.message.displayBranch, true );
-    this.commit.message.displayHash = booleanOptionOr( options.commit.message.displayHash, true );
+    this.commit.message.display = _booleanOptionOr( options.commit.message.display, true );
+    this.commit.message.displayAuthor = _booleanOptionOr( options.commit.message.displayAuthor, true );
+    this.commit.message.displayBranch = _booleanOptionOr( options.commit.message.displayBranch, true );
+    this.commit.message.displayHash = _booleanOptionOr( options.commit.message.displayHash, true );
 
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
@@ -1438,23 +1348,53 @@
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
 
-  var getFontHeight = function ( font ) {
+  /**
+   * Returns the height of the given font when rendered.
+   *
+   * @param {String} font
+   * @returns {Number}
+   * @private
+   */
+  function _getFontHeight ( font ) {
     var body = document.getElementsByTagName( "body" )[ 0 ];
-    var dummy = document.createElement( "div" );
-    var dummyText = document.createTextNode( "Mg" );
+    var dummy = document.createElement("div");
+    var dummyText = document.createTextNode("Mg");
+
     dummy.appendChild( dummyText );
     dummy.setAttribute( "style", "font: " + font + ";" );
     body.appendChild( dummy );
-    var result = dummy.offsetHeight;
-    body.removeChild( dummy );
-    return result;
-  };
+    var fontHeight = dummy.offsetHeight;
+    body.removeChild(dummy);
 
-  function booleanOptionOr ( booleanOption, defaultOption ) {
+    return fontHeight;
+  }
+
+  /**
+   * Returns the `booleanOptions` if it's actually a boolean, returns `defaultOptions` otherwise.
+   *
+   * @param {*} booleanOption
+   * @param {Boolean} defaultOptions
+   * @returns {Boolean}
+   * @private
+   */
+  function _booleanOptionOr ( booleanOption, defaultOption ) {
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
-  function drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
+  /**
+   * Draw text background.
+   *
+   * @param {CanvasRenderingContext2D} context - Canvas 2D context in which to render text.
+   * @param {Number} x - Horizontal offset of the text.
+   * @param {Number} y - Vertical offset of the text.
+   * @param {String} text - Text content.
+   * @param {String} color - Text Colors.
+   * @param {String} font - Text font.
+   * @param {Number} angle - Angle of the text for rotation.
+   * @param {Boolean} useStroke - Name of the triggered event.
+   * @private
+   */
+  function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
@@ -1462,7 +1402,7 @@
 
     context.font = font;
     var width = context.measureText( text ).width;
-    var height = getFontHeight( font );
+    var height = _getFontHeight( font );
 
     if ( useStroke ) {
       context.beginPath();
@@ -1480,6 +1420,96 @@
 
     context.fillText( text, 0, height / 2 );
     context.restore();
+  }
+
+  /**
+   * Emit an event on the given element.
+   *
+   * @param {HTMLElement} element - DOM element to trigger the event on.
+   * @param {String} eventName - Name of the triggered event.
+   * @param {Object} [data = {}] - Custom data to attach to the event.
+   * @private
+   */
+  function _emitEvent ( element, eventName, data ) {
+    var event;
+
+    if ( document.createEvent ) {
+      event = document.createEvent( "HTMLEvents" );
+      event.initEvent( eventName, true, true );
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+    }
+
+    event.eventName = eventName;
+    event.data = data || {};
+
+    if ( document.createEvent ) {
+      element.dispatchEvent( event );
+    } else {
+      element.fireEvent( "on" + event.eventType, event );
+    }
+  }
+
+  /**
+   * Returns the scaling factor of given canvas `context`.
+   * Handles high-resolution displays.
+   *
+   * @param {Object} context
+   * @returns {Number}
+   * @private
+   */
+  function _getScale ( context ) {
+    var backingStorePixelRatio;
+    var scalingFactor;
+
+    // Account for high-resolution displays
+    scalingFactor = 1;
+
+    if ( window.devicePixelRatio ) {
+      backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
+                               context.mozBackingStorePixelRatio ||
+                               context.msBackingStorePixelRatio ||
+                               context.oBackingStorePixelRatio ||
+                               context.backingStorePixelRatio || 1;
+
+      scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
+    }
+
+    return scalingFactor;
+  }
+
+  /**
+   * Returns `true` if `graph` has a vertical orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {boolean}
+   * @private
+   */
+  function _isVertical ( graph ) {
+    return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
+  }
+
+  /**
+   * Returns `true` if `graph` has an horizontal orientation.
+   *
+   * @param {GitGraph} graph
+   * @returns {boolean}
+   * @private
+   */
+  function _isHorizontal ( graph ) {
+    return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
+  }
+
+  /**
+   * Returns `true` if `object` is an object.
+   *
+   * @param {*} object
+   * @returns {boolean}
+   * @private
+   */
+  function _isObject(object) {
+    return (typeof object === "object");
   }
 
   // Expose GitGraph object
