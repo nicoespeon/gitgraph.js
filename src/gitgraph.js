@@ -291,7 +291,7 @@
    *
    * @callback commitCallback
    * @param {Commit} commit - A commit
-   * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   * @param {Boolean} mouseOver - True, if the mouse is currently hovering over the commit
    * @param {Event} event - The DOM event (e.g. a click event)
    */
 
@@ -1483,7 +1483,7 @@
    * Returns `true` if `graph` has a vertical orientation.
    *
    * @param {GitGraph} graph
-   * @returns {boolean}
+   * @returns {Boolean}
    * @private
    */
   function _isVertical ( graph ) {
@@ -1494,7 +1494,7 @@
    * Returns `true` if `graph` has an horizontal orientation.
    *
    * @param {GitGraph} graph
-   * @returns {boolean}
+   * @returns {Boolean}
    * @private
    */
   function _isHorizontal ( graph ) {
@@ -1505,7 +1505,7 @@
    * Returns `true` if `object` is an object.
    *
    * @param {*} object
-   * @returns {boolean}
+   * @returns {Boolean}
    * @private
    */
   function _isObject(object) {
