@@ -1112,29 +1112,19 @@
       var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
       var commitSpaceDelta = (this.showLabel ? 2 : 1);
 
-      var isArrowVertical = (
-        isReversed
-        && _isVertical( this.parent )
-        && Math.abs( this.y - this.parentCommit.y ) > Math.abs( this.template.commit.spacingY )
-      ) || (
-        _isVertical( this.parent )
-        && commitSpaceDelta > 1
-      );
-      var alphaX = (isArrowVertical)
-        ? 0
-        : this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
+      var alphaX = this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
+      var isSpacedInY = Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
+      var isArrowVertical = _isVertical(this.parent) && ((isReversed && isSpacedInY) || (commitSpaceDelta > 1));
+      if (isArrowVertical) {
+        alphaX = 0;
+      }
 
-      var isArrowHorizontal = (
-        isReversed
-        && _isHorizontal( this.parent )
-        && Math.abs( this.x - this.parentCommit.x ) > Math.abs( this.template.commit.spacingX )
-      ) || (
-        _isHorizontal( this.parent )
-        && commitSpaceDelta > 1
-      );
-      var alphaY = (isArrowHorizontal)
-        ? 0
-        : this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
+      var alphaY = this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
+      var isSpacedInX = Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
+      var isArrowHorizontal = _isHorizontal(this.parent) && ((isReversed && isSpacedInX) || (commitSpaceDelta > 1));
+      if (isArrowHorizontal) {
+        alphaY = 0;
+      }
 
       alpha = rotate( alphaY, alphaX );
       color = this.parentCommit.branch.color;
