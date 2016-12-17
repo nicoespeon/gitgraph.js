@@ -1108,21 +1108,24 @@
     var alpha = rotate( this.parentCommit.y - this.y, this.parentCommit.x - this.x );
 
     // Merge & Fork case
-    if ( this.type === "mergeCommit" || this === this.branch.commits[ 0 ] /* First commit */ ) {
+    var isForkCommit = (this === this.branch.commits[0]);
+    if ( this.type === "mergeCommit" || isForkCommit ) {
       var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
       var commitSpaceDelta = (this.showLabel ? 2 : 1);
 
       var alphaX = this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
-      var isSpacedInY = Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
-      var isArrowVertical = _isVertical(this.parent) && ((isReversed && isSpacedInY) || (commitSpaceDelta > 1));
-      if (isArrowVertical) {
+      var isPushedInY = (isForkCommit || isReversed)
+          && Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
+      var isOnSameXThanParent = (this.x === this.parentCommit.x);
+      if (_isVertical(this.parent) && (isPushedInY || isOnSameXThanParent)) {
         alphaX = 0;
       }
 
       var alphaY = this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
-      var isSpacedInX = Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
-      var isArrowHorizontal = _isHorizontal(this.parent) && ((isReversed && isSpacedInX) || (commitSpaceDelta > 1));
-      if (isArrowHorizontal) {
+      var isPushedInX = (isForkCommit || isReversed)
+          && Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
+      var isOnSameYThanParent = (this.y === this.parentCommit.y);
+      if (_isHorizontal(this.parent) && (isPushedInX || isOnSameYThanParent)) {
         alphaY = 0;
       }
 
