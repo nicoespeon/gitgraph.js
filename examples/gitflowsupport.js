@@ -5,7 +5,8 @@ var graphConfig = new GitGraph.Template({
         spacingX: 60,
         mergeStyle: "straight",
         showLabel: true,                // display branch names on graph
-        labelFont: "normal 10pt Arial"
+        labelFont: "normal 10pt Arial",
+        labelRotation: 0
     },
     commit: {
         spacingY: -30,
@@ -35,7 +36,7 @@ var graphConfig = new GitGraph.Template({
 var config = {
   template: graphConfig,
   mode: "extended",
-  orientation: "vertical"
+  orientation: "horizontal"
 };
 
 var bugfixCommit = {

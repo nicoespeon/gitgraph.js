@@ -45,7 +45,10 @@
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
       this.orientation = "vertical-reverse";
-      this.template.branch.labelRotation = 0;
+
+      this.template.branch.labelRotation = options.template.branch.labelRotation !== null ?
+                                           options.template.branch.labelRotation : 0;
+
       this.template.commit.tag.spacingY *= -1;
       break;
     case "horizontal" :
@@ -55,7 +58,10 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal";
-      this.template.branch.labelRotation = -90;
+
+      this.template.branch.labelRotation = this.template.branch.labelRotation !== null ?
+                                           this.template.branch.labelRotation : -90;
+
       this.template.commit.tag.spacingX = -this.template.commit.spacingX;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
@@ -66,13 +72,18 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal-reverse";
-      this.template.branch.labelRotation = 90;
+
+      this.template.branch.labelRotation = options.template.branch.labelRotation !== null ?
+                                           options.template.branch.labelRotation : 90;
+
       this.template.commit.tag.spacingX = -this.template.commit.spacingY;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     default:
       this.orientation = "vertical";
-      this.template.branch.labelRotation = 0;
+
+      this.template.branch.labelRotation = options.template.branch.labelRotation !== null ?
+                                           options.template.branch.labelRotation : 0;
       break;
     }
 
@@ -1016,7 +1027,14 @@
 
     // Label
     if ( this.showLabel ) {
-      _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+
+      if (this.template.branch.labelRotation % 180 === 0)
+      {
+        _drawTextBG( this.context, this.x, this.y - 30, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+      } else {
+         _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+      }
+
     }
 
     // Dot
@@ -1044,7 +1062,9 @@
       this.parent.tagNum++;
       this.context.font = this.tagFont;
       var textWidth = this.context.measureText( this.tag ).width;
-      if ( this.template.branch.labelRotation !== 0 ) {
+
+      // Can't base this on the label rotation angle anymore, as both orientation modes can support varied angles.
+      if ((this.parent.orientation.indexOf('horizontal') === 0)) {
         var textHeight = _getFontHeight( this.tagFont );
         _drawTextBG( this.context,
           this.x - this.dotSize / 2,
@@ -1056,7 +1076,9 @@
           this.y - this.dotSize / 2,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       }
+
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
+
     }
 
     this.context.font = this.messageFont;
@@ -1223,7 +1245,9 @@
     this.branch.showLabel = options.branch.showLabel || false;
     this.branch.labelColor = options.branch.labelColor || null;
     this.branch.labelFont = options.branch.labelFont || "normal 8pt Calibri";
-    this.branch.labelRotation = options.branch.labelRotation || 0;
+
+    this.branch.labelRotation = options.branch.labelRotation !== undefined ?
+                                options.branch.labelRotation : null; // Needs to be null rather than 0;
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
@@ -1388,6 +1412,12 @@
    * @private
    */
   function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
+
+    if (angle % 180 === 0) {
+
+
+    }
+
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
