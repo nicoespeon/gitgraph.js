@@ -65,7 +65,7 @@ var master = gitgraph.branch({name:"master", column:masterCol});
 master.commit("Initial commit");
 
 var develop = gitgraph.branch({parentBranch:master, name: "develop", column:developCol});
-master.commit({messageDisplay:false}).merge(develop, {messageDisplay:false});
+master.commit({messageDisplay:false});
 develop.commit({messageDisplay:false});
 
 var feature1 = gitgraph.branch({parentBranch:develop, name:"feature/1", column:featureCol});
