@@ -116,7 +116,8 @@ module.exports = function ( grunt ) {
       src: [ "src/*.js" ],
       options: {
         force: true,
-        jshintrc: ".jshintrc"
+        jshintrc: ".jshintrc",
+        reporterOutput: "",
       }
     },
 
