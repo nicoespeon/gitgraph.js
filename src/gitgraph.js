@@ -1025,10 +1025,15 @@
     // Label
     if ( this.showLabel ) {
 
-      if (this.template.branch.labelRotation % 180 === 0 && (this.parent.orientation.indexOf('horizontal') === 0))
+      // For cases where we want 0 or 180 degree label rotation in horizontal mode, we need to modify the position of the label to sit above the commit dot.
+      if ((this.parent.orientation.indexOf('horizontal') === 0) && (this.template.branch.labelRotation % 180 === 0))
       {
-        _drawTextBG( this.context, this.x, this.y - 30, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
-      } else {
+
+        // Take into account the dot size and the height of the label (calculated from the font size) to arrive at the Y position.
+        var yNegativeMargin = this.y - (this.dotSize) - (_getFontHeight(this.labelFont))
+        _drawTextBG( this.context, this.x, yNegativeMargin, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+
+    } else {
          _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
       }
 
