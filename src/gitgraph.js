@@ -1025,16 +1025,36 @@
     // Label
     if ( this.showLabel ) {
 
-      // For cases where we want 0 or 180 degree label rotation in horizontal mode, we need to modify the position of the label to sit above the commit dot.
-      if ((this.parent.orientation.indexOf('horizontal') === 0) && (this.template.branch.labelRotation % 180 === 0))
+      /*
+       * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
+       * we need to modify the position of the label to sit centrally above the commit dot.
+       */
+      if ((this.parent.orientation.indexOf('horizontal') === 0)
+          && (this.template.branch.labelRotation % 180 === 0))
       {
 
-        // Take into account the dot size and the height of the label (calculated from the font size) to arrive at the Y position.
-        var yNegativeMargin = this.y - (this.dotSize) - (_getFontHeight(this.labelFont))
-        _drawTextBG( this.context, this.x, yNegativeMargin, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
-
+        /*
+         * Take into account the dot size and the height of the label
+         * (calculated from the font size) to arrive at the Y position.
+         */
+        var yNegativeMargin = this.y - this.dotSize - _getFontHeight(this.labelFont);
+        _drawTextBG( this.context,
+                     this.x,
+                     yNegativeMargin,
+                     this.branch.name,
+                     this.labelColor,
+                     this.labelFont,
+                     this.template.branch.labelRotation,
+                     true );
     } else {
-         _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+         _drawTextBG( this.context,
+                      this.x + this.template.commit.spacingX,
+                      this.y + this.template.commit.spacingY,
+                      this.branch.name,
+                      this.labelColor,
+                      this.labelFont,
+                      this.template.branch.labelRotation,
+                      true );
       }
 
     }
