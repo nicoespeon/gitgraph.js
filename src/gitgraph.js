@@ -1243,12 +1243,14 @@
     this.branch.labelColor = options.branch.labelColor || null;
     this.branch.labelFont = options.branch.labelFont || "normal 8pt Calibri";
 
-    console.log(options.branch.labelRotation);
-
+    /*
+     * Set to 'null' by default, as a value of '0' can no longer be used to test
+     * whether rotation angle has been defined
+     * ('0' is an acceptable value).
+     */
     this.branch.labelRotation = options.branch.labelRotation !== undefined ?
-                                options.branch.labelRotation : null; // Needs to be null rather than 0;
+                                options.branch.labelRotation : null;
 
-    console.log(this.branch.labelRotation);
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
 
