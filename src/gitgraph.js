@@ -78,7 +78,8 @@
       break;
     default:
       this.orientation = "vertical";
-      this.template.branch.labelRotation =  options.template.branch !== undefined &&
+
+      this.template.branch.labelRotation =  _isDefined(options, 'template.branch.labelRotation') &&
                                             options.template.branch.labelRotation !== null ?
                                             options.template.branch.labelRotation : 0;
       break;
@@ -1555,6 +1556,15 @@
    */
   function _isObject(object) {
     return (typeof object === "object");
+  }
+
+  function _isDefined(obj, key) {
+    return key.split(".").every(function(x) {
+        if(typeof obj != "object" || obj === null || ! x in obj)
+            return false;
+        obj = obj[x];
+        return true;
+    });
   }
 
   // Expose GitGraph object
