@@ -1030,8 +1030,8 @@
        * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
        * we need to modify the position of the label to sit centrally above the commit dot.
        */
-      if ((this.parent.orientation.indexOf('horizontal') === 0)
-          && (this.template.branch.labelRotation % 180 === 0))
+      if(_isHorizontal(this.parent)
+        && (this.template.branch.labelRotation % 180 === 0))
       {
 
         /*
@@ -1087,7 +1087,7 @@
       var textWidth = this.context.measureText( this.tag ).width;
 
       // Can't base this on the label rotation angle anymore, as both orientation modes can support varied angles.
-      if ((this.parent.orientation.indexOf('horizontal') === 0)) {
+      if (_isHorizontal(this.parent)) {
         var textHeight = _getFontHeight( this.tagFont );
         _drawTextBG( this.context,
           this.x - this.dotSize / 2,
@@ -1560,8 +1560,9 @@
 
   function _isDefined(obj, key) {
     return key.split(".").every(function(x) {
-        if(typeof obj != "object" || obj === null || ! x in obj)
-            return false;
+        if(typeof obj !== "object" || obj === null || !x in obj) {
+          return false;
+        }
         obj = obj[x];
         return true;
     });
