@@ -1344,7 +1344,8 @@
           color: "#000000",
           lineWidth: 4,
           spacingX: 50,
-          mergeStyle: "straight"
+          mergeStyle: "straight",
+          labelRotation: 0
         },
         commit: {
           spacingY: -60,
@@ -1371,7 +1372,8 @@
         colors: [ "#979797", "#008fb5", "#f1c109" ],
         branch: {
           lineWidth: 10,
-          spacingX: 50
+          spacingX: 50,
+          labelRotation: 0
         },
         commit: {
           spacingY: -80,
