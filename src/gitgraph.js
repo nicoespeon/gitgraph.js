@@ -45,8 +45,7 @@
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
       this.orientation = "vertical-reverse";
-      this.template.branch.labelRotation =  options.template.branch !== undefined &&
-                                            options.template.branch.labelRotation !== null ?
+      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
                                             options.template.branch.labelRotation : 0;
       this.template.commit.tag.spacingY *= -1;
       break;
@@ -57,8 +56,7 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal";
-      this.template.branch.labelRotation =  options.template.branch !== undefined &&
-                                            options.template.branch.labelRotation !== null ?
+      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
                                             options.template.branch.labelRotation : -90;
       this.template.commit.tag.spacingX = -this.template.commit.spacingX;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
@@ -70,17 +68,14 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal-reverse";
-      this.template.branch.labelRotation =  options.template.branch !== undefined &&
-                                            options.template.branch.labelRotation !== null ?
+      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
                                             options.template.branch.labelRotation : 90;
       this.template.commit.tag.spacingX = -this.template.commit.spacingY;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     default:
       this.orientation = "vertical";
-
-      this.template.branch.labelRotation =  _isDefined(options, "template.branch.labelRotation") &&
-                                            options.template.branch.labelRotation !== null ?
+      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
                                             options.template.branch.labelRotation : 0;
       break;
     }
@@ -1560,19 +1555,97 @@
     return (typeof object === "object");
   }
 
-  function _isDefined(obj, key) {
+  /**
+   * Returns `true` if any of the properties (nested or single) of `obj` specified by `key` are undefined or set to a value of null.
+   * Modified from original source: http://stackoverflow.com/a/23809123.
+   *
+   * @param {*} obj - The object whose properties are to be tested as being undefined or equal to null.
+   * @param {String} key - The property hierarchy of `obj` to be tested, specified using 'dot notation' (e.g. property1.property2.property3 etc).
+   * @returns {Boolean} - True if ANY of the properties specified by `key` is undefined or equal to null, otherwise False.
+   * @private
+   */
+  function _isNullOrUndefined(obj, key) {
     return key.split(".").every(function(x) {
         if(typeof obj !== "object" || obj === null || !(x in obj)) {
-          return false;
+          return true;
         }
         obj = obj[x];
-        return true;
+        return false;
     });
   }
+
+  /* Polyfill for ECMA-252 5th edition Array.prototype.every()
+   * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+   * for more information.
+   * */
+  if (!Array.prototype.every) {
+    Array.prototype.every = function(callbackfn, thisArg) {
+      'use strict';
+      var T, k;
+
+      if (this == null) {
+        throw new TypeError('this is null or not defined');
+      }
+
+      // 1. Let O be the result of calling ToObject passing the this
+      //    value as the argument.
+      var O = Object(this);
+
+      // 2. Let lenValue be the result of calling the Get internal method
+      //    of O with the argument "length".
+      // 3. Let len be ToUint32(lenValue).
+      var len = O.length >>> 0;
+
+      // 4. If IsCallable(callbackfn) is false, throw a TypeError exception.
+      if (typeof callbackfn !== 'function') {
+        throw new TypeError();
+      }
+
+      // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+      if (arguments.length > 1) {
+        T = thisArg;
+      }
+
+      // 6. Let k be 0.
+      k = 0;
+
+      // 7. Repeat, while k < len
+      while (k < len) {
+
+        var kValue;
+
+        // a. Let Pk be ToString(k).
+        //   This is implicit for LHS operands of the in operator
+        // b. Let kPresent be the result of calling the HasProperty internal
+        //    method of O with argument Pk.
+        //   This step can be combined with c
+        // c. If kPresent is true, then
+        if (k in O) {
+
+          // i. Let kValue be the result of calling the Get internal method
+          //    of O with argument Pk.
+          kValue = O[k];
+
+          // ii. Let testResult be the result of calling the Call internal method
+          //     of callbackfn with T as the this value and argument list
+          //     containing kValue, k, and O.
+          var testResult = callbackfn.call(T, kValue, k, O);
+
+          // iii. If ToBoolean(testResult) is false, return false.
+          if (!testResult) {
+            return false;
+          }
+        }
+        k++;
+      }
+      return true;
+    };
+}
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
   window.GitGraph.Branch = Branch;
   window.GitGraph.Commit = Commit;
   window.GitGraph.Template = Template;
+
 })();
