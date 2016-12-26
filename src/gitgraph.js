@@ -1440,11 +1440,6 @@
    */
   function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
 
-    if (angle % 180 === 0) {
-
-
-    }
-
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
