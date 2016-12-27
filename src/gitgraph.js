@@ -75,6 +75,8 @@
       break;
     default:
       this.orientation = "vertical";
+      console.log(options);
+      console.log(_isNullOrUndefined(options, "template.branch.labelRotation"));
       this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
                                             options.template.branch.labelRotation : 0;
       break;
@@ -1565,13 +1567,19 @@
    * @private
    */
   function _isNullOrUndefined(obj, key) {
-    return key.split(".").every(function(x) {
+
+    /* We invert the result of '.every()' in order to meet the expected return value for the condition test of the function.
+     * We have to do this, given that '.every()' will return immediately upon capturing a falsey value from the callback.
+     *
+     * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/every for more information.
+     */
+    return !(key.split(".").every(function(x) {
         if(typeof obj !== "object" || obj === null || !(x in obj)) {
-          return true;
+          return false;
         }
         obj = obj[x];
-        return false;
-    });
+        return true;
+    }));
   }
 
   /* Polyfill for ECMA-252 5th edition Array.prototype.every()
@@ -1580,11 +1588,10 @@
    * */
   if (!Array.prototype.every) {
     Array.prototype.every = function(callbackfn, thisArg) {
-      'use strict';
       var T, k;
 
-      if (this == null) {
-        throw new TypeError('this is null or not defined');
+      if (this === null) {
+        throw new TypeError("this is null or not defined");
       }
 
       // 1. Let O be the result of calling ToObject passing the this
@@ -1597,7 +1604,7 @@
       var len = O.length >>> 0;
 
       // 4. If IsCallable(callbackfn) is false, throw a TypeError exception.
-      if (typeof callbackfn !== 'function') {
+      if (typeof callbackfn !== "function") {
         throw new TypeError();
       }
 
