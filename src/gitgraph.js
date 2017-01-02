@@ -45,8 +45,8 @@
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
       this.orientation = "vertical-reverse";
-      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
-                                            options.template.branch.labelRotation : 0;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                            0 : options.template.branch.labelRotation;
       this.template.commit.tag.spacingY *= -1;
       break;
     case "horizontal" :
@@ -56,8 +56,8 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal";
-      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
-                                            options.template.branch.labelRotation : -90;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                            -90 : options.template.branch.labelRotation;
       this.template.commit.tag.spacingX = -this.template.commit.spacingX;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
@@ -68,17 +68,15 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal-reverse";
-      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
-                                            options.template.branch.labelRotation : 90;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                            90 : options.template.branch.labelRotation;
       this.template.commit.tag.spacingX = -this.template.commit.spacingY;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     default:
       this.orientation = "vertical";
-      console.log(options);
-      console.log(_isNullOrUndefined(options, "template.branch.labelRotation"));
-      this.template.branch.labelRotation =  !(_isNullOrUndefined(options, "template.branch.labelRotation")) ?
-                                            options.template.branch.labelRotation : 0;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                             0 : options.template.branch.labelRotation;
       break;
     }
 
@@ -808,7 +806,6 @@
       if (isGraphHorizontal) {
         var targetBranchY = targetBranch.path[1].y;
         this.path.forEach(function(point) {
-          console.log(point.y, targetBranchY);
           point.y = targetBranchY;
         });
       } else {
@@ -1088,7 +1085,7 @@
         var textHeight = _getFontHeight( this.tagFont );
         _drawTextBG( this.context,
           this.x - this.dotSize / 2,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + textHeight * 1.5,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       } else {
         _drawTextBG( this.context,
@@ -1439,7 +1436,6 @@
    * @private
    */
   function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
-
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );
@@ -1594,51 +1590,29 @@
         throw new TypeError("this is null or not defined");
       }
 
-      // 1. Let O be the result of calling ToObject passing the this
-      //    value as the argument.
       var O = Object(this);
 
-      // 2. Let lenValue be the result of calling the Get internal method
-      //    of O with the argument "length".
-      // 3. Let len be ToUint32(lenValue).
       var len = O.length >>> 0;
 
-      // 4. If IsCallable(callbackfn) is false, throw a TypeError exception.
       if (typeof callbackfn !== "function") {
         throw new TypeError();
       }
 
-      // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
       if (arguments.length > 1) {
         T = thisArg;
       }
 
-      // 6. Let k be 0.
       k = 0;
 
-      // 7. Repeat, while k < len
       while (k < len) {
 
         var kValue;
-
-        // a. Let Pk be ToString(k).
-        //   This is implicit for LHS operands of the in operator
-        // b. Let kPresent be the result of calling the HasProperty internal
-        //    method of O with argument Pk.
-        //   This step can be combined with c
-        // c. If kPresent is true, then
         if (k in O) {
 
-          // i. Let kValue be the result of calling the Get internal method
-          //    of O with argument Pk.
           kValue = O[k];
 
-          // ii. Let testResult be the result of calling the Call internal method
-          //     of callbackfn with T as the this value and argument list
-          //     containing kValue, k, and O.
           var testResult = callbackfn.call(T, kValue, k, O);
 
-          // iii. If ToBoolean(testResult) is false, return false.
           if (!testResult) {
             return false;
           }
@@ -1654,5 +1628,4 @@
   window.GitGraph.Branch = Branch;
   window.GitGraph.Commit = Commit;
   window.GitGraph.Template = Template;
-
 })();
