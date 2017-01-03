@@ -442,7 +442,7 @@
    * @param {Object} options - Options of branch
    * @param {GitGraph} options.parent - GitGraph constructor
    * @param {Branch} [options.parentBranch = options.parentCommit.branch] - Parent branch
-   * @param {Commit} [options.parentCommit = options.parentBranch.commits.slice(-1)[0]] - Parent commit
+   * @param {Commit} [options.parentCommit = _getLast(options.parentBranch.commits)] - Parent commit
    * @param {String} [options.name = "no-name"] - Branch name
    * @param {Object} [options.commitDefaultOptions = {}] - Default options for commits
    *
@@ -504,7 +504,7 @@
 
     // Add start point
     if (this.parentBranch) {
-      if (this.parentCommit === this.parentBranch.commits.slice(-1)[0]) {
+      if (this.parentCommit === _getLast(this.parentBranch.commits)) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
           y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -629,12 +629,12 @@
       this.template.commit.color ||
       this.template.colors[columnIndex];
     options.parent = this.parent;
-    options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
+    options.parentCommit = options.parentCommit || _getLast(this.commits);
 
     // Special compact mode
     if (this.parent.mode === "compact" &&
-      this.parent.commits.slice(-1)[0] &&
-      this.parent.commits.slice(-1)[0].branch !== options.branch &&
+      _getLast(this.parent.commits) &&
+      _getLast(this.parent.commits).branch !== options.branch &&
       options.branch.commits.length &&
       options.type !== "mergeCommit") {
       this.parent.commitOffsetX -= this.template.commit.spacingX;
@@ -674,7 +674,7 @@
     }
 
     // Check collision (Cause of special compact mode)
-    var previousCommit = options.branch.commits.slice(-1)[0] || {};
+    var previousCommit = _getLast(options.branch.commits) || {};
     var commitPosition = options.x + options.y;
     var previousCommitPosition = previousCommit.x + previousCommit.y;
     var isCommitAtSamePlaceThanPreviousOne = (commitPosition === previousCommitPosition);
@@ -798,10 +798,10 @@
       commitOptions.message = commitOptions.message || defaultMessage;
     }
     commitOptions.type = "mergeCommit";
-    commitOptions.parentCommit = this.commits.slice(-1)[0];
+    commitOptions.parentCommit = _getLast(this.commits);
 
     var branchParentCommit = this.commits[0].parentCommit;
-    var parentBranchLastCommit = targetBranch.commits.slice(-1)[0];
+    var parentBranchLastCommit = _getLast(targetBranch.commits);
     var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
       var isGraphHorizontal  = _isHorizontal(this.parent);
@@ -836,7 +836,7 @@
       targetBranch.commit(commitOptions);
 
       // Add points to path
-      var targetCommit = targetBranch.commits.slice(-1)[0];
+      var targetCommit = _getLast(targetBranch.commits);
       var endOfBranch = {
         x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
         y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
@@ -896,7 +896,7 @@
    * @this Branch
    */
   Branch.prototype.pushPath = function (point) {
-    var lastPoint = this.path.slice(-1)[0];
+    var lastPoint = _getLast(this.path);
     if (!lastPoint) {
       this.path.push(point);
     } else if (lastPoint.x === point.x && lastPoint.y === point.y) {
@@ -1391,6 +1391,15 @@
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
 
+  /**
+   * Returns the last element of given array.
+   *
+   * @param {Array} array
+   * @returns {*}
+   * @private */
+  function _getLast(array) {
+    return array.slice(-1)[0];
+  }
 
   /**
    * Returns the parent commit of current HEAD from given branch.
@@ -1400,8 +1409,8 @@
    * @private
    * */
   function _getParentCommitFromBranch(branch) {
-    if (branch.commits.slice(-1)[0]) {
-      return branch.commits.slice(-1)[0];
+    if (_getLast(branch.commits)) {
+      return _getLast(branch.commits);
     } else if (branch.parentBranch) {
       return _getParentCommitFromBranch(branch.parentBranch);
     } else {
