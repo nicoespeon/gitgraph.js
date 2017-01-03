@@ -467,7 +467,7 @@
       this.parentCommit = options.parentCommit;
       this.parentBranch = options.parentCommit.branch;
     } else if (options.parentBranch) {
-      this.parentCommit = options.parentBranch.commits.slice(-1)[0];
+      this.parentCommit = _getParentCommitFromBranch(options.parentBranch);
       this.parentBranch = options.parentBranch;
     } else {
       this.parentCommit = null;
@@ -713,26 +713,27 @@
     };
 
     if (!isFirstBranch && isPathBeginning) {
-      // Start point on parent branch
       this.pushPath(this.startPoint);
-      // Move to this branch
-      this.pushPath({
-        x: this.startPoint.x - this.parentBranch.offsetX + this.offsetX - this.template.commit.spacingX,
-        y: this.startPoint.y - this.parentBranch.offsetY + this.offsetY - this.template.commit.spacingY,
-        type: "join"
-      });
 
-      // Extend parent branch
-      var parent = JSON.parse(JSON.stringify(this.startPoint)); // Elegant way for cloning an object
-      parent.type = "join";
-      this.parentBranch.pushPath(parent);
+      // Trace path from parent branch if it has commits already
+      if (this.parentBranch.commits.length > 0) {
+        this.pushPath({
+          x: this.startPoint.x - this.parentBranch.offsetX + this.offsetX - this.template.commit.spacingX,
+          y: this.startPoint.y - this.parentBranch.offsetY + this.offsetY - this.template.commit.spacingY,
+          type: "join"
+        });
+
+        var parent = _clone(this.startPoint);
+        parent.type = "join";
+        this.parentBranch.pushPath(parent);
+      }
     } else if (isPathBeginning) {
       point.type = "start";
     }
 
-    // Increment commitOffset for next commit position
     this.pushPath(point);
 
+    // Increment commitOffset for next commit position
     this.parent.commitOffsetX += this.template.commit.spacingX * (options.showLabel ? 2 : 1);
     this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
 
@@ -841,7 +842,7 @@
         y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
         type: "join"
       };
-      this.pushPath(JSON.parse(JSON.stringify(endOfBranch))); // Elegant way for cloning an object
+      this.pushPath(_clone(endOfBranch));
 
       var mergeCommit = {
         x: targetCommit.x,
@@ -1389,6 +1390,35 @@
   // --------------------------------------------------------------------
   // -----------------------      Utilities       -----------------------
   // --------------------------------------------------------------------
+
+
+  /**
+   * Returns the parent commit of current HEAD from given branch.
+   *
+   * @param {Branch} branch
+   * @returns {Commit}
+   * @private
+   * */
+  function _getParentCommitFromBranch(branch) {
+    if (branch.commits.slice(-1)[0]) {
+      return branch.commits.slice(-1)[0];
+    } else if (branch.parentBranch) {
+      return _getParentCommitFromBranch(branch.parentBranch);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Returns a copy of the given object.
+   *
+   * @param {Object} object
+   * @returns {Object}
+   * @private
+   * */
+  function _clone(object) {
+    return JSON.parse(JSON.stringify(object));
+  }
 
   /**
    * Returns the height of the given font when rendered.
