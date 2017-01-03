@@ -764,7 +764,7 @@
    * @this Branch
    **/
   Branch.prototype.delete = function () {
-    this.isfinish = true;
+    this.isDeleted = true;
   };
 
   /**
@@ -872,7 +872,7 @@
   Branch.prototype.calculColumn = function () {
     var candidates = [];
     for (var i = 0, branch; !!(branch = this.parent.branches[i]); i++) {
-      if (!branch.isfinish) {
+      if (!branch.isDeleted) {
         if (!(branch.column in candidates)) {
           candidates[branch.column] = 0;
         }
@@ -1219,7 +1219,7 @@
    * @param {Number} [options.arrow.size] - Arrow size
    * @param {Number} [options.arrow.offset] - Arrow offset
    * @param {String} [options.branch.color] - Branch color
-   * @param {Number} [options.branch.linewidth] - Branch line width
+   * @param {Number} [options.branch.lineWidth] - Branch line width
    * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
    * @param {Number} [options.branch.spacingX] - Space between branches
    * @param {Number} [options.branch.spacingY] - Space between branches
@@ -1584,7 +1584,7 @@
    * for more information.
    * */
   if (!Array.prototype.every) {
-    Array.prototype.every = function (callbackfn, thisArg) {
+    Array.prototype.every = function (callbackFn, thisArg) {
       var T, k;
 
       if (this === null) {
@@ -1592,10 +1592,9 @@
       }
 
       var O = Object(this);
-
       var len = O.length >>> 0;
 
-      if (typeof callbackfn !== "function") {
+      if (typeof callbackFn !== "function") {
         throw new TypeError();
       }
 
@@ -1606,13 +1605,12 @@
       k = 0;
 
       while (k < len) {
-
         var kValue;
         if (k in O) {
 
           kValue = O[k];
 
-          var testResult = callbackfn.call(T, kValue, k, O);
+          var testResult = callbackFn.call(T, kValue, k, O);
 
           if (!testResult) {
             return false;
@@ -1620,6 +1618,7 @@
         }
         k++;
       }
+
       return true;
     };
   }
