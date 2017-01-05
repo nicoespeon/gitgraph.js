@@ -1085,7 +1085,7 @@
         var textHeight = _getFontHeight( this.tagFont );
         _drawTextBG( this.context,
           this.x - this.dotSize / 2,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + textHeight * 1.5,
+          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       } else {
         _drawTextBG( this.context,
