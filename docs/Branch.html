@@ -192,10 +192,51 @@
             
                 <td class="default">
                 
+                    options.parentCommit.branch
+                
                 </td>
             
             
             <td class="description last"><p>Parent branch</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parentCommit</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Commit.html">Commit</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    _getLast(options.parentBranch.commits)
+                
+                </td>
+            
+            
+            <td class="description last"><p>Parent commit</p></td>
         </tr>
 	
 	
@@ -238,6 +279,45 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>commitDefaultOptions</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+            
+            <td class="description last"><p>Default options for commits</p></td>
+        </tr>
+	
+	
 	</tbody>
 </table>
             </td>
@@ -271,7 +351,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 259
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line468">line 468</a>
     </li></ul></dd>
     
     
@@ -315,6 +395,158 @@
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
+            
+<dt>
+    <h4 class="name" id="branch"><span class="type-signature"></span>branch<span class="signature">(options)</span><span class="type-signature"> &rarr; {<a href="Branch.html">Branch</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Create new branch</p>
+    </div>
+    
+
+    
+    
+    
+        <h5>This:</h5>
+        <ul><li><a href="Branch.html">Branch</a></li></ul>
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Branch name | Options of Branch</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line558">line 558</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Branch.html">Branch</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>New Branch</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Branch.html">Branch</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="calculColumn"><span class="type-signature"></span>calculColumn<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -361,7 +593,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 488
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line922">line 922</a>
     </li></ul></dd>
     
     
@@ -433,7 +665,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 417
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line807">line 807</a>
     </li></ul></dd>
     
     
@@ -537,7 +769,67 @@
             
             
             
-            <td class="description last"><p>Message | Options of commit</p></td>
+            <td class="description last"><p>Message | Options of commit</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>detailId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Id of detail DOM Element</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -568,7 +860,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 331
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line632">line 632</a>
     </li></ul></dd>
     
     
@@ -647,7 +939,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 426
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line816">line 816</a>
     </li></ul></dd>
     
     
@@ -675,7 +967,7 @@
         
             
 <dt>
-    <h4 class="name" id="merge"><span class="type-signature"></span>merge<span class="signature">(<span class="optional">target</span>, <span class="optional">message</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="merge"><span class="type-signature"></span>merge<span class="signature">(<span class="optional">target</span>, <span class="optional">commitOptions</span>)</span><span class="type-signature"> &rarr; {<a href="Branch.html">Branch</a>}</span></h4>
     
     
 </dt>
@@ -763,13 +1055,16 @@
 	
         <tr>
             
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>commitOptions</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
 
 
             
@@ -793,7 +1088,75 @@
                 </td>
             
             
-            <td class="description last"></td>
+            <td class="description last"><p>Message | Options of commit</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>fastForward</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last"><p>If true, merge should use fast-forward if possible</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -824,7 +1187,102 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 437
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line831">line 831</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Branch.html">Branch</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pushPath"><span class="type-signature"></span>pushPath<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Push a new point to path.
+This method will combine duplicate points and reject reversed points.</p>
+    </div>
+    
+
+    
+    
+    
+        <h5>This:</h5>
+        <ul><li><a href="Branch.html">Branch</a></li></ul>
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line947">line 947</a>
     </li></ul></dd>
     
     
@@ -896,12 +1354,313 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 300
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line583">line 583</a>
     </li></ul></dd>
     
     
     
     
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tag"><span class="type-signature"></span>tag<span class="signature">(<span class="optional">options</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Tag the last commit of the branch.</p>
+    </div>
+    
+
+    
+    
+    
+        <h5>This:</h5>
+        <ul><li><a href="Branch.html">Branch</a></li></ul>
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Message | Options of the tag</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Message of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagColor</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Color of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Font of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>displayTagBox</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>If true, display a box around the tag</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line783">line 783</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Tag.html">Tag</a></li>
+        </ul>
+    </dd>
     
     
     
@@ -937,13 +1696,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Tag.html">Tag</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_assignTagOptionsToCommit">_assignTagOptionsToCommit</a></li><li><a href="global.html#_booleanOptionOr">_booleanOptionOr</a></li><li><a href="global.html#_clone">_clone</a></li><li><a href="global.html#_drawTextBG">_drawTextBG</a></li><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getFontHeight">_getFontHeight</a></li><li><a href="global.html#_getLast">_getLast</a></li><li><a href="global.html#_getParentCommitFromBranch">_getParentCommitFromBranch</a></li><li><a href="global.html#_getScale">_getScale</a></li><li><a href="global.html#_isHorizontal">_isHorizontal</a></li><li><a href="global.html#_isNullOrUndefined">_isNullOrUndefined</a></li><li><a href="global.html#_isObject">_isObject</a></li><li><a href="global.html#_isVertical">_isVertical</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sun Sep 15 2013 19:04:46 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jan 06 2017 09:40:41 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

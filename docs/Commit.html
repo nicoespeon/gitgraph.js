@@ -381,6 +381,43 @@
 	
         <tr>
             
+                <td class="name"><code>detail</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>DOM Element of detail part</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>sha1</code></td>
             
             
@@ -412,6 +449,236 @@
             
             
             <td class="description last"><p>Sha1, default is a random short sha1</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parentCommit</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Commit.html">Commit</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>Parent commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    ("mergeCommit"|null)
+                
+                </td>
+            
+            
+            <td class="description last"><p>Type of commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>Tag of the commit</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagColor</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    options.color
+                
+                </td>
+            
+            
+            <td class="description last"><p>Color of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.tag.font
+                
+                </td>
+            
+            
+            <td class="description last"><p>Font of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>displayTagBox</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last"><p>If true, display a box around the tag</p></td>
         </tr>
 	
 	
@@ -574,43 +841,6 @@
 	
         <tr>
             
-                <td class="name"><code>parentCommit</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Commit.html">Commit</a></span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Parent commit</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>message</code></td>
             
             
@@ -689,6 +919,45 @@
 	
         <tr>
             
+                <td class="name"><code>messageFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.message.font
+                
+                </td>
+            
+            
+            <td class="description last"><p>Font of the message</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>messageDisplay</code></td>
             
             
@@ -721,14 +990,131 @@
                 </td>
             
             
-            <td class="description last"><p>Commit message policy</p></td>
+            <td class="description last"><p>Commit message display policy</p></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>type</code></td>
+                <td class="name"><code>messageAuthorDisplay</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.message.displayAuthor
+                
+                </td>
+            
+            
+            <td class="description last"><p>Commit message author policy</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>messageBranchDisplay</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.message.displayBranch
+                
+                </td>
+            
+            
+            <td class="description last"><p>Commit message author policy</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>messageHashDisplay</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.commit.message.displayHash
+                
+                </td>
+            
+            
+            <td class="description last"><p>Commit message hash policy</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelColor</code></td>
             
             
             <td class="type">
@@ -755,12 +1141,164 @@
             
                 <td class="default">
                 
-                    ("mergeCommit"|null)
+                    options.color
                 
                 </td>
             
             
-            <td class="description last"><p>Type of commit</p></td>
+            <td class="description last"><p>Specific label color</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.template.branch.labelFont
+                
+                </td>
+            
+            
+            <td class="description last"><p>Font used for labels</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tooltipDisplay</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last"><p>Tooltip message display policy</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>onClick</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#commitCallback">commitCallback</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>OnClick event for the commit dot</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>representedObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.</p></td>
         </tr>
 	
 	
@@ -797,7 +1335,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 531
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line1021">line 1021</a>
     </li></ul></dd>
     
     
@@ -887,7 +1425,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 601
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line1168">line 1168</a>
     </li></ul></dd>
     
     
@@ -959,7 +1497,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        gitgraph.js, line 567
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line1069">line 1069</a>
     </li></ul></dd>
     
     
@@ -1000,13 +1538,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Tag.html">Tag</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_assignTagOptionsToCommit">_assignTagOptionsToCommit</a></li><li><a href="global.html#_booleanOptionOr">_booleanOptionOr</a></li><li><a href="global.html#_clone">_clone</a></li><li><a href="global.html#_drawTextBG">_drawTextBG</a></li><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getFontHeight">_getFontHeight</a></li><li><a href="global.html#_getLast">_getLast</a></li><li><a href="global.html#_getParentCommitFromBranch">_getParentCommitFromBranch</a></li><li><a href="global.html#_getScale">_getScale</a></li><li><a href="global.html#_isHorizontal">_isHorizontal</a></li><li><a href="global.html#_isNullOrUndefined">_isNullOrUndefined</a></li><li><a href="global.html#_isObject">_isObject</a></li><li><a href="global.html#_isVertical">_isVertical</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sun Sep 15 2013 19:04:46 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jan 06 2017 09:40:41 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
