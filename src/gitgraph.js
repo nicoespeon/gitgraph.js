@@ -837,6 +837,12 @@
       return this;
     }
 
+    var firstBranchCommit = this.commits[0];
+    if (!firstBranchCommit) {
+      console.log(this.name + " is already up-to-date with " + targetBranch.name);
+      return this;
+    }
+
     // Merge commit
     var defaultMessage = "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
     if (typeof commitOptions !== "object") {
