@@ -213,6 +213,23 @@
   };
 
   /**
+   * Tag the HEAD
+   *
+   * @param {Object} options - Options of tag
+   *
+   * @see Tag
+   * @this GitGraph
+   *
+   * @return {GitGraph} this - Return the main object so we can chain
+   **/
+  GitGraph.prototype.tag = function (options) {
+    this.HEAD.tag(options);
+
+    // Return the main object so we can chain
+    return this;
+  };
+
+  /**
    * Create a new template
    *
    * @param {(String|Object)} options - The template name, or the template options
@@ -751,6 +768,38 @@
   };
 
   /**
+   * Tag the last commit of the branch.
+   *
+   * @param {(String | Object)} [options] - Message | Options of the tag
+   * @param {String} [options.tag] - Message of the tag
+   * @param {String} [options.tagColor] - Color of the tag
+   * @param {String} [options.tagFont] - Font of the tag
+   * @param {Boolean} [options.displayTagBox] - If true, display a box around the tag
+   *
+   * @see Tag
+   *
+   * @this Branch
+   * */
+  Branch.prototype.tag = function (options) {
+    if (typeof options === "string") {
+      options = {
+        tag: options
+      };
+    }
+
+    options = _isObject(options) ?  options :  {};
+
+    var lastCommit = _getLast(this.commits);
+    if (_isObject(lastCommit)) {
+      _assignTagOptionsToCommit(lastCommit, options);
+      this.parent.render();
+    }
+
+    // Return the main object so we can chain
+    return this;
+  };
+
+  /**
    * Checkout onto this branch
    *
    * @this Branch
@@ -943,9 +992,9 @@
    * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
    *
    * @param {String} [options.tag] - Tag of the commit
-   * @param {String} [options.tagColor = options.color] - Specific tag color
+   * @param {String} [options.tagColor = options.color] - Color of the tag
    * @param {String} [options.tagFont = this.template.commit.tag.font] - Font of the tag
-   * @param {String} [options.displayTagBox = true] - If true, display a box around tag
+   * @param {String} [options.displayTagBox = true] - If true, display a box around the tag
    *
    * @param {String} [options.dotColor = options.color] - Specific dot color
    * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
@@ -984,10 +1033,6 @@
     this.author = options.author || this.parent.author;
     this.date = options.date || new Date().toUTCString();
     this.detail = options.detail || null;
-    this.tag = options.tag || null;
-    this.tagColor = options.tagColor || options.color;
-    this.tagFont = options.tagFont || this.template.commit.tag.font;
-    this.displayTagBox = _booleanOptionOr(options.displayTagBox, true);
     this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
@@ -1011,6 +1056,7 @@
     this.showLabel = options.showLabel;
     this.labelColor = options.labelColor || options.color;
     this.labelFont = options.labelFont || this.template.branch.labelFont;
+    _assignTagOptionsToCommit(this, options);
 
     this.parent.commits.push(this);
   }
@@ -1021,6 +1067,8 @@
    * @this Commit
    **/
   Commit.prototype.render = function () {
+    var commitOffsetForTags = this.template.commit.tag.spacingX;
+    var commitOffsetLeft = (this.parent.columnMax + 1) * this.template.branch.spacingX + commitOffsetForTags;
 
     // Label
     if (this.showLabel) {
@@ -1077,32 +1125,14 @@
     }
 
     // Tag
-    var tagWidth = this.template.commit.tag.spacingX;
     if (this.tag !== null) {
-      this.parent.tagNum++;
-      this.context.font = this.tagFont;
+      var tag = new Tag(this, {
+        color: this.tagColor,
+        font: this.tagFont
+      });
 
-      var textWidth = this.context.measureText(this.tag).width;
-      if (_isHorizontal(this.parent)) {
-        var textHeight = _getFontHeight(this.tagFont);
-        _drawTextBG(this.context,
-          this.x - this.dotSize / 2,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
-          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox);
-      } else {
-        _drawTextBG(this.context,
-          ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
-          this.y - this.dotSize / 2,
-          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox);
-      }
-
-      tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
-
+      commitOffsetLeft += tag.width - commitOffsetForTags;
     }
-
-    this.context.font = this.messageFont;
-
-    var commitOffsetLeft = (this.parent.columnMax + 1) * this.template.branch.spacingX + tagWidth;
 
     // Detail
     if (this.detail !== null) {
@@ -1124,6 +1154,7 @@
         message = (this.branch.name ? "[" + this.branch.name + "] " : "") + message;
       }
 
+      this.context.font = this.messageFont;
       this.context.fillStyle = this.messageColor;
       this.context.fillText(message, commitOffsetLeft, this.y + this.dotSize / 2);
     }
@@ -1204,6 +1235,59 @@
     this.context.lineTo(x4, y4); // Bottom right
     this.context.fill();
   };
+
+  // --------------------------------------------------------------------
+  // -----------------------      Tag         ------------------------
+  // --------------------------------------------------------------------
+
+  /**
+   * Tag
+   *
+   * @constructor
+   *
+   * @param {Commit} commit - Tagged commit
+   * @param {Object} [options] - Tag options
+   * @param {String} [options.color = commit.color] - Specific tag color
+   * @param {String} [options.font = commit.template.commit.tag.font] - Font of the tag
+   * @return {Tag}
+   *
+   * @this Tag
+   * */
+  function Tag(commit, options) {
+    if (!_isObject(commit)) {
+      throw new Error("You can't tag a commit that doesn't exist");
+    }
+
+    options = _isObject(options) ? options : {};
+    this.color = options.color || commit.color;
+    this.font = options.font || commit.template.commit.tag.font;
+
+    // Set context font for calculations
+    var originalFont = commit.context.font;
+    commit.context.font = this.font;
+
+    var textWidth = commit.context.measureText(commit.tag).width;
+    this.width = Math.max(commit.template.commit.tag.spacingX, textWidth);
+
+    commit.parent.tagNum++;
+
+    var x = 0;
+    var y = 0;
+    if (_isHorizontal(commit.parent)) {
+      x = commit.x - commit.dotSize / 2;
+      y = ((commit.parent.columnMax + 1) * commit.template.commit.tag.spacingY) - commit.template.commit.tag.spacingY / 2 + (commit.parent.tagNum % 2) * _getFontHeight(this.font) * 1.5;
+    } else {
+      x = ((commit.parent.columnMax + 1) * commit.template.commit.tag.spacingX) - commit.template.commit.tag.spacingX / 2 + textWidth / 2;
+      y = commit.y - commit.dotSize / 2;
+    }
+
+    _drawTextBG(commit.context, x, y, commit.tag, this.color, this.font, 0, commit.displayTagBox);
+
+    // Reset original context font
+    commit.context.font = originalFont;
+
+    return this;
+  }
 
   // --------------------------------------------------------------------
   // -----------------------      Template       ------------------------
@@ -1399,6 +1483,27 @@
    * @private */
   function _getLast(array) {
     return array.slice(-1)[0];
+  }
+
+
+  /**
+   * Extend given commit with proper attributes for tag from options.
+   *
+   * @param {Commit} commit
+   * @param {Object} [options]
+   * @param {String} [options.tag] - Tag of the commit
+   * @param {String} [options.tagColor = commit.messageColor] - Color of the tag
+   * @param {String} [options.tagFont = commit.template.commit.tag.font] - Font of the tag
+   * @param {String} [options.displayTagBox = true] - If true, display a box around the tag
+   * @private
+   */
+  function _assignTagOptionsToCommit(commit, options) {
+    Object.assign(commit, {
+      tag: options.tag || null,
+      tagColor: options.tagColor || commit.messageColor,
+      tagFont: options.tagFont || commit.template.commit.tag.font,
+      displayTagBox: _booleanOptionOr(options.displayTagBox, true)
+    });
   }
 
   /**

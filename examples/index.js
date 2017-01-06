@@ -150,6 +150,17 @@ test.commit({
   displayTagBox: false
 });
 
+// Tag current HEAD
+test.commit("Tag this commit").tag("b-tag");
+gitGraph
+  .commit("This one has no tag")
+  .commit("Tag this one")
+  .tag({
+    tag: "c-tag",
+    tagColor: "green",
+    displayTagBox: false
+  });
+
 // Perform a merge, with a tag
 test.merge(master, {
   message: "New release",
