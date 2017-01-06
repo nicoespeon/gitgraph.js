@@ -855,9 +855,9 @@
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = _getParentCommitFromBranch(this);
 
-    var branchParentCommit = this.commits[0].parentCommit;
-    var parentBranchLastCommit = _getLast(targetBranch.commits);
-    var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
+    var branchParentCommit = firstBranchCommit.parentCommit;
+    var targetBranchParentCommit = _getParentCommitFromBranch(targetBranch);
+    var isFastForwardPossible = (branchParentCommit && branchParentCommit.sha1 === targetBranchParentCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
       var isGraphHorizontal  = _isHorizontal(this.parent);
       this.color = targetBranch.color;
