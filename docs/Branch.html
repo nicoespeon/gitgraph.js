@@ -72,11 +72,7 @@
 		<th>Type</th>
 		
 		
-		<th>Argument</th>
 		
-		
-		
-		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -101,19 +97,7 @@
             </td>
             
             
-                <td class="attributes">
-                
-                    
-                
-                    
-                
-                </td>
             
-            
-            
-                <td class="default">
-                
-                </td>
             
             
             <td class="description last"><p>Options of branch</p>
@@ -217,16 +201,10 @@
         </tr>
 	
 	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
 	
         <tr>
             
-                <td class="name"><code>[options.parentCommit</code></td>
+                <td class="name"><code>parentCommit</code></td>
             
             
             <td class="type">
@@ -241,6 +219,8 @@
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
                     
                 
                     
@@ -251,17 +231,19 @@
             
                 <td class="default">
                 
+                    _getLast(options.parentBranch.commits)
+                
                 </td>
             
             
-            <td class="description last"><p>= options.parentBranch.commits.slice(-1)[0]] - Parent commit</p></td>
+            <td class="description last"><p>Parent commit</p></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>options.name</code></td>
+                <td class="name"><code>name</code></td>
             
             
             <td class="type">
@@ -300,7 +282,7 @@
 	
         <tr>
             
-                <td class="name"><code>options.commitDefaultOptions</code></td>
+                <td class="name"><code>commitDefaultOptions</code></td>
             
             
             <td class="type">
@@ -338,6 +320,12 @@
 	
 	</tbody>
 </table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -363,7 +351,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line445">line 445</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line468">line 468</a>
     </li></ul></dd>
     
     
@@ -504,7 +492,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line535">line 535</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line558">line 558</a>
     </li></ul></dd>
     
     
@@ -605,7 +593,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line865">line 865</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line922">line 922</a>
     </li></ul></dd>
     
     
@@ -677,7 +665,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line749">line 749</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line807">line 807</a>
     </li></ul></dd>
     
     
@@ -872,7 +860,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line609">line 609</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line632">line 632</a>
     </li></ul></dd>
     
     
@@ -951,7 +939,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line758">line 758</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line816">line 816</a>
     </li></ul></dd>
     
     
@@ -1199,7 +1187,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line773">line 773</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line831">line 831</a>
     </li></ul></dd>
     
     
@@ -1294,7 +1282,7 @@ This method will combine duplicate points and reject reversed points.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line890">line 890</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line947">line 947</a>
     </li></ul></dd>
     
     
@@ -1366,12 +1354,313 @@ This method will combine duplicate points and reject reversed points.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line560">line 560</a>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line583">line 583</a>
     </li></ul></dd>
     
     
     
     
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tag"><span class="type-signature"></span>tag<span class="signature">(<span class="optional">options</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Tag the last commit of the branch.</p>
+    </div>
+    
+
+    
+    
+    
+        <h5>This:</h5>
+        <ul><li><a href="Branch.html">Branch</a></li></ul>
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Message | Options of the tag</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Message of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagColor</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Color of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tagFont</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Font of the tag</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>displayTagBox</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>If true, display a box around the tag</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gitgraph.js.html">gitgraph.js</a>, <a href="gitgraph.js.html#line783">line 783</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Tag.html">Tag</a></li>
+        </ul>
+    </dd>
     
     
     
@@ -1407,13 +1696,13 @@ This method will combine duplicate points and reject reversed points.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_booleanOptionOr">_booleanOptionOr</a></li><li><a href="global.html#_drawTextBG">_drawTextBG</a></li><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getFontHeight">_getFontHeight</a></li><li><a href="global.html#_getScale">_getScale</a></li><li><a href="global.html#_isHorizontal">_isHorizontal</a></li><li><a href="global.html#_isObject">_isObject</a></li><li><a href="global.html#_isVertical">_isVertical</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Tag.html">Tag</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_assignTagOptionsToCommit">_assignTagOptionsToCommit</a></li><li><a href="global.html#_booleanOptionOr">_booleanOptionOr</a></li><li><a href="global.html#_clone">_clone</a></li><li><a href="global.html#_drawTextBG">_drawTextBG</a></li><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getFontHeight">_getFontHeight</a></li><li><a href="global.html#_getLast">_getLast</a></li><li><a href="global.html#_getParentCommitFromBranch">_getParentCommitFromBranch</a></li><li><a href="global.html#_getScale">_getScale</a></li><li><a href="global.html#_isHorizontal">_isHorizontal</a></li><li><a href="global.html#_isNullOrUndefined">_isNullOrUndefined</a></li><li><a href="global.html#_isObject">_isObject</a></li><li><a href="global.html#_isVertical">_isVertical</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Dec 17 2016 10:12:59 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jan 06 2017 09:25:20 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

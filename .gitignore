@@ -143,3 +143,6 @@ Thumbs.db
 
 # Temporary files
 *~
+
+# VSCode
+.vscode/

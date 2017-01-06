@@ -5,7 +5,8 @@ var graphConfig = new GitGraph.Template({
         spacingX: 60,
         mergeStyle: "straight",
         showLabel: true,                // display branch names on graph
-        labelFont: "normal 10pt Arial"
+        labelFont: "normal 10pt Arial",
+        labelRotation: 0
     },
     commit: {
         spacingY: -30,
@@ -35,7 +36,7 @@ var graphConfig = new GitGraph.Template({
 var config = {
   template: graphConfig,
   mode: "extended",
-  orientation: "vertical"
+  orientation: "horizontal"
 };
 
 var bugfixCommit = {
@@ -65,7 +66,7 @@ var master = gitgraph.branch({name:"master", column:masterCol});
 master.commit("Initial commit");
 
 var develop = gitgraph.branch({parentBranch:master, name: "develop", column:developCol});
-master.commit({messageDisplay:false}).merge(develop, {messageDisplay:false});
+master.commit({messageDisplay:false});
 develop.commit({messageDisplay:false});
 
 var feature1 = gitgraph.branch({parentBranch:develop, name:"feature/1", column:featureCol});

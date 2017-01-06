@@ -1,6 +1,6 @@
 ![gitgraph.js](/assets/logo/gitgraph-logo.png)
 
-[![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js) [![devDependency Status](https://david-dm.org/nicoespeon/gitgraph.js/dev-status.png)](https://david-dm.org/nicoespeon/gitgraph.js#info=devDependencies)
+[![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js)
 ===========
 
 A JavaScript library to draw pretty git graphs in the browser.
@@ -12,7 +12,7 @@ Project page: <http://gitgraphjs.com/>
 You have different options to start with the library:
 
 - [Download the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest).
-- Clone the repo: `git clone git://github.com/nicoespeon/gitgraph.js.git`.
+- Clone the repo: `git clone git@github.com:nicoespeon/gitgraph.js.git`.
 - Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
 - Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
 - Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
