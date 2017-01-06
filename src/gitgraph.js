@@ -521,7 +521,7 @@
 
     // Add start point
     if (this.parentBranch) {
-      if (this.parentCommit === _getLast(this.parentBranch.commits)) {
+      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch)) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
           y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -646,7 +646,7 @@
       this.template.commit.color ||
       this.template.colors[columnIndex];
     options.parent = this.parent;
-    options.parentCommit = options.parentCommit || _getLast(this.commits);
+    options.parentCommit = options.parentCommit || _getParentCommitFromBranch(this);
 
     // Special compact mode
     if (this.parent.mode === "compact" &&
@@ -847,7 +847,7 @@
       commitOptions.message = commitOptions.message || defaultMessage;
     }
     commitOptions.type = "mergeCommit";
-    commitOptions.parentCommit = _getLast(this.commits);
+    commitOptions.parentCommit = _getParentCommitFromBranch(this);
 
     var branchParentCommit = this.commits[0].parentCommit;
     var parentBranchLastCommit = _getLast(targetBranch.commits);
@@ -1498,12 +1498,10 @@
    * @private
    */
   function _assignTagOptionsToCommit(commit, options) {
-    Object.assign(commit, {
-      tag: options.tag || null,
-      tagColor: options.tagColor || commit.messageColor,
-      tagFont: options.tagFont || commit.template.commit.tag.font,
-      displayTagBox: _booleanOptionOr(options.displayTagBox, true)
-    });
+    commit.tag = options.tag || null;
+    commit.tagColor = options.tagColor || commit.messageColor;
+    commit.tagFont = options.tagFont || commit.template.commit.tag.font;
+    commit.displayTagBox = _booleanOptionOr(options.displayTagBox, true);
   }
 
   /**
