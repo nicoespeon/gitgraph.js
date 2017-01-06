@@ -19,65 +19,65 @@
    *
    * @this GitGraph
    **/
-  function GitGraph ( options ) {
+  function GitGraph(options) {
     // Options
     options = _isObject(options) ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
     this.author = (typeof options.author === "string") ? options.author : "Sergio Flores <saxo-guy@epic.com>";
-    this.reverseArrow = _booleanOptionOr( options.reverseArrow, false );
+    this.reverseArrow = _booleanOptionOr(options.reverseArrow, false);
 
     // Template management
-    if ( (typeof options.template === "string") || _isObject(options.template) ) {
-      this.template = this.newTemplate( options.template );
-    } else if ( options.template instanceof Template ) {
+    if ((typeof options.template === "string") || _isObject(options.template)) {
+      this.template = this.newTemplate(options.template);
+    } else if (options.template instanceof Template) {
       this.template = options.template;
     } else {
-      this.template = this.newTemplate( "metro" );
+      this.template = this.newTemplate("metro");
     }
 
     this.mode = options.mode || null;
-    if ( this.mode === "compact" ) {
+    if (this.mode === "compact") {
       this.template.commit.message.display = false;
     }
 
     // Orientation
-    switch ( options.orientation ) {
-    case "vertical-reverse" :
-      this.template.commit.spacingY *= -1;
-      this.orientation = "vertical-reverse";
-      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
-                                            0 : options.template.branch.labelRotation;
-      this.template.commit.tag.spacingY *= -1;
-      break;
-    case "horizontal" :
-      this.template.commit.message.display = false;
-      this.template.commit.spacingX = this.template.commit.spacingY;
-      this.template.branch.spacingY = this.template.branch.spacingX;
-      this.template.commit.spacingY = 0;
-      this.template.branch.spacingX = 0;
-      this.orientation = "horizontal";
-      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
-                                            -90 : options.template.branch.labelRotation;
-      this.template.commit.tag.spacingX = -this.template.commit.spacingX;
-      this.template.commit.tag.spacingY = this.template.branch.spacingY;
-      break;
-    case "horizontal-reverse" :
-      this.template.commit.message.display = false;
-      this.template.commit.spacingX = -this.template.commit.spacingY;
-      this.template.branch.spacingY = this.template.branch.spacingX;
-      this.template.commit.spacingY = 0;
-      this.template.branch.spacingX = 0;
-      this.orientation = "horizontal-reverse";
-      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
-                                            90 : options.template.branch.labelRotation;
-      this.template.commit.tag.spacingX = -this.template.commit.spacingY;
-      this.template.commit.tag.spacingY = this.template.branch.spacingY;
-      break;
-    default:
-      this.orientation = "vertical";
-      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
-                                             0 : options.template.branch.labelRotation;
-      break;
+    switch (options.orientation) {
+      case "vertical-reverse":
+        this.template.commit.spacingY *= -1;
+        this.orientation = "vertical-reverse";
+        this.template.branch.labelRotation = _isNullOrUndefined(options, "template.branch.labelRotation") ?
+          0 : options.template.branch.labelRotation;
+        this.template.commit.tag.spacingY *= -1;
+        break;
+      case "horizontal":
+        this.template.commit.message.display = false;
+        this.template.commit.spacingX = this.template.commit.spacingY;
+        this.template.branch.spacingY = this.template.branch.spacingX;
+        this.template.commit.spacingY = 0;
+        this.template.branch.spacingX = 0;
+        this.orientation = "horizontal";
+        this.template.branch.labelRotation = _isNullOrUndefined(options, "template.branch.labelRotation") ?
+          -90 : options.template.branch.labelRotation;
+        this.template.commit.tag.spacingX = -this.template.commit.spacingX;
+        this.template.commit.tag.spacingY = this.template.branch.spacingY;
+        break;
+      case "horizontal-reverse":
+        this.template.commit.message.display = false;
+        this.template.commit.spacingX = -this.template.commit.spacingY;
+        this.template.branch.spacingY = this.template.branch.spacingX;
+        this.template.commit.spacingY = 0;
+        this.template.branch.spacingX = 0;
+        this.orientation = "horizontal-reverse";
+        this.template.branch.labelRotation = _isNullOrUndefined(options, "template.branch.labelRotation") ?
+          90 : options.template.branch.labelRotation;
+        this.template.commit.tag.spacingX = -this.template.commit.spacingY;
+        this.template.commit.tag.spacingY = this.template.branch.spacingY;
+        break;
+      default:
+        this.orientation = "vertical";
+        this.template.branch.labelRotation = _isNullOrUndefined(options, "template.branch.labelRotation") ?
+          0 : options.template.branch.labelRotation;
+        break;
     }
 
     this.marginX = this.template.branch.spacingX + this.template.commit.dot.size * 2;
@@ -86,18 +86,18 @@
     this.offsetY = 0;
 
     // Canvas init
-    this.canvas = document.getElementById( this.elementId ) || options.canvas;
-    this.context = this.canvas.getContext( "2d" );
+    this.canvas = document.getElementById(this.elementId) || options.canvas;
+    this.context = this.canvas.getContext("2d");
     this.context.textBaseline = "center";
 
     // Tooltip layer
-    this.tooltip = document.createElement( "div" );
+    this.tooltip = document.createElement("div");
     this.tooltip.className = "gitgraph-tooltip";
     this.tooltip.style.position = "fixed";
     this.tooltip.style.display = "none";
 
     // Add tooltip div into body
-    document.body.appendChild( this.tooltip );
+    document.body.appendChild(this.tooltip);
 
     // Navigation vars
     this.HEAD = null;
@@ -114,16 +114,16 @@
       handleEvent: this.hover,
       gitgraph: this
     };
-    this.canvas.addEventListener( "mousemove", this.mouseMoveOptions, false );
+    this.canvas.addEventListener("mousemove", this.mouseMoveOptions, false);
 
     this.mouseDownOptions = {
       handleEvent: this.click,
       gitgraph: this
     };
-    this.canvas.addEventListener( "mousedown", this.mouseDownOptions, false );
+    this.canvas.addEventListener("mousedown", this.mouseDownOptions, false);
 
     // Render on window resize
-    window.onresize = this.render.bind( this );
+    window.onresize = this.render.bind(this);
   }
 
   /**
@@ -132,8 +132,8 @@
    * @this GitGraph
    **/
   GitGraph.prototype.dispose = function () {
-    this.canvas.removeEventListener( "mousemove", this.mouseMoveOptions, false );
-    this.canvas.removeEventListener( "mousedown", this.mouseDownOptions, false );
+    this.canvas.removeEventListener("mousemove", this.mouseMoveOptions, false);
+    this.canvas.removeEventListener("mousedown", this.mouseDownOptions, false);
   };
 
   /**
@@ -146,9 +146,9 @@
    *
    * @return {Branch} New branch
    **/
-  GitGraph.prototype.branch = function ( options ) {
+  GitGraph.prototype.branch = function (options) {
     // Options
-    if ( typeof options === "string" ) {
+    if (typeof options === "string") {
       var name = options;
       options = {};
       options.name = name;
@@ -159,8 +159,8 @@
     options.parentBranch = options.parentBranch || this.HEAD;
 
     // Add branch
-    var branch = new Branch( options );
-    this.branches.push( branch );
+    var branch = new Branch(options);
+    this.branches.push(branch);
 
     // Return
     return branch;
@@ -176,9 +176,9 @@
    *
    * @return {Branch} New branch
    **/
-  GitGraph.prototype.orphanBranch = function ( options ) {
+  GitGraph.prototype.orphanBranch = function (options) {
     // Options
-    if ( typeof options === "string" ) {
+    if (typeof options === "string") {
       var name = options;
       options = {};
       options.name = name;
@@ -188,8 +188,8 @@
     options.parent = this;
 
     // Add branch
-    var branch = new Branch( options );
-    this.branches.push( branch );
+    var branch = new Branch(options);
+    this.branches.push(branch);
 
     // Return
     return branch;
@@ -205,8 +205,8 @@
    *
    * @return {GitGraph} this - Return the main object so we can chain
    **/
-  GitGraph.prototype.commit = function ( options ) {
-    this.HEAD.commit( options );
+  GitGraph.prototype.commit = function (options) {
+    this.HEAD.commit(options);
 
     // Return the main object so we can chain
     return this;
@@ -219,11 +219,11 @@
    *
    * @return {Template}
    **/
-  GitGraph.prototype.newTemplate = function ( options ) {
-    if ( typeof options === "string" ) {
-      return new Template().get( options );
+  GitGraph.prototype.newTemplate = function (options) {
+    if (typeof options === "string") {
+      return new Template().get(options);
     }
-    return new Template( options );
+    return new Template(options);
   };
 
   /**
@@ -232,19 +232,19 @@
    * @this GitGraph
    **/
   GitGraph.prototype.render = function () {
-    this.scalingFactor = _getScale( this.context );
+    this.scalingFactor = _getScale(this.context);
 
     // Resize canvas
     var unscaledResolution = {
-      x: Math.abs( (this.columnMax + 1 ) * this.template.branch.spacingX )
-         + Math.abs( this.commitOffsetX )
-         + this.marginX * 2,
-      y: Math.abs( (this.columnMax + 1 ) * this.template.branch.spacingY )
-         + Math.abs( this.commitOffsetY )
-         + this.marginY * 2
+      x: Math.abs((this.columnMax + 1) * this.template.branch.spacingX) +
+        Math.abs(this.commitOffsetX) +
+        this.marginX * 2,
+      y: Math.abs((this.columnMax + 1) * this.template.branch.spacingY) +
+        Math.abs(this.commitOffsetY) +
+        this.marginY * 2
     };
 
-    if ( this.template.commit.message.display ) {
+    if (this.template.commit.message.display) {
       unscaledResolution.x += 800;
     }
 
@@ -257,37 +257,39 @@
     this.canvas.height = unscaledResolution.y * this.scalingFactor;
 
     // Clear All
-    this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height );
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Add some margin
-    this.context.translate( this.marginX, this.marginY );
+    this.context.translate(this.marginX, this.marginY);
 
     // Translate for inverse orientation
-    if ( this.template.commit.spacingY > 0 ) {
-      this.context.translate( 0, this.canvas.height - this.marginY * 2 );
+    if (this.template.commit.spacingY > 0) {
+      this.context.translate(0, this.canvas.height - this.marginY * 2);
       this.offsetY = this.canvas.height - this.marginY * 2;
     }
-    if ( this.template.commit.spacingX > 0 ) {
-      this.context.translate( this.canvas.width - this.marginX * 2, 0 );
+    if (this.template.commit.spacingX > 0) {
+      this.context.translate(this.canvas.width - this.marginX * 2, 0);
       this.offsetX = this.canvas.width - this.marginX * 2;
     }
 
     // Scale the context when every transformations have been made.
-    this.context.scale( this.scalingFactor, this.scalingFactor );
+    this.context.scale(this.scalingFactor, this.scalingFactor);
 
     // Render branches
-    for ( var i = this.branches.length - 1, branch; !!(branch = this.branches[ i ]); i-- ) {
+    for (var i = this.branches.length - 1, branch; !!(branch = this.branches[i]); i--) {
       branch.render();
     }
 
     this.tagNum = 0;
 
     // Render commits after to put them on the foreground
-    for ( var j = 0, commit; !!(commit = this.commits[ j ]); j++ ) {
+    for (var j = 0, commit; !!(commit = this.commits[j]); j++) {
       commit.render();
     }
 
-    _emitEvent( this.canvas, "graph:render", { id: this.elementId } );
+    _emitEvent(this.canvas, "graph:render", {
+      id: this.elementId
+    });
   };
 
   /**
@@ -314,10 +316,10 @@
    *
    * @this GitGraph
    **/
-  GitGraph.prototype.applyCommits = function ( event, callbackFn ) {
+  GitGraph.prototype.applyCommits = function (event, callbackFn) {
     // Fallback onto layerX/layerY for older versions of Firefox.
-    function getOffsetById ( id ) {
-      var el = document.getElementById( id );
+    function getOffsetById(id) {
+      var el = document.getElementById(id);
       var rect = el.getBoundingClientRect();
 
       return {
@@ -326,16 +328,16 @@
       };
     }
 
-    var offsetX = event.offsetX || (event.pageX - getOffsetById( this.elementId ).left);
-    var offsetY = event.offsetY || (event.pageY - getOffsetById( this.elementId ).top);
+    var offsetX = event.offsetX || (event.pageX - getOffsetById(this.elementId).left);
+    var offsetY = event.offsetY || (event.pageY - getOffsetById(this.elementId).top);
 
-    for ( var i = 0, commit; !!(commit = this.commits[ i ]); i++ ) {
+    for (var i = 0, commit; !!(commit = this.commits[i]); i++) {
       var distanceX = (commit.x + (this.offsetX + this.marginX) / this.scalingFactor - offsetX);
       var distanceY = (commit.y + (this.offsetY + this.marginY) / this.scalingFactor - offsetY);
-      var distanceBetweenCommitCenterAndMouse = Math.sqrt( Math.pow( distanceX, 2 ) + Math.pow( distanceY, 2 ) );
+      var distanceBetweenCommitCenterAndMouse = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
       var isOverCommit = distanceBetweenCommitCenterAndMouse < this.template.commit.dot.size;
 
-      callbackFn( commit, isOverCommit, event );
+      callbackFn(commit, isOverCommit, event);
     }
   };
 
@@ -346,32 +348,32 @@
    *
    * @this GitGraph
    **/
-  GitGraph.prototype.hover = function ( event ) {
+  GitGraph.prototype.hover = function (event) {
     var self = this.gitgraph;
     var isOut = true;
 
-    function showCommitTooltip ( commit ) {
-      if ( !commit.tooltipDisplay ) {
+    function showCommitTooltip(commit) {
+      if (!commit.tooltipDisplay) {
         return;
       }
 
       // Fix firefox MouseEvent
-      if ( typeof InstallTrigger !== "undefined" )/* == (is Firefox) */ {
+      if (typeof InstallTrigger !== "undefined") /* == (is Firefox) */ {
         event.x = event.x ? event.x : event.clientX;
         event.y = event.y ? event.y : event.clientY;
       }
 
       self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
-      self.tooltip.style.top = event.y + "px";  // TODO Scroll bug
-      if ( self.template.commit.tooltipHTMLFormatter !== null ) {
-        self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter( commit );
+      self.tooltip.style.top = event.y + "px"; // TODO Scroll bug
+      if (self.template.commit.tooltipHTMLFormatter !== null) {
+        self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
       } else {
         self.tooltip.textContent = commit.sha1 + " - " + commit.message;
       }
       self.tooltip.style.display = "block";
     }
 
-    function emitCommitEvent ( commit, event ) {
+    function emitCommitEvent(commit, event) {
       var mouseEventOptions = {
         author: commit.author,
         message: commit.message,
@@ -379,32 +381,32 @@
         sha1: commit.sha1
       };
 
-      _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
+      _emitEvent(self.canvas, "commit:" + event, mouseEventOptions);
     }
 
-    self.applyCommits( event, function ( commit, isOverCommit, event ) {
-      if ( isOverCommit ) {
-        if ( !self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode ) {
-          showCommitTooltip( commit );
+    self.applyCommits(event, function (commit, isOverCommit, event) {
+      if (isOverCommit) {
+        if (!self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode) {
+          showCommitTooltip(commit);
         }
 
         // Don't emit event if we already were over a commit.
-        if ( !commit.isMouseOver ) {
-          emitCommitEvent( commit, "mouseover" );
+        if (!commit.isMouseOver) {
+          emitCommitEvent(commit, "mouseover");
         }
 
         isOut = false;
         commit.isMouseOver = true;
       } else {
         // Don't emit event if we already were out of a commit.
-        if ( commit.isMouseOver ) {
-          emitCommitEvent( commit, "mouseout" );
+        if (commit.isMouseOver) {
+          emitCommitEvent(commit, "mouseout");
         }
         commit.isMouseOver = false;
       }
-    } );
+    });
 
-    if ( isOut ) {
+    if (isOut) {
       self.tooltip.style.display = "none";
     }
   };
@@ -416,16 +418,16 @@
    *
    * @this GitGraph
    **/
-  GitGraph.prototype.click = function ( event ) {
-    this.gitgraph.applyCommits( event, function ( commit, isOverCommit, event ) {
-      if ( !isOverCommit ) {
+  GitGraph.prototype.click = function (event) {
+    this.gitgraph.applyCommits(event, function (commit, isOverCommit, event) {
+      if (!isOverCommit) {
         return;
       }
 
-      if ( commit.onClick !== null ) {
-        commit.onClick( commit, true, event );
+      if (commit.onClick !== null) {
+        commit.onClick(commit, true, event);
       }
-    } );
+    });
   };
 
   // --------------------------------------------------------------------
@@ -446,26 +448,26 @@
    *
    * @this Branch
    **/
-  function Branch ( options ) {
+  function Branch(options) {
     // Check integrity
-    if ( options.parent instanceof GitGraph === false ) {
+    if (options.parent instanceof GitGraph === false) {
       return;
     }
 
     // Options
     options = _isObject(options) ? options : {};
     this.parent = options.parent;
-    if ( options.parentCommit && options.parentBranch ) {
-      if ( options.parentCommit.branch !== options.parentBranch ) {
+    if (options.parentCommit && options.parentBranch) {
+      if (options.parentCommit.branch !== options.parentBranch) {
         return;
       }
       this.parentCommit = options.parentCommit;
       this.parentBranch = options.parentBranch;
-    } else if ( options.parentCommit ) {
+    } else if (options.parentCommit) {
       this.parentCommit = options.parentCommit;
       this.parentBranch = options.parentCommit.branch;
-    } else if ( options.parentBranch ) {
-      this.parentCommit = options.parentBranch.commits.slice( -1 )[ 0 ];
+    } else if (options.parentBranch) {
+      this.parentCommit = options.parentBranch.commits.slice(-1)[0];
       this.parentBranch = options.parentBranch;
     } else {
       this.parentCommit = null;
@@ -477,7 +479,7 @@
     this.template = this.parent.template;
     this.lineWidth = options.lineWidth || this.template.branch.lineWidth;
     this.lineDash = options.lineDash || this.template.branch.lineDash;
-    this.showLabel = _booleanOptionOr( options.showLabel, this.template.branch.showLabel );
+    this.showLabel = _booleanOptionOr(options.showLabel, this.template.branch.showLabel);
     this.spacingX = this.template.branch.spacingX;
     this.spacingY = this.template.branch.spacingY;
     this.size = 0;
@@ -487,7 +489,7 @@
     this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"join"|"end")}
 
     // Column number calculation for auto-color & auto-offset
-    if ( typeof options.column === "number" ) {
+    if (typeof options.column === "number") {
       this.column = options.column;
     } else {
       this.column = 0;
@@ -501,8 +503,8 @@
     this.offsetY = this.column * this.spacingY;
 
     // Add start point
-    if ( this.parentBranch ) {
-      if ( this.parentCommit === this.parentBranch.commits.slice( -1 )[ 0 ] ) {
+    if (this.parentBranch) {
+      if (this.parentCommit === this.parentBranch.commits.slice(-1)[0]) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
           y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -520,7 +522,7 @@
     }
 
     var columnIndex = (this.column % this.template.colors.length);
-    this.color = options.color || this.template.branch.color || this.template.colors[ columnIndex ];
+    this.color = options.color || this.template.branch.color || this.template.colors[columnIndex];
 
     // Checkout on this new branch
     this.checkout();
@@ -536,9 +538,9 @@
    *
    * @return {Branch} New Branch
    **/
-  Branch.prototype.branch = function ( options ) {
+  Branch.prototype.branch = function (options) {
     // Options
-    if ( typeof options === "string" ) {
+    if (typeof options === "string") {
       var name = options;
       options = {};
       options.name = name;
@@ -549,8 +551,8 @@
     options.parentBranch = options.parentBranch || this;
 
     // Add branch
-    var branch = new Branch( options );
-    this.parent.branches.push( branch );
+    var branch = new Branch(options);
+    this.parent.branches.push(branch);
 
     // Return
     return branch;
@@ -564,12 +566,12 @@
   Branch.prototype.render = function () {
     this.context.beginPath();
 
-    for ( var i = 0, point; !!(point = this.path[ i ]); i++ ) {
-      if ( point.type === "start" ) {
-        this.context.moveTo( point.x, point.y );
+    for (var i = 0, point; !!(point = this.path[i]); i++) {
+      if (point.type === "start") {
+        this.context.moveTo(point.x, point.y);
       } else {
-        if ( this.template.branch.mergeStyle === "bezier" ) {
-          var path = this.path[ i - 1 ];
+        if (this.template.branch.mergeStyle === "bezier") {
+          var path = this.path[i - 1];
 
           this.context.bezierCurveTo(
             path.x - this.template.commit.spacingX / 2, path.y - this.template.commit.spacingY / 2,
@@ -577,7 +579,7 @@
             point.x, point.y
           );
         } else {
-          this.context.lineTo( point.x, point.y );
+          this.context.lineTo(point.x, point.y);
         }
       }
     }
@@ -586,17 +588,17 @@
     this.context.strokeStyle = this.color;
 
     var prevLineDash;
-    if ( this.context.setLineDash !== undefined ) {
+    if (this.context.setLineDash !== undefined) {
       prevLineDash = this.context.getLineDash();
-      this.context.setLineDash( this.lineDash );
+      this.context.setLineDash(this.lineDash);
     }
 
     this.context.stroke();
     this.context.closePath();
 
     //Restore previous line dash setting, if any
-    if ( prevLineDash !== undefined ) {
-      this.context.setLineDash( prevLineDash );
+    if (prevLineDash !== undefined) {
+      this.context.setLineDash(prevLineDash);
     }
   };
 
@@ -610,72 +612,74 @@
    *
    * @this Branch
    **/
-  Branch.prototype.commit = function ( options ) {
-    if ( typeof (options) === "string" ) {
-      options = { message: options };
-    } else if ( typeof (options) !== "object" ) {
+  Branch.prototype.commit = function (options) {
+    if (typeof (options) === "string") {
+      options = {
+        message: options
+      };
+    } else if (typeof (options) !== "object") {
       options = {};
     }
 
     options.arrowDisplay = this.template.arrow.active;
     options.branch = this;
     var columnIndex = (this.column % this.template.colors.length);
-    options.color = options.color
-        || this.commitDefaultOptions.color
-        || this.template.commit.color
-        || this.template.colors[columnIndex];
+    options.color = options.color ||
+      this.commitDefaultOptions.color ||
+      this.template.commit.color ||
+      this.template.colors[columnIndex];
     options.parent = this.parent;
-    options.parentCommit = options.parentCommit || this.commits.slice( -1 )[ 0 ];
+    options.parentCommit = options.parentCommit || this.commits.slice(-1)[0];
 
     // Special compact mode
-    if ( this.parent.mode === "compact"
-         && this.parent.commits.slice( -1 )[ 0 ]
-         && this.parent.commits.slice( -1 )[ 0 ].branch !== options.branch
-         && options.branch.commits.length
-         && options.type !== "mergeCommit" ) {
+    if (this.parent.mode === "compact" &&
+      this.parent.commits.slice(-1)[0] &&
+      this.parent.commits.slice(-1)[0].branch !== options.branch &&
+      options.branch.commits.length &&
+      options.type !== "mergeCommit") {
       this.parent.commitOffsetX -= this.template.commit.spacingX;
       this.parent.commitOffsetY -= this.template.commit.spacingY;
     }
 
-    options.messageColor = options.messageColor
-      || this.commitDefaultOptions.messageColor
-      || this.template.commit.message.color
-      || options.color
-      || null;
-    options.labelColor = options.labelColor
-      || this.commitDefaultOptions.labelColor
-      || this.template.branch.labelColor
-      || options.color
-      || null;
-    options.tagColor = options.tagColor
-      || this.commitDefaultOptions.tagColor
-      || this.template.commit.tag.color
-      || options.color
-      || null;
-    options.dotColor = options.dotColor
-      || this.commitDefaultOptions.dotColor
-      || this.template.commit.dot.color
-      || options.color
-      || null;
+    options.messageColor = options.messageColor ||
+      this.commitDefaultOptions.messageColor ||
+      this.template.commit.message.color ||
+      options.color ||
+      null;
+    options.labelColor = options.labelColor ||
+      this.commitDefaultOptions.labelColor ||
+      this.template.branch.labelColor ||
+      options.color ||
+      null;
+    options.tagColor = options.tagColor ||
+      this.commitDefaultOptions.tagColor ||
+      this.template.commit.tag.color ||
+      options.color ||
+      null;
+    options.dotColor = options.dotColor ||
+      this.commitDefaultOptions.dotColor ||
+      this.template.commit.dot.color ||
+      options.color ||
+      null;
     options.x = this.offsetX - this.parent.commitOffsetX;
     options.y = this.offsetY - this.parent.commitOffsetY;
 
     // Detail
     var isVertical = this.parent.orientation === "vertical";
     var isNotCompact = this.parent.mode !== "compact";
-    if ( typeof options.detailId === "string" && isVertical && isNotCompact ) {
-      options.detail = document.getElementById( options.detailId );
+    if (typeof options.detailId === "string" && isVertical && isNotCompact) {
+      options.detail = document.getElementById(options.detailId);
     } else {
       options.detail = null;
     }
 
     // Check collision (Cause of special compact mode)
-    var previousCommit = options.branch.commits.slice( -1 )[ 0 ] || {};
+    var previousCommit = options.branch.commits.slice(-1)[0] || {};
     var commitPosition = options.x + options.y;
     var previousCommitPosition = previousCommit.x + previousCommit.y;
     var isCommitAtSamePlaceThanPreviousOne = (commitPosition === previousCommitPosition);
 
-    if ( isCommitAtSamePlaceThanPreviousOne ) {
+    if (isCommitAtSamePlaceThanPreviousOne) {
       this.parent.commitOffsetX += this.template.commit.spacingX;
       this.parent.commitOffsetY += this.template.commit.spacingY;
       options.x = this.offsetX - this.parent.commitOffsetX;
@@ -683,23 +687,23 @@
     }
 
     // Fork case: Parent commit from parent branch
-    if ( options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch ) {
+    if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
       options.parentCommit = this.parentCommit;
     }
 
     // First commit
-    var isFirstBranch = !( options.parentCommit instanceof Commit );
+    var isFirstBranch = !(options.parentCommit instanceof Commit);
     var isPathBeginning = this.path.length === 0;
 
     options.showLabel = (isPathBeginning && this.showLabel) ? true : false;
 
-    if ( options.showLabel ) {
+    if (options.showLabel) {
       options.x -= this.template.commit.spacingX;
       options.y -= this.template.commit.spacingY;
     }
 
-    var commit = new Commit( options );
-    this.commits.push( commit );
+    var commit = new Commit(options);
+    this.commits.push(commit);
 
     // Add point(s) to path
     var point = {
@@ -708,32 +712,32 @@
       type: "join"
     };
 
-    if ( !isFirstBranch && isPathBeginning ) {
+    if (!isFirstBranch && isPathBeginning) {
       // Start point on parent branch
-      this.pushPath( this.startPoint );
+      this.pushPath(this.startPoint);
       // Move to this branch
-      this.pushPath( {
+      this.pushPath({
         x: this.startPoint.x - this.parentBranch.offsetX + this.offsetX - this.template.commit.spacingX,
         y: this.startPoint.y - this.parentBranch.offsetY + this.offsetY - this.template.commit.spacingY,
         type: "join"
-      } );
+      });
 
       // Extend parent branch
-      var parent = JSON.parse( JSON.stringify( this.startPoint ) ); // Elegant way for cloning an object
+      var parent = JSON.parse(JSON.stringify(this.startPoint)); // Elegant way for cloning an object
       parent.type = "join";
-      this.parentBranch.pushPath( parent );
-    } else if ( isPathBeginning ) {
+      this.parentBranch.pushPath(parent);
+    } else if (isPathBeginning) {
       point.type = "start";
     }
 
     // Increment commitOffset for next commit position
-    this.pushPath( point );
+    this.pushPath(point);
 
     this.parent.commitOffsetX += this.template.commit.spacingX * (options.showLabel ? 2 : 1);
     this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
 
     // Add height of detail div (normal vertical mode only)
-    if ( commit.detail !== null ) {
+    if (commit.detail !== null) {
       commit.detail.style.display = "block";
       this.parent.commitOffsetY -= commit.detail.clientHeight - 40;
     }
@@ -774,18 +778,18 @@
    *
    * @return {Branch} this
    **/
-  Branch.prototype.merge = function ( target, commitOptions ) {
+  Branch.prototype.merge = function (target, commitOptions) {
     // Merge target
     var targetBranch = target || this.parent.HEAD;
 
     // Check integrity of target
-    if ( targetBranch instanceof Branch === false || targetBranch === this ) {
+    if (targetBranch instanceof Branch === false || targetBranch === this) {
       return this;
     }
 
     // Merge commit
     var defaultMessage = "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
-    if ( typeof commitOptions !== "object" ) {
+    if (typeof commitOptions !== "object") {
       var message = commitOptions;
       commitOptions = {};
       commitOptions.message = (typeof message === "string") ? message : defaultMessage;
@@ -793,19 +797,19 @@
       commitOptions.message = commitOptions.message || defaultMessage;
     }
     commitOptions.type = "mergeCommit";
-    commitOptions.parentCommit = this.commits.slice( -1 )[ 0 ];
+    commitOptions.parentCommit = this.commits.slice(-1)[0];
 
     var branchParentCommit = this.commits[0].parentCommit;
-    var parentBranchLastCommit = targetBranch.commits.slice( -1 )[ 0 ];
+    var parentBranchLastCommit = targetBranch.commits.slice(-1)[0];
     var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
-      var isGraphHorizontal  = _isHorizontal(this.parent);
+      var isGraphHorizontal  = _isHorizontal(this.parent);
       this.color = targetBranch.color;
 
       // Make branch path follow target branch ones
       if (isGraphHorizontal) {
         var targetBranchY = targetBranch.path[1].y;
-        this.path.forEach(function(point) {
+        this.path.forEach(function (point) {
           point.y = targetBranchY;
         });
       } else {
@@ -815,7 +819,7 @@
         });
       }
 
-      this.commits.forEach(function(commit) {
+      this.commits.forEach(function (commit) {
         if (isGraphHorizontal) {
           commit.y = branchParentCommit.y;
         } else {
@@ -828,26 +832,26 @@
         commit.dotStrokeColor = branchParentCommit.dotStrokeColor;
       });
     } else {
-      targetBranch.commit( commitOptions );
+      targetBranch.commit(commitOptions);
 
       // Add points to path
-      var targetCommit = targetBranch.commits.slice( -1 )[ 0 ];
+      var targetCommit = targetBranch.commits.slice(-1)[0];
       var endOfBranch = {
         x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
         y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
         type: "join"
       };
-      this.pushPath( JSON.parse( JSON.stringify( endOfBranch ) ) ); // Elegant way for cloning an object
+      this.pushPath(JSON.parse(JSON.stringify(endOfBranch))); // Elegant way for cloning an object
 
       var mergeCommit = {
         x: targetCommit.x,
         y: targetCommit.y,
         type: "end"
       };
-      this.pushPath( mergeCommit );
+      this.pushPath(mergeCommit);
 
       endOfBranch.type = "start";
-      this.pushPath( endOfBranch ); // End of branch for future commits
+      this.pushPath(endOfBranch); // End of branch for future commits
     }
 
     // Auto-render
@@ -867,18 +871,18 @@
    **/
   Branch.prototype.calculColumn = function () {
     var candidates = [];
-    for ( var i = 0, branch; !!(branch = this.parent.branches[ i ]); i++ ) {
-      if ( !branch.isfinish ) {
-        if ( !( branch.column in candidates ) ) {
-          candidates[ branch.column ] = 0;
+    for (var i = 0, branch; !!(branch = this.parent.branches[i]); i++) {
+      if (!branch.isfinish) {
+        if (!(branch.column in candidates)) {
+          candidates[branch.column] = 0;
         }
-        candidates[ branch.column ]++;
+        candidates[branch.column]++;
       }
     }
 
     this.column = 0;
-    for ( ; ; this.column++ ) {
-      if ( !( this.column in candidates ) || candidates[ this.column ] === 0 ) {
+    for (;; this.column++) {
+      if (!(this.column in candidates) || candidates[this.column] === 0) {
         break;
       }
     }
@@ -890,27 +894,27 @@
    *
    * @this Branch
    */
-  Branch.prototype.pushPath = function ( point ) {
-    var lastPoint = this.path.slice( -1 )[ 0 ];
-    if ( !lastPoint ) {
-      this.path.push( point );
-    } else if ( lastPoint.x === point.x && lastPoint.y === point.y ) {
-      if ( lastPoint.type !== "start" && point.type === "end" ) {
+  Branch.prototype.pushPath = function (point) {
+    var lastPoint = this.path.slice(-1)[0];
+    if (!lastPoint) {
+      this.path.push(point);
+    } else if (lastPoint.x === point.x && lastPoint.y === point.y) {
+      if (lastPoint.type !== "start" && point.type === "end") {
         lastPoint.type = "end";
-      } else if ( point.type === "join" ) {
+      } else if (point.type === "join") {
 
       } else {
-        this.path.push( point );
+        this.path.push(point);
       }
     } else {
-      if ( point.type === "join" ) {
-        if ( ( point.x - lastPoint.x ) * this.template.commit.spacingX < 0 ) {
-          this.path.push( point );
-        } else if ( ( point.y - lastPoint.y ) * this.template.commit.spacingY < 0 ) {
-          this.path.push( point );
+      if (point.type === "join") {
+        if ((point.x - lastPoint.x) * this.template.commit.spacingX < 0) {
+          this.path.push(point);
+        } else if ((point.y - lastPoint.y) * this.template.commit.spacingY < 0) {
+          this.path.push(point);
         }
       } else {
-        this.path.push( point );
+        this.path.push(point);
       }
     }
   };
@@ -964,9 +968,9 @@
    *
    * @this Commit
    **/
-  function Commit ( options ) {
+  function Commit(options) {
     // Check integrity
-    if ( options.parent instanceof GitGraph === false ) {
+    if (options.parent instanceof GitGraph === false) {
       return;
     }
 
@@ -982,14 +986,14 @@
     this.tag = options.tag || null;
     this.tagColor = options.tagColor || options.color;
     this.tagFont = options.tagFont || this.template.commit.tag.font;
-    this.displayTagBox = _booleanOptionOr( options.displayTagBox, true );
-    this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
+    this.displayTagBox = _booleanOptionOr(options.displayTagBox, true);
+    this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
-    this.messageDisplay = _booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
-    this.messageAuthorDisplay = _booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
-    this.messageBranchDisplay = _booleanOptionOr( options.messageBranchDisplay, this.template.commit.message.displayBranch );
-    this.messageHashDisplay = _booleanOptionOr( options.messageHashDisplay, this.template.commit.message.displayHash );
+    this.messageDisplay = _booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
+    this.messageAuthorDisplay = _booleanOptionOr(options.messageAuthorDisplay, this.template.commit.message.displayAuthor);
+    this.messageBranchDisplay = _booleanOptionOr(options.messageBranchDisplay, this.template.commit.message.displayBranch);
+    this.messageHashDisplay = _booleanOptionOr(options.messageHashDisplay, this.template.commit.message.displayHash);
     this.messageColor = options.messageColor || options.color;
     this.messageFont = options.messageFont || this.template.commit.message.font;
     this.dotColor = options.dotColor || options.color;
@@ -997,7 +1001,7 @@
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
     this.type = options.type || null;
-    this.tooltipDisplay = _booleanOptionOr( options.tooltipDisplay, true );
+    this.tooltipDisplay = _booleanOptionOr(options.tooltipDisplay, true);
     this.onClick = options.onClick || null;
     this.representedObject = options.representedObject || null;
     this.parentCommit = options.parentCommit;
@@ -1007,7 +1011,7 @@
     this.labelColor = options.labelColor || options.color;
     this.labelFont = options.labelFont || this.template.branch.labelFont;
 
-    this.parent.commits.push( this );
+    this.parent.commits.push(this);
   }
 
   /**
@@ -1018,50 +1022,48 @@
   Commit.prototype.render = function () {
 
     // Label
-    if ( this.showLabel ) {
+    if (this.showLabel) {
 
       /*
        * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
        * we need to modify the position of the label to sit centrally above the commit dot.
        */
-      if(_isHorizontal(this.parent)
-        && (this.template.branch.labelRotation % 180 === 0))
-      {
+      if (_isHorizontal(this.parent) &&
+        (this.template.branch.labelRotation % 180 === 0)) {
 
         /*
          * Take into account the dot size and the height of the label
          * (calculated from the font size) to arrive at the Y position.
          */
         var yNegativeMargin = this.y - this.dotSize - _getFontHeight(this.labelFont);
-        _drawTextBG( this.context,
-                     this.x,
-                     yNegativeMargin,
-                     this.branch.name,
-                     this.labelColor,
-                     this.labelFont,
-                     this.template.branch.labelRotation,
-                     true );
-    } else {
-         _drawTextBG( this.context,
-                      this.x + this.template.commit.spacingX,
-                      this.y + this.template.commit.spacingY,
-                      this.branch.name,
-                      this.labelColor,
-                      this.labelFont,
-                      this.template.branch.labelRotation,
-                      true );
+        _drawTextBG(this.context,
+          this.x,
+          yNegativeMargin,
+          this.branch.name,
+          this.labelColor,
+          this.labelFont,
+          this.template.branch.labelRotation,
+          true);
+      } else {
+        _drawTextBG(this.context,
+          this.x + this.template.commit.spacingX,
+          this.y + this.template.commit.spacingY,
+          this.branch.name,
+          this.labelColor,
+          this.labelFont,
+          this.template.branch.labelRotation,
+          true);
       }
-
     }
 
     // Dot
     this.context.beginPath();
-    this.context.arc( this.x, this.y, this.dotSize, 0, 2 * Math.PI, false );
+    this.context.arc(this.x, this.y, this.dotSize, 0, 2 * Math.PI, false);
     this.context.fillStyle = this.dotColor;
     this.context.strokeStyle = this.dotStrokeColor;
     this.context.lineWidth = this.dotStrokeWidth;
 
-    if ( typeof (this.dotStrokeWidth) === "number" ) {
+    if (typeof (this.dotStrokeWidth) === "number") {
       this.context.stroke();
     }
 
@@ -1069,29 +1071,28 @@
     this.context.closePath();
 
     // Arrow
-    if ( this.arrowDisplay && this.parentCommit instanceof Commit ) {
+    if (this.arrowDisplay && this.parentCommit instanceof Commit) {
       this.arrow();
     }
 
     // Tag
     var tagWidth = this.template.commit.tag.spacingX;
-    if ( this.tag !== null ) {
+    if (this.tag !== null) {
       this.parent.tagNum++;
       this.context.font = this.tagFont;
-      var textWidth = this.context.measureText( this.tag ).width;
 
-      // Can't base this on the label rotation angle anymore, as both orientation modes can support varied angles.
+      var textWidth = this.context.measureText(this.tag).width;
       if (_isHorizontal(this.parent)) {
-        var textHeight = _getFontHeight( this.tagFont );
-        _drawTextBG( this.context,
+        var textHeight = _getFontHeight(this.tagFont);
+        _drawTextBG(this.context,
           this.x - this.dotSize / 2,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingY) - this.template.commit.tag.spacingY / 2 + (this.parent.tagNum % 2) * textHeight * 1.5,
-          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
+          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox);
       } else {
-        _drawTextBG( this.context,
+        _drawTextBG(this.context,
           ((this.parent.columnMax + 1) * this.template.commit.tag.spacingX) - this.template.commit.tag.spacingX / 2 + textWidth / 2,
           this.y - this.dotSize / 2,
-          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
+          this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox);
       }
 
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
@@ -1103,27 +1104,27 @@
     var commitOffsetLeft = (this.parent.columnMax + 1) * this.template.branch.spacingX + tagWidth;
 
     // Detail
-    if ( this.detail !== null ) {
+    if (this.detail !== null) {
       this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + 30 + "px";
       this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40 + "px";
       this.detail.width = 30;
     }
 
     // Message
-    if ( this.messageDisplay ) {
+    if (this.messageDisplay) {
       var message = this.message;
-      if ( this.messageHashDisplay ) {
+      if (this.messageHashDisplay) {
         message = this.sha1 + " " + message;
       }
-      if ( this.messageAuthorDisplay ) {
+      if (this.messageAuthorDisplay) {
         message = message + (this.author ? " - " + this.author : "");
       }
-      if ( this.messageBranchDisplay ) {
+      if (this.messageBranchDisplay) {
         message = (this.branch.name ? "[" + this.branch.name + "] " : "") + message;
       }
 
       this.context.fillStyle = this.messageColor;
-      this.context.fillText( message, commitOffsetLeft, this.y + this.dotSize / 2 );
+      this.context.fillText(message, commitOffsetLeft, this.y + this.dotSize / 2);
     }
   };
 
@@ -1132,43 +1133,43 @@
    *
    * @this Commit
    **/
-  Commit.prototype.arrow = function Arrow () {
+  Commit.prototype.arrow = function Arrow() {
     // Options
     var size = this.template.arrow.size;
     var color = this.template.arrow.color || this.branch.color;
     var isReversed = this.parent.reverseArrow;
 
-    function rotate ( y, x ) {
+    function rotate(y, x) {
       var direction = (isReversed) ? -1 : 1;
-      return Math.atan2( direction * y, direction * x );
+      return Math.atan2(direction * y, direction * x);
     }
 
     // Angles calculation
-    var alpha = rotate( this.parentCommit.y - this.y, this.parentCommit.x - this.x );
+    var alpha = rotate(this.parentCommit.y - this.y, this.parentCommit.x - this.x);
 
     // Merge & Fork case
     var isForkCommit = (this === this.branch.commits[0]);
-    if ( this.type === "mergeCommit" || isForkCommit ) {
+    if (this.type === "mergeCommit" || isForkCommit) {
       var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
       var commitSpaceDelta = (this.showLabel ? 2 : 1);
 
       var alphaX = this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
-      var isPushedInY = (isForkCommit || isReversed)
-          && Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
+      var isPushedInY = (isForkCommit || isReversed) &&
+        Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
       var isOnSameXThanParent = (this.x === this.parentCommit.x);
       if (_isVertical(this.parent) && (isPushedInY || isOnSameXThanParent)) {
         alphaX = 0;
       }
 
       var alphaY = this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
-      var isPushedInX = (isForkCommit || isReversed)
-          && Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
+      var isPushedInX = (isForkCommit || isReversed) &&
+        Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
       var isOnSameYThanParent = (this.y === this.parentCommit.y);
       if (_isHorizontal(this.parent) && (isPushedInX || isOnSameYThanParent)) {
         alphaY = 0;
       }
 
-      alpha = rotate( alphaY, alphaX );
+      alpha = rotate(alphaY, alphaX);
       color = this.parentCommit.branch.color;
     }
 
@@ -1179,27 +1180,27 @@
 
     // Top
     var h = this.template.commit.dot.size + this.template.arrow.offset;
-    var x1 = h * Math.cos( alpha ) + arrowX;
-    var y1 = h * Math.sin( alpha ) + arrowY;
+    var x1 = h * Math.cos(alpha) + arrowX;
+    var y1 = h * Math.sin(alpha) + arrowY;
 
     // Bottom left
-    var x2 = (h + size) * Math.cos( alpha - delta ) + arrowX;
-    var y2 = (h + size) * Math.sin( alpha - delta ) + arrowY;
+    var x2 = (h + size) * Math.cos(alpha - delta) + arrowX;
+    var y2 = (h + size) * Math.sin(alpha - delta) + arrowY;
 
     // Bottom center
-    var x3 = (h + size / 2) * Math.cos( alpha ) + arrowX;
-    var y3 = (h + size / 2) * Math.sin( alpha ) + arrowY;
+    var x3 = (h + size / 2) * Math.cos(alpha) + arrowX;
+    var y3 = (h + size / 2) * Math.sin(alpha) + arrowY;
 
     // Bottom right
-    var x4 = (h + size) * Math.cos( alpha + delta ) + arrowX;
-    var y4 = (h + size) * Math.sin( alpha + delta ) + arrowY;
+    var x4 = (h + size) * Math.cos(alpha + delta) + arrowX;
+    var y4 = (h + size) * Math.sin(alpha + delta) + arrowY;
 
     this.context.beginPath();
     this.context.fillStyle = color;
-    this.context.moveTo( x1, y1 ); // Top
-    this.context.lineTo( x2, y2 ); // Bottom left
-    this.context.quadraticCurveTo( x3, y3, x4, y4 ); // Bottom center
-    this.context.lineTo( x4, y4 ); // Bottom right
+    this.context.moveTo(x1, y1); // Top
+    this.context.lineTo(x2, y2); // Bottom left
+    this.context.quadraticCurveTo(x3, y3, x4, y4); // Bottom center
+    this.context.lineTo(x4, y4); // Bottom right
     this.context.fill();
   };
 
@@ -1241,7 +1242,7 @@
    *
    * @this Template
    **/
-  function Template ( options ) {
+  function Template(options) {
     // Options
     options = _isObject(options) ? options : {};
     options.branch = options.branch || {};
@@ -1252,7 +1253,7 @@
     options.commit.message = options.commit.message || {};
 
     // One color per column
-    this.colors = options.colors || [ "#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657" ];
+    this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
 
     // Branch style
     this.branch = {};
@@ -1269,7 +1270,7 @@
      * ('0' is an acceptable value).
      */
     this.branch.labelRotation = options.branch.labelRotation !== undefined ?
-                                options.branch.labelRotation : null;
+      options.branch.labelRotation : null;
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
@@ -1291,7 +1292,7 @@
     this.commit.spacingY = (typeof options.commit.spacingY === "number") ? options.commit.spacingY : 25;
     this.commit.widthExtension = (typeof options.commit.widthExtension === "number") ? options.commit.widthExtension : 0;
     this.commit.tooltipHTMLFormatter = options.commit.tooltipHTMLFormatter || null;
-    this.commit.shouldDisplayTooltipsInCompactMode = _booleanOptionOr( options.commit.shouldDisplayTooltipsInCompactMode, true );
+    this.commit.shouldDisplayTooltipsInCompactMode = _booleanOptionOr(options.commit.shouldDisplayTooltipsInCompactMode, true);
 
     // Only one color, if null message takes branch color (full commit)
     this.commit.color = options.commit.color || null;
@@ -1311,10 +1312,10 @@
     this.commit.tag.spacingY = this.commit.spacingY;
 
     this.commit.message = {};
-    this.commit.message.display = _booleanOptionOr( options.commit.message.display, true );
-    this.commit.message.displayAuthor = _booleanOptionOr( options.commit.message.displayAuthor, true );
-    this.commit.message.displayBranch = _booleanOptionOr( options.commit.message.displayBranch, true );
-    this.commit.message.displayHash = _booleanOptionOr( options.commit.message.displayHash, true );
+    this.commit.message.display = _booleanOptionOr(options.commit.message.display, true);
+    this.commit.message.displayAuthor = _booleanOptionOr(options.commit.message.displayAuthor, true);
+    this.commit.message.displayBranch = _booleanOptionOr(options.commit.message.displayBranch, true);
+    this.commit.message.displayHash = _booleanOptionOr(options.commit.message.displayHash, true);
 
     // Only one color, if null message takes commit color (only message)
     this.commit.message.color = options.commit.message.color || null;
@@ -1328,61 +1329,61 @@
    *
    * @return {Template} [template] - Template if exist
    **/
-  Template.prototype.get = function ( name ) {
+  Template.prototype.get = function (name) {
     var template = {};
 
-    switch ( name ) {
-    case "blackarrow":
-      template = {
-        branch: {
-          color: "#000000",
-          lineWidth: 4,
-          spacingX: 50,
-          mergeStyle: "straight",
-          labelRotation: 0
-        },
-        commit: {
-          spacingY: -60,
-          dot: {
-            size: 12,
-            strokeColor: "#000000",
-            strokeWidth: 7
+    switch (name) {
+      case "blackarrow":
+        template = {
+          branch: {
+            color: "#000000",
+            lineWidth: 4,
+            spacingX: 50,
+            mergeStyle: "straight",
+            labelRotation: 0
           },
-          message: {
-            color: "black"
+          commit: {
+            spacingY: -60,
+            dot: {
+              size: 12,
+              strokeColor: "#000000",
+              strokeWidth: 7
+            },
+            message: {
+              color: "black"
+            }
+          },
+          arrow: {
+            size: 16,
+            offset: 2.5
           }
-        },
-        arrow: {
-          size: 16,
-          offset: 2.5
-        }
-      };
-      break;
+        };
+        break;
 
-    case "metro":
-      /* falls through */
-    default:
-      template = {
-        colors: [ "#979797", "#008fb5", "#f1c109" ],
-        branch: {
-          lineWidth: 10,
-          spacingX: 50,
-          labelRotation: 0
-        },
-        commit: {
-          spacingY: -80,
-          dot: {
-            size: 14
+      case "metro":
+        /* falls through */
+      default:
+        template = {
+          colors: ["#979797", "#008fb5", "#f1c109"],
+          branch: {
+            lineWidth: 10,
+            spacingX: 50,
+            labelRotation: 0
           },
-          message: {
-            font: "normal 14pt Arial"
+          commit: {
+            spacingY: -80,
+            dot: {
+              size: 14
+            },
+            message: {
+              font: "normal 14pt Arial"
+            }
           }
-        }
-      };
-      break;
+        };
+        break;
     }
 
-    return new Template( template );
+    return new Template(template);
   };
 
   // --------------------------------------------------------------------
@@ -1396,14 +1397,14 @@
    * @returns {Number}
    * @private
    */
-  function _getFontHeight ( font ) {
-    var body = document.getElementsByTagName( "body" )[ 0 ];
+  function _getFontHeight(font) {
+    var body = document.getElementsByTagName("body")[0];
     var dummy = document.createElement("div");
     var dummyText = document.createTextNode("Mg");
 
-    dummy.appendChild( dummyText );
-    dummy.setAttribute( "style", "font: " + font + ";" );
-    body.appendChild( dummy );
+    dummy.appendChild(dummyText);
+    dummy.setAttribute("style", "font: " + font + ";");
+    body.appendChild(dummy);
     var fontHeight = dummy.offsetHeight;
     body.removeChild(dummy);
 
@@ -1418,7 +1419,7 @@
    * @returns {Boolean}
    * @private
    */
-  function _booleanOptionOr ( booleanOption, defaultOption ) {
+  function _booleanOptionOr(booleanOption, defaultOption) {
     return (typeof booleanOption === "boolean") ? booleanOption : defaultOption;
   }
 
@@ -1435,19 +1436,19 @@
    * @param {Boolean} useStroke - Name of the triggered event.
    * @private
    */
-  function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
+  function _drawTextBG(context, x, y, text, color, font, angle, useStroke) {
     context.save();
-    context.translate( x, y );
-    context.rotate( angle * (Math.PI / 180) );
+    context.translate(x, y);
+    context.rotate(angle * (Math.PI / 180));
     context.textAlign = "center";
 
     context.font = font;
-    var width = context.measureText( text ).width;
-    var height = _getFontHeight( font );
+    var width = context.measureText(text).width;
+    var height = _getFontHeight(font);
 
-    if ( useStroke ) {
+    if (useStroke) {
       context.beginPath();
-      context.rect( -(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2 );
+      context.rect(-(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2);
       context.fillStyle = color;
       context.fill();
       context.lineWidth = 2;
@@ -1459,7 +1460,7 @@
       context.fillStyle = color;
     }
 
-    context.fillText( text, 0, height / 2 );
+    context.fillText(text, 0, height / 2);
     context.restore();
   }
 
@@ -1471,12 +1472,12 @@
    * @param {Object} [data = {}] - Custom data to attach to the event.
    * @private
    */
-  function _emitEvent ( element, eventName, data ) {
+  function _emitEvent(element, eventName, data) {
     var event;
 
-    if ( document.createEvent ) {
-      event = document.createEvent( "HTMLEvents" );
-      event.initEvent( eventName, true, true );
+    if (document.createEvent) {
+      event = document.createEvent("HTMLEvents");
+      event.initEvent(eventName, true, true);
     } else {
       event = document.createEventObject();
       event.eventType = eventName;
@@ -1485,10 +1486,10 @@
     event.eventName = eventName;
     event.data = data || {};
 
-    if ( document.createEvent ) {
-      element.dispatchEvent( event );
+    if (document.createEvent) {
+      element.dispatchEvent(event);
     } else {
-      element.fireEvent( "on" + event.eventType, event );
+      element.fireEvent("on" + event.eventType, event);
     }
   }
 
@@ -1500,19 +1501,19 @@
    * @returns {Number}
    * @private
    */
-  function _getScale ( context ) {
+  function _getScale(context) {
     var backingStorePixelRatio;
     var scalingFactor;
 
     // Account for high-resolution displays
     scalingFactor = 1;
 
-    if ( window.devicePixelRatio ) {
+    if (window.devicePixelRatio) {
       backingStorePixelRatio = context.webkitBackingStorePixelRatio ||
-                               context.mozBackingStorePixelRatio ||
-                               context.msBackingStorePixelRatio ||
-                               context.oBackingStorePixelRatio ||
-                               context.backingStorePixelRatio || 1;
+        context.mozBackingStorePixelRatio ||
+        context.msBackingStorePixelRatio ||
+        context.oBackingStorePixelRatio ||
+        context.backingStorePixelRatio || 1;
 
       scalingFactor *= window.devicePixelRatio / backingStorePixelRatio;
     }
@@ -1527,7 +1528,7 @@
    * @returns {Boolean}
    * @private
    */
-  function _isVertical ( graph ) {
+  function _isVertical(graph) {
     return (graph.orientation === "vertical" || graph.orientation === "vertical-reverse");
   }
 
@@ -1538,7 +1539,7 @@
    * @returns {Boolean}
    * @private
    */
-  function _isHorizontal ( graph ) {
+  function _isHorizontal(graph) {
     return (graph.orientation === "horizontal" || graph.orientation === "horizontal-reverse");
   }
 
@@ -1569,12 +1570,12 @@
      *
      * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/every for more information.
      */
-    return !(key.split(".").every(function(x) {
-        if(typeof obj !== "object" || obj === null || !(x in obj)) {
-          return false;
-        }
-        obj = obj[x];
-        return true;
+    return !(key.split(".").every(function (x) {
+      if (typeof obj !== "object" || obj === null || !(x in obj)) {
+        return false;
+      }
+      obj = obj[x];
+      return true;
     }));
   }
 
@@ -1583,7 +1584,7 @@
    * for more information.
    * */
   if (!Array.prototype.every) {
-    Array.prototype.every = function(callbackfn, thisArg) {
+    Array.prototype.every = function (callbackfn, thisArg) {
       var T, k;
 
       if (this === null) {
@@ -1621,7 +1622,7 @@
       }
       return true;
     };
-}
+  }
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
