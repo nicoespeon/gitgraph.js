@@ -712,8 +712,7 @@
     var isFirstBranch = !(options.parentCommit instanceof Commit);
     var isPathBeginning = this.path.length === 0;
 
-    options.showLabel = (isPathBeginning && this.showLabel) ? true : false;
-
+    options.showLabel = (isPathBeginning && this.showLabel);
     if (options.showLabel) {
       options.x -= this.template.commit.spacingX;
       options.y -= this.template.commit.spacingY;
