@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.7.1
+ *                  GitGraph v1.8.0
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2016 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -55,7 +55,9 @@
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
       this.orientation = "vertical-reverse";
-      this.template.branch.labelRotation = 0;
+      this.template.branch.labelRotation =  options.template.branch !== undefined &&
+                                            options.template.branch.labelRotation !== null ?
+                                            options.template.branch.labelRotation : 0;
       this.template.commit.tag.spacingY *= -1;
       break;
     case "horizontal" :
@@ -65,7 +67,9 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal";
-      this.template.branch.labelRotation = -90;
+      this.template.branch.labelRotation =  options.template.branch !== undefined &&
+                                            options.template.branch.labelRotation !== null ?
+                                            options.template.branch.labelRotation : -90;
       this.template.commit.tag.spacingX = -this.template.commit.spacingX;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
@@ -76,13 +80,17 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal-reverse";
-      this.template.branch.labelRotation = 90;
+      this.template.branch.labelRotation =  options.template.branch !== undefined &&
+                                            options.template.branch.labelRotation !== null ?
+                                            options.template.branch.labelRotation : 90;
       this.template.commit.tag.spacingX = -this.template.commit.spacingY;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     default:
       this.orientation = "vertical";
-      this.template.branch.labelRotation = 0;
+      this.template.branch.labelRotation =  options.template.branch !== undefined &&
+                                            options.template.branch.labelRotation !== null ?
+                                            options.template.branch.labelRotation : 0;
       break;
     }
 
@@ -1026,7 +1034,39 @@
 
     // Label
     if ( this.showLabel ) {
-      _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+
+      /*
+       * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
+       * we need to modify the position of the label to sit centrally above the commit dot.
+       */
+      if ((this.parent.orientation.indexOf('horizontal') === 0)
+          && (this.template.branch.labelRotation % 180 === 0))
+      {
+
+        /*
+         * Take into account the dot size and the height of the label
+         * (calculated from the font size) to arrive at the Y position.
+         */
+        var yNegativeMargin = this.y - this.dotSize - _getFontHeight(this.labelFont);
+        _drawTextBG( this.context,
+                     this.x,
+                     yNegativeMargin,
+                     this.branch.name,
+                     this.labelColor,
+                     this.labelFont,
+                     this.template.branch.labelRotation,
+                     true );
+    } else {
+         _drawTextBG( this.context,
+                      this.x + this.template.commit.spacingX,
+                      this.y + this.template.commit.spacingY,
+                      this.branch.name,
+                      this.labelColor,
+                      this.labelFont,
+                      this.template.branch.labelRotation,
+                      true );
+      }
+
     }
 
     // Dot
@@ -1054,7 +1094,9 @@
       this.parent.tagNum++;
       this.context.font = this.tagFont;
       var textWidth = this.context.measureText( this.tag ).width;
-      if ( this.template.branch.labelRotation !== 0 ) {
+
+      // Can't base this on the label rotation angle anymore, as both orientation modes can support varied angles.
+      if ((this.parent.orientation.indexOf('horizontal') === 0)) {
         var textHeight = _getFontHeight( this.tagFont );
         _drawTextBG( this.context,
           this.x - this.dotSize / 2,
@@ -1066,7 +1108,9 @@
           this.y - this.dotSize / 2,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       }
+
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
+
     }
 
     this.context.font = this.messageFont;
@@ -1233,7 +1277,14 @@
     this.branch.showLabel = options.branch.showLabel || false;
     this.branch.labelColor = options.branch.labelColor || null;
     this.branch.labelFont = options.branch.labelFont || "normal 8pt Calibri";
-    this.branch.labelRotation = options.branch.labelRotation || 0;
+
+    /*
+     * Set to 'null' by default, as a value of '0' can no longer be used to test
+     * whether rotation angle has been defined
+     * ('0' is an acceptable value).
+     */
+    this.branch.labelRotation = options.branch.labelRotation !== undefined ?
+                                options.branch.labelRotation : null;
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
@@ -1398,6 +1449,7 @@
    * @private
    */
   function _drawTextBG ( context, x, y, text, color, font, angle, useStroke ) {
+
     context.save();
     context.translate( x, y );
     context.rotate( angle * (Math.PI / 180) );

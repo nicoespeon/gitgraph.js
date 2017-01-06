@@ -45,7 +45,8 @@
     case "vertical-reverse" :
       this.template.commit.spacingY *= -1;
       this.orientation = "vertical-reverse";
-      this.template.branch.labelRotation = 0;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                            0 : options.template.branch.labelRotation;
       this.template.commit.tag.spacingY *= -1;
       break;
     case "horizontal" :
@@ -55,7 +56,8 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal";
-      this.template.branch.labelRotation = -90;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                            -90 : options.template.branch.labelRotation;
       this.template.commit.tag.spacingX = -this.template.commit.spacingX;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
@@ -66,13 +68,15 @@
       this.template.commit.spacingY = 0;
       this.template.branch.spacingX = 0;
       this.orientation = "horizontal-reverse";
-      this.template.branch.labelRotation = 90;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                            90 : options.template.branch.labelRotation;
       this.template.commit.tag.spacingX = -this.template.commit.spacingY;
       this.template.commit.tag.spacingY = this.template.branch.spacingY;
       break;
     default:
       this.orientation = "vertical";
-      this.template.branch.labelRotation = 0;
+      this.template.branch.labelRotation =  _isNullOrUndefined(options, "template.branch.labelRotation") ?
+                                             0 : options.template.branch.labelRotation;
       break;
     }
 
@@ -802,7 +806,6 @@
       if (isGraphHorizontal) {
         var targetBranchY = targetBranch.path[1].y;
         this.path.forEach(function(point) {
-          console.log(point.y, targetBranchY);
           point.y = targetBranchY;
         });
       } else {
@@ -1016,7 +1019,39 @@
 
     // Label
     if ( this.showLabel ) {
-      _drawTextBG( this.context, this.x + this.template.commit.spacingX, this.y + this.template.commit.spacingY, this.branch.name, this.labelColor, this.labelFont, this.template.branch.labelRotation, true );
+
+      /*
+       * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
+       * we need to modify the position of the label to sit centrally above the commit dot.
+       */
+      if(_isHorizontal(this.parent)
+        && (this.template.branch.labelRotation % 180 === 0))
+      {
+
+        /*
+         * Take into account the dot size and the height of the label
+         * (calculated from the font size) to arrive at the Y position.
+         */
+        var yNegativeMargin = this.y - this.dotSize - _getFontHeight(this.labelFont);
+        _drawTextBG( this.context,
+                     this.x,
+                     yNegativeMargin,
+                     this.branch.name,
+                     this.labelColor,
+                     this.labelFont,
+                     this.template.branch.labelRotation,
+                     true );
+    } else {
+         _drawTextBG( this.context,
+                      this.x + this.template.commit.spacingX,
+                      this.y + this.template.commit.spacingY,
+                      this.branch.name,
+                      this.labelColor,
+                      this.labelFont,
+                      this.template.branch.labelRotation,
+                      true );
+      }
+
     }
 
     // Dot
@@ -1044,7 +1079,9 @@
       this.parent.tagNum++;
       this.context.font = this.tagFont;
       var textWidth = this.context.measureText( this.tag ).width;
-      if ( this.template.branch.labelRotation !== 0 ) {
+
+      // Can't base this on the label rotation angle anymore, as both orientation modes can support varied angles.
+      if (_isHorizontal(this.parent)) {
         var textHeight = _getFontHeight( this.tagFont );
         _drawTextBG( this.context,
           this.x - this.dotSize / 2,
@@ -1056,7 +1093,9 @@
           this.y - this.dotSize / 2,
           this.tag, this.tagColor, this.tagFont, 0, this.displayTagBox );
       }
+
       tagWidth = (tagWidth < textWidth) ? textWidth : tagWidth;
+
     }
 
     this.context.font = this.messageFont;
@@ -1223,7 +1262,14 @@
     this.branch.showLabel = options.branch.showLabel || false;
     this.branch.labelColor = options.branch.labelColor || null;
     this.branch.labelFont = options.branch.labelFont || "normal 8pt Calibri";
-    this.branch.labelRotation = options.branch.labelRotation || 0;
+
+    /*
+     * Set to 'null' by default, as a value of '0' can no longer be used to test
+     * whether rotation angle has been defined
+     * ('0' is an acceptable value).
+     */
+    this.branch.labelRotation = options.branch.labelRotation !== undefined ?
+                                options.branch.labelRotation : null;
 
     // Merge style = "bezier" | "straight"
     this.branch.mergeStyle = options.branch.mergeStyle || "bezier";
@@ -1292,7 +1338,8 @@
           color: "#000000",
           lineWidth: 4,
           spacingX: 50,
-          mergeStyle: "straight"
+          mergeStyle: "straight",
+          labelRotation: 0
         },
         commit: {
           spacingY: -60,
@@ -1319,7 +1366,8 @@
         colors: [ "#979797", "#008fb5", "#f1c109" ],
         branch: {
           lineWidth: 10,
-          spacingX: 50
+          spacingX: 50,
+          labelRotation: 0
         },
         commit: {
           spacingY: -80,
@@ -1504,6 +1552,76 @@
   function _isObject(object) {
     return (typeof object === "object");
   }
+
+  /**
+   * Returns `true` if any of the properties (nested or single) of `obj` specified by `key` are undefined or set to a value of null.
+   * Modified from original source: http://stackoverflow.com/a/23809123.
+   *
+   * @param {*} obj - The object whose properties are to be tested as being undefined or equal to null.
+   * @param {String} key - The property hierarchy of `obj` to be tested, specified using 'dot notation' (e.g. property1.property2.property3 etc).
+   * @returns {Boolean} - True if ANY of the properties specified by `key` is undefined or equal to null, otherwise False.
+   * @private
+   */
+  function _isNullOrUndefined(obj, key) {
+
+    /* We invert the result of '.every()' in order to meet the expected return value for the condition test of the function.
+     * We have to do this, given that '.every()' will return immediately upon capturing a falsey value from the callback.
+     *
+     * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/every for more information.
+     */
+    return !(key.split(".").every(function(x) {
+        if(typeof obj !== "object" || obj === null || !(x in obj)) {
+          return false;
+        }
+        obj = obj[x];
+        return true;
+    }));
+  }
+
+  /* Polyfill for ECMA-252 5th edition Array.prototype.every()
+   * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+   * for more information.
+   * */
+  if (!Array.prototype.every) {
+    Array.prototype.every = function(callbackfn, thisArg) {
+      var T, k;
+
+      if (this === null) {
+        throw new TypeError("this is null or not defined");
+      }
+
+      var O = Object(this);
+
+      var len = O.length >>> 0;
+
+      if (typeof callbackfn !== "function") {
+        throw new TypeError();
+      }
+
+      if (arguments.length > 1) {
+        T = thisArg;
+      }
+
+      k = 0;
+
+      while (k < len) {
+
+        var kValue;
+        if (k in O) {
+
+          kValue = O[k];
+
+          var testResult = callbackfn.call(T, kValue, k, O);
+
+          if (!testResult) {
+            return false;
+          }
+        }
+        k++;
+      }
+      return true;
+    };
+}
 
   // Expose GitGraph object
   window.GitGraph = GitGraph;
