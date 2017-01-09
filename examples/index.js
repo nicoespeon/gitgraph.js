@@ -32,10 +32,10 @@ var myTemplate = new GitGraph.Template(myTemplateConfig);
  ***********************/
 
 var config = {
-  template: "metro" // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
-    //, reverseArrow: true  // to make arrows point to ancestors, if displayed
-    //, orientation: "vertical-reverse"
-    //, mode: "compact"     // special compact mode: hide messages & compact graph
+  template: "metro", // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
+  reverseArrow: false, // to make arrows point to ancestors, if displayed
+  orientation: "vertical",
+  // mode: "compact" // special compact mode: hide messages & compact graph
 };
 var gitGraph = new GitGraph(config);
 
@@ -90,8 +90,8 @@ gitGraph.commit(commitConfig);
  ***********************/
 
 var commitWithDetailsConfig = {
-  message: "test",
-  detailId: "detail" // Id of detail div (available in normal vertical mode only)
+  message: "A commit with detailed message",
+  detailId: "detail"
 };
 gitGraph.commit(commitWithDetailsConfig).commit();
 dev.commit().commit(); // 2 default commits on "dev"
