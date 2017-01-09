@@ -520,8 +520,8 @@
     this.offsetY = this.column * this.spacingY;
 
     // Add start point
-    if (this.parentBranch) {
-      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch)) {
+    if (this.parentBranch && this.parentCommit) {
+      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch) && this.commits.length > 0) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
           y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -712,8 +712,7 @@
     var isFirstBranch = !(options.parentCommit instanceof Commit);
     var isPathBeginning = this.path.length === 0;
 
-    options.showLabel = (isPathBeginning && this.showLabel) ? true : false;
-
+    options.showLabel = (isPathBeginning && this.showLabel);
     if (options.showLabel) {
       options.x -= this.template.commit.spacingX;
       options.y -= this.template.commit.spacingY;
@@ -837,6 +836,12 @@
       return this;
     }
 
+    var firstBranchCommit = this.commits[0];
+    if (!firstBranchCommit) {
+      console.log(this.name + " is already up-to-date with " + targetBranch.name);
+      return this;
+    }
+
     // Merge commit
     var defaultMessage = "Merge branch `" + this.name + "` into `" + targetBranch.name + "`";
     if (typeof commitOptions !== "object") {
@@ -849,9 +854,9 @@
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = _getParentCommitFromBranch(this);
 
-    var branchParentCommit = this.commits[0].parentCommit;
-    var parentBranchLastCommit = _getLast(targetBranch.commits);
-    var isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
+    var branchParentCommit = firstBranchCommit.parentCommit;
+    var targetBranchParentCommit = _getParentCommitFromBranch(targetBranch);
+    var isFastForwardPossible = (branchParentCommit && branchParentCommit.sha1 === targetBranchParentCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
       var isGraphHorizontal  = _isHorizontal(this.parent);
       this.color = targetBranch.color;

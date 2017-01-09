@@ -1,24 +1,21 @@
 {
   "name": "gitgraph.js",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "description": "A JavaScript library to draw pretty git graphs in the browser",
-  "contributors": [
-    {
-      "name": "Fabien Bernard",
-      "email": "fabien0102@gmail.com"
-    }
-  ],
+  "contributors": [{
+    "name": "Fabien Bernard",
+    "email": "fabien0102@gmail.com"
+  }],
   "main": "./src/gitgraph.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/nicoespeon/gitgraph.js"
   },
-  "keywords": [ "git", "graph", "javascript" ],
-  "dependencies" : {
-  },
+  "keywords": ["git", "graph", "javascript"],
+  "dependencies": {},
   "devDependencies": {
-    "grunt":  "~0.4.1",
+    "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.5.0",
     "grunt-contrib-copy": "~0.6.0",
