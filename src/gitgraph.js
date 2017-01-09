@@ -520,7 +520,7 @@
     this.offsetY = this.column * this.spacingY;
 
     // Add start point
-    if (this.parentBranch) {
+    if (this.parentBranch && this.parentCommit) {
       if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch) && this.commits.length > 0) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
