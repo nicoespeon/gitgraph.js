@@ -521,7 +521,7 @@
 
     // Add start point
     if (this.parentBranch) {
-      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch)) {
+      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch) && this.commits.length > 0) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
           y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
