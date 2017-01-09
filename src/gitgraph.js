@@ -682,9 +682,8 @@
     options.y = this.offsetY - this.parent.commitOffsetY;
 
     // Detail
-    var isVertical = this.parent.orientation === "vertical";
-    var isNotCompact = this.parent.mode !== "compact";
-    if (typeof options.detailId === "string" && isVertical && isNotCompact) {
+    var isCompact = (this.parent.mode === "compact");
+    if (typeof options.detailId === "string" && !isCompact) {
       options.detail = document.getElementById(options.detailId);
     } else {
       options.detail = null;
@@ -753,10 +752,15 @@
     this.parent.commitOffsetX += this.template.commit.spacingX * (options.showLabel ? 2 : 1);
     this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
 
-    // Add height of detail div (normal vertical mode only)
-    if (commit.detail !== null) {
+    // Add height of detail div (vertical mode only)
+    if (commit.detail !== null && _isVertical(this.parent)) {
       commit.detail.style.display = "block";
-      this.parent.commitOffsetY -= commit.detail.clientHeight - 40;
+
+      if (this.parent.orientation === "vertical-reverse") {
+        this.parent.commitOffsetY += commit.detail.clientHeight;
+      } else {
+        this.parent.commitOffsetY -= commit.detail.clientHeight;
+      }
     }
 
     // Auto-render
@@ -1140,10 +1144,18 @@
     }
 
     // Detail
-    if (this.detail !== null) {
-      this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + 30 + "px";
-      this.detail.style.top = this.parent.canvas.offsetTop + this.y + 40 + "px";
+    if (this.detail !== null && _isVertical(this.parent)) {
       this.detail.width = 30;
+      this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + this.detail.width + "px";
+
+      var detailOffsetTop = (this.parent.canvas.offsetTop + this.y);
+      var detailHorizontalMargin = 30;
+      if (this.parent.orientation === "vertical-reverse") {
+        var clientOffset = (this.parent.canvas.clientHeight - this.detail.clientHeight);
+        this.detail.style.top = detailOffsetTop + clientOffset - detailHorizontalMargin + "px";
+      } else {
+        this.detail.style.top = detailOffsetTop + detailHorizontalMargin + "px";
+      }
     }
 
     // Message
