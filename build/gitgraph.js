@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.8.2
+ *                  GitGraph v1.8.3
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2017 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -306,8 +306,6 @@
     for (var i = this.branches.length - 1, branch; !!(branch = this.branches[i]); i--) {
       branch.render();
     }
-
-    this.tagNum = 0;
 
     // Render commits after to put them on the foreground
     for (var j = 0, commit; !!(commit = this.commits[j]); j++) {
@@ -1296,15 +1294,14 @@
     var textWidth = commit.context.measureText(commit.tag).width;
     this.width = Math.max(commit.template.commit.tag.spacingX, textWidth);
 
-    commit.parent.tagNum++;
-
     var x = 0;
     var y = 0;
+    var tagColumn = (commit.parent.columnMax + 1);
     if (_isHorizontal(commit.parent)) {
       x = commit.x - commit.dotSize / 2;
-      y = ((commit.parent.columnMax + 1) * commit.template.commit.tag.spacingY) - commit.template.commit.tag.spacingY / 2 + (commit.parent.tagNum % 2) * _getFontHeight(this.font) * 1.5;
+      y = (tagColumn * commit.template.commit.tag.spacingY) - commit.template.commit.tag.spacingY / 2;
     } else {
-      x = ((commit.parent.columnMax + 1) * commit.template.commit.tag.spacingX) - commit.template.commit.tag.spacingX / 2 + textWidth / 2;
+      x = (tagColumn * commit.template.commit.tag.spacingX) - commit.template.commit.tag.spacingX / 2 + textWidth / 2;
       y = commit.y - commit.dotSize / 2;
     }
 
