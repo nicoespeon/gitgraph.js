@@ -744,11 +744,12 @@
     var isFirstBranch = !(options.parentCommit instanceof Commit);
     var isPathBeginning = this.path.length === 0;
 
-    options.showLabel = (isPathBeginning && this.showLabel);
-    if (options.showLabel) {
-      options.x -= this.template.commit.spacingX;
-      options.y -= this.template.commit.spacingY;
-    }
+    var cmts = options.branch.commits;
+    cmts.forEach(function (commit) {
+      commit.showLabel = false;
+    });
+
+    options.showLabel = (this.showLabel);
 
     var commit = new Commit(options);
     this.commits.push(commit);
@@ -784,8 +785,8 @@
     this.pushPath(point);
 
     // Increment commitOffset for next commit position
-    this.parent.commitOffsetX += this.template.commit.spacingX * (options.showLabel ? 2 : 1);
-    this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
+    this.parent.commitOffsetX += this.template.commit.spacingX;
+    this.parent.commitOffsetY += this.template.commit.spacingY;
 
     // Add height of detail div (vertical mode only)
     if (commit.detail !== null && _isVertical(this.parent)) {
@@ -1141,8 +1142,8 @@
           true);
       } else {
         _drawTextBG(this.context,
-          this.x + this.template.commit.spacingX,
-          this.y + this.template.commit.spacingY,
+          this.x + (this.template.branch.spacingX/2),
+          this.y,
           this.branch.name,
           this.labelColor,
           this.labelFont,
@@ -1629,7 +1630,7 @@
   /**
    * Draw text background.
    *
-   * @param {CanvasRenderingContext2D} context - Canvas 2D context in which to render text.
+   * @param {CanvasRenderingContext2D} context - Canvas 2D context in which to render text.
    * @param {number} x - Horizontal offset of the text.
    * @param {number} y - Vertical offset of the text.
    * @param {string} text - Text content.
