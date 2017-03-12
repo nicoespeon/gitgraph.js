@@ -16,6 +16,7 @@
    * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
    * @param {Number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
    * @param {Number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.
+   * @param {HTMLElement} [options.tooltipContainer = document.body] - HTML Element containing tooltips in compact mode.
    *
    * @this GitGraph
    **/
@@ -95,9 +96,8 @@
     this.tooltip.className = "gitgraph-tooltip";
     this.tooltip.style.position = "fixed";
     this.tooltip.style.display = "none";
-
-    // Add tooltip div into body
-    document.body.appendChild(this.tooltip);
+    var tooltipContainer = options.tooltipContainer || document.body;
+    tooltipContainer.appendChild(this.tooltip);
 
     // Navigation vars
     this.HEAD = null;
