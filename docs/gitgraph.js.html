@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Source: gitgraph.js</title>
-    
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -16,16 +16,17 @@
 <body>
 
 <div id="main">
-    
+
     <h1 class="page-title">Source: gitgraph.js</h1>
+
     
-    
+
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source"><code>
+            <pre class="prettyprint source linenums"><code>
   "use strict";
 
   /**
@@ -43,6 +44,7 @@
    * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
    * @param {Number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
    * @param {Number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.
+   * @param {HTMLElement} [options.tooltipContainer = document.body] - HTML Element containing tooltips in compact mode.
    *
    * @this GitGraph
    **/
@@ -122,9 +124,8 @@
     this.tooltip.className = "gitgraph-tooltip";
     this.tooltip.style.position = "fixed";
     this.tooltip.style.display = "none";
-
-    // Add tooltip div into body
-    document.body.appendChild(this.tooltip);
+    var tooltipContainer = options.tooltipContainer || document.body;
+    tooltipContainer.appendChild(this.tooltip);
 
     // Navigation vars
     this.HEAD = null;
@@ -428,7 +429,7 @@
 
     self.applyCommits(event, function (commit, isOverCommit, event) {
       if (isOverCommit) {
-        if (!self.template.commit.message.display && self.template.commit.shouldDisplayTooltipsInCompactMode) {
+        if (!self.template.commit.message.display &amp;&amp; self.template.commit.shouldDisplayTooltipsInCompactMode) {
           showCommitTooltip(commit);
         }
 
@@ -499,7 +500,7 @@
     // Options
     options = _isObject(options) ? options : {};
     this.parent = options.parent;
-    if (options.parentCommit && options.parentBranch) {
+    if (options.parentCommit &amp;&amp; options.parentBranch) {
       if (options.parentCommit.branch !== options.parentBranch) {
         return;
       }
@@ -530,7 +531,7 @@
     this.commits = [];
     this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"join"|"end")}
 
-    // Column number calculation for auto-color & auto-offset
+    // Column number calculation for auto-color &amp; auto-offset
     if (typeof options.column === "number") {
       this.column = options.column;
     } else {
@@ -545,8 +546,8 @@
     this.offsetY = this.column * this.spacingY;
 
     // Add start point
-    if (this.parentBranch && this.parentCommit) {
-      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch) && this.commits.length > 0) {
+    if (this.parentBranch &amp;&amp; this.parentCommit) {
+      if (this.parentCommit === _getParentCommitFromBranch(this.parentBranch) &amp;&amp; this.commits.length > 0) {
         this.startPoint = {
           x: this.parentBranch.offsetX - this.parent.commitOffsetX + this.template.commit.spacingX,
           y: this.parentBranch.offsetY - this.parent.commitOffsetY + this.template.commit.spacingY,
@@ -674,10 +675,10 @@
     options.parentCommit = options.parentCommit || _getParentCommitFromBranch(this);
 
     // Special compact mode
-    if (this.parent.mode === "compact" &&
-      _getLast(this.parent.commits) &&
-      _getLast(this.parent.commits).branch !== options.branch &&
-      options.branch.commits.length &&
+    if (this.parent.mode === "compact" &amp;&amp;
+      _getLast(this.parent.commits) &amp;&amp;
+      _getLast(this.parent.commits).branch !== options.branch &amp;&amp;
+      options.branch.commits.length &amp;&amp;
       options.type !== "mergeCommit") {
       this.parent.commitOffsetX -= this.template.commit.spacingX;
       this.parent.commitOffsetY -= this.template.commit.spacingY;
@@ -708,7 +709,7 @@
 
     // Detail
     var isCompact = (this.parent.mode === "compact");
-    if (typeof options.detailId === "string" && !isCompact) {
+    if (typeof options.detailId === "string" &amp;&amp; !isCompact) {
       options.detail = document.getElementById(options.detailId);
     } else {
       options.detail = null;
@@ -728,7 +729,7 @@
     }
 
     // Fork case: Parent commit from parent branch
-    if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
+    if (options.parentCommit instanceof Commit === false &amp;&amp; this.parentBranch instanceof Branch) {
       options.parentCommit = this.parentCommit;
     }
 
@@ -736,7 +737,7 @@
     var isFirstBranch = !(options.parentCommit instanceof Commit);
     var isPathBeginning = this.path.length === 0;
 
-    options.showLabel = (isPathBeginning && this.showLabel);
+    options.showLabel = (isPathBeginning &amp;&amp; this.showLabel);
     if (options.showLabel) {
       options.x -= this.template.commit.spacingX;
       options.y -= this.template.commit.spacingY;
@@ -752,7 +753,7 @@
       type: "join"
     };
 
-    if (!isFirstBranch && isPathBeginning) {
+    if (!isFirstBranch &amp;&amp; isPathBeginning) {
       this.pushPath(this.startPoint);
 
       // Trace path from parent branch if it has commits already
@@ -778,7 +779,7 @@
     this.parent.commitOffsetY += this.template.commit.spacingY * (options.showLabel ? 2 : 1);
 
     // Add height of detail div (vertical mode only)
-    if (commit.detail !== null && _isVertical(this.parent)) {
+    if (commit.detail !== null &amp;&amp; _isVertical(this.parent)) {
       commit.detail.style.display = "block";
 
       if (this.parent.orientation === "vertical-reverse") {
@@ -885,8 +886,8 @@
 
     var branchParentCommit = firstBranchCommit.parentCommit;
     var targetBranchParentCommit = _getParentCommitFromBranch(targetBranch);
-    var isFastForwardPossible = (branchParentCommit && branchParentCommit.sha1 === targetBranchParentCommit.sha1);
-    if (commitOptions.fastForward && isFastForwardPossible) {
+    var isFastForwardPossible = (branchParentCommit &amp;&amp; branchParentCommit.sha1 === targetBranchParentCommit.sha1);
+    if (commitOptions.fastForward &amp;&amp; isFastForwardPossible) {
       var isGraphHorizontal  = _isHorizontal(this.parent);
       this.color = targetBranch.color;
 
@@ -982,8 +983,8 @@
     var lastPoint = _getLast(this.path);
     if (!lastPoint) {
       this.path.push(point);
-    } else if (lastPoint.x === point.x && lastPoint.y === point.y) {
-      if (lastPoint.type !== "start" && point.type === "end") {
+    } else if (lastPoint.x === point.x &amp;&amp; lastPoint.y === point.y) {
+      if (lastPoint.type !== "start" &amp;&amp; point.type === "end") {
         lastPoint.type = "end";
       } else if (point.type === "join") {
 
@@ -1016,9 +1017,9 @@
    * @param {GitGraph} options.parent - GitGraph constructor
    * @param {Number} options.x - Position X (dot)
    * @param {Number} options.y - Position Y (dot)
-   * @param {String} options.color - Master color (dot & message)
+   * @param {String} options.color - Master color (dot &amp; message)
    * @param {Boolean} options.arrowDisplay - Add a arrow under commit dot
-   * @param {String} [options.author = this.parent.author] - Author name & email
+   * @param {String} [options.author = this.parent.author] - Author name &amp; email
    * @param {String} [options.date] - Date of commit, default is now
    * @param {String} [options.detail] - DOM Element of detail part
    * @param {String} [options.sha1] - Sha1, default is a random short sha1
@@ -1111,7 +1112,7 @@
        * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
        * we need to modify the position of the label to sit centrally above the commit dot.
        */
-      if (_isHorizontal(this.parent) &&
+      if (_isHorizontal(this.parent) &amp;&amp;
         (this.template.branch.labelRotation % 180 === 0)) {
 
         /*
@@ -1154,7 +1155,7 @@
     this.context.closePath();
 
     // Arrow
-    if (this.arrowDisplay && this.parentCommit instanceof Commit) {
+    if (this.arrowDisplay &amp;&amp; this.parentCommit instanceof Commit) {
       this.arrow();
     }
 
@@ -1169,7 +1170,7 @@
     }
 
     // Detail
-    if (this.detail !== null && _isVertical(this.parent)) {
+    if (this.detail !== null &amp;&amp; _isVertical(this.parent)) {
       this.detail.width = 30;
       this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + this.detail.width + "px";
 
@@ -1221,25 +1222,25 @@
     // Angles calculation
     var alpha = rotate(this.parentCommit.y - this.y, this.parentCommit.x - this.x);
 
-    // Merge & Fork case
+    // Merge &amp; Fork case
     var isForkCommit = (this === this.branch.commits[0]);
     if (this.type === "mergeCommit" || isForkCommit) {
       var deltaColumn = (this.parentCommit.branch.column - this.branch.column);
       var commitSpaceDelta = (this.showLabel ? 2 : 1);
 
       var alphaX = this.template.branch.spacingX * deltaColumn + this.template.commit.spacingX * commitSpaceDelta;
-      var isPushedInY = (isForkCommit || isReversed) &&
+      var isPushedInY = (isForkCommit || isReversed) &amp;&amp;
         Math.abs(this.y - this.parentCommit.y) > Math.abs(this.template.commit.spacingY);
       var isOnSameXThanParent = (this.x === this.parentCommit.x);
-      if (_isVertical(this.parent) && (isPushedInY || isOnSameXThanParent)) {
+      if (_isVertical(this.parent) &amp;&amp; (isPushedInY || isOnSameXThanParent)) {
         alphaX = 0;
       }
 
       var alphaY = this.template.branch.spacingY * deltaColumn + this.template.commit.spacingY * commitSpaceDelta;
-      var isPushedInX = (isForkCommit || isReversed) &&
+      var isPushedInX = (isForkCommit || isReversed) &amp;&amp;
         Math.abs(this.x - this.parentCommit.x) > Math.abs(this.template.commit.spacingX);
       var isOnSameYThanParent = (this.y === this.parentCommit.y);
-      if (_isHorizontal(this.parent) && (isPushedInX || isOnSameYThanParent)) {
+      if (_isHorizontal(this.parent) &amp;&amp; (isPushedInX || isOnSameYThanParent)) {
         alphaY = 0;
       }
 
@@ -1247,7 +1248,7 @@
       color = this.parentCommit.branch.color;
     }
 
-    var delta = Math.PI / 7; // Delta between left & right (radian)
+    var delta = Math.PI / 7; // Delta between left &amp; right (radian)
 
     var arrowX = (isReversed) ? this.parentCommit.x : this.x;
     var arrowY = (isReversed) ? this.parentCommit.y : this.y;
@@ -1352,7 +1353,7 @@
    * @param {Number} [options.commit.spacingX] - Space between commits
    * @param {Number} [options.commit.spacingY] - Space between commits
    * @param {Number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
-   * @param {String} [options.commit.color] - Master commit color (dot & message)
+   * @param {String} [options.commit.color] - Master commit color (dot &amp; message)
    * @param {String} [options.commit.dot.color] - Commit dot color
    * @param {Number} [options.commit.dot.size] - Commit dot size
    * @param {Number} [options.commit.dot.strokeWidth] - Commit dot stroke width
@@ -1822,13 +1823,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Tag.html">Tag</a></li><li><a href="Template.html">Template</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_assignTagOptionsToCommit">_assignTagOptionsToCommit</a></li><li><a href="global.html#_booleanOptionOr">_booleanOptionOr</a></li><li><a href="global.html#_clone">_clone</a></li><li><a href="global.html#_drawTextBG">_drawTextBG</a></li><li><a href="global.html#_emitEvent">_emitEvent</a></li><li><a href="global.html#_getFontHeight">_getFontHeight</a></li><li><a href="global.html#_getLast">_getLast</a></li><li><a href="global.html#_getParentCommitFromBranch">_getParentCommitFromBranch</a></li><li><a href="global.html#_getScale">_getScale</a></li><li><a href="global.html#_isHorizontal">_isHorizontal</a></li><li><a href="global.html#_isNullOrUndefined">_isNullOrUndefined</a></li><li><a href="global.html#_isObject">_isObject</a></li><li><a href="global.html#_isVertical">_isVertical</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Branch.html">Branch</a></li><li><a href="Commit.html">Commit</a></li><li><a href="GitGraph.html">GitGraph</a></li><li><a href="Tag.html">Tag</a></li><li><a href="Template.html">Template</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
-<br clear="both">
+<br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jan 10 2017 08:09:14 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Mar 12 2017 21:59:49 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
