@@ -38,7 +38,10 @@
   },
   "scripts": {
     "start": "grunt server",
-    "test": "grunt test"
+    "test": "grunt test",
+    "doc": "grunt doc",
+    "dist": "grunt dist",
+    "release": "grunt release"
   },
   "license": "MIT"
 }
