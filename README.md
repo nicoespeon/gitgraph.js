@@ -56,7 +56,7 @@ the command line.
 
 [> Need more information about how to get started with Grunt?](http://gruntjs.com/getting-started)
 
-### Available Grunt commands
+### Available commands
 
 #### test code - `npm test`
 
