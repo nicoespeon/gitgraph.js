@@ -95,8 +95,16 @@ module.exports = function ( grunt ) {
         src: [ "dist/jsdoc/src/*.js", "README.md" ],
         options: {
           configure: ".jsdocrc",
-          destination: "dist/tsd",
+          destination: "dist",
           template: "./node_modules/tsd-jsdoc"
+        }
+      },
+      json: {
+        src: [ "dist/jsdoc/src/*.js", "README.md" ],
+        options: {
+          configure: ".jsdocrc",
+          destination: "dist/doc.json",
+          template: "./node_modules/jsdoc-json"
         }
       },
       release: {
@@ -198,15 +206,22 @@ module.exports = function ( grunt ) {
   // `grunt lint` will check code by running JSHint and unit tests over it.
   grunt.registerTask( "test", [ "jshint", "jasmine" ] );
 
-  // `grunt docs` will create non-versioned documentation for development use.
+  // `grunt doc` will create non-versioned documentation for development use.
   grunt.registerTask( "doc", [
     "string-replace:jsdoc",
     "jsdoc:dist",
     "clean:jsdoc"
   ] );
 
-  // `grunt tsd` will create typescript definition
-  grunt.registerTask( "tsd", [
+  // `grunt doc:json` will create non-versioned documentation for development use.
+  grunt.registerTask( "doc:json", [
+    "string-replace:jsdoc",
+    "jsdoc:json",
+    "clean:jsdoc"
+  ] );
+
+  // `grunt doc:tsd` will create typescript definition
+  grunt.registerTask( "doc:tsd", [
     "string-replace:jsdoc",
     "jsdoc:tsd",
     "clean:jsdoc"

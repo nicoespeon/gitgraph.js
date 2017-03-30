@@ -69,9 +69,14 @@ Check source code against [JSHint][] then runs unit tests with [Jasmine][].
 Generate source code documentation into `dist/docs/` (not versioned) with
 [JSDoc](http://usejsdoc.org/).
 
-#### generate TypeScript Definition - `npm run tsd`
+#### generate documentation as json- `npm run doc:json`
 
-Generate TypeScript Definition into `dist/tsd` (not versioned) with [JSDoc](http://usejsdoc.org/) and [jsdoc2tsd](https://www.npmjs.com/package/tsd-jsdoc).
+Generate source code documentation into `dist/doc.json` (not versioned) with
+[JSDoc](http://usejsdoc.org/).
+
+#### generate TypeScript Definition - `npm run doc:tsd`
+
+Generate TypeScript Definition into `dist/types.d.ts` (not versioned) with [JSDoc](http://usejsdoc.org/) and [jsdoc2tsd](https://www.npmjs.com/package/tsd-jsdoc).
 
 #### compile a non-versioned release - `npm run dist`
 

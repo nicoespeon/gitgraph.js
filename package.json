@@ -34,6 +34,7 @@
     "grunt-jsdoc": "2.1.0",
     "grunt-open": "~0.2.2",
     "grunt-string-replace": "~1.0.0",
+    "jsdoc-json": "^2.0.0",
     "load-grunt-tasks": "~0.6.0",
     "tsd-jsdoc": "^2.0.0-beta.3"
   },
@@ -43,7 +44,8 @@
     "doc": "grunt doc",
     "dist": "grunt dist",
     "release": "grunt release",
-    "tsd": "grunt tsd"
+    "doc:tsd": "grunt doc:tsd",
+    "doc:json": "grunt doc:json"
   },
   "license": "MIT"
 }
