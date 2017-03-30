@@ -45,7 +45,8 @@
     "dist": "grunt dist",
     "release": "grunt release",
     "doc:tsd": "grunt doc:tsd",
-    "doc:json": "grunt doc:json"
+    "doc:json": "grunt doc:json",
+    "parse:tsd": "grunt parse:tsd"
   },
   "license": "MIT"
 }

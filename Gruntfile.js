@@ -1,3 +1,5 @@
+var fs = require("fs");
+
 // This file defines grunt tasks used by [Grunt.js](http://gruntjs.com/sample-gruntfile)
 module.exports = function ( grunt ) {
 
@@ -226,6 +228,62 @@ module.exports = function ( grunt ) {
     "jsdoc:tsd",
     "clean:jsdoc"
   ]);
+
+  // `grunt parse:tsd` will parse doc.json to types.d.ts
+  grunt.registerTask( "parse:tsd", function () {
+    const done = this.async();
+
+    let data = JSON.parse(fs.readFileSync( "./dist/doc.json"));
+    let output = "";
+
+    // utils
+    let parseComment = (comment) => comment
+      .replace(/object\}/g, 'any}')
+      .replace(/\{object/g, '{any')
+      .replace(/\(object/g, '(any')
+      .replace(/object\)/g, 'any)');
+
+    let parseTypes = (type) => type.names
+      .map(n => n === 'object' ? 'any' : n) // deal with `object` type
+      .join('|');
+
+    let getParams = (doc) => {
+      if (!doc.params) return '';
+      return doc.params
+        .filter(p => !p.name.includes('.')) // avoid dot notation
+        .map(p => `${p.name}: ${parseTypes(p.type)}`)
+    };
+
+    let getReturns = (doc) => {
+      if (!doc.returns) return 'void';
+      return doc.returns
+        .map(r => `${parseTypes(r.type)}`);
+    }
+
+    let getClassFunctions = (name) => {
+      return data.docs
+        .filter(d => d.longname.startsWith(name + "#"))
+        .reduce((mem, d) => mem += `
+        ${parseComment(d.comment)}
+        ${d.name}(${getParams(d)}): ${getReturns(d)}
+        `, "");
+    };
+
+    // main - loop on classes
+    data.docs
+      .filter(d => d.kind === "class")
+      .forEach(d => {
+        output += `
+          ${parseComment(d.comment)}
+          declare class ${d.name} {
+            constructor(${getParams(d)})
+
+            ${getClassFunctions(d.name)}
+          }`;
+      });
+
+    fs.writeFile("./dist/gitgraph.d.ts", output, done);
+  });
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
