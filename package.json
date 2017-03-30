@@ -42,7 +42,8 @@
     "test": "grunt test",
     "doc": "grunt doc",
     "dist": "grunt dist",
-    "release": "grunt release"
+    "release": "grunt release",
+    "tsd": "grunt tsd"
   },
   "license": "MIT"
 }

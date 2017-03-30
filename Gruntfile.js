@@ -91,6 +91,14 @@ module.exports = function ( grunt ) {
           destination: "dist/docs"
         }
       },
+      tsd: {
+        src: [ "dist/jsdoc/src/*.js", "README.md" ],
+        options: {
+          configure: ".jsdocrc",
+          destination: "dist/tsd",
+          template: "./node_modules/tsd-jsdoc"
+        }
+      },
       release: {
         src: [ "dist/jsdoc/src/*.js", "README.md" ],
         options: {
@@ -196,6 +204,13 @@ module.exports = function ( grunt ) {
     "jsdoc:dist",
     "clean:jsdoc"
   ] );
+
+  // `grunt tsd` will create typescript definition
+  grunt.registerTask( "tsd", [
+    "string-replace:jsdoc",
+    "jsdoc:tsd",
+    "clean:jsdoc"
+  ]);
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
