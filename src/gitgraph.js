@@ -768,19 +768,13 @@
 
     if (!isFirstBranch && isPathBeginning) {
       this.pushPath(this.startPoint);
-
-      // Trace path from parent branch if it has commits already
-      if (this.parentBranch.commits.length > 0) {
-        this.pushPath({
-          x: this.startPoint.x - this.parentBranch.offsetX + this.offsetX - this.template.commit.spacingX,
-          y: this.startPoint.y - this.parentBranch.offsetY + this.offsetY - this.template.commit.spacingY,
-          type: "join"
-        });
-
-        var parent = _clone(this.startPoint);
-        parent.type = "join";
-        this.parentBranch.pushPath(parent);
-      }
+      // Add a path point to startpoint + offset - template spacing
+      // So that line will not go through commit of other branches
+      this.pushPath({
+        x: commit.x,
+        y: this.startPoint.y - this.template.commit.spacingY,
+        type: "joint"
+      });
     } else if (isPathBeginning) {
       point.type = "start";
     }
