@@ -36,14 +36,14 @@ exports[`getClassFunction should return corresponding class function 1`] = `
         /**
    * Commit on HEAD
    *
-   * @param {(string|any)} options - Message | Options of commit
+   * @param {(string|BranchCommitOptions)} options - Message | Options of commit
    *
    * @see Commit
    * @this GitGraph
    *
    * @return {GitGraph} this - Return the main object so we can chain
    **/
-        commit(options: string|GitGraph.CommitOptions): GitGraph;
+        commit(options: string|GitGraph.BranchCommitOptions): GitGraph;
         
         /**
    * Tag the HEAD
@@ -144,7 +144,7 @@ dot?: {
           color?: string;
 size?: number;
 strokeWidth?: number;
-strokeColor?: number;
+strokeColor?: string;
         };
 
 

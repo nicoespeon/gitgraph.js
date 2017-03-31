@@ -198,7 +198,7 @@
   /**
    * Commit on HEAD
    *
-   * @param {(string|object)} options - Message | Options of commit
+   * @param {(string|BranchCommitOptions)} options - Message | Options of commit
    *
    * @see Commit
    * @this GitGraph
@@ -257,11 +257,11 @@
     // Resize canvas
     var unscaledResolution = {
       x: Math.abs((this.columnMax + 1) * this.template.branch.spacingX) +
-        Math.abs(this.commitOffsetX) +
-        this.marginX * 2,
+      Math.abs(this.commitOffsetX) +
+      this.marginX * 2,
       y: Math.abs((this.columnMax + 1) * this.template.branch.spacingY) +
-        Math.abs(this.commitOffsetY) +
-        this.marginY * 2
+      Math.abs(this.commitOffsetY) +
+      this.marginY * 2
     };
 
     if (this.template.commit.message.display) {
@@ -621,9 +621,47 @@
   };
 
   /**
+   * Branch commit options
+   * 
+   * @typedef {object} BranchCommitOptions
+   * 
+   * @property {string} [color] - Master color (dot & message)
+   * @property {string} [author = this.parent.author] - Author name & email
+   * @property {string} [date] - Date of commit, default is now
+   * @property {string} [detail] - DOM Element of detail part
+   * @property {string} [sha1] - Sha1, default is a random short sha1
+   * @property {Commit} [parentCommit] - Parent commit
+   * @property {string} [type = ("mergeCommit"|null)] - Type of commit
+   *
+   * @property {string} [tag] - Tag of the commit
+   * @property {string} [tagColor = color] - Color of the tag
+   * @property {string} [tagFont = this.template.commit.tag.font] - Font of the tag
+   * @property {string} [displayTagBox = true] - If true, display a box around the tag
+   *
+   * @property {string} [dotColor = color] - Specific dot color
+   * @property {number} [dotSize = this.template.commit.dot.size] - Dot size
+   * @property {number} [dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
+   * @property {string} [dotStrokeColor = this.template.commit.dot.strokeColor]
+   *
+   * @property {string} [message = "He doesn't like George Michael! Boooo!"] - Commit message
+   * @property {string} [messageColor = color] - Specific message color
+   * @property {string} [messageFont = this.template.commit.message.font] - Font of the message
+   * @property {boolean} [messageDisplay = this.template.commit.message.display] - Commit message display policy
+   * @property {boolean} [messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
+   * @property {boolean} [messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
+   * @property {boolean} [messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
+   *
+   * @property {string} [labelColor = color] - Specific label color
+   * @property {string} [labelFont = this.template.branch.labelFont] - Font used for labels
+   *
+   * @property {boolean} [tooltipDisplay = true] - Tooltip message display policy
+   * @property {CommitCallback} [onClick] - OnClick event for the commit dot
+   * @property {object} [representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
+   **/
+  /**
    * Add a commit
    *
-   * @param {(string|object)} [options] - Message | Options of commit
+   * @param {(string|BranchCommitOptions)} [options] - Message | Options of commit
    * @param {string} [options.detailId] - Id of detail DOM Element
    *
    * @see Commit
@@ -791,7 +829,7 @@
       };
     }
 
-    options = _isObject(options) ?  options :  {};
+    options = _isObject(options) ? options : {};
 
     var lastCommit = _getLast(this.commits);
     if (_isObject(lastCommit)) {
@@ -864,7 +902,7 @@
     var targetBranchParentCommit = _getParentCommitFromBranch(targetBranch);
     var isFastForwardPossible = (branchParentCommit && branchParentCommit.sha1 === targetBranchParentCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
-      var isGraphHorizontal  = _isHorizontal(this.parent);
+      var isGraphHorizontal = _isHorizontal(this.parent);
       this.color = targetBranch.color;
 
       // Make branch path follow target branch ones
@@ -942,7 +980,7 @@
     }
 
     this.column = 0;
-    for (;; this.column++) {
+    for (; ; this.column++) {
       if (!(this.column in candidates) || candidates[this.column] === 0) {
         break;
       }
@@ -1464,7 +1502,7 @@
         break;
 
       case "metro":
-        /* falls through */
+      /* falls through */
       default:
         template = {
           colors: ["#979797", "#008fb5", "#f1c109"],

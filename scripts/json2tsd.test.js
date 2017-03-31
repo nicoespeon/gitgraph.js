@@ -13,7 +13,6 @@ const {
   getObject
 } = require('./json2tsd.js')(data);
 
-
 describe('parseComment', () => {
   it('should deal with `{object|string}` format', () => {
     let comment = "{object|string} options";
