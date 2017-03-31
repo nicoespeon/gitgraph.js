@@ -1010,7 +1010,7 @@
    * @param {string} [options.dotColor = options.color] - Specific dot color
    * @param {number} [options.dotSize = this.template.commit.dot.size] - Dot size
    * @param {number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
-   * @param {number} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
+   * @param {string} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
    *
    * @param {string} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
    * @param {string} [options.messageColor = options.color] - Specific message color
@@ -1333,7 +1333,7 @@
    * @param {string} [options.commit.dot.color] - Commit dot color
    * @param {number} [options.commit.dot.size] - Commit dot size
    * @param {number} [options.commit.dot.strokeWidth] - Commit dot stroke width
-   * @param {number} [options.commit.dot.strokeColor] - Commit dot stroke color
+   * @param {string} [options.commit.dot.strokeColor] - Commit dot stroke color
    * @param {string} [options.commit.message.color] - Commit message color
    * @param {boolean} [options.commit.message.display] - Commit display policy
    * @param {boolean} [options.commit.message.displayAuthor] - Commit message author policy
