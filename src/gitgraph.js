@@ -198,7 +198,7 @@
   /**
    * Commit on HEAD
    *
-   * @param {object} options - Options of commit
+   * @param {(string|object)} options - Message | Options of commit
    *
    * @see Commit
    * @this GitGraph
@@ -313,7 +313,7 @@
   /**
    * A callback for each commit
    *
-   * @callback commitCallback
+   * @callback CommitCallback
    * @param {Commit} commit - A commit
    * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
    * @param {Event} event - The DOM event (e.g. a click event)
@@ -322,7 +322,7 @@
   /**
    * A formatter for commit
    *
-   * @callback commitFormatter
+   * @callback CommitFormatter
    * @param {Commit} commit - The commit to format
    */
 
@@ -330,7 +330,7 @@
    * Hover event on commit dot
    *
    * @param {MouseEvent} event - Mouse event
-   * @param {commitCallback} callbackFn - A callback function that will be called for each commit
+   * @param {CommitCallback} callbackFn - A callback function that will be called for each commit
    *
    * @this GitGraph
    **/
@@ -828,6 +828,7 @@
    * @param {(string|object)} [commitOptions] - Message | Options of commit
    * @param {boolean} [commitOptions.fastForward = false] - If true, merge should use fast-forward if possible
    *
+   * @see Commit
    * @this Branch
    *
    * @return {Branch} this
@@ -1023,7 +1024,7 @@
    * @param {string} [options.labelFont = this.template.branch.labelFont] - Font used for labels
    *
    * @param {boolean} [options.tooltipDisplay = true] - Tooltip message display policy
-   * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
+   * @param {CommitCallback} [options.onClick] - OnClick event for the commit dot
    * @param {object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
    * @this Commit
@@ -1340,7 +1341,7 @@
    * @param {boolean} [options.commit.message.displayHash] - Commit message hash policy
    * @param {string} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
    * @param {boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
-   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.
+   * @param {CommitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
