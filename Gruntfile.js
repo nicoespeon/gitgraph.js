@@ -222,13 +222,6 @@ module.exports = function ( grunt ) {
     "clean:jsdoc"
   ] );
 
-  // `grunt doc:tsd` will create typescript definition
-  grunt.registerTask( "doc:tsd", [
-    "string-replace:jsdoc",
-    "jsdoc:tsd",
-    "clean:jsdoc"
-  ]);
-
   // `grunt parse:tsd` will parse doc.json to types.d.ts
   grunt.registerTask( "parse:tsd", function () {
     const done = this.async();

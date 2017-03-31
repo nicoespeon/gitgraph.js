@@ -36,8 +36,7 @@
     "grunt-string-replace": "~1.0.0",
     "jest": "^19.0.2",
     "jsdoc-json": "^2.0.0",
-    "load-grunt-tasks": "~0.6.0",
-    "tsd-jsdoc": "^2.0.0-beta.3"
+    "load-grunt-tasks": "~0.6.0"
   },
   "scripts": {
     "start": "grunt server",
@@ -46,7 +45,6 @@
     "doc": "grunt doc",
     "dist": "grunt dist",
     "release": "grunt release",
-    "doc:tsd": "grunt doc:tsd",
     "doc:json": "grunt doc:json",
     "parse:tsd": "grunt parse:tsd"
   },
