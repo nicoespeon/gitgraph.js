@@ -234,7 +234,12 @@ module.exports = function ( grunt ) {
     const done = this.async();
 
     let data = JSON.parse(fs.readFileSync( "./dist/doc.json"));
-    let output = "";
+    let classes = "";
+    let gitgraph = "";
+    let interfaces = "declare namespace GitGraph {";
+    let gitgraphTypes = data.docs
+      .filter(d => (d.kind === "class" || d.kind === "typedef") && d.name !== "GitGraph")
+      .map(d => d.name);
 
     // utils
     let parseComment = (comment) => comment
@@ -243,15 +248,20 @@ module.exports = function ( grunt ) {
       .replace(/\(object/g, '(any')
       .replace(/object\)/g, 'any)');
 
-    let parseTypes = (type) => type.names
-      .map(n => n === 'object' ? 'any' : n) // deal with `object` type
+    let pascal = (str) => str.slice(0, 1).toUpperCase() + str.slice(1);
+
+    let parseTypes = (type, doc) => type.names
+      .map(n => n === 'object' && doc ? `GitGraph.${pascal((doc.see && doc.see[0]) || doc.name)}Options` : n) // deal with `options` type
+      .map(n => n === 'object' ? "any" : n) // deal with `object` type
+      .map(n => n.includes("Array") ? /\<(\w+)\>/.exec(n)[1] + "[]": n) // deal with `Array.<type>` format
+      .map(n => gitgraphTypes.join(',').includes(n) ? 'GitGraph.' + n : n)
       .join('|');
 
     let getParams = (doc) => {
       if (!doc.params) return '';
       return doc.params
         .filter(p => !p.name.includes('.')) // avoid dot notation
-        .map(p => `${p.name}: ${parseTypes(p.type)}`)
+        .map(p => `${p.name}: ${parseTypes(p.type, doc)}`)
     };
 
     let getReturns = (doc) => {
@@ -265,24 +275,64 @@ module.exports = function ( grunt ) {
         .filter(d => d.longname.startsWith(name + "#"))
         .reduce((mem, d) => mem += `
         ${parseComment(d.comment)}
-        ${d.name}(${getParams(d)}): ${getReturns(d)}
+        ${d.name}(${getParams(d)}): ${getReturns(d)};
         `, "");
     };
 
-    // main - loop on classes
+    let getOptions = (doc) => {
+      if (!doc.params.map(p => p.name).join(',').includes('options.')) return '';
+      return `
+        interface ${doc.name}Options {
+          ${doc.params.filter(p => p.name.startsWith('options.')).reduce((params, p) => {
+            let optChar = p.optional ? '?' : '';
+            // TODO deal with nested objects
+            return params += p.name.split('.')[1] + optChar + ": " + parseTypes(p.type) + ";\n";
+          }, "")}}
+      `;
+    };
+
+    // GitGraph class
     data.docs
-      .filter(d => d.kind === "class")
+      .filter(d => d.kind === "class" && d.name === "GitGraph")
       .forEach(d => {
-        output += `
+        interfaces += getOptions(d);
+        gitgraph += `
           ${parseComment(d.comment)}
           declare class ${d.name} {
-            constructor(${getParams(d)})
+            constructor(${getParams(d)});
+
+            ${getClassFunctions(d.name)}
+          `;
+      });
+
+    // Other classes
+    data.docs
+      .filter(d => d.kind === "class" && d.name !== "GitGraph")
+      .forEach(d => {
+        interfaces += getOptions(d);
+  
+        interfaces += `
+          ${parseComment(d.comment)}
+          class ${d.name} {
+            constructor(${getParams(d)});
 
             ${getClassFunctions(d.name)}
           }`;
       });
 
-    fs.writeFile("./dist/gitgraph.d.ts", output, done);
+    // Type def
+    data.docs
+      .filter(d => d.kind === "typedef")
+      .forEach(d => {
+        interfaces += `
+          ${parseComment(d.comment)}
+          type ${d.name} = (${getParams(d)}) => void;
+        `;
+      });
+
+    interfaces += "}\n";
+    gitgraph += "}\n";
+    fs.writeFile("./dist/gitgraph.d.ts", interfaces + gitgraph + classes, done);
   });
 
   // `grunt dist` will create a non-versioned new release for development use.
