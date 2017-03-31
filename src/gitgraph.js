@@ -1038,9 +1038,9 @@
     this.context = this.parent.context;
     this.branch = options.branch;
     this.author = options.author || this.parent.author;
-    this.date = options.date || new Date().toUTCstring();
+    this.date = options.date || new Date().toUTCString();
     this.detail = options.detail || null;
-    this.sha1 = options.sha1 || (Math.random(100)).tostring(16).substring(3, 10);
+    this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
     this.message = options.message || "He doesn't like George Michael! Boooo!";
     this.arrowDisplay = options.arrowDisplay;
     this.messageDisplay = _booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
