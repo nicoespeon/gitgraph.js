@@ -42,6 +42,7 @@
   "scripts": {
     "start": "grunt server",
     "test": "grunt test",
+    "test:scripts": "jest scripts",
     "doc": "grunt doc",
     "dist": "grunt dist",
     "release": "grunt release",

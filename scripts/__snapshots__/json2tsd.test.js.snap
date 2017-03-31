@@ -1,0 +1,186 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getClassFunction should return corresponding class function 1`] = `
+"
+        /**
+   * Disposing canvas event handlers
+   *
+   * @this GitGraph
+   **/
+        dispose(): void;
+        
+        /**
+   * Create new branch
+   *
+   * @param {(string|any)} options - Branch name | Options of Branch
+   *
+   * @see Branch
+   * @this GitGraph
+   *
+   * @return {Branch} New branch
+   **/
+        branch(options: string|GitGraph.BranchOptions): GitGraph.Branch;
+        
+        /**
+   * Create new orphan branch
+   *
+   * @param {(string|any)} options - Branch name | Options of Branch
+   *
+   * @see Branch
+   * @this GitGraph
+   *
+   * @return {Branch} New branch
+   **/
+        orphanBranch(options: string|GitGraph.BranchOptions): GitGraph.Branch;
+        
+        /**
+   * Commit on HEAD
+   *
+   * @param {(string|any)} options - Message | Options of commit
+   *
+   * @see Commit
+   * @this GitGraph
+   *
+   * @return {GitGraph} this - Return the main object so we can chain
+   **/
+        commit(options: string|GitGraph.CommitOptions): GitGraph;
+        
+        /**
+   * Tag the HEAD
+   *
+   * @param {any} options - Options of tag
+   *
+   * @see Tag
+   * @this GitGraph
+   *
+   * @return {GitGraph} this - Return the main object so we can chain
+   **/
+        tag(options: GitGraph.TagOptions): GitGraph;
+        
+        /**
+   * Create a new template
+   *
+   * @param {(string|any)} options - The template name, or the template options
+   *
+   * @see Template
+   * @this GitGraph
+   *
+   * @return {Template}
+   **/
+        newTemplate(options: string|GitGraph.TemplateOptions): GitGraph.Template;
+        
+        /**
+   * Render the canvas
+   *
+   * @this GitGraph
+   **/
+        render(): void;
+        
+        /**
+   * Hover event on commit dot
+   *
+   * @param {MouseEvent} event - Mouse event
+   * @param {CommitCallback} callbackFn - A callback function that will be called for each commit
+   *
+   * @this GitGraph
+   **/
+        applyCommits(event: MouseEvent,callbackFn: GitGraph.CommitCallback): void;
+        
+        /**
+   * Hover event on commit dot
+   *
+   * @param {MouseEvent} event - Mouse event
+   *
+   * @this GitGraph
+   **/
+        hover(event: MouseEvent): void;
+        
+        /**
+   * Click event on commit dot
+   *
+   * @param {MouseEvent} event - Mouse event
+   *
+   * @this GitGraph
+   **/
+        click(event: MouseEvent): void;
+        "
+`;
+
+exports[`getObject should deal with nested objects 1`] = `
+"color?: string;
+dot?: {
+          color?: string;
+size?: number;
+        };
+"
+`;
+
+exports[`getObject should return a pretty format object 1`] = `
+"color?: string;
+size?: number;
+offset?: number;"
+`;
+
+exports[`getOptions should deal with nested object format 1`] = `
+"
+        type TemplateOptions = {
+          colors?: string[];
+arrow?: {
+color?: string;
+size?: number;
+offset?: number;};
+branch?: {
+color?: string;
+lineWidth?: number;
+mergeStyle?: string;
+spacingX?: number;
+spacingY?: number;};
+commit?: {
+spacingX?: number;
+spacingY?: number;
+widthExtension?: number;
+color?: string;
+dot?: {
+          color?: string;
+size?: number;
+strokeWidth?: number;
+strokeColor?: number;
+        };
+
+
+
+message?: {
+          color?: string;
+display?: boolean;
+displayAuthor?: boolean;
+displayBranch?: boolean;
+displayHash?: boolean;
+font?: string;
+        };
+
+
+
+
+
+shouldDisplayTooltipsInCompactMode?: boolean;
+tooltipHTMLFormatter?: GitGraph.CommitFormatter;};
+};
+      "
+`;
+
+exports[`getOptions should return parsed options from doc 1`] = `
+"
+        type GitGraphOptions = {
+          elementId?: string;
+template?: GitGraph.Template|string|any;
+author?: string;
+mode?: string;
+canvas?: HTMLElement;
+orientation?: string;
+reverseArrow?: boolean;
+initCommitOffsetX?: number;
+initCommitOffsetY?: number;
+tooltipContainer?: HTMLElement;
+};
+      "
+`;

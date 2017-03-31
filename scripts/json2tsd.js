@@ -1,0 +1,165 @@
+module.exports = function (data) {
+
+  const gitgraphTypes = data.docs
+    .filter(d => (d.kind === "class" || d.kind === "typedef") && d.name !== "GitGraph")
+    .map(d => d.name);
+
+  const parseComment = (comment) => comment
+    .replace(/object\}/g, 'any}')
+    .replace(/\{object/g, '{any')
+    .replace(/\(object/g, '(any')
+    .replace(/object\)/g, 'any)');
+
+  const pascal = (str) => str.slice(0, 1).toUpperCase() + str.slice(1);
+
+  const parseTypes = (type, doc) => type.names
+    .map(n => n === "object" && doc ? `GitGraph.${pascal((doc.see && doc.see[0]) || doc.name)}Options` : n) // deal with `options` type
+    .map(n => n === "object" ? "any" : n) // deal with `object` type
+    .map(n => n.includes("Array") ? /\<(\w+)\>/.exec(n)[1] + "[]" : n) // deal with `Array.<type>` format
+    .map(n => gitgraphTypes.join(',').includes(n) ? 'GitGraph.' + n : n)
+    .join('|');
+
+  const getParams = (doc) => {
+    if (!doc.params) return '';
+    return doc.params
+      .filter(p => !p.name.includes('.')) // avoid dot notation
+      .map(p => `${p.name}: ${parseTypes(p.type, doc)}`)
+  };
+
+  const getProperties = (doc) => {
+    if (!doc.properties) return '';
+    return doc.properties
+      .filter(p => !p.name.includes('.')) // avoid dot notation
+      .map(p => {
+        let optChar = p.optional ? '?' : '';
+        return `${p.name}${optChar}: ${parseTypes(p.type, doc)};`
+      });
+  };
+
+  const getReturns = (doc) => {
+    if (!doc.returns) return 'void';
+    return doc.returns
+      .map(r => `${parseTypes(r.type)}`);
+  }
+
+  const getClassFunctions = (name) => {
+    return data.docs
+      .filter(d => d.longname.startsWith(name + "#"))
+      .reduce((mem, d) => mem += `
+        ${parseComment(d.comment)}
+        ${d.name}(${getParams(d)}): ${getReturns(d)};
+        `, "");
+  };
+
+  const getObject = (doc, index = 2) => {
+    let namespaces = [];
+    return doc.map(p => {
+      let optChar = p.optional ? '?' : '';
+      let parts = p.name.split('.');
+      if (parts.length > index + 1) {
+        let namespace = [...Array(index + 1)].map((_, i) => parts[i]).join('.') + ".";
+        if (namespaces.includes(namespace)) return;
+        namespaces.push(namespace);
+        let subdoc = doc.filter(a => a.name.startsWith(namespace));
+        return `${parts[index]}${optChar}: {
+          ${getObject(subdoc, index + 1)}
+        };`;
+      } else {
+        return `${parts[index]}${optChar}: ${parseTypes(p.type)};`;
+      }
+    }).join('\n');
+  }
+
+  const getOptions = (doc) => {
+    if (!doc.params.map(p => p.name).join(',').includes('options.')) return '';
+    let optionsKeys = [];
+    return `
+        type ${doc.name}Options = {
+          ${doc.params.filter(p => p.name.startsWith('options.')).reduce((params, p) => {
+        let optChar = p.optional ? '?' : '';
+        let parts = p.name.split('.');
+        if (optionsKeys.includes(parts[1])) return params;
+        if (parts.length === 2) return params += parts[1] + optChar + ": " + parseTypes(p.type) + ";\n";
+        optionsKeys.push(parts[1]);
+        return params += parts[1] + optChar + ": {\n"
+          + getObject(doc.params.filter(p => p.name.startsWith(`options.${parts[1]}`)))
+          + "};\n";
+      }, "")}};
+      `;
+  };
+
+  const generate = () => {
+    let classes = "";
+    let gitgraph = "";
+    let gitgraphNamespace = "declare namespace GitGraph {";
+
+    // GitGraph class
+    data.docs
+      .filter(d => d.kind === "class" && d.name === "GitGraph")
+      .forEach(d => {
+        gitgraphNamespace += getOptions(d);
+        gitgraph += `
+          ${parseComment(d.comment)}
+          declare class ${d.name} {
+            constructor(${getParams(d)});
+
+            ${getClassFunctions(d.name)}
+          `;
+      });
+
+    // Other classes
+    data.docs
+      .filter(d => d.kind === "class" && d.name !== "GitGraph")
+      .forEach(d => {
+        gitgraphNamespace += getOptions(d);
+
+        gitgraphNamespace += `
+          ${parseComment(d.comment)}
+          class ${d.name} {
+            constructor(${getParams(d)});
+
+            ${getClassFunctions(d.name)}
+          }`;
+      });
+
+    // Type def (callback)
+    data.docs
+      .filter(d => d.kind === "typedef" && parseTypes(d.type) === "function")
+      .forEach(d => {
+        gitgraphNamespace += `
+          ${parseComment(d.comment)}
+          type ${d.name} = (${getParams(d)}) => void;
+        `;
+      });
+
+    // Type def (object)
+    data.docs
+      .filter(d => d.kind === "typedef" && d.type.names[0] === "object")
+      .forEach(d => {
+        gitgraphNamespace += `
+          ${parseComment(d.comment)}
+          type ${d.name} = {
+            ${getProperties(d).join('\n')}
+          };
+        `;
+      });
+
+    gitgraphNamespace += "}\n";
+    gitgraph += "}\n";
+
+    return gitgraphNamespace + gitgraph + classes;
+  }
+
+  return {
+    parseComment,
+    pascal,
+    parseTypes,
+    getParams,
+    getProperties,
+    getReturns,
+    getClassFunctions,
+    getObject,
+    getOptions,
+    generate
+  }
+}
