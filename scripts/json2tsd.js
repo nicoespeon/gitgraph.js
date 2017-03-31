@@ -23,7 +23,10 @@ module.exports = function (data) {
     if (!doc.params) return '';
     return doc.params
       .filter(p => !p.name.includes('.')) // avoid dot notation
-      .map(p => `${p.name}: ${parseTypes(p, doc)}`)
+      .map(p => {
+        let optChar = p.optional ? '?' : '';
+        return `${p.name}${optChar}: ${parseTypes(p, doc)}`;
+      })
   };
 
   const getProperties = (doc) => {

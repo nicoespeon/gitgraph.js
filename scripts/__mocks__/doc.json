@@ -67,7 +67,8 @@
             ]
           },
           "description": "<p>GitGraph options</p>",
-          "name": "options"
+          "name": "options",
+          "optional": true
         },
         {
           "type": {

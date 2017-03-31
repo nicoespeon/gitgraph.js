@@ -99,14 +99,14 @@ describe('getParams', () => {
   it('should remove dot notation', () => {
     let doc = data.docs.find(d => d.name === "GitGraph");
 
-    expect(getParams(doc)).toEqual(["options: GitGraph.GitGraphOptions"]);
+    expect(getParams(doc)).toEqual(["options?: GitGraph.GitGraphOptions"]);
   });
 
   it('should parse type properly', () => {
     let doc = data.docs.find(d => d.longname === "GitGraph#applyCommits");
 
     expect(getParams(doc)).toEqual(["event: MouseEvent", "callbackFn: GitGraph.CommitCallback"]);
-  })
+  });
 });
 
 describe('getProperties', () => {
