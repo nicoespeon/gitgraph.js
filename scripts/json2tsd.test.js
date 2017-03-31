@@ -58,40 +58,40 @@ describe('pascal', () => {
 
 describe('parseTypes', () => {
   it('should join types', () => {
-    let type = { names: ["number", "string"] };
+    let param = { type: { names: ["number", "string"] } };
 
-    expect(parseTypes(type)).toEqual("number|string")
+    expect(parseTypes(param)).toEqual("number|string")
   });
 
   it('should replace object with gitgraph types', () => {
-    let type = { names: ["object"] };
+    let param = { name: "options", type: { names: ["object"] } };
     let doc = { see: ["Template"] };
 
-    expect(parseTypes(type, doc)).toEqual("GitGraph.TemplateOptions");
+    expect(parseTypes(param, doc)).toEqual("GitGraph.TemplateOptions");
   });
 
   it('should prepend with `GitGraph.` if type exists', () => {
-    let type = { names: ["Template"] };
+    let param = { type: { names: ["Template"] } };
 
-    expect(parseTypes(type)).toEqual("GitGraph.Template");
+    expect(parseTypes(param)).toEqual("GitGraph.Template");
   });
 
   it('should not prepend with `GitGraph.` if type not exists', () => {
-    let type = { names: ["MouseEvent"] };
+    let param = { type: { names: ["MouseEvent"] } };
 
-    expect(parseTypes(type)).toEqual("MouseEvent");
+    expect(parseTypes(param)).toEqual("MouseEvent");
   });
 
   it('should deal this array notation', () => {
-    let type = { names: ["Array.<string>"] };
+    let param = { type: { names: ["Array.<string>"] } };
 
-    expect(parseTypes(type)).toEqual("string[]");
+    expect(parseTypes(param)).toEqual("string[]");
   });
 
   it('should put `any` if is an unknown object', () => {
-    let type = { names: ["object"] };
+    let param = { type: { names: ["object"] } };
 
-    expect(parseTypes(type)).toEqual("any");
+    expect(parseTypes(param)).toEqual("any");
   });
 });
 
@@ -175,6 +175,12 @@ describe('getProperties', () => {
     ];
 
     expect(getProperties(doc)).toEqual(expected);
+  });
+
+  it('should deal with `object` type', () => {
+    let doc = data.docs.find(d => d.name === "BranchCommitOptions");
+
+    expect(getProperties(doc)).toMatchSnapshot();
   });
 });
 

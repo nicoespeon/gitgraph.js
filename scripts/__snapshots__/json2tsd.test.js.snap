@@ -184,3 +184,35 @@ tooltipContainer?: HTMLElement;
 };
       "
 `;
+
+exports[`getProperties should deal with \`object\` type 1`] = `
+Array [
+  "color?: string;",
+  "author?: string;",
+  "date?: string;",
+  "detail?: string;",
+  "sha1?: string;",
+  "parentCommit?: GitGraph.Commit;",
+  "type?: string;",
+  "tag?: string;",
+  "tagColor?: string;",
+  "tagFont?: string;",
+  "displayTagBox?: string;",
+  "dotColor?: string;",
+  "dotSize?: number;",
+  "dotStrokeWidth?: number;",
+  "dotStrokeColor?: string;",
+  "message?: string;",
+  "messageColor?: string;",
+  "messageFont?: string;",
+  "messageDisplay?: boolean;",
+  "messageAuthorDisplay?: boolean;",
+  "messageBranchDisplay?: boolean;",
+  "messageHashDisplay?: boolean;",
+  "labelColor?: string;",
+  "labelFont?: string;",
+  "tooltipDisplay?: boolean;",
+  "onClick?: GitGraph.CommitCallback;",
+  "representedObject?: any;",
+]
+`;

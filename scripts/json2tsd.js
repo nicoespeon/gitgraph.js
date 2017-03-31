@@ -12,8 +12,8 @@ module.exports = function (data) {
 
   const pascal = (str) => str.slice(0, 1).toUpperCase() + str.slice(1);
 
-  const parseTypes = (type, doc) => type.names
-    .map(n => n === "object" && doc ? `GitGraph.${pascal((doc.see && doc.see[0]) || doc.name)}Options` : n) // deal with `options` type
+  const parseTypes = (param, doc) => param.type.names
+    .map(n => n === "object" && param.name === "options" && doc ? `GitGraph.${pascal((doc.see && doc.see[0]) || doc.name)}Options` : n) // deal with `options` type
     .map(n => n === "object" ? "any" : n) // deal with `object` type
     .map(n => n.includes("Array") ? /\<(\w+)\>/.exec(n)[1] + "[]" : n) // deal with `Array.<type>` format
     .map(n => gitgraphTypes.join(',').includes(n) ? 'GitGraph.' + n : n)
@@ -23,7 +23,7 @@ module.exports = function (data) {
     if (!doc.params) return '';
     return doc.params
       .filter(p => !p.name.includes('.')) // avoid dot notation
-      .map(p => `${p.name}: ${parseTypes(p.type, doc)}`)
+      .map(p => `${p.name}: ${parseTypes(p, doc)}`)
   };
 
   const getProperties = (doc) => {
@@ -32,14 +32,14 @@ module.exports = function (data) {
       .filter(p => !p.name.includes('.')) // avoid dot notation
       .map(p => {
         let optChar = p.optional ? '?' : '';
-        return `${p.name}${optChar}: ${parseTypes(p.type, doc)};`
+        return `${p.name}${optChar}: ${parseTypes(p, doc)};`
       });
   };
 
   const getReturns = (doc) => {
     if (!doc.returns) return 'void';
     return doc.returns
-      .map(r => `${parseTypes(r.type)}`);
+      .map(r => `${parseTypes(r)}`);
   }
 
   const getClassFunctions = (name) => {
@@ -65,7 +65,7 @@ module.exports = function (data) {
           ${getObject(subdoc, index + 1)}
         };`;
       } else {
-        return `${parts[index]}${optChar}: ${parseTypes(p.type)};`;
+        return `${parts[index]}${optChar}: ${parseTypes(p)};`;
       }
     }).join('\n');
   }
@@ -79,7 +79,7 @@ module.exports = function (data) {
         let optChar = p.optional ? '?' : '';
         let parts = p.name.split('.');
         if (optionsKeys.includes(parts[1])) return params;
-        if (parts.length === 2) return params += parts[1] + optChar + ": " + parseTypes(p.type) + ";\n";
+        if (parts.length === 2) return params += parts[1] + optChar + ": " + parseTypes(p) + ";\n";
         optionsKeys.push(parts[1]);
         return params += parts[1] + optChar + ": {\n"
           + getObject(doc.params.filter(p => p.name.startsWith(`options.${parts[1]}`)))
@@ -124,7 +124,7 @@ module.exports = function (data) {
 
     // Type def (callback)
     data.docs
-      .filter(d => d.kind === "typedef" && parseTypes(d.type) === "function")
+      .filter(d => d.kind === "typedef" && parseTypes(d) === "function")
       .forEach(d => {
         gitgraphNamespace += `
           ${parseComment(d.comment)}
