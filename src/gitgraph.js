@@ -234,6 +234,9 @@
    *
    * @param {(string|object)} options - The template name, or the template options
    *
+   * @see Template
+   * @this GitGraph
+   *
    * @return {Template}
    **/
   GitGraph.prototype.newTemplate = function (options) {
