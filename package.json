@@ -40,13 +40,13 @@
   },
   "scripts": {
     "start": "grunt server",
-    "test": "grunt test",
+    "test": "npm run test:scripts && npm run test:src",
+    "test:src": "grunt test",
     "test:scripts": "jest scripts",
     "doc": "grunt doc",
     "dist": "grunt dist",
     "release": "grunt release",
-    "doc:json": "grunt doc:json",
-    "parse:tsd": "grunt parse:tsd"
+    "tsd": "grunt tsd"
   },
   "license": "MIT"
 }

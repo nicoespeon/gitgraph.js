@@ -27,6 +27,8 @@ module.exports = function ( grunt ) {
       options: {force: true},
       dist: [ "dist/" ],
       jsdoc: [ "dist/jsdoc/" ],
+      jsdocjson: [ "dist/doc.json" ],
+      tsd: [ "dist/gitgraph.d.ts" ],
       release: [ "build/", "docs/" ]
     },
 
@@ -91,14 +93,6 @@ module.exports = function ( grunt ) {
         options: {
           configure: ".jsdocrc",
           destination: "dist/docs"
-        }
-      },
-      tsd: {
-        src: [ "dist/jsdoc/src/*.js", "README.md" ],
-        options: {
-          configure: ".jsdocrc",
-          destination: "dist",
-          template: "./node_modules/tsd-jsdoc"
         }
       },
       json: {
@@ -222,13 +216,27 @@ module.exports = function ( grunt ) {
     "clean:jsdoc"
   ] );
 
-  // `grunt parse:tsd` will parse doc.json to types.d.ts
-  grunt.registerTask( "parse:tsd", function () {
+  // `grunt parse:tsd` will parse /dist/doc.json to /dist/gitgraph.d.ts
+  grunt.registerTask( "parse:tsd", function (dest) {
     const done = this.async();
     const data = JSON.parse(fs.readFileSync("./dist/doc.json"));
     const fileContent = require("./scripts/json2tsd")(data).generate();
-    fs.writeFile("./dist/gitgraph.d.ts", fileContent, done);
+    fs.writeFile(`./${dest}/gitgraph.d.ts`, fileContent, done);
   });
+
+  // `grunt tsd` will generate /dist/gitgraph.d.ts
+  grunt.registerTask( "tsd", [
+    "doc:json",
+    "parse:tsd:dist",
+    "clean:jsdocjson"
+  ]);
+
+  // `grunt tsd:release` will generate /build/gitgraph.d.ts
+  grunt.registerTask( "tsd:release", [
+    "doc:json",
+    "parse:tsd:build",
+    "clean:jsdocjson"
+  ]);
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
@@ -237,7 +245,8 @@ module.exports = function ( grunt ) {
     "copy:dist",
     "concat:dist",
     "uglify:dist",
-    "doc"
+    "doc",
+    "tsd"
   ] );
 
   // `grunt release` will create a new release of the source code.
@@ -249,7 +258,8 @@ module.exports = function ( grunt ) {
     "uglify:release",
     "string-replace:jsdoc",
     "jsdoc:release",
-    "clean:jsdoc"
+    "clean:jsdoc",
+    "tsd:release"
   ] );
 
   // `grunt server` will open a live reload server in your favorite browser.
