@@ -46,6 +46,10 @@ module.exports = function ( grunt ) {
       release: {
         src: [ "src/gitgraph.js" ],
         dest: "build/gitgraph.js"
+      },
+      tsd: {
+        src: [ "dist/gitgraph.d.ts" ],
+        dest: "dist/gitgraph.d.ts"
       }
     },
 
@@ -233,6 +237,7 @@ module.exports = function ( grunt ) {
   grunt.registerTask( "tsd", [
     "doc:json",
     "parse:tsd:dist",
+    "concat:tsd",
     "clean:jsdocjson"
   ]);
 
