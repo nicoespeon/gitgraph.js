@@ -77,7 +77,7 @@ module.exports = function (data) {
     if (!doc.params.map(p => p.name).join(',').includes('options.')) return '';
     let optionsKeys = [];
     return `
-        type ${doc.name}Options = {
+        interface ${doc.name}Options {
           ${doc.params.filter(p => p.name.startsWith('options.')).reduce((params, p) => {
         let optChar = p.optional ? '?' : '';
         let parts = p.name.split('.');
@@ -87,7 +87,7 @@ module.exports = function (data) {
         return params += parts[1] + optChar + ": {\n"
           + getObject(doc.params.filter(p => p.name.startsWith(`options.${parts[1]}`)))
           + "};\n";
-      }, "")}};
+      }, "")}}
       `;
   };
 
@@ -102,12 +102,11 @@ module.exports = function (data) {
       .forEach(d => {
         gitgraphNamespace += getOptions(d);
         gitgraph += `
-          ${parseComment(d.comment)}
-          declare class ${d.name} {
-            constructor(${getParams(d)});
+${parseComment(d.comment)}
+declare class ${d.name} {
+  constructor(${getParams(d)});
 
-            ${getClassFunctions(d.name)}
-          `;
+  ${getClassFunctions(d.name)}`;
       });
 
     // Other classes
@@ -117,12 +116,12 @@ module.exports = function (data) {
         gitgraphNamespace += getOptions(d);
 
         gitgraphNamespace += `
-          ${parseComment(d.comment)}
-          class ${d.name} {
-            constructor(${getParams(d)});
+${parseComment(d.comment)}
+class ${d.name} {
+  constructor(${getParams(d)});
 
-            ${getClassFunctions(d.name)}
-          }`;
+  ${getClassFunctions(d.name)}
+}`;
       });
 
     // Type def (callback)
@@ -130,9 +129,8 @@ module.exports = function (data) {
       .filter(d => d.kind === "typedef" && parseTypes(d) === "function")
       .forEach(d => {
         gitgraphNamespace += `
-          ${parseComment(d.comment)}
-          type ${d.name} = (${getParams(d)}) => void;
-        `;
+${parseComment(d.comment)}
+type ${d.name} = (${getParams(d)}) => void;`;
       });
 
     // Type def (object)
@@ -140,11 +138,10 @@ module.exports = function (data) {
       .filter(d => d.kind === "typedef" && d.type.names[0] === "object")
       .forEach(d => {
         gitgraphNamespace += `
-          ${parseComment(d.comment)}
-          type ${d.name} = {
-            ${getProperties(d).join('\n')}
-          };
-        `;
+${parseComment(d.comment)}
+interface ${d.name} {
+  ${getProperties(d).join('\n')}
+}`;
       });
 
     gitgraphNamespace += "}\n";

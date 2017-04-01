@@ -36,7 +36,9 @@
     "grunt-string-replace": "~1.0.0",
     "jest": "^19.0.2",
     "jsdoc-json": "^2.0.0",
-    "load-grunt-tasks": "~0.6.0"
+    "load-grunt-tasks": "~0.6.0",
+    "typescript": "^2.2.2",
+    "typescript-formatter": "^5.1.2"
   },
   "scripts": {
     "start": "grunt server",

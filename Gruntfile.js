@@ -1,4 +1,5 @@
 var fs = require("fs");
+var tsfmt = require("typescript-formatter");
 
 // This file defines grunt tasks used by [Grunt.js](http://gruntjs.com/sample-gruntfile)
 module.exports = function ( grunt ) {
@@ -221,7 +222,11 @@ module.exports = function ( grunt ) {
     const done = this.async();
     const data = JSON.parse(fs.readFileSync("./dist/doc.json"));
     const fileContent = require("./scripts/json2tsd")(data).generate();
-    fs.writeFile(`./${dest}/gitgraph.d.ts`, fileContent, done);
+    fs.writeFile(`./${dest}/gitgraph.d.ts`, fileContent, () => {
+      tsfmt.processFiles([`./${dest}/gitgraph.d.ts`],{
+        replace: true
+      }).then(done);
+    });
   });
 
   // `grunt tsd` will generate /dist/gitgraph.d.ts
