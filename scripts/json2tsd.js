@@ -57,6 +57,11 @@ ${d.name}(${getParams(d)}): ${getReturns(d)};
 `, "");
   };
 
+  const getDescription = (param) => `
+/**
+ * ${(/<p>(.*)<\/p>/.exec(param.description) || [])[1]}
+ */`;
+
   const getObject = (doc, index = 2) => {
     let namespaces = [];
     return doc.map(p => {
@@ -69,29 +74,32 @@ ${d.name}(${getParams(d)}): ${getReturns(d)};
         let subdoc = doc.filter(a => a.name.startsWith(namespace));
         return `${parts[index]}${optChar}: {
           ${getObject(subdoc, index + 1)}
-        };`;
+        };\n`;
       } else {
-        return `${parts[index]}${optChar}: ${parseTypes(p)};`;
+        return `${getDescription(p)}\n ${parts[index]}${optChar}: ${parseTypes(p)};\n`;
       }
-    }).join('\n');
+    }).join('');
   }
+
 
   const getOptions = (doc) => {
     if (!doc.params.map(p => p.name).join(',').includes('options.')) return '';
     let optionsKeys = [];
     return `
-        interface ${doc.name}Options {
-          ${doc.params.filter(p => p.name.startsWith('options.')).reduce((params, p) => {
-        let optChar = p.optional ? '?' : '';
-        let parts = p.name.split('.');
-        if (optionsKeys.includes(parts[1])) return params;
-        if (parts.length === 2) return params += parts[1] + optChar + ": " + parseTypes(p) + ";\n";
-        optionsKeys.push(parts[1]);
-        return params += parts[1] + optChar + ": {\n"
-          + getObject(doc.params.filter(p => p.name.startsWith(`options.${parts[1]}`)))
-          + "};\n";
-      }, "")}}
-      `;
+${getDescription(doc.params[0])}
+interface ${doc.name}Options {
+  ${doc.params
+        .filter(p => p.name.startsWith('options.'))
+        .reduce((params, p, index) => {
+          let optChar = p.optional ? '?' : '';
+          let parts = p.name.split('.');
+          if (optionsKeys.includes(parts[1])) return params;
+          if (parts.length === 2) return params += getDescription(p) + "\n" + parts[1] + optChar + ": " + parseTypes(p) + ";\n";
+          optionsKeys.push(parts[1]);
+          return params += parts[1] + optChar + ": {\n"
+            + getObject(doc.params.filter(p => p.name.startsWith(`options.${parts[1]}`)))
+            + "};\n";
+        }, "")}}`;
   };
 
   const generate = () => {
@@ -115,15 +123,17 @@ declare class ${d.name} {
     data.docs
       .filter(d => d.kind === "class" && d.name !== "GitGraph")
       .forEach(d => {
-        gitgraphNamespace += getOptions(d);
-
         gitgraphNamespace += `
+${getOptions(d)}
+
 ${parseComment(d.comment)}
 class ${d.name} {
   constructor(${getParams(d)});
   ${getClassFunctions(d.name)}
-}
-`;});
+}`;
+      });
+
+    gitgraphNamespace += "\n";
 
     // Type def (callback)
     data.docs
@@ -132,7 +142,8 @@ class ${d.name} {
         gitgraphNamespace += `
 ${parseComment(d.comment)}
 type ${d.name} = (${getParams(d)}) => void;
-`;});
+`;
+      });
 
     // Type def (object)
     data.docs
@@ -148,7 +159,7 @@ interface ${d.name} {
     gitgraphNamespace += "}\n";
     gitgraph += "}\n";
 
-    return (gitgraphNamespace + gitgraph + classes).replace(/\n\n\n/g, "");
+    return (gitgraphNamespace + gitgraph + classes).replace(/\n\n\n/g, "\n\n");
   }
 
   return {

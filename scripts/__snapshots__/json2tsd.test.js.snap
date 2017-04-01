@@ -84,82 +84,251 @@ click(event: MouseEvent): void;
 `;
 
 exports[`getObject should deal with nested objects 1`] = `
-"color?: string;
+"
+/**
+ * Master commit color (dot &amp; message)
+ */
+ color?: string;
 dot?: {
-          color?: string;
-size?: number;
+          
+/**
+ * Commit dot color
+ */
+ color?: string;
+
+/**
+ * Commit dot size
+ */
+ size?: number;
+
         };
 "
 `;
 
 exports[`getObject should return a pretty format object 1`] = `
-"color?: string;
-size?: number;
-offset?: number;"
+"
+/**
+ * Arrow color
+ */
+ color?: string;
+
+/**
+ * Arrow size
+ */
+ size?: number;
+
+/**
+ * Arrow offset
+ */
+ offset?: number;
+"
 `;
 
 exports[`getOptions should deal with nested object format 1`] = `
 "
-        interface TemplateOptions {
-          colors?: string[];
+
+/**
+ * Template options
+ */
+interface TemplateOptions {
+  
+/**
+ * Colors scheme: One color for each column
+ */
+colors?: string[];
 arrow?: {
-color?: string;
-size?: number;
-offset?: number;};
+
+/**
+ * Arrow color
+ */
+ color?: string;
+
+/**
+ * Arrow size
+ */
+ size?: number;
+
+/**
+ * Arrow offset
+ */
+ offset?: number;
+};
 branch?: {
-color?: string;
-lineWidth?: number;
-mergeStyle?: string;
-spacingX?: number;
-spacingY?: number;};
+
+/**
+ * Branch color
+ */
+ color?: string;
+
+/**
+ * Branch line width
+ */
+ lineWidth?: number;
+
+/**
+ * Branch merge style
+ */
+ mergeStyle?: string;
+
+/**
+ * Space between branches
+ */
+ spacingX?: number;
+
+/**
+ * Space between branches
+ */
+ spacingY?: number;
+};
 commit?: {
-spacingX?: number;
-spacingY?: number;
-widthExtension?: number;
-color?: string;
+
+/**
+ * Space between commits
+ */
+ spacingX?: number;
+
+/**
+ * Space between commits
+ */
+ spacingY?: number;
+
+/**
+ * Additional width to be added to the calculated width
+ */
+ widthExtension?: number;
+
+/**
+ * Master commit color (dot &amp; message)
+ */
+ color?: string;
 dot?: {
-          color?: string;
-size?: number;
-strokeWidth?: number;
-strokeColor?: string;
+          
+/**
+ * Commit dot color
+ */
+ color?: string;
+
+/**
+ * Commit dot size
+ */
+ size?: number;
+
+/**
+ * Commit dot stroke width
+ */
+ strokeWidth?: number;
+
+/**
+ * Commit dot stroke color
+ */
+ strokeColor?: string;
+
         };
-
-
-
 message?: {
-          color?: string;
-display?: boolean;
-displayAuthor?: boolean;
-displayBranch?: boolean;
-displayHash?: boolean;
-font?: string;
+          
+/**
+ * Commit message color
+ */
+ color?: string;
+
+/**
+ * Commit display policy
+ */
+ display?: boolean;
+
+/**
+ * Commit message author policy
+ */
+ displayAuthor?: boolean;
+
+/**
+ * Commit message branch policy
+ */
+ displayBranch?: boolean;
+
+/**
+ * Commit message hash policy
+ */
+ displayHash?: boolean;
+
+/**
+ * Commit message font
+ */
+ font?: string;
+
         };
 
+/**
+ * Tooltips policy
+ */
+ shouldDisplayTooltipsInCompactMode?: boolean;
 
-
-
-
-shouldDisplayTooltipsInCompactMode?: boolean;
-tooltipHTMLFormatter?: GitGraph.CommitFormatter;};
-}
-      "
+/**
+ * Formatter for the tooltip contents.
+ */
+ tooltipHTMLFormatter?: GitGraph.CommitFormatter;
+};
+}"
 `;
 
 exports[`getOptions should return parsed options from doc 1`] = `
 "
-        interface GitGraphOptions {
-          elementId?: string;
+
+/**
+ * GitGraph options
+ */
+interface GitGraphOptions {
+  
+/**
+ * Id of the canvas container
+ */
+elementId?: string;
+
+/**
+ * Template of the graph
+ */
 template?: GitGraph.Template|string|any;
+
+/**
+ * Default author for commits
+ */
 author?: string;
+
+/**
+ * Display mode
+ */
 mode?: string;
+
+/**
+ * DOM canvas (ex: document.getElementById(&quot;id&quot;))
+ */
 canvas?: HTMLElement;
+
+/**
+ * Graph orientation
+ */
 orientation?: string;
+
+/**
+ * Make arrows point to ancestors if true
+ */
 reverseArrow?: boolean;
+
+/**
+ * Add custom offsetX to initial commit.
+ */
 initCommitOffsetX?: number;
+
+/**
+ * Add custom offsetY to initial commit.
+ */
 initCommitOffsetY?: number;
+
+/**
+ * HTML Element containing tooltips in compact mode.
+ */
 tooltipContainer?: HTMLElement;
-}
-      "
+}"
 `;
 
 exports[`getProperties should deal with \`object\` type 1`] = `
