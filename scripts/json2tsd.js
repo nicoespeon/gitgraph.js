@@ -38,7 +38,7 @@ module.exports = function (data) {
       .filter(p => !p.name.includes('.')) // avoid dot notation
       .map(p => {
         let optChar = p.optional ? '?' : '';
-        return `${p.name}${optChar}: ${parseTypes(p, doc)};`
+        return `${getDescription(p)}\n${p.name}${optChar}: ${parseTypes(p, doc)};`
       });
   };
 
@@ -150,7 +150,7 @@ type ${d.name} = (${getParams(d)}) => void;
       .filter(d => d.kind === "typedef" && d.type.names[0] === "object")
       .forEach(d => {
         gitgraphNamespace += `
-${parseComment(d.comment)}
+${getDescription(d)}
 interface ${d.name} {
   ${getProperties(d).join('\n')}
 }`;

@@ -333,33 +333,281 @@ tooltipContainer?: HTMLElement;
 
 exports[`getProperties should deal with \`object\` type 1`] = `
 Array [
-  "color?: string;",
-  "author?: string;",
-  "date?: string;",
-  "detail?: string;",
-  "sha1?: string;",
-  "parentCommit?: GitGraph.Commit;",
-  "type?: string;",
-  "tag?: string;",
-  "tagColor?: string;",
-  "tagFont?: string;",
-  "displayTagBox?: string;",
-  "dotColor?: string;",
-  "dotSize?: number;",
-  "dotStrokeWidth?: number;",
-  "dotStrokeColor?: string;",
-  "message?: string;",
-  "messageColor?: string;",
-  "messageFont?: string;",
-  "messageDisplay?: boolean;",
-  "messageAuthorDisplay?: boolean;",
-  "messageBranchDisplay?: boolean;",
-  "messageHashDisplay?: boolean;",
-  "labelColor?: string;",
-  "labelFont?: string;",
-  "tooltipDisplay?: boolean;",
-  "onClick?: GitGraph.CommitCallback;",
-  "representedObject?: any;",
+  "
+/**
+ * Master color (dot &amp; message)
+ */
+color?: string;",
+  "
+/**
+ * Author name &amp; email
+ */
+author?: string;",
+  "
+/**
+ * Date of commit, default is now
+ */
+date?: string;",
+  "
+/**
+ * DOM Element of detail part
+ */
+detail?: string;",
+  "
+/**
+ * Sha1, default is a random short sha1
+ */
+sha1?: string;",
+  "
+/**
+ * Parent commit
+ */
+parentCommit?: GitGraph.Commit;",
+  "
+/**
+ * Type of commit
+ */
+type?: string;",
+  "
+/**
+ * Tag of the commit
+ */
+tag?: string;",
+  "
+/**
+ * Color of the tag
+ */
+tagColor?: string;",
+  "
+/**
+ * Font of the tag
+ */
+tagFont?: string;",
+  "
+/**
+ * If true, display a box around the tag
+ */
+displayTagBox?: string;",
+  "
+/**
+ * Specific dot color
+ */
+dotColor?: string;",
+  "
+/**
+ * Dot size
+ */
+dotSize?: number;",
+  "
+/**
+ * Dot stroke width
+ */
+dotStrokeWidth?: number;",
+  "
+/**
+ * undefined
+ */
+dotStrokeColor?: string;",
+  "
+/**
+ * Commit message
+ */
+message?: string;",
+  "
+/**
+ * Specific message color
+ */
+messageColor?: string;",
+  "
+/**
+ * Font of the message
+ */
+messageFont?: string;",
+  "
+/**
+ * Commit message display policy
+ */
+messageDisplay?: boolean;",
+  "
+/**
+ * Commit message author policy
+ */
+messageAuthorDisplay?: boolean;",
+  "
+/**
+ * Commit message author policy
+ */
+messageBranchDisplay?: boolean;",
+  "
+/**
+ * Commit message hash policy
+ */
+messageHashDisplay?: boolean;",
+  "
+/**
+ * Specific label color
+ */
+labelColor?: string;",
+  "
+/**
+ * Font used for labels
+ */
+labelFont?: string;",
+  "
+/**
+ * Tooltip message display policy
+ */
+tooltipDisplay?: boolean;",
+  "
+/**
+ * OnClick event for the commit dot
+ */
+onClick?: GitGraph.CommitCallback;",
+  "
+/**
+ * Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
+ */
+representedObject?: any;",
+]
+`;
+
+exports[`getProperties should extract properly all properties 1`] = `
+Array [
+  "
+/**
+ * Master color (dot &amp; message)
+ */
+color?: string;",
+  "
+/**
+ * Author name &amp; email
+ */
+author?: string;",
+  "
+/**
+ * Date of commit, default is now
+ */
+date?: string;",
+  "
+/**
+ * DOM Element of detail part
+ */
+detail?: string;",
+  "
+/**
+ * Sha1, default is a random short sha1
+ */
+sha1?: string;",
+  "
+/**
+ * Parent commit
+ */
+parentCommit?: GitGraph.Commit;",
+  "
+/**
+ * Type of commit
+ */
+type?: string;",
+  "
+/**
+ * Tag of the commit
+ */
+tag?: string;",
+  "
+/**
+ * Color of the tag
+ */
+tagColor?: string;",
+  "
+/**
+ * Font of the tag
+ */
+tagFont?: string;",
+  "
+/**
+ * If true, display a box around the tag
+ */
+displayTagBox?: string;",
+  "
+/**
+ * Specific dot color
+ */
+dotColor?: string;",
+  "
+/**
+ * Dot size
+ */
+dotSize?: number;",
+  "
+/**
+ * Dot stroke width
+ */
+dotStrokeWidth?: number;",
+  "
+/**
+ * undefined
+ */
+dotStrokeColor?: string;",
+  "
+/**
+ * Commit message
+ */
+message?: string;",
+  "
+/**
+ * Specific message color
+ */
+messageColor?: string;",
+  "
+/**
+ * Font of the message
+ */
+messageFont?: string;",
+  "
+/**
+ * Commit message display policy
+ */
+messageDisplay?: boolean;",
+  "
+/**
+ * Commit message author policy
+ */
+messageAuthorDisplay?: boolean;",
+  "
+/**
+ * Commit message author policy
+ */
+messageBranchDisplay?: boolean;",
+  "
+/**
+ * Commit message hash policy
+ */
+messageHashDisplay?: boolean;",
+  "
+/**
+ * Specific label color
+ */
+labelColor?: string;",
+  "
+/**
+ * Font used for labels
+ */
+labelFont?: string;",
+  "
+/**
+ * Tooltip message display policy
+ */
+tooltipDisplay?: boolean;",
+  "
+/**
+ * OnClick event for the commit dot
+ */
+onClick?: GitGraph.CommitCallback;",
+  "
+/**
+ * Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
+ */
+representedObject?: any;",
 ]
 `;
 

@@ -82,70 +82,9 @@ describe('getParams', () => {
 
 describe('getProperties', () => {
   it('should extract properly all properties', () => {
-    let doc = {
-      properties: [
-        {
-          "type": {
-            "names": [
-              "string"
-            ]
-          },
-          "description": "<p>Branch color</p>",
-          "name": "color"
-        },
-        {
-          "type": {
-            "names": [
-              "number"
-            ]
-          },
-          "optional": true,
-          "description": "<p>Branch line width</p>",
-          "name": "lineWidth"
-        },
-        {
-          "type": {
-            "names": [
-              "string"
-            ]
-          },
-          "optional": true,
-          "defaultvalue": "(\"bezier\"|\"straight\")",
-          "description": "<p>Branch merge style</p>",
-          "name": "mergeStyle"
-        },
-        {
-          "type": {
-            "names": [
-              "number"
-            ]
-          },
-          "optional": true,
-          "description": "<p>Space between branches</p>",
-          "name": "spacingX"
-        },
-        {
-          "type": {
-            "names": [
-              "number"
-            ]
-          },
-          "optional": true,
-          "description": "<p>Space between branches</p>",
-          "name": "spacingY"
-        }
-      ]
-    };
+    let doc = data.docs.find(d => d.name === "BranchCommitOptions");
 
-    let expected = [
-      "color: string;",
-      "lineWidth?: number;",
-      "mergeStyle?: string;",
-      "spacingX?: number;",
-      "spacingY?: number;"
-    ];
-
-    expect(getProperties(doc)).toEqual(expected);
+    expect(getProperties(doc)).toMatchSnapshot();
   });
 
   it('should deal with `object` type', () => {
