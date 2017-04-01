@@ -5,10 +5,13 @@ module.exports = function (data) {
     .map(d => d.name);
 
   const parseComment = (comment) => comment
-    .replace(/object\}/g, 'any}')
-    .replace(/\{object/g, '{any')
-    .replace(/\(object/g, '(any')
-    .replace(/object\)/g, 'any)');
+    .split('\n')
+    .filter(line => !/options\./.exec(line))
+    .filter(line => !/^ *\* *$/.exec(line))
+    .map(line => line.replace(/{.*}/g, ""))
+    .map(line => line.replace(/  /g, " "))
+    .map(line => line.replace(/ - /g, " "))
+    .join('\n');
 
   const pascal = (str) => str.slice(0, 1).toUpperCase() + str.slice(1);
 
@@ -49,9 +52,9 @@ module.exports = function (data) {
     return data.docs
       .filter(d => d.longname.startsWith(name + "#"))
       .reduce((mem, d) => mem += `
-        ${parseComment(d.comment)}
-        ${d.name}(${getParams(d)}): ${getReturns(d)};
-        `, "");
+${parseComment(d.comment)}
+${d.name}(${getParams(d)}): ${getReturns(d)};
+`, "");
   };
 
   const getObject = (doc, index = 2) => {

@@ -14,39 +14,10 @@ const {
 } = require('./json2tsd.js')(data);
 
 describe('parseComment', () => {
-  it('should deal with `{object|string}` format', () => {
-    let comment = "{object|string} options";
-    let expected = "{any|string} options";
+  it('should remove all dot notation params', () => {
+    let comment = data.docs.find(d => d.name === "GitGraph").comment;
 
-    expect(parseComment(comment)).toEqual(expected);
-  });
-
-  it('should deal with `{object}` format', () => {
-    let comment = "{object} options";
-    let expected = "{any} options";
-
-    expect(parseComment(comment)).toEqual(expected);
-  });
-
-  it('should deal with `{string|object}` format', () => {
-    let comment = "{string|object} options";
-    let expected = "{string|any} options";
-
-    expect(parseComment(comment)).toEqual(expected);
-  });
-
-  it('should deal with `{(object|string)}` format', () => {
-    let comment = "{(object|string)} options";
-    let expected = "{(any|string)} options";
-
-    expect(parseComment(comment)).toEqual(expected);
-  });
-
-  it('should deal with `{(string|object)}` format', () => {
-    let comment = "{(string|object)} options";
-    let expected = "{(string|any)} options";
-
-    expect(parseComment(comment)).toEqual(expected);
+    expect(parseComment(comment)).toMatchSnapshot();
   });
 });
 
