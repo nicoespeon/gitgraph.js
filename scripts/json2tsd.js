@@ -108,7 +108,6 @@ ${d.name}(${getParams(d)}): ${getReturns(d)};
 ${parseComment(d.comment)}
 declare class ${d.name} {
   constructor(${getParams(d)});
-
   ${getClassFunctions(d.name)}`;
       });
 
@@ -122,10 +121,9 @@ declare class ${d.name} {
 ${parseComment(d.comment)}
 class ${d.name} {
   constructor(${getParams(d)});
-
   ${getClassFunctions(d.name)}
-}`;
-      });
+}
+`;});
 
     // Type def (callback)
     data.docs
@@ -133,8 +131,8 @@ class ${d.name} {
       .forEach(d => {
         gitgraphNamespace += `
 ${parseComment(d.comment)}
-type ${d.name} = (${getParams(d)}) => void;`;
-      });
+type ${d.name} = (${getParams(d)}) => void;
+`;});
 
     // Type def (object)
     data.docs
@@ -150,7 +148,7 @@ interface ${d.name} {
     gitgraphNamespace += "}\n";
     gitgraph += "}\n";
 
-    return gitgraphNamespace + gitgraph + classes;
+    return (gitgraphNamespace + gitgraph + classes).replace(/\n\n\n/g, "");
   }
 
   return {
