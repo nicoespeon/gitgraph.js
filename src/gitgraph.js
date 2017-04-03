@@ -504,7 +504,7 @@
     this.height = 0;
     this.width = 0;
     this.commits = [];
-    this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"join"|"end")}
+    this.path = []; // Path to draw, this is an array of points {x, y, type("start"|"joint"|"end")}
 
     // Column number calculation for auto-color & auto-offset
     if (typeof options.column === "number") {
@@ -763,12 +763,12 @@
     var point = {
       x: commit.x,
       y: commit.y,
-      type: "join"
+      type: "joint"
     };
 
     if (!isFirstBranch && isPathBeginning) {
       this.pushPath(this.startPoint);
-      // Add a path point to startpoint + offset - template spacing
+      // Add a path joint to startpoint + template spacing
       // So that line will not go through commit of other branches
       this.pushPath({
         x: commit.x,
@@ -932,7 +932,7 @@
       var endOfBranch = {
         x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
         y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
-        type: "join"
+        type: "joint"
       };
       this.pushPath(_clone(endOfBranch));
 
@@ -994,13 +994,13 @@
     } else if (lastPoint.x === point.x && lastPoint.y === point.y) {
       if (lastPoint.type !== "start" && point.type === "end") {
         lastPoint.type = "end";
-      } else if (point.type === "join") {
+      } else if (point.type === "joint") {
 
       } else {
         this.path.push(point);
       }
     } else {
-      if (point.type === "join") {
+      if (point.type === "joint") {
         if ((point.x - lastPoint.x) * this.template.commit.spacingX < 0) {
           this.path.push(point);
         } else if ((point.y - lastPoint.y) * this.template.commit.spacingY < 0) {
