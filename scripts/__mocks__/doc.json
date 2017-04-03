@@ -1,0 +1,3494 @@
+{
+  "docs": [
+    {
+      "comment": "/**\n   * GitGraph\n   *\n   * @constructor\n   *\n   * @param {object} options - GitGraph options\n   * @param {string} [options.elementId = \"gitGraph\"] - Id of the canvas container\n   * @param {Template|string|object} [options.template] - Template of the graph\n   * @param {string} [options.author = \"Sergio Flores <saxo-guy@epic.com>\"] - Default author for commits\n   * @param {string} [options.mode = (null|\"compact\")]  - Display mode\n   * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById(\"id\"))\n   * @param {string} [options.orientation = (\"vertical-reverse\"|\"horizontal\"|\"horizontal-reverse\")] - Graph orientation\n   * @param {boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true\n   * @param {number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.\n   * @param {number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.\n   * @param {HTMLElement} [options.tooltipContainer = document.body] - HTML Element containing tooltips in compact mode.\n   *\n   * @this GitGraph\n   **/",
+      "meta": {
+        "range": [
+          1100,
+          5386
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 23,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000003",
+          "name": "GitGraph",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "GitGraph~options",
+          "this.elementId": "GitGraph#elementId",
+          "this.author": "GitGraph#author",
+          "this.reverseArrow": "GitGraph#reverseArrow",
+          "this.template": "GitGraph#template",
+          "this.mode": "GitGraph#mode",
+          "this.template.commit.message.display": "GitGraph#template.commit.message.display",
+          "this.template.commit.spacingY": "GitGraph#template.commit.spacingY",
+          "this.orientation": "GitGraph#orientation",
+          "this.template.branch.labelRotation": "GitGraph#template.branch.labelRotation",
+          "this.template.commit.tag.spacingY": "GitGraph#template.commit.tag.spacingY",
+          "this.template.commit.spacingX": "GitGraph#template.commit.spacingX",
+          "this.template.branch.spacingY": "GitGraph#template.branch.spacingY",
+          "this.template.branch.spacingX": "GitGraph#template.branch.spacingX",
+          "this.template.commit.tag.spacingX": "GitGraph#template.commit.tag.spacingX",
+          "this.marginX": "GitGraph#marginX",
+          "this.marginY": "GitGraph#marginY",
+          "this.offsetX": "GitGraph#offsetX",
+          "this.offsetY": "GitGraph#offsetY",
+          "this.canvas": "GitGraph#canvas",
+          "this.context": "GitGraph#context",
+          "this.context.textBaseline": "GitGraph#context.textBaseline",
+          "this.tooltip": "GitGraph#tooltip",
+          "this.tooltip.className": "GitGraph#tooltip.className",
+          "this.tooltip.style.position": "GitGraph#tooltip.style.position",
+          "this.tooltip.style.display": "GitGraph#tooltip.style.display",
+          "tooltipContainer": "GitGraph~tooltipContainer",
+          "this.HEAD": "GitGraph#HEAD",
+          "this.branches": "GitGraph#branches",
+          "this.commits": "GitGraph#commits",
+          "this.columnMax": "GitGraph#columnMax",
+          "this.commitOffsetX": "GitGraph#commitOffsetX",
+          "this.commitOffsetY": "GitGraph#commitOffsetY",
+          "this.mouseMoveOptions": "GitGraph#mouseMoveOptions",
+          "this.mouseDownOptions": "GitGraph#mouseDownOptions",
+          "window.onresize": "window.onresize"
+        }
+      },
+      "description": "<p>GitGraph</p>",
+      "kind": "class",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "<p>GitGraph options</p>",
+          "name": "options",
+          "optional": true
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "\"gitGraph\"",
+          "description": "<p>Id of the canvas container</p>",
+          "name": "options.elementId"
+        },
+        {
+          "type": {
+            "names": [
+              "Template",
+              "string",
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Template of the graph</p>",
+          "name": "options.template"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "\"Sergio Flores <saxo-guy@epic.com>\"",
+          "description": "<p>Default author for commits</p>",
+          "name": "options.author"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "(null|\"compact\")",
+          "description": "<p>Display mode</p>",
+          "name": "options.mode"
+        },
+        {
+          "type": {
+            "names": [
+              "HTMLElement"
+            ]
+          },
+          "optional": true,
+          "description": "<p>DOM canvas (ex: document.getElementById(&quot;id&quot;))</p>",
+          "name": "options.canvas"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "(\"vertical-reverse\"|\"horizontal\"|\"horizontal-reverse\")",
+          "description": "<p>Graph orientation</p>",
+          "name": "options.orientation"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": false,
+          "description": "<p>Make arrows point to ancestors if true</p>",
+          "name": "options.reverseArrow"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": 0,
+          "description": "<p>Add custom offsetX to initial commit.</p>",
+          "name": "options.initCommitOffsetX"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": 0,
+          "description": "<p>Add custom offsetY to initial commit.</p>",
+          "name": "options.initCommitOffsetY"
+        },
+        {
+          "type": {
+            "names": [
+              "HTMLElement"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "document.body",
+          "description": "<p>HTML Element containing tooltips in compact mode.</p>",
+          "name": "options.tooltipContainer"
+        }
+      ],
+      "this": "GitGraph",
+      "name": "GitGraph",
+      "longname": "GitGraph",
+      "scope": "global",
+      "___id": "T000002R000002",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Disposing canvas event handlers\n   *\n   * @this GitGraph\n   **/",
+      "meta": {
+        "range": [
+          5465,
+          5671
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 134,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000752",
+          "name": "GitGraph.prototype.dispose",
+          "type": "FunctionExpression",
+          "paramnames": []
+        }
+      },
+      "description": "<p>Disposing canvas event handlers</p>",
+      "this": "GitGraph",
+      "name": "dispose",
+      "longname": "GitGraph#dispose",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000061",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Create new branch\n   *\n   * @param {(string|object)} options - Branch name | Options of Branch\n   *\n   * @see Branch\n   * @this GitGraph\n   *\n   * @return {Branch} New branch\n   **/",
+      "meta": {
+        "range": [
+          5869,
+          6316
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 149,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000785",
+          "name": "GitGraph.prototype.branch",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "name": "GitGraph#branch~name",
+          "options": "GitGraph#branch~options",
+          "options.name": "GitGraph#branch~options.name",
+          "options.parent": "GitGraph#branch~options.parent",
+          "options.parentBranch": "GitGraph#branch~options.parentBranch",
+          "branch": "GitGraph#branch~branch"
+        }
+      },
+      "description": "<p>Create new branch</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "description": "<p>Branch name | Options of Branch</p>",
+          "name": "options"
+        }
+      ],
+      "see": [
+        "Branch"
+      ],
+      "this": "GitGraph",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "description": "<p>New branch</p>"
+        }
+      ],
+      "name": "branch",
+      "longname": "GitGraph#branch",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000062",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Create new orphan branch\n   *\n   * @param {(string|object)} options - Branch name | Options of Branch\n   *\n   * @see Branch\n   * @this GitGraph\n   *\n   * @return {Branch} New branch\n   **/",
+      "meta": {
+        "range": [
+          6521,
+          6912
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 179,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000858",
+          "name": "GitGraph.prototype.orphanBranch",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "name": "GitGraph#orphanBranch~name",
+          "options": "GitGraph#orphanBranch~options",
+          "options.name": "GitGraph#orphanBranch~options.name",
+          "options.parent": "GitGraph#orphanBranch~options.parent",
+          "branch": "GitGraph#orphanBranch~branch"
+        }
+      },
+      "description": "<p>Create new orphan branch</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "description": "<p>Branch name | Options of Branch</p>",
+          "name": "options"
+        }
+      ],
+      "see": [
+        "Branch"
+      ],
+      "this": "GitGraph",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "description": "<p>New branch</p>"
+        }
+      ],
+      "name": "orphanBranch",
+      "longname": "GitGraph#orphanBranch",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000070",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Commit on HEAD\n   *\n   * @param {(string|BranchCommitOptions)} options - Message | Options of commit\n   *\n   * @see Commit\n   * @this GitGraph\n   *\n   * @return {GitGraph} this - Return the main object so we can chain\n   **/",
+      "meta": {
+        "range": [
+          7153,
+          7300
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 208,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000919",
+          "name": "GitGraph.prototype.commit",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        }
+      },
+      "description": "<p>Commit on HEAD</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "BranchCommitOptions"
+            ]
+          },
+          "description": "<p>Message | Options of commit</p>",
+          "name": "options"
+        }
+      ],
+      "see": [
+        "Commit"
+      ],
+      "this": "GitGraph",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "GitGraph"
+            ]
+          },
+          "description": "<p>this - Return the main object so we can chain</p>"
+        }
+      ],
+      "name": "commit",
+      "longname": "GitGraph#commit",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000077",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Tag the HEAD\n   *\n   * @param {object} options - Options of tag\n   *\n   * @see Tag\n   * @this GitGraph\n   *\n   * @return {GitGraph} this - Return the main object so we can chain\n   **/",
+      "meta": {
+        "range": [
+          7501,
+          7642
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 225,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000939",
+          "name": "GitGraph.prototype.tag",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        }
+      },
+      "description": "<p>Tag the HEAD</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "<p>Options of tag</p>",
+          "name": "options"
+        }
+      ],
+      "see": [
+        "Tag"
+      ],
+      "this": "GitGraph",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "GitGraph"
+            ]
+          },
+          "description": "<p>this - Return the main object so we can chain</p>"
+        }
+      ],
+      "name": "tag",
+      "longname": "GitGraph#tag",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000078",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Create a new template\n   *\n   * @param {(string|object)} options - The template name, or the template options\n   *\n   * @see Template\n   * @this GitGraph\n   *\n   * @return {Template}\n   **/",
+      "meta": {
+        "range": [
+          7848,
+          8026
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 242,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000959",
+          "name": "GitGraph.prototype.newTemplate",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        }
+      },
+      "description": "<p>Create a new template</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "description": "<p>The template name, or the template options</p>",
+          "name": "options"
+        }
+      ],
+      "see": [
+        "Template"
+      ],
+      "this": "GitGraph",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Template"
+            ]
+          }
+        }
+      ],
+      "name": "newTemplate",
+      "longname": "GitGraph#newTemplate",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000079",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Render the canvas\n   *\n   * @this GitGraph\n   **/",
+      "meta": {
+        "range": [
+          8092,
+          10013
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 254,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100000986",
+          "name": "GitGraph.prototype.render",
+          "type": "FunctionExpression",
+          "paramnames": []
+        },
+        "vars": {
+          "this.scalingFactor": "GitGraph#scalingFactor",
+          "unscaledResolution": "GitGraph#render~unscaledResolution",
+          "unscaledResolution.x": "GitGraph#render~unscaledResolution.x",
+          "this.canvas.style.width": "GitGraph#canvas.style.width",
+          "this.canvas.style.height": "GitGraph#canvas.style.height",
+          "this.canvas.width": "GitGraph#canvas.width",
+          "this.canvas.height": "GitGraph#canvas.height",
+          "this.offsetY": "GitGraph#offsetY",
+          "this.offsetX": "GitGraph#offsetX",
+          "i": "GitGraph#render~i",
+          "branch": "GitGraph#render~branch",
+          "j": "GitGraph#render~j",
+          "commit": "GitGraph#render~commit"
+        }
+      },
+      "description": "<p>Render the canvas</p>",
+      "this": "GitGraph",
+      "name": "render",
+      "longname": "GitGraph#render",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000080",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * A callback for each commit\n   *\n   * @callback CommitCallback\n   * @param {Commit} commit - A commit\n   * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit\n   * @param {Event} event - The DOM event (e.g. a click event)\n   */",
+      "meta": {
+        "range": [
+          10018,
+          10287
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 313,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {}
+      },
+      "description": "<p>A callback for each commit</p>",
+      "kind": "typedef",
+      "name": "CommitCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "description": "<p>A commit</p>",
+          "name": "commit"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "<p>True, if the mouse is currently hovering over the commit</p>",
+          "name": "mouseOver"
+        },
+        {
+          "type": {
+            "names": [
+              "Event"
+            ]
+          },
+          "description": "<p>The DOM event (e.g. a click event)</p>",
+          "name": "event"
+        }
+      ],
+      "longname": "CommitCallback",
+      "scope": "global",
+      "___id": "T000002R000100",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * A formatter for commit\n   *\n   * @callback CommitFormatter\n   * @param {Commit} commit - The commit to format\n   */",
+      "meta": {
+        "range": [
+          10291,
+          10415
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 322,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {}
+      },
+      "description": "<p>A formatter for commit</p>",
+      "kind": "typedef",
+      "name": "CommitFormatter",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "description": "<p>The commit to format</p>",
+          "name": "commit"
+        }
+      ],
+      "longname": "CommitFormatter",
+      "scope": "global",
+      "___id": "T000002R000101",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Hover event on commit dot\n   *\n   * @param {MouseEvent} event - Mouse event\n   * @param {CommitCallback} callbackFn - A callback function that will be called for each commit\n   *\n   * @this GitGraph\n   **/",
+      "meta": {
+        "range": [
+          10636,
+          11713
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 337,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100001361",
+          "name": "GitGraph.prototype.applyCommits",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "event",
+            "callbackFn"
+          ]
+        },
+        "vars": {
+          "getOffsetById": "GitGraph#applyCommits~getOffsetById",
+          "offsetX": "GitGraph#applyCommits~offsetX",
+          "offsetY": "GitGraph#applyCommits~offsetY",
+          "i": "GitGraph#applyCommits~i",
+          "commit": "GitGraph#applyCommits~commit",
+          "distanceX": "GitGraph#applyCommits~distanceX",
+          "distanceY": "GitGraph#applyCommits~distanceY",
+          "distanceBetweenCommitCenterAndMouse": "GitGraph#applyCommits~distanceBetweenCommitCenterAndMouse",
+          "isOverCommit": "GitGraph#applyCommits~isOverCommit"
+        }
+      },
+      "description": "<p>Hover event on commit dot</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "MouseEvent"
+            ]
+          },
+          "description": "<p>Mouse event</p>",
+          "name": "event"
+        },
+        {
+          "type": {
+            "names": [
+              "CommitCallback"
+            ]
+          },
+          "description": "<p>A callback function that will be called for each commit</p>",
+          "name": "callbackFn"
+        }
+      ],
+      "this": "GitGraph",
+      "name": "applyCommits",
+      "longname": "GitGraph#applyCommits",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000102",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Hover event on commit dot\n   *\n   * @param {MouseEvent} event - Mouse event\n   *\n   * @this GitGraph\n   **/",
+      "meta": {
+        "range": [
+          11837,
+          13729
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 369,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100001548",
+          "name": "GitGraph.prototype.hover",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "event"
+          ]
+        },
+        "vars": {
+          "self": "GitGraph#hover~self",
+          "isOut": "GitGraph#hover~isOut",
+          "showCommitTooltip": "GitGraph#hover~showCommitTooltip",
+          "emitCommitEvent": "GitGraph#hover~emitCommitEvent",
+          "": null,
+          "self.tooltip.style.display": "GitGraph#hover~self.tooltip.style.display"
+        }
+      },
+      "description": "<p>Hover event on commit dot</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "MouseEvent"
+            ]
+          },
+          "description": "<p>Mouse event</p>",
+          "name": "event"
+        }
+      ],
+      "this": "GitGraph",
+      "name": "hover",
+      "longname": "GitGraph#hover",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000117",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Click event on commit dot\n   *\n   * @param {MouseEvent} event - Mouse event\n   *\n   * @this GitGraph\n   **/",
+      "meta": {
+        "range": [
+          13853,
+          14131
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 439,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100001821",
+          "name": "GitGraph.prototype.click",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "event"
+          ]
+        },
+        "vars": {
+          "": null
+        }
+      },
+      "description": "<p>Click event on commit dot</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "MouseEvent"
+            ]
+          },
+          "description": "<p>Mouse event</p>",
+          "name": "event"
+        }
+      ],
+      "this": "GitGraph",
+      "name": "click",
+      "longname": "GitGraph#click",
+      "kind": "function",
+      "memberof": "GitGraph",
+      "scope": "instance",
+      "___id": "T000002R000138",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Branch\n   *\n   * @constructor\n   *\n   * @param {object} options - Options of branch\n   * @param {GitGraph} options.parent - GitGraph constructor\n   * @param {Branch} [options.parentBranch = options.parentCommit.branch] - Parent branch\n   * @param {Commit} [options.parentCommit = _getLast(options.parentBranch.commits)] - Parent commit\n   * @param {string} [options.name = \"no-name\"] - Branch name\n   * @param {object} [options.commitDefaultOptions = {}] - Default options for commits\n   *\n   * @this Branch\n   **/",
+      "meta": {
+        "range": [
+          14885,
+          17852
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 469,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100001863",
+          "name": "Branch",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "Branch~options",
+          "this.parent": "Branch#parent",
+          "this.parentCommit": "Branch#parentCommit",
+          "this.parentBranch": "Branch#parentBranch",
+          "this.name": "Branch#name",
+          "this.commitDefaultOptions": "Branch#commitDefaultOptions",
+          "this.context": "Branch#context",
+          "this.template": "Branch#template",
+          "this.lineWidth": "Branch#lineWidth",
+          "this.lineDash": "Branch#lineDash",
+          "this.showLabel": "Branch#showLabel",
+          "this.spacingX": "Branch#spacingX",
+          "this.spacingY": "Branch#spacingY",
+          "this.size": "Branch#size",
+          "this.height": "Branch#height",
+          "this.width": "Branch#width",
+          "this.commits": "Branch#commits",
+          "this.path": "Branch#path",
+          "this.column": "Branch#column",
+          "this.parent.columnMax": "Branch#parent.columnMax",
+          "this.offsetX": "Branch#offsetX",
+          "this.offsetY": "Branch#offsetY",
+          "this.startPoint": "Branch#startPoint",
+          "columnIndex": "Branch~columnIndex",
+          "this.color": "Branch#color"
+        }
+      },
+      "description": "<p>Branch</p>",
+      "kind": "class",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "<p>Options of branch</p>",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "GitGraph"
+            ]
+          },
+          "description": "<p>GitGraph constructor</p>",
+          "name": "options.parent"
+        },
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "options.parentCommit.branch",
+          "description": "<p>Parent branch</p>",
+          "name": "options.parentBranch"
+        },
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "_getLast(options.parentBranch.commits)",
+          "description": "<p>Parent commit</p>",
+          "name": "options.parentCommit"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "\"no-name\"",
+          "description": "<p>Branch name</p>",
+          "name": "options.name"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "{}",
+          "description": "<p>Default options for commits</p>",
+          "name": "options.commitDefaultOptions"
+        }
+      ],
+      "this": "Branch",
+      "name": "Branch",
+      "longname": "Branch",
+      "scope": "global",
+      "___id": "T000002R000139",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Create new branch\n   *\n   * @param {(string|object)} options - Branch name | Options of Branch\n   *\n   * @see Branch\n   * @this Branch\n   *\n   * @return {Branch} New Branch\n   **/",
+      "meta": {
+        "range": [
+          18047,
+          18501
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 559,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100002369",
+          "name": "Branch.prototype.branch",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "name": "Branch#branch~name",
+          "options": "Branch#branch~options",
+          "options.name": "Branch#branch~options.name",
+          "options.parent": "Branch#branch~options.parent",
+          "options.parentBranch": "Branch#branch~options.parentBranch",
+          "branch": "Branch#branch~branch"
+        }
+      },
+      "description": "<p>Create new branch</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "description": "<p>Branch name | Options of Branch</p>",
+          "name": "options"
+        }
+      ],
+      "see": [
+        "Branch"
+      ],
+      "this": "Branch",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "description": "<p>New Branch</p>"
+        }
+      ],
+      "name": "branch",
+      "longname": "Branch#branch",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000180",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Render the branch\n   *\n   * @this Branch\n   **/",
+      "meta": {
+        "range": [
+          18565,
+          19731
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 584,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100002444",
+          "name": "Branch.prototype.render",
+          "type": "FunctionExpression",
+          "paramnames": []
+        },
+        "vars": {
+          "i": "Branch#render~i",
+          "point": "Branch#render~point",
+          "path": "Branch#render~path",
+          "this.context.lineWidth": "Branch#context.lineWidth",
+          "this.context.strokeStyle": "Branch#context.strokeStyle",
+          "prevLineDash": "Branch#render~prevLineDash"
+        }
+      },
+      "description": "<p>Render the branch</p>",
+      "this": "Branch",
+      "name": "render",
+      "longname": "Branch#render",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000188",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Branch commit options\n   * \n   * @typedef BranchCommitOptions\n   * \n   * @property {string} [color] - Master color (dot & message)\n   * @property {string} [author = this.parent.author] - Author name & email\n   * @property {string} [date] - Date of commit, default is now\n   * @property {string} [detail] - DOM Element of detail part\n   * @property {string} [sha1] - Sha1, default is a random short sha1\n   * @property {Commit} [parentCommit] - Parent commit\n   * @property {string} [type = (\"mergeCommit\"|null)] - Type of commit\n   *\n   * @property {string} [tag] - Tag of the commit\n   * @property {string} [tagColor = color] - Color of the tag\n   * @property {string} [tagFont = this.template.commit.tag.font] - Font of the tag\n   * @property {string} [displayTagBox = true] - If true, display a box around the tag\n   *\n   * @property {string} [dotColor = color] - Specific dot color\n   * @property {number} [dotSize = this.template.commit.dot.size] - Dot size\n   * @property {number} [dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width\n   * @property {string} [dotStrokeColor = this.template.commit.dot.strokeColor]\n   *\n   * @property {string} [message = \"He doesn't like George Michael! Boooo!\"] - Commit message\n   * @property {string} [messageColor = color] - Specific message color\n   * @property {string} [messageFont = this.template.commit.message.font] - Font of the message\n   * @property {boolean} [messageDisplay = this.template.commit.message.display] - Commit message display policy\n   * @property {boolean} [messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy\n   * @property {boolean} [messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy\n   * @property {boolean} [messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy\n   *\n   * @property {string} [labelColor = color] - Specific label color\n   * @property {string} [labelFont = this.template.branch.labelFont] - Font used for labels\n   *\n   * @property {boolean} [tooltipDisplay = true] - Tooltip message display policy\n   * @property {CommitCallback} [onClick] - OnClick event for the commit dot\n   * @property {object} [representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.\n   **/",
+      "meta": {
+        "range": [
+          19736,
+          22170
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 623,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {}
+      },
+      "description": "<p>Branch commit options</p>",
+      "kind": "typedef",
+      "name": "BranchCommitOptions",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Master color (dot &amp; message)</p>",
+          "name": "color"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.parent.author",
+          "description": "<p>Author name &amp; email</p>",
+          "name": "author"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Date of commit, default is now</p>",
+          "name": "date"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>DOM Element of detail part</p>",
+          "name": "detail"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Sha1, default is a random short sha1</p>",
+          "name": "sha1"
+        },
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Parent commit</p>",
+          "name": "parentCommit"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "(\"mergeCommit\"|null)",
+          "description": "<p>Type of commit</p>",
+          "name": "type"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Tag of the commit</p>",
+          "name": "tag"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "color",
+          "description": "<p>Color of the tag</p>",
+          "name": "tagColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.tag.font",
+          "description": "<p>Font of the tag</p>",
+          "name": "tagFont"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": true,
+          "description": "<p>If true, display a box around the tag</p>",
+          "name": "displayTagBox"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "color",
+          "description": "<p>Specific dot color</p>",
+          "name": "dotColor"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.dot.size",
+          "description": "<p>Dot size</p>",
+          "name": "dotSize"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.dot.strokeWidth",
+          "description": "<p>Dot stroke width</p>",
+          "name": "dotStrokeWidth"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.dot.strokeColor",
+          "name": "dotStrokeColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "\"He doesn't like George Michael! Boooo!\"",
+          "description": "<p>Commit message</p>",
+          "name": "message"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "color",
+          "description": "<p>Specific message color</p>",
+          "name": "messageColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.font",
+          "description": "<p>Font of the message</p>",
+          "name": "messageFont"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.display",
+          "description": "<p>Commit message display policy</p>",
+          "name": "messageDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.displayAuthor",
+          "description": "<p>Commit message author policy</p>",
+          "name": "messageAuthorDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.displayBranch",
+          "description": "<p>Commit message author policy</p>",
+          "name": "messageBranchDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.displayHash",
+          "description": "<p>Commit message hash policy</p>",
+          "name": "messageHashDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "color",
+          "description": "<p>Specific label color</p>",
+          "name": "labelColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.branch.labelFont",
+          "description": "<p>Font used for labels</p>",
+          "name": "labelFont"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": true,
+          "description": "<p>Tooltip message display policy</p>",
+          "name": "tooltipDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "CommitCallback"
+            ]
+          },
+          "optional": true,
+          "description": "<p>OnClick event for the commit dot</p>",
+          "name": "onClick"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.</p>",
+          "name": "representedObject"
+        }
+      ],
+      "longname": "BranchCommitOptions",
+      "scope": "global",
+      "___id": "T000002R000197",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Add a commit\n   *\n   * @param {(string|BranchCommitOptions)} [options] - Message | Options of commit\n   * @param {string} [options.detailId] - Id of detail DOM Element\n   *\n   * @see Commit\n   *\n   * @this Branch\n   **/",
+      "meta": {
+        "range": [
+          22404,
+          27257
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 671,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100002678",
+          "name": "Branch.prototype.commit",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "Branch#commit~options",
+          "options.arrowDisplay": "Branch#commit~options.arrowDisplay",
+          "options.branch": "Branch#commit~options.branch",
+          "columnIndex": "Branch#commit~columnIndex",
+          "options.color": "Branch#commit~options.color",
+          "options.parent": "Branch#commit~options.parent",
+          "options.parentCommit": "Branch#commit~options.parentCommit",
+          "this.parent.commitOffsetX": "Branch#parent.commitOffsetX",
+          "this.parent.commitOffsetY": "Branch#parent.commitOffsetY",
+          "options.messageColor": "Branch#commit~options.messageColor",
+          "options.labelColor": "Branch#commit~options.labelColor",
+          "options.tagColor": "Branch#commit~options.tagColor",
+          "options.dotColor": "Branch#commit~options.dotColor",
+          "options.x": "Branch#commit~options.x",
+          "options.y": "Branch#commit~options.y",
+          "isCompact": "Branch#commit~isCompact",
+          "options.detail": "Branch#commit~options.detail",
+          "previousCommit": "Branch#commit~previousCommit",
+          "commitPosition": "Branch#commit~commitPosition",
+          "previousCommitPosition": "Branch#commit~previousCommitPosition",
+          "isCommitAtSamePlaceThanPreviousOne": "Branch#commit~isCommitAtSamePlaceThanPreviousOne",
+          "isFirstBranch": "Branch#commit~isFirstBranch",
+          "isPathBeginning": "Branch#commit~isPathBeginning",
+          "options.showLabel": "Branch#commit~options.showLabel",
+          "commit": "Branch#commit~commit",
+          "point": "Branch#commit~point",
+          "parent": "Branch#commit~parent",
+          "parent.type": "Branch#commit~parent.type",
+          "point.type": "Branch#commit~point.type",
+          "commit.detail.style.display": "Branch#commit~commit.detail.style.display"
+        }
+      },
+      "description": "<p>Add a commit</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "BranchCommitOptions"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Message | Options of commit</p>",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Id of detail DOM Element</p>",
+          "name": "options.detailId"
+        }
+      ],
+      "see": [
+        "Commit"
+      ],
+      "this": "Branch",
+      "name": "commit",
+      "longname": "Branch#commit",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000198",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Tag the last commit of the branch.\n   *\n   * @param {(string|object)} [options] - Message | Options of the tag\n   * @param {string} [options.tag] - Message of the tag\n   * @param {string} [options.tagColor] - Color of the tag\n   * @param {string} [options.tagFont] - Font of the tag\n   * @param {boolean} [options.displayTagBox] - If true, display a box around the tag\n   *\n   * @see Tag\n   *\n   * @this Branch\n   * */",
+      "meta": {
+        "range": [
+          27692,
+          28113
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 825,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100003483",
+          "name": "Branch.prototype.tag",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "Branch#tag~options",
+          "lastCommit": "Branch#tag~lastCommit"
+        }
+      },
+      "description": "<p>Tag the last commit of the branch.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Message | Options of the tag</p>",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Message of the tag</p>",
+          "name": "options.tag"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Color of the tag</p>",
+          "name": "options.tagColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Font of the tag</p>",
+          "name": "options.tagFont"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "description": "<p>If true, display a box around the tag</p>",
+          "name": "options.displayTagBox"
+        }
+      ],
+      "see": [
+        "Tag"
+      ],
+      "this": "Branch",
+      "name": "tag",
+      "longname": "Branch#tag",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000249",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Checkout onto this branch\n   *\n   * @this Branch\n   **/",
+      "meta": {
+        "range": [
+          28185,
+          28259
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 849,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100003541",
+          "name": "Branch.prototype.checkout",
+          "type": "FunctionExpression",
+          "paramnames": []
+        },
+        "vars": {
+          "this.parent.HEAD": "Branch#parent.HEAD"
+        }
+      },
+      "description": "<p>Checkout onto this branch</p>",
+      "this": "Branch",
+      "name": "checkout",
+      "longname": "Branch#checkout",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000254",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Delete this branch\n   *\n   * @this Branch\n   **/",
+      "meta": {
+        "range": [
+          28324,
+          28394
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 858,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100003558",
+          "name": "Branch.prototype.delete",
+          "type": "FunctionExpression",
+          "paramnames": []
+        },
+        "vars": {
+          "this.isDeleted": "Branch#isDeleted"
+        }
+      },
+      "description": "<p>Delete this branch</p>",
+      "this": "Branch",
+      "name": "delete",
+      "longname": "Branch#delete",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000256",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Merge branch\n   *\n   * @param {Branch} [target = this.parent.HEAD]\n   * @param {(string|object)} [commitOptions] - Message | Options of commit\n   * @param {boolean} [commitOptions.fastForward = false] - If true, merge should use fast-forward if possible\n   *\n   * @see Commit\n   * @this Branch\n   *\n   * @return {Branch} this\n   **/",
+      "meta": {
+        "range": [
+          28743,
+          31868
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 874,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100003573",
+          "name": "Branch.prototype.merge",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "target",
+            "commitOptions"
+          ]
+        },
+        "vars": {
+          "targetBranch": "Branch#merge~targetBranch",
+          "firstBranchCommit": "Branch#merge~firstBranchCommit",
+          "defaultMessage": "Branch#merge~defaultMessage",
+          "message": "Branch#merge~message",
+          "commitOptions": "Branch#merge~commitOptions",
+          "commitOptions.message": "Branch#merge~commitOptions.message",
+          "commitOptions.type": "Branch#merge~commitOptions.type",
+          "commitOptions.parentCommit": "Branch#merge~commitOptions.parentCommit",
+          "branchParentCommit": "Branch#merge~branchParentCommit",
+          "targetBranchParentCommit": "Branch#merge~targetBranchParentCommit",
+          "isFastForwardPossible": "Branch#merge~isFastForwardPossible",
+          "isGraphHorizontal": "Branch#merge~isGraphHorizontal",
+          "this.color": "Branch#color",
+          "targetBranchY": "Branch#merge~targetBranchY",
+          "": null,
+          "targetBranchX": "Branch#merge~targetBranchX",
+          "targetCommit": "Branch#merge~targetCommit",
+          "endOfBranch": "Branch#merge~endOfBranch",
+          "mergeCommit": "Branch#merge~mergeCommit",
+          "endOfBranch.type": "Branch#merge~endOfBranch.type",
+          "this.parent.HEAD": "Branch#parent.HEAD"
+        }
+      },
+      "description": "<p>Merge branch</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.parent.HEAD",
+          "name": "target"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Message | Options of commit</p>",
+          "name": "commitOptions"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": false,
+          "description": "<p>If true, merge should use fast-forward if possible</p>",
+          "name": "commitOptions.fastForward"
+        }
+      ],
+      "see": [
+        "Commit"
+      ],
+      "this": "Branch",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "description": "<p>this</p>"
+        }
+      ],
+      "name": "merge",
+      "longname": "Branch#merge",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000258",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Calcul column\n   *\n   * @this Branch\n   **/",
+      "meta": {
+        "range": [
+          31928,
+          32410
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 971,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100003995",
+          "name": "Branch.prototype.calculColumn",
+          "type": "FunctionExpression",
+          "paramnames": []
+        },
+        "vars": {
+          "candidates": "Branch#calculColumn~candidates",
+          "i": "Branch#calculColumn~i",
+          "branch": "Branch#calculColumn~branch",
+          "candidates[undefined]": "Branch#calculColumn~candidates.undefined]",
+          "this.column": "Branch#column"
+        }
+      },
+      "description": "<p>Calcul column</p>",
+      "this": "Branch",
+      "name": "calculColumn",
+      "longname": "Branch#calculColumn",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000294",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Push a new point to path.\n   * This method will combine duplicate points and reject reversed points.\n   *\n   * @this Branch\n   */",
+      "meta": {
+        "range": [
+          32556,
+          33301
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 996,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100004087",
+          "name": "Branch.prototype.pushPath",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "point"
+          ]
+        },
+        "vars": {
+          "lastPoint": "Branch#pushPath~lastPoint",
+          "lastPoint.type": "Branch#pushPath~lastPoint.type"
+        }
+      },
+      "description": "<p>Push a new point to path.\nThis method will combine duplicate points and reject reversed points.</p>",
+      "this": "Branch",
+      "name": "pushPath",
+      "longname": "Branch#pushPath",
+      "kind": "function",
+      "memberof": "Branch",
+      "scope": "instance",
+      "___id": "T000002R000301",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Commit\n   *\n   * @constructor\n   *\n   * @param {object} options - Commit options\n   * @param {GitGraph} options.parent - GitGraph constructor\n   * @param {number} options.x - Position X (dot)\n   * @param {number} options.y - Position Y (dot)\n   * @param {string} options.color - Master color (dot & message)\n   * @param {boolean} options.arrowDisplay - Add a arrow under commit dot\n   * @param {string} [options.author = this.parent.author] - Author name & email\n   * @param {string} [options.date] - Date of commit, default is now\n   * @param {string} [options.detail] - DOM Element of detail part\n   * @param {string} [options.sha1] - Sha1, default is a random short sha1\n   * @param {Commit} [options.parentCommit] - Parent commit\n   * @param {string} [options.type = (\"mergeCommit\"|null)] - Type of commit\n   *\n   * @param {string} [options.tag] - Tag of the commit\n   * @param {string} [options.tagColor = options.color] - Color of the tag\n   * @param {string} [options.tagFont = this.template.commit.tag.font] - Font of the tag\n   * @param {string} [options.displayTagBox = true] - If true, display a box around the tag\n   *\n   * @param {string} [options.dotColor = options.color] - Specific dot color\n   * @param {number} [options.dotSize = this.template.commit.dot.size] - Dot size\n   * @param {number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width\n   * @param {string} [options.dotStrokeColor = this.template.commit.dot.strokeColor]\n   *\n   * @param {string} [options.message = \"He doesn't like George Michael! Boooo!\"] - Commit message\n   * @param {string} [options.messageColor = options.color] - Specific message color\n   * @param {string} [options.messageFont = this.template.commit.message.font] - Font of the message\n   * @param {boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message display policy\n   * @param {boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy\n   * @param {boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy\n   * @param {boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy\n   *\n   * @param {string} [options.labelColor = options.color] - Specific label color\n   * @param {string} [options.labelFont = this.template.branch.labelFont] - Font used for labels\n   *\n   * @param {boolean} [options.tooltipDisplay = true] - Tooltip message display policy\n   * @param {CommitCallback} [options.onClick] - OnClick event for the commit dot\n   * @param {object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.\n   *\n   * @this Commit\n   **/",
+      "meta": {
+        "range": [
+          36402,
+          38617
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1070,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100004239",
+          "name": "Commit",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "Commit~options",
+          "this.parent": "Commit#parent",
+          "this.template": "Commit#template",
+          "this.context": "Commit#context",
+          "this.branch": "Commit#branch",
+          "this.author": "Commit#author",
+          "this.date": "Commit#date",
+          "this.detail": "Commit#detail",
+          "this.sha1": "Commit#sha1",
+          "this.message": "Commit#message",
+          "this.arrowDisplay": "Commit#arrowDisplay",
+          "this.messageDisplay": "Commit#messageDisplay",
+          "this.messageAuthorDisplay": "Commit#messageAuthorDisplay",
+          "this.messageBranchDisplay": "Commit#messageBranchDisplay",
+          "this.messageHashDisplay": "Commit#messageHashDisplay",
+          "this.messageColor": "Commit#messageColor",
+          "this.messageFont": "Commit#messageFont",
+          "this.dotColor": "Commit#dotColor",
+          "this.dotSize": "Commit#dotSize",
+          "this.dotStrokeWidth": "Commit#dotStrokeWidth",
+          "this.dotStrokeColor": "Commit#dotStrokeColor",
+          "this.type": "Commit#type",
+          "this.tooltipDisplay": "Commit#tooltipDisplay",
+          "this.onClick": "Commit#onClick",
+          "this.representedObject": "Commit#representedObject",
+          "this.parentCommit": "Commit#parentCommit",
+          "this.x": "Commit#x",
+          "this.y": "Commit#y",
+          "this.showLabel": "Commit#showLabel",
+          "this.labelColor": "Commit#labelColor",
+          "this.labelFont": "Commit#labelFont"
+        }
+      },
+      "description": "<p>Commit</p>",
+      "kind": "class",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "<p>Commit options</p>",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "GitGraph"
+            ]
+          },
+          "description": "<p>GitGraph constructor</p>",
+          "name": "options.parent"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "<p>Position X (dot)</p>",
+          "name": "options.x"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "<p>Position Y (dot)</p>",
+          "name": "options.y"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>Master color (dot &amp; message)</p>",
+          "name": "options.color"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "<p>Add a arrow under commit dot</p>",
+          "name": "options.arrowDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.parent.author",
+          "description": "<p>Author name &amp; email</p>",
+          "name": "options.author"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Date of commit, default is now</p>",
+          "name": "options.date"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>DOM Element of detail part</p>",
+          "name": "options.detail"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Sha1, default is a random short sha1</p>",
+          "name": "options.sha1"
+        },
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Parent commit</p>",
+          "name": "options.parentCommit"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "(\"mergeCommit\"|null)",
+          "description": "<p>Type of commit</p>",
+          "name": "options.type"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Tag of the commit</p>",
+          "name": "options.tag"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "options.color",
+          "description": "<p>Color of the tag</p>",
+          "name": "options.tagColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.tag.font",
+          "description": "<p>Font of the tag</p>",
+          "name": "options.tagFont"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": true,
+          "description": "<p>If true, display a box around the tag</p>",
+          "name": "options.displayTagBox"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "options.color",
+          "description": "<p>Specific dot color</p>",
+          "name": "options.dotColor"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.dot.size",
+          "description": "<p>Dot size</p>",
+          "name": "options.dotSize"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.dot.strokeWidth",
+          "description": "<p>Dot stroke width</p>",
+          "name": "options.dotStrokeWidth"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.dot.strokeColor",
+          "name": "options.dotStrokeColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "\"He doesn't like George Michael! Boooo!\"",
+          "description": "<p>Commit message</p>",
+          "name": "options.message"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "options.color",
+          "description": "<p>Specific message color</p>",
+          "name": "options.messageColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.font",
+          "description": "<p>Font of the message</p>",
+          "name": "options.messageFont"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.display",
+          "description": "<p>Commit message display policy</p>",
+          "name": "options.messageDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.displayAuthor",
+          "description": "<p>Commit message author policy</p>",
+          "name": "options.messageAuthorDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.displayBranch",
+          "description": "<p>Commit message author policy</p>",
+          "name": "options.messageBranchDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.commit.message.displayHash",
+          "description": "<p>Commit message hash policy</p>",
+          "name": "options.messageHashDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "options.color",
+          "description": "<p>Specific label color</p>",
+          "name": "options.labelColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "this.template.branch.labelFont",
+          "description": "<p>Font used for labels</p>",
+          "name": "options.labelFont"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": true,
+          "description": "<p>Tooltip message display policy</p>",
+          "name": "options.tooltipDisplay"
+        },
+        {
+          "type": {
+            "names": [
+              "CommitCallback"
+            ]
+          },
+          "optional": true,
+          "description": "<p>OnClick event for the commit dot</p>",
+          "name": "options.onClick"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.</p>",
+          "name": "options.representedObject"
+        }
+      ],
+      "this": "Commit",
+      "name": "Commit",
+      "longname": "Commit",
+      "scope": "global",
+      "___id": "T000002R000304",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Render the commit\n   *\n   * @this Commit\n   **/",
+      "meta": {
+        "range": [
+          38680,
+          42030
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1118,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100004670",
+          "name": "Commit.prototype.render",
+          "type": "FunctionExpression",
+          "paramnames": []
+        },
+        "vars": {
+          "commitOffsetForTags": "Commit#render~commitOffsetForTags",
+          "commitOffsetLeft": "Commit#render~commitOffsetLeft",
+          "yNegativeMargin": "Commit#render~yNegativeMargin",
+          "this.context.fillStyle": "Commit#context.fillStyle",
+          "this.context.strokeStyle": "Commit#context.strokeStyle",
+          "this.context.lineWidth": "Commit#context.lineWidth",
+          "tag": "Commit#render~tag",
+          "this.detail.width": "Commit#detail.width",
+          "this.detail.style.left": "Commit#detail.style.left",
+          "detailOffsetTop": "Commit#render~detailOffsetTop",
+          "detailHorizontalMargin": "Commit#render~detailHorizontalMargin",
+          "clientOffset": "Commit#render~clientOffset",
+          "this.detail.style.top": "Commit#detail.style.top",
+          "message": "Commit#render~message",
+          "this.context.font": "Commit#context.font"
+        }
+      },
+      "description": "<p>Render the commit</p>",
+      "this": "Commit",
+      "name": "render",
+      "longname": "Commit#render",
+      "kind": "function",
+      "memberof": "Commit",
+      "scope": "instance",
+      "___id": "T000002R000336",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Render a arrow before commit\n   *\n   * @this Commit\n   **/",
+      "meta": {
+        "range": [
+          42105,
+          44876
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1225,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100005198",
+          "name": "Commit.prototype.arrow",
+          "type": "FunctionExpression",
+          "value": "Arrow",
+          "paramnames": []
+        },
+        "vars": {
+          "size": "Commit#arrow~size",
+          "color": "Commit#arrow~color",
+          "isReversed": "Commit#arrow~isReversed",
+          "rotate": "Commit#arrow~rotate",
+          "alpha": "Commit#arrow~alpha",
+          "isForkCommit": "Commit#arrow~isForkCommit",
+          "deltaColumn": "Commit#arrow~deltaColumn",
+          "commitSpaceDelta": "Commit#arrow~commitSpaceDelta",
+          "alphaX": "Commit#arrow~alphaX",
+          "isPushedInY": "Commit#arrow~isPushedInY",
+          "isOnSameXThanParent": "Commit#arrow~isOnSameXThanParent",
+          "alphaY": "Commit#arrow~alphaY",
+          "isPushedInX": "Commit#arrow~isPushedInX",
+          "isOnSameYThanParent": "Commit#arrow~isOnSameYThanParent",
+          "delta": "Commit#arrow~delta",
+          "arrowX": "Commit#arrow~arrowX",
+          "arrowY": "Commit#arrow~arrowY",
+          "h": "Commit#arrow~h",
+          "x1": "Commit#arrow~x1",
+          "y1": "Commit#arrow~y1",
+          "x2": "Commit#arrow~x2",
+          "y2": "Commit#arrow~y2",
+          "x3": "Commit#arrow~x3",
+          "y3": "Commit#arrow~y3",
+          "x4": "Commit#arrow~x4",
+          "y4": "Commit#arrow~y4",
+          "this.context.fillStyle": "Commit#context.fillStyle"
+        }
+      },
+      "description": "<p>Render a arrow before commit</p>",
+      "this": "Commit",
+      "name": "arrow",
+      "longname": "Commit#arrow",
+      "kind": "function",
+      "memberof": "Commit",
+      "scope": "instance",
+      "___id": "T000002R000360",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Tag\n   *\n   * @constructor\n   *\n   * @param {Commit} commit - Tagged commit\n   * @param {object} [options] - Tag options\n   * @param {string} [options.color = commit.color] - Specific tag color\n   * @param {string} [options.font = commit.template.commit.tag.font] - Font of the tag\n   * @return {Tag}\n   *\n   * @this Tag\n   * */",
+      "meta": {
+        "range": [
+          45441,
+          46647
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1313,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100005747",
+          "name": "Tag",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "commit",
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "Tag~options",
+          "this.color": "Tag#color",
+          "this.font": "Tag#font",
+          "originalFont": "Tag~originalFont",
+          "commit.context.font": "commit.context.font",
+          "textWidth": "Tag~textWidth",
+          "this.width": "Tag#width",
+          "x": "Tag~x",
+          "y": "Tag~y",
+          "tagColumn": "Tag~tagColumn"
+        }
+      },
+      "description": "<p>Tag</p>",
+      "kind": "class",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "description": "<p>Tagged commit</p>",
+          "name": "commit"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Tag options</p>",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "commit.color",
+          "description": "<p>Specific tag color</p>",
+          "name": "options.color"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "commit.template.commit.tag.font",
+          "description": "<p>Font of the tag</p>",
+          "name": "options.font"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Tag"
+            ]
+          }
+        }
+      ],
+      "this": "Tag",
+      "name": "Tag",
+      "longname": "Tag",
+      "scope": "global",
+      "___id": "T000002R000393",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Template\n   *\n   * @constructor\n   *\n   * @param {object} options - Template options\n   * @param {string[]} [options.colors] - Colors scheme: One color for each column\n   * @param {string} [options.arrow.color] - Arrow color\n   * @param {number} [options.arrow.size] - Arrow size\n   * @param {number} [options.arrow.offset] - Arrow offset\n   * @param {string} [options.branch.color] - Branch color\n   * @param {number} [options.branch.lineWidth] - Branch line width\n   * @param {string} [options.branch.mergeStyle = (\"bezier\"|\"straight\")] - Branch merge style\n   * @param {number} [options.branch.spacingX] - Space between branches\n   * @param {number} [options.branch.spacingY] - Space between branches\n   * @param {number} [options.commit.spacingX] - Space between commits\n   * @param {number} [options.commit.spacingY] - Space between commits\n   * @param {number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width\n   * @param {string} [options.commit.color] - Master commit color (dot & message)\n   * @param {string} [options.commit.dot.color] - Commit dot color\n   * @param {number} [options.commit.dot.size] - Commit dot size\n   * @param {number} [options.commit.dot.strokeWidth] - Commit dot stroke width\n   * @param {string} [options.commit.dot.strokeColor] - Commit dot stroke color\n   * @param {string} [options.commit.message.color] - Commit message color\n   * @param {boolean} [options.commit.message.display] - Commit display policy\n   * @param {boolean} [options.commit.message.displayAuthor] - Commit message author policy\n   * @param {boolean} [options.commit.message.displayBranch] - Commit message branch policy\n   * @param {boolean} [options.commit.message.displayHash] - Commit message hash policy\n   * @param {string} [options.commit.message.font = \"normal 12pt Calibri\"] - Commit message font\n   * @param {boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy\n   * @param {CommitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.\n   *\n   * @this Template\n   **/",
+      "meta": {
+        "range": [
+          48978,
+          52786
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1386,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100005989",
+          "name": "Template",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "options"
+          ]
+        },
+        "vars": {
+          "options": "Template~options",
+          "options.branch": "Template~options.branch",
+          "options.arrow": "Template~options.arrow",
+          "options.commit": "Template~options.commit",
+          "options.commit.dot": "Template~options.commit.dot",
+          "options.commit.tag": "Template~options.commit.tag",
+          "options.commit.message": "Template~options.commit.message",
+          "this.colors": "Template#colors",
+          "this.branch": "Template#branch",
+          "this.branch.color": "Template#branch.color",
+          "this.branch.lineWidth": "Template#branch.lineWidth",
+          "this.branch.lineDash": "Template#branch.lineDash",
+          "this.branch.showLabel": "Template#branch.showLabel",
+          "this.branch.labelColor": "Template#branch.labelColor",
+          "this.branch.labelFont": "Template#branch.labelFont",
+          "this.branch.labelRotation": "Template#branch.labelRotation",
+          "this.branch.mergeStyle": "Template#branch.mergeStyle",
+          "this.branch.spacingX": "Template#branch.spacingX",
+          "this.branch.spacingY": "Template#branch.spacingY",
+          "this.arrow": "Template#arrow",
+          "this.arrow.size": "Template#arrow.size",
+          "this.arrow.color": "Template#arrow.color",
+          "this.arrow.active": "Template#arrow.active",
+          "this.arrow.offset": "Template#arrow.offset",
+          "this.commit": "Template#commit",
+          "this.commit.spacingX": "Template#commit.spacingX",
+          "this.commit.spacingY": "Template#commit.spacingY",
+          "this.commit.widthExtension": "Template#commit.widthExtension",
+          "this.commit.tooltipHTMLFormatter": "Template#commit.tooltipHTMLFormatter",
+          "this.commit.shouldDisplayTooltipsInCompactMode": "Template#commit.shouldDisplayTooltipsInCompactMode",
+          "this.commit.color": "Template#commit.color",
+          "this.commit.dot": "Template#commit.dot",
+          "this.commit.dot.color": "Template#commit.dot.color",
+          "this.commit.dot.size": "Template#commit.dot.size",
+          "this.commit.dot.strokeWidth": "Template#commit.dot.strokeWidth",
+          "this.commit.dot.strokeColor": "Template#commit.dot.strokeColor",
+          "this.commit.tag": "Template#commit.tag",
+          "this.commit.tag.color": "Template#commit.tag.color",
+          "this.commit.tag.font": "Template#commit.tag.font",
+          "this.commit.tag.spacingX": "Template#commit.tag.spacingX",
+          "this.commit.tag.spacingY": "Template#commit.tag.spacingY",
+          "this.commit.message": "Template#commit.message",
+          "this.commit.message.display": "Template#commit.message.display",
+          "this.commit.message.displayAuthor": "Template#commit.message.displayAuthor",
+          "this.commit.message.displayBranch": "Template#commit.message.displayBranch",
+          "this.commit.message.displayHash": "Template#commit.message.displayHash",
+          "this.commit.message.color": "Template#commit.message.color",
+          "this.commit.message.font": "Template#commit.message.font"
+        }
+      },
+      "description": "<p>Template</p>",
+      "kind": "class",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "<p>Template options</p>",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<string>"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Colors scheme: One color for each column</p>",
+          "name": "options.colors"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Arrow color</p>",
+          "name": "options.arrow.color"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Arrow size</p>",
+          "name": "options.arrow.size"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Arrow offset</p>",
+          "name": "options.arrow.offset"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Branch color</p>",
+          "name": "options.branch.color"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Branch line width</p>",
+          "name": "options.branch.lineWidth"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "(\"bezier\"|\"straight\")",
+          "description": "<p>Branch merge style</p>",
+          "name": "options.branch.mergeStyle"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Space between branches</p>",
+          "name": "options.branch.spacingX"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Space between branches</p>",
+          "name": "options.branch.spacingY"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Space between commits</p>",
+          "name": "options.commit.spacingX"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Space between commits</p>",
+          "name": "options.commit.spacingY"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": 0,
+          "description": "<p>Additional width to be added to the calculated width</p>",
+          "name": "options.commit.widthExtension"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Master commit color (dot &amp; message)</p>",
+          "name": "options.commit.color"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit dot color</p>",
+          "name": "options.commit.dot.color"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit dot size</p>",
+          "name": "options.commit.dot.size"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit dot stroke width</p>",
+          "name": "options.commit.dot.strokeWidth"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit dot stroke color</p>",
+          "name": "options.commit.dot.strokeColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit message color</p>",
+          "name": "options.commit.message.color"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit display policy</p>",
+          "name": "options.commit.message.display"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit message author policy</p>",
+          "name": "options.commit.message.displayAuthor"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit message branch policy</p>",
+          "name": "options.commit.message.displayBranch"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Commit message hash policy</p>",
+          "name": "options.commit.message.displayHash"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "\"normal 12pt Calibri\"",
+          "description": "<p>Commit message font</p>",
+          "name": "options.commit.message.font"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Tooltips policy</p>",
+          "name": "options.commit.shouldDisplayTooltipsInCompactMode"
+        },
+        {
+          "type": {
+            "names": [
+              "CommitFormatter"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": true,
+          "description": "<p>Formatter for the tooltip contents.</p>",
+          "name": "options.commit.tooltipHTMLFormatter"
+        }
+      ],
+      "this": "Template",
+      "name": "Template",
+      "longname": "Template",
+      "scope": "global",
+      "___id": "T000002R000409",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Get a default template from library\n   *\n   * @param {string} name - Template name\n   *\n   * @return {Template} [template] - Template if exist\n   **/",
+      "meta": {
+        "range": [
+          52951,
+          54133
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1473,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006707",
+          "name": "Template.prototype.get",
+          "type": "FunctionExpression",
+          "paramnames": [
+            "name"
+          ]
+        },
+        "vars": {
+          "template": "Template#get~template"
+        }
+      },
+      "description": "<p>Get a default template from library</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>Template name</p>",
+          "name": "name"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Template"
+            ]
+          },
+          "description": "<p>[template] - Template if exist</p>"
+        }
+      ],
+      "name": "get",
+      "longname": "Template#get",
+      "kind": "function",
+      "memberof": "Template",
+      "scope": "instance",
+      "___id": "T000002R000458",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns the last element of given array.\n   *\n   * @param {Array} array\n   * @returns {*}\n   * @private */",
+      "meta": {
+        "range": [
+          54479,
+          54540
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1540,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006802",
+          "name": "_getLast",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "array"
+          ]
+        }
+      },
+      "description": "<p>Returns the last element of given array.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Array"
+            ]
+          },
+          "name": "array"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_getLast",
+      "longname": "_getLast",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000490",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Extend given commit with proper attributes for tag from options.\n   *\n   * @param {Commit} commit\n   * @param {object} [options]\n   * @param {string} [options.tag] - Tag of the commit\n   * @param {string} [options.tagColor = commit.messageColor] - Color of the tag\n   * @param {string} [options.tagFont = commit.template.commit.tag.font] - Font of the tag\n   * @param {string} [options.displayTagBox = true] - If true, display a box around the tag\n   * @private\n   */",
+      "meta": {
+        "range": [
+          55024,
+          55329
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1556,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006815",
+          "name": "_assignTagOptionsToCommit",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "commit",
+            "options"
+          ]
+        },
+        "vars": {
+          "commit.tag": "commit.tag",
+          "commit.tagColor": "commit.tagColor",
+          "commit.tagFont": "commit.tagFont",
+          "commit.displayTagBox": "commit.displayTagBox"
+        }
+      },
+      "description": "<p>Extend given commit with proper attributes for tag from options.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          },
+          "name": "commit"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "<p>Tag of the commit</p>",
+          "name": "options.tag"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "commit.messageColor",
+          "description": "<p>Color of the tag</p>",
+          "name": "options.tagColor"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "commit.template.commit.tag.font",
+          "description": "<p>Font of the tag</p>",
+          "name": "options.tagFont"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": true,
+          "description": "<p>If true, display a box around the tag</p>",
+          "name": "options.displayTagBox"
+        }
+      ],
+      "access": "private",
+      "name": "_assignTagOptionsToCommit",
+      "longname": "_assignTagOptionsToCommit",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000491",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns the parent commit of current HEAD from given branch.\n   *\n   * @param {Branch} branch\n   * @returns {Commit}\n   * @private\n   * */",
+      "meta": {
+        "range": [
+          55483,
+          55745
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1570,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006871",
+          "name": "_getParentCommitFromBranch",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "branch"
+          ]
+        }
+      },
+      "description": "<p>Returns the parent commit of current HEAD from given branch.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Branch"
+            ]
+          },
+          "name": "branch"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Commit"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_getParentCommitFromBranch",
+      "longname": "_getParentCommitFromBranch",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000496",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns a copy of the given object.\n   *\n   * @param {object} object\n   * @returns {object}\n   * @private\n   * */",
+      "meta": {
+        "range": [
+          55874,
+          55950
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1587,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006902",
+          "name": "_clone",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "object"
+          ]
+        }
+      },
+      "description": "<p>Returns a copy of the given object.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "name": "object"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_clone",
+      "longname": "_clone",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000497",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns the height of the given font when rendered.\n   *\n   * @param {string} font\n   * @returns {number}\n   * @private\n   */",
+      "meta": {
+        "range": [
+          56091,
+          56495
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1598,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006916",
+          "name": "_getFontHeight",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "font"
+          ]
+        },
+        "vars": {
+          "body": "_getFontHeight~body",
+          "dummy": "_getFontHeight~dummy",
+          "dummyText": "_getFontHeight~dummyText",
+          "fontHeight": "_getFontHeight~fontHeight"
+        }
+      },
+      "description": "<p>Returns the height of the given font when rendered.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "name": "font"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_getFontHeight",
+      "longname": "_getFontHeight",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000498",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns the `booleanOptions` if it's actually a boolean, returns `defaultOptions` otherwise.\n   *\n   * @param {*} booleanOption\n   * @param {boolean} defaultOptions\n   * @returns {boolean}\n   * @private\n   */",
+      "meta": {
+        "range": [
+          56719,
+          56861
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1620,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006983",
+          "name": "_booleanOptionOr",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "booleanOption",
+            "defaultOption"
+          ]
+        }
+      },
+      "description": "<p>Returns the <code>booleanOptions</code> if it's actually a boolean, returns <code>defaultOptions</code> otherwise.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "name": "booleanOption"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "name": "defaultOptions"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_booleanOptionOr",
+      "longname": "_booleanOptionOr",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000503",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Draw text background.\n   *\n   * @param {CanvasRenderingContext2D} context - Canvas 2D context in which to render text.\n   * @param {number} x - Horizontal offset of the text.\n   * @param {number} y - Vertical offset of the text.\n   * @param {string} text - Text content.\n   * @param {string} color - Text Colors.\n   * @param {string} font - Text font.\n   * @param {number} angle - Angle of the text for rotation.\n   * @param {boolean} useStroke - Name of the triggered event.\n   * @private\n   */",
+      "meta": {
+        "range": [
+          57372,
+          58121
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1637,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100006996",
+          "name": "_drawTextBG",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "context",
+            "x",
+            "y",
+            "text",
+            "color",
+            "font",
+            "angle",
+            "useStroke"
+          ]
+        },
+        "vars": {
+          "context.textAlign": "context.textAlign",
+          "context.font": "context.font",
+          "width": "_drawTextBG~width",
+          "height": "_drawTextBG~height",
+          "context.fillStyle": "context.fillStyle",
+          "context.lineWidth": "context.lineWidth",
+          "context.strokeStyle": "context.strokeStyle"
+        }
+      },
+      "description": "<p>Draw text background.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "CanvasRenderingContext2D"
+            ]
+          },
+          "description": "<p>Canvas 2D context in which to render text.</p>",
+          "name": "context"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "<p>Horizontal offset of the text.</p>",
+          "name": "x"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "<p>Vertical offset of the text.</p>",
+          "name": "y"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>Text content.</p>",
+          "name": "text"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>Text Colors.</p>",
+          "name": "color"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>Text font.</p>",
+          "name": "font"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "<p>Angle of the text for rotation.</p>",
+          "name": "angle"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "<p>Name of the triggered event.</p>",
+          "name": "useStroke"
+        }
+      ],
+      "access": "private",
+      "name": "_drawTextBG",
+      "longname": "_drawTextBG",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000504",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Emit an event on the given element.\n   *\n   * @param {HTMLElement} element - DOM element to trigger the event on.\n   * @param {string} eventName - Name of the triggered event.\n   * @param {object} [data = {}] - Custom data to attach to the event.\n   * @private\n   */",
+      "meta": {
+        "range": [
+          58403,
+          58903
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1673,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100007146",
+          "name": "_emitEvent",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "element",
+            "eventName",
+            "data"
+          ]
+        },
+        "vars": {
+          "event": "_emitEvent~event",
+          "event.eventType": "_emitEvent~event.eventType",
+          "event.eventName": "_emitEvent~event.eventName",
+          "event.data": "_emitEvent~event.data"
+        }
+      },
+      "description": "<p>Emit an event on the given element.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "HTMLElement"
+            ]
+          },
+          "description": "<p>DOM element to trigger the event on.</p>",
+          "name": "element"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>Name of the triggered event.</p>",
+          "name": "eventName"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "{}",
+          "description": "<p>Custom data to attach to the event.</p>",
+          "name": "data"
+        }
+      ],
+      "access": "private",
+      "name": "_emitEvent",
+      "longname": "_emitEvent",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000514",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns the scaling factor of given canvas `context`.\n   * Handles high-resolution displays.\n   *\n   * @param {object} context\n   * @returns {number}\n   * @private\n   */",
+      "meta": {
+        "range": [
+          59088,
+          59635
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1702,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100007227",
+          "name": "_getScale",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "context"
+          ]
+        },
+        "vars": {
+          "backingStorePixelRatio": "_getScale~backingStorePixelRatio",
+          "scalingFactor": "_getScale~scalingFactor"
+        }
+      },
+      "description": "<p>Returns the scaling factor of given canvas <code>context</code>.\nHandles high-resolution displays.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "name": "context"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_getScale",
+      "longname": "_getScale",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000521",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns `true` if `graph` has a vertical orientation.\n   *\n   * @param {GitGraph} graph\n   * @returns {boolean}\n   * @private\n   */",
+      "meta": {
+        "range": [
+          59782,
+          59906
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1729,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100007280",
+          "name": "_isVertical",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "graph"
+          ]
+        }
+      },
+      "description": "<p>Returns <code>true</code> if <code>graph</code> has a vertical orientation.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "GitGraph"
+            ]
+          },
+          "name": "graph"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_isVertical",
+      "longname": "_isVertical",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000527",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns `true` if `graph` has an horizontal orientation.\n   *\n   * @param {GitGraph} graph\n   * @returns {boolean}\n   * @private\n   */",
+      "meta": {
+        "range": [
+          60056,
+          60186
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1740,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100007296",
+          "name": "_isHorizontal",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "graph"
+          ]
+        }
+      },
+      "description": "<p>Returns <code>true</code> if <code>graph</code> has an horizontal orientation.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "GitGraph"
+            ]
+          },
+          "name": "graph"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_isHorizontal",
+      "longname": "_isHorizontal",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000528",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns `true` if `object` is an object.\n   *\n   * @param {*} object\n   * @returns {boolean}\n   * @private\n   */",
+      "meta": {
+        "range": [
+          60314,
+          60387
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1751,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100007312",
+          "name": "_isObject",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "object"
+          ]
+        }
+      },
+      "description": "<p>Returns <code>true</code> if <code>object</code> is an object.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "name": "object"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          }
+        }
+      ],
+      "access": "private",
+      "name": "_isObject",
+      "longname": "_isObject",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000529",
+      "___s": true
+    },
+    {
+      "comment": "/**\n   * Returns `true` if any of the properties (nested or single) of `obj` specified by `key` are undefined or set to a value of null.\n   * Modified from original source: http://stackoverflow.com/a/23809123.\n   *\n   * @param {*} obj - The object whose properties are to be tested as being undefined or equal to null.\n   * @param {string} key - The property hierarchy of `obj` to be tested, specified using 'dot notation' (e.g. property1.property2.property3 etc).\n   * @returns {boolean} - True if ANY of the properties specified by `key` is undefined or equal to null, otherwise False.\n   * @private\n   */",
+      "meta": {
+        "range": [
+          61001,
+          61626
+        ],
+        "filename": "gitgraph.js",
+        "lineno": 1764,
+        "path": "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src",
+        "code": {
+          "id": "astnode100007321",
+          "name": "_isNullOrUndefined",
+          "type": "FunctionDeclaration",
+          "paramnames": [
+            "obj",
+            "key"
+          ]
+        },
+        "vars": {
+          "": null
+        }
+      },
+      "description": "<p>Returns <code>true</code> if any of the properties (nested or single) of <code>obj</code> specified by <code>key</code> are undefined or set to a value of null.\nModified from original source: http://stackoverflow.com/a/23809123.</p>",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "<p>The object whose properties are to be tested as being undefined or equal to null.</p>",
+          "name": "obj"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "<p>The property hierarchy of <code>obj</code> to be tested, specified using 'dot notation' (e.g. property1.property2.property3 etc).</p>",
+          "name": "key"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "<ul>\n<li>True if ANY of the properties specified by <code>key</code> is undefined or equal to null, otherwise False.</li>\n</ul>"
+        }
+      ],
+      "access": "private",
+      "name": "_isNullOrUndefined",
+      "longname": "_isNullOrUndefined",
+      "kind": "function",
+      "scope": "global",
+      "___id": "T000002R000530",
+      "___s": true
+    },
+    {
+      "kind": "package",
+      "longname": "package:undefined",
+      "files": [
+        "D:\\Projets\\gitgraph.js\\dist\\jsdoc\\src\\gitgraph.js"
+      ],
+      "___id": "T000002R000546",
+      "___s": true
+    }
+  ]
+}

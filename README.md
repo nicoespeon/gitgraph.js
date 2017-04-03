@@ -48,7 +48,6 @@ Grunt commands.
 
 From the command line:
 
-- Install `grunt-cli` globally with `npm install -g grunt-cli`.
 - Install [the necessary local dependencies][] with `npm install`.
 [the necessary local dependencies]: https://github.com/nicoespeon/gitgraph.js/blob/master/package.json
 
@@ -57,30 +56,34 @@ the command line.
 
 [> Need more information about how to get started with Grunt?](http://gruntjs.com/getting-started)
 
-### Available Grunt commands
+### Available commands
 
-#### test code - `grunt test`
+#### test code - `npm test`
 
 Check source code against [JSHint][] then runs unit tests with [Jasmine][].
 [JSHint]: http://www.jshint.com/
 [Jasmine]: https://jasmine.github.io/
 
-#### generate documentation - `grunt doc`
+#### generate documentation - `npm run doc`
 
 Generate source code documentation into `dist/docs/` (not versioned) with
 [JSDoc](http://usejsdoc.org/).
 
-#### compile a non-versioned release - `grunt dist`
+#### generate TypeScript Definition - `npm run tsd`
+
+Generate TypeScript Definition into `dist/gitgraph.d.ts` (not versioned).
+
+#### compile a non-versioned release - `npm run dist`
 
 Clean `dist/` directory, lint code, output the minified release into
 `dist/gitgraph.min.js` and generate the documentation into `dist/docs/`.
 
-#### compile a new release - `grunt release`
+#### compile a new release - `npm run release`
 
 Lint code, output the source and minified releases into `build/` and generate
 the official documentation into `docs/`.
 
-#### open a live reload server - `grunt server`
+#### open a live reload server - `npm start`
 
 For a better code experience, this grunt task opens a live server in your
 favorite browser. This server is automatically reloaded when you save a project

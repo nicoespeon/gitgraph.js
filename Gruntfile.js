@@ -1,3 +1,6 @@
+var fs = require("fs");
+var tsfmt = require("typescript-formatter");
+
 // This file defines grunt tasks used by [Grunt.js](http://gruntjs.com/sample-gruntfile)
 module.exports = function ( grunt ) {
 
@@ -25,6 +28,8 @@ module.exports = function ( grunt ) {
       options: {force: true},
       dist: [ "dist/" ],
       jsdoc: [ "dist/jsdoc/" ],
+      jsdocjson: [ "dist/doc.json" ],
+      tsd: [ "dist/gitgraph.d.ts" ],
       release: [ "build/", "docs/" ]
     },
 
@@ -41,6 +46,10 @@ module.exports = function ( grunt ) {
       release: {
         src: [ "src/gitgraph.js" ],
         dest: "build/gitgraph.js"
+      },
+      tsd: {
+        src: [ "dist/gitgraph.d.ts" ],
+        dest: "dist/gitgraph.d.ts"
       }
     },
 
@@ -89,6 +98,14 @@ module.exports = function ( grunt ) {
         options: {
           configure: ".jsdocrc",
           destination: "dist/docs"
+        }
+      },
+      json: {
+        src: [ "dist/jsdoc/src/*.js", "README.md" ],
+        options: {
+          configure: ".jsdocrc",
+          destination: "dist/doc.json",
+          template: "./node_modules/jsdoc-json"
         }
       },
       release: {
@@ -190,12 +207,46 @@ module.exports = function ( grunt ) {
   // `grunt lint` will check code by running JSHint and unit tests over it.
   grunt.registerTask( "test", [ "jshint", "jasmine" ] );
 
-  // `grunt docs` will create non-versioned documentation for development use.
+  // `grunt doc` will create non-versioned documentation for development use.
   grunt.registerTask( "doc", [
     "string-replace:jsdoc",
     "jsdoc:dist",
     "clean:jsdoc"
   ] );
+
+  // `grunt doc:json` will create non-versioned documentation for development use.
+  grunt.registerTask( "doc:json", [
+    "string-replace:jsdoc",
+    "jsdoc:json",
+    "clean:jsdoc"
+  ] );
+
+  // `grunt parse:tsd` will parse /dist/doc.json to /dist/gitgraph.d.ts
+  grunt.registerTask( "parse:tsd", function (dest) {
+    const done = this.async();
+    const data = JSON.parse(fs.readFileSync("./dist/doc.json"));
+    const fileContent = require("./scripts/json2tsd")(data).generate();
+    fs.writeFile(`./${dest}/gitgraph.d.ts`, fileContent, () => {
+      tsfmt.processFiles([`./${dest}/gitgraph.d.ts`],{
+        replace: true
+      }).then(done);
+    });
+  });
+
+  // `grunt tsd` will generate /dist/gitgraph.d.ts
+  grunt.registerTask( "tsd", [
+    "doc:json",
+    "parse:tsd:dist",
+    "concat:tsd",
+    "clean:jsdocjson"
+  ]);
+
+  // `grunt tsd:release` will generate /build/gitgraph.d.ts
+  grunt.registerTask( "tsd:release", [
+    "doc:json",
+    "parse:tsd:build",
+    "clean:jsdocjson"
+  ]);
 
   // `grunt dist` will create a non-versioned new release for development use.
   grunt.registerTask( "dist", [
@@ -204,7 +255,8 @@ module.exports = function ( grunt ) {
     "copy:dist",
     "concat:dist",
     "uglify:dist",
-    "doc"
+    "doc",
+    "tsd"
   ] );
 
   // `grunt release` will create a new release of the source code.
@@ -216,7 +268,8 @@ module.exports = function ( grunt ) {
     "uglify:release",
     "string-replace:jsdoc",
     "jsdoc:release",
-    "clean:jsdoc"
+    "clean:jsdoc",
+    "tsd:release"
   ] );
 
   // `grunt server` will open a live reload server in your favorite browser.
