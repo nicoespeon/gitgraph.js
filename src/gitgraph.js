@@ -6,16 +6,16 @@
    *
    * @constructor
    *
-   * @param {Object} options - GitGraph options
-   * @param {String} [options.elementId = "gitGraph"] - Id of the canvas container
-   * @param {Template|String|Object} [options.template] - Template of the graph
-   * @param {String} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
-   * @param {String} [options.mode = (null|"compact")]  - Display mode
+   * @param {object} [options] - GitGraph options
+   * @param {string} [options.elementId = "gitGraph"] - Id of the canvas container
+   * @param {Template|string|object} [options.template] - Template of the graph
+   * @param {string} [options.author = "Sergio Flores <saxo-guy@epic.com>"] - Default author for commits
+   * @param {string} [options.mode = (null|"compact")]  - Display mode
    * @param {HTMLElement} [options.canvas] - DOM canvas (ex: document.getElementById("id"))
-   * @param {String} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
-   * @param {Boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
-   * @param {Number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
-   * @param {Number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.
+   * @param {string} [options.orientation = ("vertical-reverse"|"horizontal"|"horizontal-reverse")] - Graph orientation
+   * @param {boolean} [options.reverseArrow = false] - Make arrows point to ancestors if true
+   * @param {number} [options.initCommitOffsetX = 0] - Add custom offsetX to initial commit.
+   * @param {number} [options.initCommitOffsetY = 0] - Add custom offsetY to initial commit.
    * @param {HTMLElement} [options.tooltipContainer = document.body] - HTML Element containing tooltips in compact mode.
    *
    * @this GitGraph
@@ -139,7 +139,7 @@
   /**
    * Create new branch
    *
-   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @param {(string|object)} options - Branch name | Options of Branch
    *
    * @see Branch
    * @this GitGraph
@@ -169,7 +169,7 @@
   /**
    * Create new orphan branch
    *
-   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @param {(string|object)} options - Branch name | Options of Branch
    *
    * @see Branch
    * @this GitGraph
@@ -198,7 +198,7 @@
   /**
    * Commit on HEAD
    *
-   * @param {Object} options - Options of commit
+   * @param {(string|BranchCommitOptions)} options - Message | Options of commit
    *
    * @see Commit
    * @this GitGraph
@@ -215,7 +215,7 @@
   /**
    * Tag the HEAD
    *
-   * @param {Object} options - Options of tag
+   * @param {object} options - Options of tag
    *
    * @see Tag
    * @this GitGraph
@@ -232,7 +232,10 @@
   /**
    * Create a new template
    *
-   * @param {(String|Object)} options - The template name, or the template options
+   * @param {(string|object)} options - The template name, or the template options
+   *
+   * @see Template
+   * @this GitGraph
    *
    * @return {Template}
    **/
@@ -254,11 +257,11 @@
     // Resize canvas
     var unscaledResolution = {
       x: Math.abs((this.columnMax + 1) * this.template.branch.spacingX) +
-        Math.abs(this.commitOffsetX) +
-        this.marginX * 2,
+      Math.abs(this.commitOffsetX) +
+      this.marginX * 2,
       y: Math.abs((this.columnMax + 1) * this.template.branch.spacingY) +
-        Math.abs(this.commitOffsetY) +
-        this.marginY * 2
+      Math.abs(this.commitOffsetY) +
+      this.marginY * 2
     };
 
     if (this.template.commit.message.display) {
@@ -310,16 +313,16 @@
   /**
    * A callback for each commit
    *
-   * @callback commitCallback
+   * @callback CommitCallback
    * @param {Commit} commit - A commit
-   * @param {Boolean} mouseOver - True, if the mouse is currently hovering over the commit
+   * @param {boolean} mouseOver - True, if the mouse is currently hovering over the commit
    * @param {Event} event - The DOM event (e.g. a click event)
    */
 
   /**
    * A formatter for commit
    *
-   * @callback commitFormatter
+   * @callback CommitFormatter
    * @param {Commit} commit - The commit to format
    */
 
@@ -327,7 +330,7 @@
    * Hover event on commit dot
    *
    * @param {MouseEvent} event - Mouse event
-   * @param {commitCallback} callbackFn - A callback function that will be called for each commit
+   * @param {CommitCallback} callbackFn - A callback function that will be called for each commit
    *
    * @this GitGraph
    **/
@@ -454,12 +457,12 @@
    *
    * @constructor
    *
-   * @param {Object} options - Options of branch
+   * @param {object} options - Options of branch
    * @param {GitGraph} options.parent - GitGraph constructor
    * @param {Branch} [options.parentBranch = options.parentCommit.branch] - Parent branch
    * @param {Commit} [options.parentCommit = _getLast(options.parentBranch.commits)] - Parent commit
-   * @param {String} [options.name = "no-name"] - Branch name
-   * @param {Object} [options.commitDefaultOptions = {}] - Default options for commits
+   * @param {string} [options.name = "no-name"] - Branch name
+   * @param {object} [options.commitDefaultOptions = {}] - Default options for commits
    *
    * @this Branch
    **/
@@ -546,7 +549,7 @@
   /**
    * Create new branch
    *
-   * @param {(String | Object)} options - Branch name | Options of Branch
+   * @param {(string|object)} options - Branch name | Options of Branch
    *
    * @see Branch
    * @this Branch
@@ -618,10 +621,48 @@
   };
 
   /**
+   * Branch commit options
+   * 
+   * @typedef {object} BranchCommitOptions
+   * 
+   * @property {string} [color] - Master color (dot & message)
+   * @property {string} [author = this.parent.author] - Author name & email
+   * @property {string} [date] - Date of commit, default is now
+   * @property {string} [detail] - DOM Element of detail part
+   * @property {string} [sha1] - Sha1, default is a random short sha1
+   * @property {Commit} [parentCommit] - Parent commit
+   * @property {string} [type = ("mergeCommit"|null)] - Type of commit
+   *
+   * @property {string} [tag] - Tag of the commit
+   * @property {string} [tagColor = color] - Color of the tag
+   * @property {string} [tagFont = this.template.commit.tag.font] - Font of the tag
+   * @property {string} [displayTagBox = true] - If true, display a box around the tag
+   *
+   * @property {string} [dotColor = color] - Specific dot color
+   * @property {number} [dotSize = this.template.commit.dot.size] - Dot size
+   * @property {number} [dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
+   * @property {string} [dotStrokeColor = this.template.commit.dot.strokeColor]
+   *
+   * @property {string} [message = "He doesn't like George Michael! Boooo!"] - Commit message
+   * @property {string} [messageColor = color] - Specific message color
+   * @property {string} [messageFont = this.template.commit.message.font] - Font of the message
+   * @property {boolean} [messageDisplay = this.template.commit.message.display] - Commit message display policy
+   * @property {boolean} [messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
+   * @property {boolean} [messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
+   * @property {boolean} [messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
+   *
+   * @property {string} [labelColor = color] - Specific label color
+   * @property {string} [labelFont = this.template.branch.labelFont] - Font used for labels
+   *
+   * @property {boolean} [tooltipDisplay = true] - Tooltip message display policy
+   * @property {CommitCallback} [onClick] - OnClick event for the commit dot
+   * @property {object} [representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
+   **/
+  /**
    * Add a commit
    *
-   * @param {(String | Object)} [options] - Message | Options of commit
-   * @param {String} [options.detailId] - Id of detail DOM Element
+   * @param {(string|BranchCommitOptions)} [options] - Message | Options of commit
+   * @param {string} [options.detailId] - Id of detail DOM Element
    *
    * @see Commit
    *
@@ -771,11 +812,11 @@
   /**
    * Tag the last commit of the branch.
    *
-   * @param {(String | Object)} [options] - Message | Options of the tag
-   * @param {String} [options.tag] - Message of the tag
-   * @param {String} [options.tagColor] - Color of the tag
-   * @param {String} [options.tagFont] - Font of the tag
-   * @param {Boolean} [options.displayTagBox] - If true, display a box around the tag
+   * @param {(string|object)} [options] - Message | Options of the tag
+   * @param {string} [options.tag] - Message of the tag
+   * @param {string} [options.tagColor] - Color of the tag
+   * @param {string} [options.tagFont] - Font of the tag
+   * @param {boolean} [options.displayTagBox] - If true, display a box around the tag
    *
    * @see Tag
    *
@@ -788,7 +829,7 @@
       };
     }
 
-    options = _isObject(options) ?  options :  {};
+    options = _isObject(options) ? options : {};
 
     var lastCommit = _getLast(this.commits);
     if (_isObject(lastCommit)) {
@@ -822,9 +863,10 @@
    * Merge branch
    *
    * @param {Branch} [target = this.parent.HEAD]
-   * @param {(String | Object)} [commitOptions] - Message | Options of commit
-   * @param {Boolean} [commitOptions.fastForward = false] - If true, merge should use fast-forward if possible
+   * @param {(string|object)} [commitOptions] - Message | Options of commit
+   * @param {boolean} [commitOptions.fastForward = false] - If true, merge should use fast-forward if possible
    *
+   * @see Commit
    * @this Branch
    *
    * @return {Branch} this
@@ -860,7 +902,7 @@
     var targetBranchParentCommit = _getParentCommitFromBranch(targetBranch);
     var isFastForwardPossible = (branchParentCommit && branchParentCommit.sha1 === targetBranchParentCommit.sha1);
     if (commitOptions.fastForward && isFastForwardPossible) {
-      var isGraphHorizontal  = _isHorizontal(this.parent);
+      var isGraphHorizontal = _isHorizontal(this.parent);
       this.color = targetBranch.color;
 
       // Make branch path follow target branch ones
@@ -938,7 +980,7 @@
     }
 
     this.column = 0;
-    for (;; this.column++) {
+    for (; ; this.column++) {
       if (!(this.column in candidates) || candidates[this.column] === 0) {
         break;
       }
@@ -985,43 +1027,43 @@
    *
    * @constructor
    *
-   * @param {Object} options - Commit options
+   * @param {object} options - Commit options
    * @param {GitGraph} options.parent - GitGraph constructor
-   * @param {Number} options.x - Position X (dot)
-   * @param {Number} options.y - Position Y (dot)
-   * @param {String} options.color - Master color (dot & message)
-   * @param {Boolean} options.arrowDisplay - Add a arrow under commit dot
-   * @param {String} [options.author = this.parent.author] - Author name & email
-   * @param {String} [options.date] - Date of commit, default is now
-   * @param {String} [options.detail] - DOM Element of detail part
-   * @param {String} [options.sha1] - Sha1, default is a random short sha1
+   * @param {number} options.x - Position X (dot)
+   * @param {number} options.y - Position Y (dot)
+   * @param {string} options.color - Master color (dot & message)
+   * @param {boolean} options.arrowDisplay - Add a arrow under commit dot
+   * @param {string} [options.author = this.parent.author] - Author name & email
+   * @param {string} [options.date] - Date of commit, default is now
+   * @param {string} [options.detail] - DOM Element of detail part
+   * @param {string} [options.sha1] - Sha1, default is a random short sha1
    * @param {Commit} [options.parentCommit] - Parent commit
-   * @param {String} [options.type = ("mergeCommit"|null)] - Type of commit
+   * @param {string} [options.type = ("mergeCommit"|null)] - Type of commit
    *
-   * @param {String} [options.tag] - Tag of the commit
-   * @param {String} [options.tagColor = options.color] - Color of the tag
-   * @param {String} [options.tagFont = this.template.commit.tag.font] - Font of the tag
-   * @param {String} [options.displayTagBox = true] - If true, display a box around the tag
+   * @param {string} [options.tag] - Tag of the commit
+   * @param {string} [options.tagColor = options.color] - Color of the tag
+   * @param {string} [options.tagFont = this.template.commit.tag.font] - Font of the tag
+   * @param {string} [options.displayTagBox = true] - If true, display a box around the tag
    *
-   * @param {String} [options.dotColor = options.color] - Specific dot color
-   * @param {Number} [options.dotSize = this.template.commit.dot.size] - Dot size
-   * @param {Number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
-   * @param {Number} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
+   * @param {string} [options.dotColor = options.color] - Specific dot color
+   * @param {number} [options.dotSize = this.template.commit.dot.size] - Dot size
+   * @param {number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
+   * @param {string} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
    *
-   * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
-   * @param {String} [options.messageColor = options.color] - Specific message color
-   * @param {String} [options.messageFont = this.template.commit.message.font] - Font of the message
-   * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message display policy
-   * @param {Boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
-   * @param {Boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
-   * @param {Boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
+   * @param {string} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
+   * @param {string} [options.messageColor = options.color] - Specific message color
+   * @param {string} [options.messageFont = this.template.commit.message.font] - Font of the message
+   * @param {boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message display policy
+   * @param {boolean} [options.messageAuthorDisplay = this.template.commit.message.displayAuthor] - Commit message author policy
+   * @param {boolean} [options.messageBranchDisplay = this.template.commit.message.displayBranch] - Commit message author policy
+   * @param {boolean} [options.messageHashDisplay = this.template.commit.message.displayHash] - Commit message hash policy
    *
-   * @param {String} [options.labelColor = options.color] - Specific label color
-   * @param {String} [options.labelFont = this.template.branch.labelFont] - Font used for labels
+   * @param {string} [options.labelColor = options.color] - Specific label color
+   * @param {string} [options.labelFont = this.template.branch.labelFont] - Font used for labels
    *
-   * @param {Boolean} [options.tooltipDisplay = true] - Tooltip message display policy
-   * @param {commitCallback} [options.onClick] - OnClick event for the commit dot
-   * @param {Object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
+   * @param {boolean} [options.tooltipDisplay = true] - Tooltip message display policy
+   * @param {CommitCallback} [options.onClick] - OnClick event for the commit dot
+   * @param {object} [options.representedObject] - Any object which is related to this commit. Can be used in onClick or the formatter. Useful to bind the commit to external objects such as database id etc.
    *
    * @this Commit
    **/
@@ -1261,9 +1303,9 @@
    * @constructor
    *
    * @param {Commit} commit - Tagged commit
-   * @param {Object} [options] - Tag options
-   * @param {String} [options.color = commit.color] - Specific tag color
-   * @param {String} [options.font = commit.template.commit.tag.font] - Font of the tag
+   * @param {object} [options] - Tag options
+   * @param {string} [options.color = commit.color] - Specific tag color
+   * @param {string} [options.font = commit.template.commit.tag.font] - Font of the tag
    * @return {Tag}
    *
    * @this Tag
@@ -1312,32 +1354,32 @@
    *
    * @constructor
    *
-   * @param {Object} options - Template options
-   * @param {Array} [options.colors] - Colors scheme: One color for each column
-   * @param {String} [options.arrow.color] - Arrow color
-   * @param {Number} [options.arrow.size] - Arrow size
-   * @param {Number} [options.arrow.offset] - Arrow offset
-   * @param {String} [options.branch.color] - Branch color
-   * @param {Number} [options.branch.lineWidth] - Branch line width
-   * @param {String} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
-   * @param {Number} [options.branch.spacingX] - Space between branches
-   * @param {Number} [options.branch.spacingY] - Space between branches
-   * @param {Number} [options.commit.spacingX] - Space between commits
-   * @param {Number} [options.commit.spacingY] - Space between commits
-   * @param {Number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
-   * @param {String} [options.commit.color] - Master commit color (dot & message)
-   * @param {String} [options.commit.dot.color] - Commit dot color
-   * @param {Number} [options.commit.dot.size] - Commit dot size
-   * @param {Number} [options.commit.dot.strokeWidth] - Commit dot stroke width
-   * @param {Number} [options.commit.dot.strokeColor] - Commit dot stroke color
-   * @param {String} [options.commit.message.color] - Commit message color
-   * @param {Boolean} [options.commit.message.display] - Commit display policy
-   * @param {Boolean} [options.commit.message.displayAuthor] - Commit message author policy
-   * @param {Boolean} [options.commit.message.displayBranch] - Commit message branch policy
-   * @param {Boolean} [options.commit.message.displayHash] - Commit message hash policy
-   * @param {String} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
-   * @param {Boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
-   * @param {commitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.
+   * @param {object} options - Template options
+   * @param {string[]} [options.colors] - Colors scheme: One color for each column
+   * @param {string} [options.arrow.color] - Arrow color
+   * @param {number} [options.arrow.size] - Arrow size
+   * @param {number} [options.arrow.offset] - Arrow offset
+   * @param {string} [options.branch.color] - Branch color
+   * @param {number} [options.branch.lineWidth] - Branch line width
+   * @param {string} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
+   * @param {number} [options.branch.spacingX] - Space between branches
+   * @param {number} [options.branch.spacingY] - Space between branches
+   * @param {number} [options.commit.spacingX] - Space between commits
+   * @param {number} [options.commit.spacingY] - Space between commits
+   * @param {number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
+   * @param {string} [options.commit.color] - Master commit color (dot & message)
+   * @param {string} [options.commit.dot.color] - Commit dot color
+   * @param {number} [options.commit.dot.size] - Commit dot size
+   * @param {number} [options.commit.dot.strokeWidth] - Commit dot stroke width
+   * @param {string} [options.commit.dot.strokeColor] - Commit dot stroke color
+   * @param {string} [options.commit.message.color] - Commit message color
+   * @param {boolean} [options.commit.message.display] - Commit display policy
+   * @param {boolean} [options.commit.message.displayAuthor] - Commit message author policy
+   * @param {boolean} [options.commit.message.displayBranch] - Commit message branch policy
+   * @param {boolean} [options.commit.message.displayHash] - Commit message hash policy
+   * @param {string} [options.commit.message.font = "normal 12pt Calibri"] - Commit message font
+   * @param {boolean} [options.commit.shouldDisplayTooltipsInCompactMode] - Tooltips policy
+   * @param {CommitFormatter} [options.commit.tooltipHTMLFormatter = true] - Formatter for the tooltip contents.
    *
    * @this Template
    **/
@@ -1424,7 +1466,7 @@
   /**
    * Get a default template from library
    *
-   * @param {String} name - Template name
+   * @param {string} name - Template name
    *
    * @return {Template} [template] - Template if exist
    **/
@@ -1460,7 +1502,7 @@
         break;
 
       case "metro":
-        /* falls through */
+      /* falls through */
       default:
         template = {
           colors: ["#979797", "#008fb5", "#f1c109"],
@@ -1504,11 +1546,11 @@
    * Extend given commit with proper attributes for tag from options.
    *
    * @param {Commit} commit
-   * @param {Object} [options]
-   * @param {String} [options.tag] - Tag of the commit
-   * @param {String} [options.tagColor = commit.messageColor] - Color of the tag
-   * @param {String} [options.tagFont = commit.template.commit.tag.font] - Font of the tag
-   * @param {String} [options.displayTagBox = true] - If true, display a box around the tag
+   * @param {object} [options]
+   * @param {string} [options.tag] - Tag of the commit
+   * @param {string} [options.tagColor = commit.messageColor] - Color of the tag
+   * @param {string} [options.tagFont = commit.template.commit.tag.font] - Font of the tag
+   * @param {string} [options.displayTagBox = true] - If true, display a box around the tag
    * @private
    */
   function _assignTagOptionsToCommit(commit, options) {
@@ -1538,8 +1580,8 @@
   /**
    * Returns a copy of the given object.
    *
-   * @param {Object} object
-   * @returns {Object}
+   * @param {object} object
+   * @returns {object}
    * @private
    * */
   function _clone(object) {
@@ -1549,8 +1591,8 @@
   /**
    * Returns the height of the given font when rendered.
    *
-   * @param {String} font
-   * @returns {Number}
+   * @param {string} font
+   * @returns {number}
    * @private
    */
   function _getFontHeight(font) {
@@ -1571,8 +1613,8 @@
    * Returns the `booleanOptions` if it's actually a boolean, returns `defaultOptions` otherwise.
    *
    * @param {*} booleanOption
-   * @param {Boolean} defaultOptions
-   * @returns {Boolean}
+   * @param {boolean} defaultOptions
+   * @returns {boolean}
    * @private
    */
   function _booleanOptionOr(booleanOption, defaultOption) {
@@ -1583,13 +1625,13 @@
    * Draw text background.
    *
    * @param {CanvasRenderingContext2D} context - Canvas 2D context in which to render text.
-   * @param {Number} x - Horizontal offset of the text.
-   * @param {Number} y - Vertical offset of the text.
-   * @param {String} text - Text content.
-   * @param {String} color - Text Colors.
-   * @param {String} font - Text font.
-   * @param {Number} angle - Angle of the text for rotation.
-   * @param {Boolean} useStroke - Name of the triggered event.
+   * @param {number} x - Horizontal offset of the text.
+   * @param {number} y - Vertical offset of the text.
+   * @param {string} text - Text content.
+   * @param {string} color - Text Colors.
+   * @param {string} font - Text font.
+   * @param {number} angle - Angle of the text for rotation.
+   * @param {boolean} useStroke - Name of the triggered event.
    * @private
    */
   function _drawTextBG(context, x, y, text, color, font, angle, useStroke) {
@@ -1624,8 +1666,8 @@
    * Emit an event on the given element.
    *
    * @param {HTMLElement} element - DOM element to trigger the event on.
-   * @param {String} eventName - Name of the triggered event.
-   * @param {Object} [data = {}] - Custom data to attach to the event.
+   * @param {string} eventName - Name of the triggered event.
+   * @param {object} [data = {}] - Custom data to attach to the event.
    * @private
    */
   function _emitEvent(element, eventName, data) {
@@ -1653,8 +1695,8 @@
    * Returns the scaling factor of given canvas `context`.
    * Handles high-resolution displays.
    *
-   * @param {Object} context
-   * @returns {Number}
+   * @param {object} context
+   * @returns {number}
    * @private
    */
   function _getScale(context) {
@@ -1681,7 +1723,7 @@
    * Returns `true` if `graph` has a vertical orientation.
    *
    * @param {GitGraph} graph
-   * @returns {Boolean}
+   * @returns {boolean}
    * @private
    */
   function _isVertical(graph) {
@@ -1692,7 +1734,7 @@
    * Returns `true` if `graph` has an horizontal orientation.
    *
    * @param {GitGraph} graph
-   * @returns {Boolean}
+   * @returns {boolean}
    * @private
    */
   function _isHorizontal(graph) {
@@ -1703,7 +1745,7 @@
    * Returns `true` if `object` is an object.
    *
    * @param {*} object
-   * @returns {Boolean}
+   * @returns {boolean}
    * @private
    */
   function _isObject(object) {
@@ -1715,8 +1757,8 @@
    * Modified from original source: http://stackoverflow.com/a/23809123.
    *
    * @param {*} obj - The object whose properties are to be tested as being undefined or equal to null.
-   * @param {String} key - The property hierarchy of `obj` to be tested, specified using 'dot notation' (e.g. property1.property2.property3 etc).
-   * @returns {Boolean} - True if ANY of the properties specified by `key` is undefined or equal to null, otherwise False.
+   * @param {string} key - The property hierarchy of `obj` to be tested, specified using 'dot notation' (e.g. property1.property2.property3 etc).
+   * @returns {boolean} - True if ANY of the properties specified by `key` is undefined or equal to null, otherwise False.
    * @private
    */
   function _isNullOrUndefined(obj, key) {

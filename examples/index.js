@@ -32,7 +32,7 @@ var myTemplate = new GitGraph.Template(myTemplateConfig);
  ***********************/
 
 var config = {
-  template: "metro", // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
+  template: "blackarrow", // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
   reverseArrow: false, // to make arrows point to ancestors, if displayed
   orientation: "vertical",
   // mode: "compact" // special compact mode: hide messages & compact graph
@@ -53,7 +53,7 @@ gitGraph.commit("Initial commit");
 gitGraph.commit("My second commit").commit("Add awesome feature");
 
 // Create a new "dev" branch from "master" with some custom configuration
-var dev = gitGraph.branch({
+var dev = master.branch({
   name: "dev",
   color: "#F00",
   commitDefaultOptions: {
@@ -77,6 +77,10 @@ var commitConfig = {
   author: "Me <me@planee.fr>"
 };
 gitGraph.commit(commitConfig);
+
+// Create another from "master"
+var feature3 = master.branch("feature3")
+feature3.commit().commit();
 
 /***********************
  *      CHECKOUT       *
@@ -166,6 +170,13 @@ test.merge(master, {
   message: "New release",
   tag: "v1.0.0"
 });
+
+// Create different branches from an empty one and do some commits
+var features = master.branch("features")
+var feature1 = features.branch("feature1")
+var feature2 = features.branch("feature2")
+feature2.commit().commit();
+feature1.commit();
 
 /***********************
  *       EVENTS        *
