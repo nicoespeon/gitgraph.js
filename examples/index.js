@@ -175,8 +175,8 @@ test.merge(master, {
 var features = master.branch("features")
 var feature1 = features.branch("feature1")
 var feature2 = features.branch("feature2")
-feature1.commit();
 feature2.commit().commit();
+feature1.commit();
 
 /***********************
  *       EVENTS        *
