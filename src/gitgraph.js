@@ -1601,7 +1601,7 @@
     var dummyText = document.createTextNode("Mg");
 
     dummy.appendChild(dummyText);
-    dummy.setAttribute("style", "font: " + font + ";");
+    dummy.setAttribute("style", "font: " + font + "; display: inline-block;");
     body.appendChild(dummy);
     var fontHeight = dummy.offsetHeight;
     body.removeChild(dummy);
