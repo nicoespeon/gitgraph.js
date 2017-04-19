@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.10.0
+ *                  GitGraph v1.10.1
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2017 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -632,9 +632,9 @@
 
   /**
    * Branch commit options
-   * 
+   *
    * @typedef {object} BranchCommitOptions
-   * 
+   *
    * @property {string} [color] - Master color (dot & message)
    * @property {string} [author = this.parent.author] - Author name & email
    * @property {string} [date] - Date of commit, default is now
@@ -1194,17 +1194,18 @@
     }
 
     // Detail
-    if (this.detail !== null && _isVertical(this.parent)) {
-      this.detail.width = 30;
-      this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + this.x + this.detail.width + "px";
+    var DETAIL_OFFSET_LEFT_IN_PX = 60;
+    var DETAIL_OFFSET_TOP_IN_PX = 30;
 
-      var detailOffsetTop = (this.parent.canvas.offsetTop + this.y);
-      var detailHorizontalMargin = 30;
+    if (this.detail !== null && _isVertical(this.parent)) {
+      this.detail.style.left = this.parent.canvas.offsetLeft + commitOffsetLeft + DETAIL_OFFSET_LEFT_IN_PX + "px";
+
+      var detailPositionTop = (this.parent.canvas.offsetTop + this.y);
       if (this.parent.orientation === "vertical-reverse") {
-        var clientOffset = (this.parent.canvas.clientHeight - this.detail.clientHeight);
-        this.detail.style.top = detailOffsetTop + clientOffset - detailHorizontalMargin + "px";
+        var clientHeight = (this.parent.canvas.clientHeight - this.detail.clientHeight);
+        this.detail.style.top = detailPositionTop + clientHeight - DETAIL_OFFSET_TOP_IN_PX + "px";
       } else {
-        this.detail.style.top = detailOffsetTop + detailHorizontalMargin + "px";
+        this.detail.style.top = detailPositionTop + DETAIL_OFFSET_TOP_IN_PX + "px";
       }
     }
 
@@ -1611,7 +1612,7 @@
     var dummyText = document.createTextNode("Mg");
 
     dummy.appendChild(dummyText);
-    dummy.setAttribute("style", "font: " + font + ";");
+    dummy.setAttribute("style", "font: " + font + "; display: inline-block;");
     body.appendChild(dummy);
     var fontHeight = dummy.offsetHeight;
     body.removeChild(dummy);
