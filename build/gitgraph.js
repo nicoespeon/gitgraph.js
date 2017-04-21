@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.10.1
+ *                  GitGraph v1.11.0
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2017 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -472,6 +472,7 @@
    * @param {Branch} [options.parentBranch = options.parentCommit.branch] - Parent branch
    * @param {Commit} [options.parentCommit = _getLast(options.parentBranch.commits)] - Parent commit
    * @param {string} [options.name = "no-name"] - Branch name
+   * @param {number[]} [options.lineDash = this.template.branch.lineDash] - Branch line dash segments
    * @param {object} [options.commitDefaultOptions = {}] - Default options for commits
    *
    * @this Branch
@@ -615,19 +616,12 @@
     this.context.lineWidth = this.lineWidth;
     this.context.strokeStyle = this.color;
 
-    var prevLineDash;
-    if (this.context.setLineDash !== undefined) {
-      prevLineDash = this.context.getLineDash();
+    if (typeof this.context.setLineDash === "function") {
       this.context.setLineDash(this.lineDash);
     }
 
     this.context.stroke();
     this.context.closePath();
-
-    //Restore previous line dash setting, if any
-    if (prevLineDash !== undefined) {
-      this.context.setLineDash(prevLineDash);
-    }
   };
 
   /**
@@ -1059,6 +1053,7 @@
    * @param {number} [options.dotSize = this.template.commit.dot.size] - Dot size
    * @param {number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
    * @param {string} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
+   * @param {number[]} [options.lineDash = this.template.commit.dot.lineDash]
    *
    * @param {string} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
    * @param {string} [options.messageColor = options.color] - Specific message color
@@ -1105,6 +1100,7 @@
     this.dotSize = options.dotSize || this.template.commit.dot.size;
     this.dotStrokeWidth = options.dotStrokeWidth || this.template.commit.dot.strokeWidth;
     this.dotStrokeColor = options.dotStrokeColor || this.template.commit.dot.strokeColor || options.color;
+    this.lineDash = options.lineDash || this.template.commit.dot.lineDash;
     this.type = options.type || null;
     this.tooltipDisplay = _booleanOptionOr(options.tooltipDisplay, true);
     this.onClick = options.onClick || null;
@@ -1131,7 +1127,6 @@
 
     // Label
     if (this.showLabel) {
-
       /*
        * For cases where we want a 0 or 180 degree label rotation in horizontal mode,
        * we need to modify the position of the label to sit centrally above the commit dot.
@@ -1171,7 +1166,11 @@
     this.context.strokeStyle = this.dotStrokeColor;
     this.context.lineWidth = this.dotStrokeWidth;
 
-    if (typeof (this.dotStrokeWidth) === "number") {
+    if (typeof this.context.setLineDash === "function") {
+      this.context.setLineDash(this.lineDash);
+    }
+
+    if (typeof this.dotStrokeWidth === "number") {
       this.context.stroke();
     }
 
@@ -1372,6 +1371,7 @@
    * @param {number} [options.arrow.offset] - Arrow offset
    * @param {string} [options.branch.color] - Branch color
    * @param {number} [options.branch.lineWidth] - Branch line width
+   * @param {number[]} [options.branch.lineDash] - Branch line dash segments
    * @param {string} [options.branch.mergeStyle = ("bezier"|"straight")] - Branch merge style
    * @param {number} [options.branch.spacingX] - Space between branches
    * @param {number} [options.branch.spacingY] - Space between branches
@@ -1383,6 +1383,7 @@
    * @param {number} [options.commit.dot.size] - Commit dot size
    * @param {number} [options.commit.dot.strokeWidth] - Commit dot stroke width
    * @param {string} [options.commit.dot.strokeColor] - Commit dot stroke color
+   * @param {number[]} [options.commit.dot.lineDash] - Commit dot line dash segments
    * @param {string} [options.commit.message.color] - Commit message color
    * @param {boolean} [options.commit.message.display] - Commit display policy
    * @param {boolean} [options.commit.message.displayAuthor] - Commit message author policy
@@ -1456,6 +1457,7 @@
     this.commit.dot.size = options.commit.dot.size || 3;
     this.commit.dot.strokeWidth = options.commit.dot.strokeWidth || null;
     this.commit.dot.strokeColor = options.commit.dot.strokeColor || null;
+    this.commit.dot.lineDash = options.commit.dot.lineDash || this.branch.lineDash;
 
     this.commit.tag = {};
     this.commit.tag.color = options.commit.tag.color || this.commit.dot.color;
