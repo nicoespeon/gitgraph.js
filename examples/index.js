@@ -6,12 +6,16 @@ var myTemplateConfig = {
   colors: ["#F00", "#0F0", "#00F"], // branches colors, 1 per column
   branch: {
     lineWidth: 8,
+    // Dash segments, see:
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
+    lineDash: [5, 3],
     spacingX: 50
   },
   commit: {
     spacingY: -80,
     dot: {
-      size: 12
+      size: 12,
+      lineDash: [4]
     },
     message: {
       displayAuthor: true,
@@ -56,6 +60,7 @@ gitGraph.commit("My second commit").commit("Add awesome feature");
 var dev = master.branch({
   name: "dev",
   color: "#F00",
+  // lineDash: [5],
   commitDefaultOptions: {
     color: "#F00"
   }
@@ -204,3 +209,16 @@ test.commit({
     console.log("You just clicked my commit.", commit, event);
   }
 });
+
+// Display WIP-like commit
+test
+  .commit({
+    lineDash: [3, 2],
+    dotStrokeWidth: 5,
+    dotColor: "white",
+    messageHashDisplay: false,
+    messageAuthorDisplay: false,
+    message: "Current WIP",
+    tag: "HEAD",
+    displayTagBox: false
+  });

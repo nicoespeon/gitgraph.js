@@ -82,6 +82,11 @@ declare namespace GitGraph {
         name?: string;
 
         /**
+         * Branch line dash segments
+         */
+        lineDash?: number[];
+
+        /**
          * Default options for commits
          */
         commitDefaultOptions?: any;
@@ -266,6 +271,11 @@ declare namespace GitGraph {
         dotStrokeColor?: string;
 
         /**
+         * undefined
+         */
+        lineDash?: number[];
+
+        /**
          * Commit message
          */
         message?: string;
@@ -417,6 +427,11 @@ declare namespace GitGraph {
             lineWidth?: number;
 
             /**
+             * Branch line dash segments
+             */
+            lineDash?: number[];
+
+            /**
              * Branch merge style
              */
             mergeStyle?: string;
@@ -473,6 +488,11 @@ declare namespace GitGraph {
                  * Commit dot stroke color
                  */
                 strokeColor?: string;
+
+                /**
+                 * Commit dot line dash segments
+                 */
+                lineDash?: number[];
 
             };
             message?: {
