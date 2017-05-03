@@ -764,7 +764,7 @@
       this.pushPath(this.startPoint);
       // Add a path joint to startpoint + template spacing
       // So that line will not go through commit of other branches
-      if ((this.parent.orientation === "vertical-reverse") || (this.parent.orientation === "vertical")) {
+      if (_isVertical(this.parent)) {
         this.pushPath({
           x: commit.x,
           y: this.startPoint.y - this.template.commit.spacingY,
