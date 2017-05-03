@@ -770,11 +770,19 @@
       this.pushPath(this.startPoint);
       // Add a path joint to startpoint + template spacing
       // So that line will not go through commit of other branches
-      this.pushPath({
-        x: commit.x,
-        y: this.startPoint.y - this.template.commit.spacingY,
-        type: "joint"
-      });
+      if ((this.parent.orientation === "vertical-reverse") || (this.parent.orientation === "vertical")) {
+        this.pushPath({
+          x: commit.x,
+          y: this.startPoint.y - this.template.commit.spacingY,
+          type: "joint"
+        });
+      } else {
+        this.pushPath({
+          x: this.startPoint.x - this.template.commit.spacingX,
+          y: commit.y,
+          type: "joint"
+        });
+      }
     } else if (isPathBeginning) {
       point.type = "start";
     }
