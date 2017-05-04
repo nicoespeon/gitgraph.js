@@ -1138,7 +1138,7 @@
           this.labelColor,
           this.labelFont,
           this.template.branch.labelRotation,
-          true);
+          "box");
       } else {
         _drawTextBG(this.context,
           this.x + this.template.commit.spacingX,
@@ -1147,7 +1147,7 @@
           this.labelColor,
           this.labelFont,
           this.template.branch.labelRotation,
-          true);
+          "box");
       }
     }
 
@@ -1339,7 +1339,7 @@
       y = commit.y - commit.dotSize / 2;
     }
 
-    _drawTextBG(commit.context, x, y, commit.tag, this.color, this.font, 0, commit.displayTagBox);
+    _drawTextBG(commit.context, x, y, commit.tag, this.color, this.font, 0, commit.displayTagBox ? "tag" : "none");
 
     // Reset original context font
     commit.context.font = originalFont;
@@ -1636,10 +1636,14 @@
    * @param {string} color - Text Colors.
    * @param {string} font - Text font.
    * @param {number} angle - Angle of the text for rotation.
-   * @param {boolean} useStroke - Name of the triggered event.
+   * @param {string} [frameType = "none"] - Type of frame around text. [none, box, tag]
    * @private
    */
-  function _drawTextBG(context, x, y, text, color, font, angle, useStroke) {
+  function _drawTextBG(context, x, y, text, color, font, angle, frameType) {
+    if (!frameType) {
+      frameType = "none";
+    }
+
     context.save();
     context.translate(x, y);
     context.rotate(angle * (Math.PI / 180));
@@ -1649,9 +1653,32 @@
     var width = context.measureText(text).width;
     var height = _getFontHeight(font);
 
-    if (useStroke) {
+    if (frameType !== "none") {
+      var curX = -(width / 2) - 4;
+      var curY = -(height / 2) + 2;
+
       context.beginPath();
-      context.rect(-(width / 2) - 4, -(height / 2) + 2, width + 8, height + 2);
+
+      if (frameType === "tag") {
+        context.moveTo(curX, curY);
+
+        curX += width + 8;
+        context.lineTo(curX, curY);
+
+        curY += height + 2;
+        context.lineTo(curX, curY);
+
+        curX -= (width + 8);
+        context.lineTo(curX, curY);
+
+        curX -= height / 2;
+        curY -= height / 2 + 1;
+        context.lineTo(curX, curY);
+      } else if (frameType === "box") {
+        context.rect(curX, curY, width + 8, height + 2);
+      }
+
+      context.closePath();
       context.fillStyle = color;
       context.fill();
       context.lineWidth = 2;
