@@ -1,4 +1,5 @@
 var graphConfig = new GitGraph.Template({
+  colors: [ "#9993FF", "#47E8D4", "#6BDB52", "#F85BB5", "#FFA657", "#F85BB5" ],
   branch: {
     color: "#000000",
     lineWidth: 3,
@@ -58,6 +59,7 @@ var featureCol = 0;
 var developCol = 1;
 var releaseCol = 2;
 var supportCol = 3;
+var support2Col = 5;
 var masterCol = 4;
 
 var gitgraph = new GitGraph(config);
@@ -114,31 +116,34 @@ develop.commit({
   messageDisplay: false
 });
 release_100.commit(stabilizationCommit);
-release_100.merge(develop).merge(master, {
+release_100.merge(master, {
   dotStrokeWidth: 10,
   message: "Release v1.0.0 tagged",
   tag: "v1.0.0"
 });
+master.merge(develop);
 
 var support_10x = gitgraph.branch({
   parentBranch: master,
   name: "support/v1.0.x",
   column: supportCol
 });
+
 support_10x.commit({
   message: "Start v1.0.1-rc Release Candidate builds",
   tag: "v1.0.1-rc",
   tagColor: 'gray'
 }).commit(bugFixCommit);
+develop.commit({
+  messageDisplay: false
+});
 
 var feature3 = gitgraph.branch({
   parentBranch: develop,
   name: "feature/3",
   column: featureCol
 });
-develop.commit({
-  messageDisplay: false
-});
+
 feature3.commit("A feature to go into v1.1.0").commit({
   messageDisplay: false
 });
@@ -179,11 +184,12 @@ release_110.commit({
   tagColor: 'gray'
 })
 release_110.commit(stabilizationCommit);
-release_110.merge(develop).merge(master, {
+release_110.merge(master, {
   dotStrokeWidth: 10,
   message: "Release v1.1.0 tagged",
   tag: "v1.1.0"
 });
+master.merge(develop);
 
 var support_11x = gitgraph.branch({
   parentBranch: master,
@@ -213,7 +219,7 @@ var feature4 = gitgraph.branch({
 develop.commit({
   messageDisplay: false
 });
-feature4.commit("A feature to go into v1.2.0").commit({
+feature4.commit("A feature to go into v2.0.0").commit({
   messageDisplay: false
 });
 feature4.merge(develop);
@@ -246,37 +252,82 @@ feature5.commit("Another feature to go into v1.2.0").commit({
 });
 feature5.merge(develop);
 
-support_11x.commit({
-  message: "Start v1.1.3-rc Release Candidate builds",
-  tag: "v1.1.3-rc",
-  tagColor: 'gray'
-})
-support_11x.commit(bugFixCommit).commit({
-  dotStrokeWidth: 10,
-  message: "Release v1.1.3 tagged",
-  tag: "v1.1.3"
-});
-support_11x.merge(develop);
 develop.commit({
   messageDisplay: false
 });
 
-var release_120 = gitgraph.branch({
+var release_200 = gitgraph.branch({
   parentBranch: develop,
-  name: "release/v1.2.0",
+  name: "release/v2.0.0",
   column: releaseCol
 });
-release_120.commit({
-  message: "Start v1.2.0-rc Release Candidate builds",
-  tag: "v1.2.0-rc",
+release_200.commit({
+  message: "Start v2.0.0-rc Release Candidate builds",
+  tag: "v2.0.0-rc",
   tagColor: 'gray'
 })
-release_120.commit(stabilizationCommit);
-release_120.merge(develop).merge(master, {
+release_200.commit(stabilizationCommit);
+release_200.merge(master, {
   dotStrokeWidth: 10,
-  message: "Release v1.2.0 tagged",
-  tag: "v1.2.0"
+  message: "Release v2.0.0 tagged",
+  tag: "v2.0.0"
 });
+master.merge(develop);
 develop.commit({
   messageDisplay: false
 });
+support_11x.commit({
+  message: "Release v1.1.3-rc tagged",
+  tag: "1.1.3-rc",
+  tagColor: 'gray'
+});
+
+var feature6 = gitgraph.branch({
+  parentBranch: develop,
+  name: "feature/6",
+  column: featureCol
+});
+feature6.commit("Feature to go into v2.0.0").commit({
+  messageDisplay: false
+});
+var support_20x = gitgraph.branch({
+  parentBranch: master,
+  name: "support/v2.0.x",
+  column: support2Col
+});
+support_20x.commit({
+  message: "Release v2.0.1-rc tagged",
+  tag: "v2.0.1-rc",
+  tagColor: 'gray'
+});
+support_20x.commit().commit({
+  dotStrokeWidth: 10,
+  message: "Release v2.0.1 tagged",
+  tag: "v2.0.1"
+});
+support_20x.merge(develop);
+support_11x.commit();
+support_11x.commit({
+  dotStrokeWidth: 10,
+  message: "Release v1.1.3 tagged",
+  tag: "v1.1.3"
+});
+feature6.merge(develop);
+
+var release_210 = gitgraph.branch({
+  parentBranch: develop,
+  name: "release/v2.1.0",
+  column: releaseCol
+});
+release_210.commit({
+  message: "Start v2.1.0-rc Release Candidate builds",
+  tag: "v2.1.0-rc",
+  tagColor: 'gray'
+})
+release_210.commit(stabilizationCommit);
+release_210.merge(master, {
+  dotStrokeWidth: 10,
+  message: "Release v2.1.0 tagged",
+  tag: "v2.1.0"
+});
+master.merge(develop);
