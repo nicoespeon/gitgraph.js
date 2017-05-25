@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.11.1
+ *                  GitGraph v1.11.2
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2017 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -385,14 +385,8 @@
         return;
       }
 
-      // Fix firefox MouseEvent
-      if (typeof InstallTrigger !== "undefined") /* == (is Firefox) */ {
-        event.x = event.x ? event.x : event.clientX;
-        event.y = event.y ? event.y : event.clientY;
-      }
-
-      self.tooltip.style.left = event.x + "px"; // TODO Scroll bug
-      self.tooltip.style.top = event.y + "px"; // TODO Scroll bug
+      self.tooltip.style.left = event.clientX + "px"; // TODO Scroll bug
+      self.tooltip.style.top = event.clientY + "px"; // TODO Scroll bug
       if (self.template.commit.tooltipHTMLFormatter !== null) {
         self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter(commit);
       } else {
