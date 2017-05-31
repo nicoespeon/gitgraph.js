@@ -888,9 +888,15 @@
     commitOptions.type = "mergeCommit";
     commitOptions.parentCommit = _getParentCommitFromBranch(this);
 
-    var branchParentCommit = firstBranchCommit.parentCommit;
-    var targetBranchParentCommit = _getParentCommitFromBranch(targetBranch);
-    var isFastForwardPossible = (branchParentCommit && branchParentCommit.sha1 === targetBranchParentCommit.sha1);
+    var parentBranchLastCommit = _getLast(targetBranch.commits);
+    var isFastForwardPossible;
+    if (target.parentBranch === this) {
+        // updating branch from parent
+        isFastForwardPossible = false;
+    } else {
+        var branchParentCommit = this.commits[0].parentCommit;
+        isFastForwardPossible = (branchParentCommit.sha1 === parentBranchLastCommit.sha1);
+    }
     if (commitOptions.fastForward && isFastForwardPossible) {
       var isGraphHorizontal = _isHorizontal(this.parent);
       this.color = targetBranch.color;
@@ -910,15 +916,15 @@
 
       this.commits.forEach(function (commit) {
         if (isGraphHorizontal) {
-          commit.y = branchParentCommit.y;
+          commit.y = parentBranchLastCommit.y;
         } else {
-          commit.x = branchParentCommit.x;
+          commit.x = parentBranchLastCommit.x;
         }
 
-        commit.labelColor = branchParentCommit.labelColor;
-        commit.messageColor = branchParentCommit.messageColor;
-        commit.dotColor = branchParentCommit.dotColor;
-        commit.dotStrokeColor = branchParentCommit.dotStrokeColor;
+        commit.labelColor = parentBranchLastCommit.labelColor;
+        commit.messageColor = parentBranchLastCommit.messageColor;
+        commit.dotColor = parentBranchLastCommit.dotColor;
+        commit.dotStrokeColor = parentBranchLastCommit.dotStrokeColor;
       });
     } else {
       targetBranch.commit(commitOptions);
