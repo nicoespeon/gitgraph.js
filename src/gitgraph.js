@@ -923,11 +923,21 @@
     } else {
       targetBranch.commit(commitOptions);
 
+      var detailOffsetY = 0;
+
+      if(commitOptions.detail) {
+        if(this.parent.orientation === "vertical") {
+          detailOffsetY = -1 * commitOptions.detail.clientHeight;
+        } else if (this.parent.orientation === "vertical-reverse") {
+          detailOffsetY = commitOptions.detail.clientHeight;
+        }
+      }
+
       // Add points to path
       var targetCommit = _getLast(targetBranch.commits);
       var endOfBranch = {
         x: this.offsetX + this.template.commit.spacingX * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetX,
-        y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY,
+        y: this.offsetY + this.template.commit.spacingY * (targetCommit.showLabel ? 3 : 2) - this.parent.commitOffsetY + detailOffsetY,
         type: "joint"
       };
       this.pushPath(_clone(endOfBranch));
