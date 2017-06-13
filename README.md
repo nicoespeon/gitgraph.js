@@ -26,6 +26,7 @@ issue](https://github.com/nicoespeon/gitgraph.js/issues).
 
 Please have a look at the [Issue Guidelines][] from [Nicolas Gallagher][] before
 doing so.
+
 [Issue Guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
 [Nicolas Gallagher]: https://github.com/necolas
 
@@ -37,6 +38,7 @@ The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
 
 Editor preferences are available in for [the editor config][] easy use in common
 text editors. Read more and download plugins at <http://editorconfig.org>.
+
 [the editor config]: https://github.com/nicoespeon/gitgraph.js/blob/master/.editorconfig
 
 The project uses [Grunt](http://gruntjs.com) with convenient methods for our
@@ -49,6 +51,7 @@ Grunt commands.
 From the command line:
 
 - Install [the necessary local dependencies][] with `npm install`.
+
 [the necessary local dependencies]: https://github.com/nicoespeon/gitgraph.js/blob/master/package.json
 
 When completed, you'll be able to run the various Grunt commands provided from
@@ -61,6 +64,7 @@ the command line.
 #### test code - `npm test`
 
 Check source code against [JSHint][] then runs unit tests with [Jasmine][].
+
 [JSHint]: http://www.jshint.com/
 [Jasmine]: https://jasmine.github.io/
 
@@ -120,6 +124,7 @@ And constructed with the following guidelines:
 ## Copyright and License
 
 Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][]
+
 [MIT license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
 
 [> What does that mean?](http://choosealicense.com/licenses/mit/)
