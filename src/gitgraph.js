@@ -673,7 +673,17 @@
       this.template.commit.color ||
       this.template.colors[columnIndex];
     options.parent = this.parent;
-    options.parentCommit = options.parentCommit || _getParentCommitFromBranch(this);
+
+    // Set parentCommit
+    // If there is commit in this branch, set parentCommit to last commit of this branch
+    // otherwise, set parentCommit to this.parentCommit, the start point of this branch
+    if (!options.parentCommit) {
+      if (_getLast(this.commits)) {
+        options.parentCommit = _getLast(this.commits);
+      } else {
+        options.parentCommit = this.parentCommit;
+      }
+    }
 
     // Special compact mode
     if (this.parent.mode === "compact" &&
@@ -727,11 +737,6 @@
       this.parent.commitOffsetY += this.template.commit.spacingY;
       options.x = this.offsetX - this.parent.commitOffsetX;
       options.y = this.offsetY - this.parent.commitOffsetY;
-    }
-
-    // Fork case: Parent commit from parent branch
-    if (options.parentCommit instanceof Commit === false && this.parentBranch instanceof Branch) {
-      options.parentCommit = this.parentCommit;
     }
 
     // First commit
