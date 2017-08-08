@@ -678,11 +678,7 @@
     // If there is commit in this branch, set parentCommit to last commit of this branch
     // otherwise, set parentCommit to this.parentCommit, the start point of this branch
     if (!options.parentCommit) {
-      if (_getLast(this.commits)) {
-        options.parentCommit = _getLast(this.commits);
-      } else {
-        options.parentCommit = this.parentCommit;
-      }
+      options.parentCommit = _getLast(this.commits) || this.parentCommit;
     }
 
     // Special compact mode
@@ -930,8 +926,8 @@
 
       var detailOffsetY = 0;
 
-      if(commitOptions.detail) {
-        if(this.parent.orientation === "vertical") {
+      if (commitOptions.detail) {
+        if (this.parent.orientation === "vertical") {
           detailOffsetY = -1 * commitOptions.detail.clientHeight;
         } else if (this.parent.orientation === "vertical-reverse") {
           detailOffsetY = commitOptions.detail.clientHeight;
