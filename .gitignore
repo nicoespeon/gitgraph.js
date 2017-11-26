@@ -146,3 +146,12 @@ Thumbs.db
 
 # VSCode
 .vscode/
+
+# compiled files
+lib
+
+# yarn
+yarn.lock
+
+# npm
+package-lock.json
