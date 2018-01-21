@@ -9,7 +9,8 @@
             true,
             "never-prefix"
         ],
-        "curly": false
+        "curly": false,
+        "object-literal-sort-keys": false
     },
     "rulesDirectory": []
 }
