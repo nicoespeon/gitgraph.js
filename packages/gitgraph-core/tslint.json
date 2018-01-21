@@ -8,7 +8,8 @@
         "interface-name": [
             true,
             "never-prefix"
-        ]
+        ],
+        "curly": false
     },
     "rulesDirectory": []
 }
