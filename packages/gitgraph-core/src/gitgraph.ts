@@ -28,7 +28,7 @@ export interface GitGraphOptions {
 
 export interface GitGraphCommitOptions {
   author?: string;
-  subject: string;
+  subject?: string;
   body?: string;
   notes?: string;
   refs?: string[];
@@ -49,6 +49,7 @@ export abstract class GitGraph {
   public options: GitGraphOptions;
 
   private commits: Commit[] = [];
+  private tags = new Map<string, Commit>();
 
   constructor(options?: GitGraphOptions) {
     this.options = { ...defaultGitGraphOptions, ...options };
@@ -66,25 +67,32 @@ export abstract class GitGraph {
    *
    * @param options Options of the commit
    */
-  public commit(options: GitGraphCommitOptions | string): GitGraph {
+  public commit(options?: GitGraphCommitOptions | string): GitGraph {
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options as string };
+    if (!options) options = {};
 
-    if (this.commits.length) {
-      const lastCommit = this.commits[this.commits.length - 1];
+    if (this.tags.has("HEAD")) {
+      const lastCommit = this.tags.get("HEAD") as Commit;
       // Update refs from precedent commit
       lastCommit.refs = [];
       // Add the last commit as parent
       options.parent = lastCommit.commit;
     }
 
-    // Add the new commit
-    this.commits.push(new Commit({
+    const commit = new Commit({
       author: this.options.author,
-      subject: this.options.commitMessage,
+      subject: this.options.commitMessage as string,
       ...options,
       refs: ["master", "HEAD"],
-    }));
+    });
+
+    // Add the new commit
+    this.commits.push(commit);
+
+    // Update tags
+    this.tags.set("HEAD", commit);
+    this.tags.set("master", commit);
 
     return this;
   }

@@ -80,6 +80,7 @@ describe("GitGraph", () => {
           },
         });
       });
+
       it("should works with the shorter commit message syntax", () => {
         const gitgraph: GitGraph = new G();
 
@@ -90,6 +91,17 @@ describe("GitGraph", () => {
 
         expect(log.length).toBe(1);
         expect(commit.subject).toBe("Initial commit");
+      });
+
+      it("should works without argument (default message)", () => {
+        const gitgraph = new G();
+        gitgraph.commit();
+
+        const log = gitgraph.log();
+        const [commit] = log;
+
+        expect(log.length).toBe(1);
+        expect(commit.subject).toBe("He doesn't like George Michael! Boooo!");
       });
     });
 
