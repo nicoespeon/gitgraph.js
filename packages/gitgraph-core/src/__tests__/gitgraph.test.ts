@@ -8,10 +8,12 @@ describe("GitGraph", () => {
     it("should have the correct default options", () => {
       const gitgraph: GitGraph = new G();
 
-      expect(gitgraph.options.author).toBe("Sergio Flores <saxo-guy@epic.com>");
-      expect(gitgraph.options.initCommitOffsetX).toBe(0);
-      expect(gitgraph.options.initCommitOffsetY).toBe(0);
-      expect(gitgraph.options.reverseArrow).toBeFalsy();
+      expect(gitgraph.options).toMatchObject({
+        author: "Sergio Flores <saxo-guy@epic.com>",
+        initCommitOffsetX: 0,
+        initCommitOffsetY: 0,
+        reverseArrow: false,
+    });
     });
 
     it("should be able to override options", () => {
@@ -21,12 +23,14 @@ describe("GitGraph", () => {
         template: TemplateEnum.Metro,
       });
 
-      expect(gitgraph.options.author).toBe("Fabien BERNARD <fabien0102@gmail.com>");
-      expect(gitgraph.options.initCommitOffsetX).toBe(0);
-      expect(gitgraph.options.initCommitOffsetY).toBe(0);
-      expect(gitgraph.options.reverseArrow).toBeTruthy();
-      expect(gitgraph.options.template).toBe("metro");
+      expect(gitgraph.options).toMatchObject({
+        author: "Fabien BERNARD <fabien0102@gmail.com>",
+        initCommitOffsetX: 0,
+        initCommitOffsetY: 0,
+        reverseArrow: true,
+        template: "metro",
     });
+  });
   });
 
   describe("commit", () => {
@@ -40,12 +44,18 @@ describe("GitGraph", () => {
         const [commit] = log;
 
         expect(log.length).toBe(1);
-        expect(commit.subject).toBe("Initial commit");
-        expect(commit.refs).toEqual(["master", "HEAD"]);
-        expect(commit.author.name).toEqual("Sergio Flores");
-        expect(commit.author.email).toEqual("saxo-guy@epic.com");
-        expect(commit.committer.name).toEqual("Sergio Flores");
-        expect(commit.committer.email).toEqual("saxo-guy@epic.com");
+        expect(commit).toMatchObject({
+          subject: "Initial commit",
+          author: {
+            name: "Sergio Flores",
+            email: "saxo-guy@epic.com",
+          },
+          committer: {
+            name: "Sergio Flores",
+            email: "saxo-guy@epic.com",
+          },
+          refs: ["master", "HEAD"],
+        });
       });
 
       it("should add the initial commit with another author", () => {
@@ -57,12 +67,18 @@ describe("GitGraph", () => {
         const [commit] = log;
 
         expect(log.length).toBe(1);
-        expect(commit.subject).toBe("Initial commit");
-        expect(commit.refs).toEqual(["master", "HEAD"]);
-        expect(commit.author.name).toEqual("Fabien BERNARD");
-        expect(commit.author.email).toEqual("fabien0102@gmail.com");
-        expect(commit.committer.name).toEqual("Fabien BERNARD");
-        expect(commit.committer.email).toEqual("fabien0102@gmail.com");
+        expect(commit).toMatchObject({
+          subject: "Initial commit",
+          refs: ["master", "HEAD"],
+          author: {
+            name: "Fabien BERNARD",
+            email: "fabien0102@gmail.com",
+          },
+          committer: {
+            name: "Fabien BERNARD",
+            email: "fabien0102@gmail.com",
+          },
+        });
       });
       it("should works with the shorter commit message syntax", () => {
         const gitgraph: GitGraph = new G();
