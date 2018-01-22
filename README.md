@@ -1,3 +1,9 @@
+**GitGraph.js v2 is not out yet. Don't use the version on this branch.** 
+
+**Check for [the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest) or [the current state of the v2](https://github.com/nicoespeon/gitgraph.js/issues/187) for more information.**
+
+**Thanks 🙏**
+
 ![gitgraph.js](/assets/logo/gitgraph-logo.png)
 
 [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js)
