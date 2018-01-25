@@ -1,4 +1,5 @@
 import { Commit } from "./commit";
+import { Refs } from "./refs";
 
 export enum OrientationsEnum {
   VerticalReverse = "vertical-reverse",
@@ -49,7 +50,7 @@ export abstract class GitGraph {
   public options: GitGraphOptions;
 
   private commits: Commit[] = [];
-  private tags = new Map<string, Commit>();
+  private tags = new Refs();
 
   constructor(options?: GitGraphOptions) {
     this.options = { ...defaultGitGraphOptions, ...options };
@@ -75,7 +76,7 @@ export abstract class GitGraph {
     if (this.tags.has("HEAD")) {
       const lastCommit = this.tags.get("HEAD") as Commit;
       // Update refs from precedent commit
-      lastCommit.refs = [];
+      //lastCommit.refs = [];
       // Add the last commit as parent
       options.parent = lastCommit.commit;
     }
@@ -84,7 +85,7 @@ export abstract class GitGraph {
       author: this.options.author,
       subject: this.options.commitMessage as string,
       ...options,
-      refs: ["master", "HEAD"],
+      refs: this.tags
     });
 
     // Add the new commit
@@ -92,8 +93,15 @@ export abstract class GitGraph {
 
     // Update tags
     this.tags.set("HEAD", commit);
-    this.tags.set("master", commit);
+    this.tags.set(this.tags.getCurrentRef(), commit);
 
+    return this;
+  }
+
+  public branch(name?: string): GitGraph {
+    const lastCommit = this.tags.get("HEAD") as Commit;
+    this.tags.set(name, lastCommit);
+    this.tags.setCurrentRef(name);
     return this;
   }
 
