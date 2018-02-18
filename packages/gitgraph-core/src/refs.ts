@@ -1,37 +1,35 @@
 import { Commit } from "./commit";
 
-export class Refs {
-    private refs: Map<string, Commit>;
-    private currentRef: string;
+export default class Refs {
+    private refs: Map<string | Commit, Commit | string[]>;
 
     constructor() {
-        this.refs = new Map<string, Commit>();
-        this.setCurrentRef('master');
+        this.refs = new Map<string | Commit, Commit | string[]>();
     }
 
-    has(name: string): boolean {
-        return this.refs.has(name);
+    has(key: string | Commit): boolean {
+        return this.refs.has(key);
     }
 
-    get(name: string): string {
-        return this.refs.get(name);
+    get(key: string | Commit): string[] | Commit | undefined {
+        return this.refs.get(key);
     }
 
-    set(name:string, commit: Commit): void {
+    set(name: string, commit: Commit): void {
+        // Remove old links
+        const prevCommit = this.refs.get(name) as Commit;
+        if (prevCommit) {
+            const prevRefs = (this.refs.get(prevCommit) || []) as string[];
+            this.refs.set(prevCommit, prevRefs.filter((ref: string) => ref !== name))
+        }
+
+        // Update the ref -> commit link
         this.refs.set(name, commit);
-    }
 
-    getFromCommit(commit: Commit): string[] {
-        return Array.from(this.refs.entries())
-            .filter(([key, value]) => value === commit)
-            .map(([key]) => key);
-    }
+        // Update the commit -> [refs] link
+        const prevRefs = this.refs.get(commit) as string[] | undefined;
+        const nextRefs = prevRefs ? [...prevRefs, name] : [name]
+        this.refs.set(commit, nextRefs);
 
-    setCurrentRef(name: string): void {
-        this.currentRef = name;
-    }
-
-    getCurrentRef(): string {
-        return this.currentRef;
     }
 }
