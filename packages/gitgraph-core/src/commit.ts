@@ -1,4 +1,4 @@
-import {Refs} from "./refs";
+import Refs from "./refs";
 
 export interface CommitOptions {
   author: string;
@@ -101,7 +101,12 @@ export class Commit {
 
   public constructor(options: CommitOptions) {
     // Set author & committer
-    const [, name, email] = options.author.match(/(.*) <(.*)>/) as RegExpExecArray;
+    let name, email;
+    try {
+      [, name, email] = options.author.match(/(.*) <(.*)>/) as RegExpExecArray;
+    } catch (e) {
+      [name, email] = [options.author, ""];
+    }
     this.author = { name, email, timestamp: Date.now() };
     this.committer = { name, email, timestamp: Date.now() };
 
