@@ -54,7 +54,7 @@ describe("GitGraph", () => {
             name: "Sergio Flores",
             email: "saxo-guy@epic.com",
           },
-          //refs: ["HEAD", "master"],
+          refs: ["HEAD", "master"],
         });
       });
 
@@ -69,7 +69,7 @@ describe("GitGraph", () => {
         expect(log.length).toBe(1);
         expect(commit).toMatchObject({
           subject: "Initial commit",
-          //refs: ["HEAD", "master"],
+          refs: ["HEAD", "master"],
           author: {
             name: "Fabien BERNARD",
             email: "fabien0102@gmail.com",
@@ -106,7 +106,6 @@ describe("GitGraph", () => {
     });
 
     describe("two commits", () => {
-      // tslint:disable-next-line:one-variable-per-declaration
       let one, two;
       beforeEach(() => {
         const gitgraph: GitGraph = new G();

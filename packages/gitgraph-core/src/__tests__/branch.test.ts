@@ -1,3 +1,4 @@
+import "jest";
 import GitGraph from "../gitgraph";
 
 describe("Branch", () => {
@@ -6,17 +7,16 @@ describe("Branch", () => {
 
   describe("commit", () => {
     describe("on HEAD", () => {
-      // tslint:disable-next-line:one-variable-per-declaration
       let one, two, three;
 
       beforeEach(() => {
         const gitgraph = new G();
 
         gitgraph
-          .commit()
-          .commit()
-          .branch("develop")
-          .commit();
+        .commit()
+        .commit()
+        .branch("develop")
+        .commit();
 
         [one, two, three] = gitgraph.log();
       });
@@ -56,6 +56,6 @@ describe("Branch", () => {
       it("should have develop and head tags on three commit", () => {
         expect(three.refs).toEqual(["develop", "HEAD"]);
       });
-    })
+    });
   });
-})
+});

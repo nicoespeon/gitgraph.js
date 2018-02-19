@@ -1,5 +1,5 @@
-import { GitGraph, GitGraphCommitOptions } from "./gitgraph";
 import Commit from "./commit";
+import { GitGraph, GitGraphCommitOptions } from "./gitgraph";
 
 export interface BranchOptions {
   /**
@@ -10,7 +10,7 @@ export interface BranchOptions {
    * Branch name
    */
   name: string;
-  /** 
+  /**
    * Parent commit
    */
   parentCommit?: Commit;
@@ -63,13 +63,13 @@ export class Branch {
     const commit = new Commit({
       author: this.gitgraph.options.author,
       subject: this.gitgraph.options.commitMessage as string,
-      ...options
+      ...options,
     });
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
       const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) || []) as string[];
-      parentRefs.forEach(ref => this.gitgraph.refs.set(ref, commit));
+      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit));
     } else {
       // Set the branch ref
       this.gitgraph.refs.set(this.name, commit);

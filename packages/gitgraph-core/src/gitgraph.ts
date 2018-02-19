@@ -1,5 +1,5 @@
-import Commit from "./commit";
 import Branch from "./branch";
+import Commit from "./commit";
 import Refs from "./refs";
 
 export enum OrientationsEnum {
@@ -56,18 +56,7 @@ export abstract class GitGraph {
   constructor(options?: GitGraphOptions) {
     this.options = { ...defaultGitGraphOptions, ...options };
     this.withRefs = this.withRefs.bind(this);
-    this.currentBranch = new Branch({ name: "master", gitgraph: this })
-  }
-
-  /**
-   * Add refs info to on commit.
-   * 
-   * @param commit One commit
-   */
-  private withRefs(commit: Commit) {
-    return {
-      ...commit, refs: (this.refs.get(commit) as string[]) || []
-    }
+    this.currentBranch = new Branch({ name: "master", gitgraph: this });
   }
 
   /**
@@ -89,12 +78,12 @@ export abstract class GitGraph {
 
   /**
    * Create a new branch.
-   * 
+   *
    * @param name name of the created branch
    */
   public branch(name: string): Branch {
     const parentCommit = this.refs.get("HEAD") as Commit;
-    const branch = new Branch({ gitgraph: this, name, parentCommit })
+    const branch = new Branch({ gitgraph: this, name, parentCommit });
     this.currentBranch = branch;
 
     return branch;
@@ -108,6 +97,16 @@ export abstract class GitGraph {
    */
   public abstract render(): void;
 
+  /**
+   * Add refs info to on commit.
+   *
+   * @param commit One commit
+   */
+  private withRefs(commit: Commit) {
+    return {
+      ...commit, refs: (this.refs.get(commit) as string[]) || [],
+    };
+  }
 }
 
 export default GitGraph;
