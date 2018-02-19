@@ -1,6 +1,6 @@
-import { Commit } from "./commit";
+import Commit from "./commit";
 
-export default class Refs {
+export class Refs {
     private refs: Map<string | Commit, Commit | string[]>;
 
     constructor() {
@@ -33,3 +33,5 @@ export default class Refs {
 
     }
 }
+
+export default Refs;

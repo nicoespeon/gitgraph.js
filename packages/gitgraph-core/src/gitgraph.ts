@@ -1,4 +1,4 @@
-import { Commit } from "./commit";
+import Commit from "./commit";
 import Refs from "./refs";
 
 export enum OrientationsEnum {
@@ -140,3 +140,5 @@ export abstract class GitGraph {
   public abstract render(): void;
 
 }
+
+export default GitGraph;

@@ -1,6 +1,6 @@
 import "jest";
 import Refs from "../refs";
-import { Commit } from "../commit";
+import Commit from "../commit";
 
 const initialCommit = new Commit(
   {

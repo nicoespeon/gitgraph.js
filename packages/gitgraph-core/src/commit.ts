@@ -130,3 +130,5 @@ export class Commit {
   }
 
 }
+
+export default Commit;

@@ -39,3 +39,5 @@ export class Branch {
     this.options = options;
   }
 }
+
+export default Branch;
