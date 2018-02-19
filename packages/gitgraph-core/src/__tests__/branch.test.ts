@@ -1,5 +1,6 @@
 import "jest";
 import GitGraph from "../gitgraph";
+import Commit from "../commit";
 
 describe("Branch", () => {
 
@@ -13,10 +14,10 @@ describe("Branch", () => {
         const gitgraph = new G();
 
         gitgraph
-        .commit()
-        .commit()
-        .branch("develop")
-        .commit();
+          .commit()
+          .commit()
+          .branch("develop")
+          .commit();
 
         [one, two, three] = gitgraph.log();
       });
@@ -56,6 +57,33 @@ describe("Branch", () => {
       it("should have develop and head tags on three commit", () => {
         expect(three.refs).toEqual(["develop", "HEAD"]);
       });
+    });
+  });
+
+  describe("merge", () => {
+    let log: Commit[];
+    beforeEach(() => {
+      const gitgraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("master 1");
+      master.commit("master 2");
+
+      const develop = gitgraph.branch("develop");
+      develop.commit("develop 1");
+      develop.commit("develop 2");
+      develop.commit("develop 3");
+      master.commit("master 3");
+
+      master.merge("develop");
+      master.commit("master 4");
+
+      log = gitgraph.log();
+    });
+
+    it("should create a merge commit into master", () => {
+      const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+      expect(mergeCommit).toBeDefined();
     });
   });
 });

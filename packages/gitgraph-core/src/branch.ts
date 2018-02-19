@@ -85,6 +85,16 @@ export class Branch {
 
     return this;
   }
+
+  /**
+   * Create a merge commit.
+   *
+   * @param branchName Branch name
+   */
+  public merge(branchName: string) {
+    this.commit(`Merge branch ${branchName}`);
+    return this;
+  }
 }
 
 export default Branch;
