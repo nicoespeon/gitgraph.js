@@ -13,7 +13,7 @@ describe("GitGraph", () => {
         initCommitOffsetX: 0,
         initCommitOffsetY: 0,
         reverseArrow: false,
-    });
+      });
     });
 
     it("should be able to override options", () => {
@@ -29,8 +29,8 @@ describe("GitGraph", () => {
         initCommitOffsetY: 0,
         reverseArrow: true,
         template: "metro",
+      });
     });
-  });
   });
 
   describe("commit", () => {
@@ -115,16 +115,15 @@ describe("GitGraph", () => {
           .commit("Initial commit")
           .commit("Second commit");
 
-        const log = gitgraph.log();
-        [one, two] = log;
+        [one, two] = gitgraph.log();
       });
 
       it("should set the HEAD/master refs to the last commit", () => {
         expect(one.subject).toBe("Initial commit");
-        expect(one.getRefs()).toEqual([]);
+        expect(one.refs).toEqual([]);
 
         expect(two.subject).toBe("Second commit");
-        expect(two.getRefs()).toEqual(["HEAD", "master"]);
+        expect(two.refs).toEqual(["master", "HEAD"]);
       });
 
       it("should have the first commit as parent refs", () => {
@@ -151,11 +150,11 @@ describe("GitGraph", () => {
         });
 
         it("should keep master tag on the second commit", () => {
-          expect(two.getRefs()).toEqual(["master"]);
+          expect(two.refs).toEqual(["master"]);
         });
 
         it("should have develop and head tags on the last commit", () => {
-          expect(three.getRefs()).toEqual(["HEAD", "develop"]);
+          expect(three.refs).toEqual(["develop", "HEAD"]);
         });
 
         it("should have the correct parents set", () => {

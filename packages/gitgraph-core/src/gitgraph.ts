@@ -1,5 +1,5 @@
 import { Commit } from "./commit";
-import { Refs } from "./refs";
+import Refs from "./refs";
 
 export enum OrientationsEnum {
   VerticalReverse = "vertical-reverse",
@@ -50,17 +50,30 @@ export abstract class GitGraph {
   public options: GitGraphOptions;
 
   private commits: Commit[] = [];
-  private tags = new Refs();
+  private refs = new Refs();
+  private newBranchName: string | null = null;
 
   constructor(options?: GitGraphOptions) {
     this.options = { ...defaultGitGraphOptions, ...options };
+    this.withRefs = this.withRefs.bind(this);
+  }
+
+  /**
+   * Add refs info to on commit.
+   * 
+   * @param commit One commit
+   */
+  private withRefs(commit: Commit) {
+    return {
+      ...commit, refs: (this.refs.get(commit) as string[]) || []
+    }
   }
 
   /**
    * Return the list of all commits (as `git log`).
    */
   public log(): Commit[] {
-    return this.commits;
+    return this.commits.map(this.withRefs);
   }
 
   /**
@@ -73,35 +86,48 @@ export abstract class GitGraph {
     if (typeof options === "string") options = { subject: options as string };
     if (!options) options = {};
 
-    if (this.tags.has("HEAD")) {
-      const lastCommit = this.tags.get("HEAD") as Commit;
-      // Update refs from precedent commit
-      //lastCommit.refs = [];
+    let parent;
+    if (this.refs.has("HEAD")) {
+      parent = this.refs.get("HEAD") as Commit;
       // Add the last commit as parent
-      options.parent = lastCommit.commit;
+      options.parent = parent.commit;
     }
 
     const commit = new Commit({
       author: this.options.author,
       subject: this.options.commitMessage as string,
-      ...options,
-      refs: this.tags
+      ...options
     });
+
+    if (this.newBranchName) {
+      // Create the new branch
+      this.refs.set(this.newBranchName, commit);
+      this.newBranchName = null;
+    } else if (parent) {
+      // Take all the refs from the parent
+      const parentRefs = (this.refs.get(parent) || []) as string[];
+      parentRefs.forEach(ref => this.refs.set(ref, commit));
+    } else {
+      // Set master as default branch name
+      this.refs.set("master", commit);
+    }
 
     // Add the new commit
     this.commits.push(commit);
 
-    // Update tags
-    this.tags.set("HEAD", commit);
-    this.tags.set(this.tags.getCurrentRef(), commit);
+    // Update HEAD
+    this.refs.set("HEAD", commit);
 
     return this;
   }
 
-  public branch(name?: string): GitGraph {
-    const lastCommit = this.tags.get("HEAD") as Commit;
-    this.tags.set(name, lastCommit);
-    this.tags.setCurrentRef(name);
+  /**
+   * Create a new branch.
+   * 
+   * @param name name of the created branch
+   */
+  public branch(name: string): GitGraph {
+    this.newBranchName = name;
     return this;
   }
 

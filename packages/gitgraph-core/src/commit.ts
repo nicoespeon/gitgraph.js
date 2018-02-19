@@ -1,11 +1,9 @@
-import Refs from "./refs";
-
 export interface CommitOptions {
   author: string;
   subject: string;
   body?: string;
   notes?: string;
-  refs?: Refs;
+  refs?: string[];
   tree?: string;
   commit?: string;
   parent?: string;
@@ -128,10 +126,7 @@ export class Commit {
     this.parentsAbbrev = this.parents.map((commit) => commit.substring(0, 7));
 
     // Set ref
-    this.refs = options.refs || new Refs();
+    this.refs = options.refs || [];
   }
 
-  getRefs(): string[] {
-    return this.refs.getFromCommit(this);
-  }
 }
