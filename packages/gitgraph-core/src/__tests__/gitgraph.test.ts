@@ -161,6 +161,30 @@ describe("GitGraph", () => {
           expect(three.parents).toEqual([two.commit]);
         });
       });
+
+      describe("with variables", () => {
+        let one, two, three, four;
+
+        beforeEach(() => {
+          const gitgraph = new G();
+
+          const master = gitgraph.branch("master");
+          master.commit().commit(); // one, two
+          const dev = gitgraph.branch("develop");
+          dev.commit(); // tree
+          master.commit(); // four
+
+          [one, two, three, four] = gitgraph.log();
+        });
+
+        it("should have master tag on four commit", () => {
+          expect(four.refs).toEqual(["master"]);
+        });
+
+        it("should have develop and head tags on three commit", () => {
+          expect(three.refs).toEqual(["develop", "HEAD"]);
+        });
+      })
     });
 
   });

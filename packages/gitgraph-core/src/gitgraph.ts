@@ -1,4 +1,5 @@
 import Commit from "./commit";
+import Branch from "./branch";
 import Refs from "./refs";
 
 export enum OrientationsEnum {
@@ -48,14 +49,14 @@ const defaultGitGraphOptions: GitGraphOptions = {
 
 export abstract class GitGraph {
   public options: GitGraphOptions;
-
-  private commits: Commit[] = [];
-  private refs = new Refs();
-  private newBranchName: string | null = null;
+  public refs = new Refs();
+  public commits: Commit[] = [];
+  public currentBranch: Branch;
 
   constructor(options?: GitGraphOptions) {
     this.options = { ...defaultGitGraphOptions, ...options };
     this.withRefs = this.withRefs.bind(this);
+    this.currentBranch = new Branch({ name: "master", gitgraph: this })
   }
 
   /**
@@ -82,42 +83,7 @@ export abstract class GitGraph {
    * @param options Options of the commit
    */
   public commit(options?: GitGraphCommitOptions | string): GitGraph {
-    // Deal with shorter syntax
-    if (typeof options === "string") options = { subject: options as string };
-    if (!options) options = {};
-
-    let parent;
-    if (this.refs.has("HEAD")) {
-      parent = this.refs.get("HEAD") as Commit;
-      // Add the last commit as parent
-      options.parent = parent.commit;
-    }
-
-    const commit = new Commit({
-      author: this.options.author,
-      subject: this.options.commitMessage as string,
-      ...options
-    });
-
-    if (this.newBranchName) {
-      // Create the new branch
-      this.refs.set(this.newBranchName, commit);
-      this.newBranchName = null;
-    } else if (parent) {
-      // Take all the refs from the parent
-      const parentRefs = (this.refs.get(parent) || []) as string[];
-      parentRefs.forEach(ref => this.refs.set(ref, commit));
-    } else {
-      // Set master as default branch name
-      this.refs.set("master", commit);
-    }
-
-    // Add the new commit
-    this.commits.push(commit);
-
-    // Update HEAD
-    this.refs.set("HEAD", commit);
-
+    this.currentBranch.commit(options);
     return this;
   }
 
@@ -126,9 +92,12 @@ export abstract class GitGraph {
    * 
    * @param name name of the created branch
    */
-  public branch(name: string): GitGraph {
-    this.newBranchName = name;
-    return this;
+  public branch(name: string): Branch {
+    const parentCommit = this.refs.get("HEAD") as Commit;
+    const branch = new Branch({ gitgraph: this, name, parentCommit })
+    this.currentBranch = branch;
+
+    return branch;
   }
 
   /**
