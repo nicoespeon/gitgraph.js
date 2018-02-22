@@ -77,14 +77,13 @@ export abstract class GitGraph {
   }
 
   /**
-   * Create a new branch.
+   * Create a new branch. (as `git branch`)
    *
    * @param name name of the created branch
    */
   public branch(name: string): Branch {
     const parentCommit = this.refs.get("HEAD") as Commit;
     const branch = new Branch({ gitgraph: this, name, parentCommit });
-    this.currentBranch = branch;
 
     return branch;
   }
