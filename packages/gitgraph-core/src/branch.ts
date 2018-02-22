@@ -95,6 +95,27 @@ export class Branch {
     this.commit(`Merge branch ${branchName}`);
     return this;
   }
+
+  /**
+   * Checkout onto this branch
+   */
+  public checkout() {
+    this.gitgraph.currentBranch = this;
+  }
+
+  /**
+   * Delete this branch
+   */
+  public delete() {
+    throw new Error("not implemented");
+  }
+
+  /**
+   * Tag the last commit of the branch
+   */
+  public tag() {
+    throw new Error("not implemented");
+  }
 }
 
 export default Branch;
