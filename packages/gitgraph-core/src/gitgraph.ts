@@ -1,6 +1,6 @@
-import Branch from "./branch";
+import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
-import { Template, metroTemplate, blackArrowTemplate } from "./template";
+import { Template, metroTemplate, blackArrowTemplate, CommitStyle } from "./template";
 import Refs from "./refs";
 
 export enum OrientationsEnum {
@@ -38,6 +38,18 @@ export interface GitGraphCommitOptions {
   tree?: string;
   commit?: string;
   parent?: string;
+  style?: CommitStyle;
+}
+
+export interface GitGraphBranchOptions {
+  /**
+   * Branch name
+   */
+  name: string;
+  /**
+   * Default options for commits
+   */
+  commitDefaultOptions?: BranchCommitDefaultOptions;
 }
 
 const defaultGitGraphOptions: GitGraphOptions = {
@@ -82,9 +94,17 @@ export abstract class GitGraph {
   /**
    * Add a new commit in the history (as `git commit`).
    *
+   * @param subject Commit subject
+   */
+  public commit(subject?: string): GitGraph;
+  /**
+   * Add a new commit in the history (as `git commit`).
+   *
    * @param options Options of the commit
    */
-  public commit(options?: GitGraphCommitOptions | string): GitGraph {
+  // tslint:disable-next-line:unified-signatures
+  public commit(options?: GitGraphCommitOptions): GitGraph;
+  public commit(options?: any): GitGraph {
     this.currentBranch.commit(options);
     return this;
   }
@@ -92,11 +112,25 @@ export abstract class GitGraph {
   /**
    * Create a new branch. (as `git branch`)
    *
+   * @param options options of the branch
+   */
+  public branch(options: GitGraphBranchOptions): Branch;
+  /**
+   * Create a new branch. (as `git branch`)
+   *
    * @param name name of the created branch
    */
-  public branch(name: string): Branch {
+  // tslint:disable-next-line:unified-signatures
+  public branch(name: string): Branch;
+  public branch(args: any): Branch {
     const parentCommit = this.refs.get("HEAD") as Commit;
-    const branch = new Branch({ gitgraph: this, name, parentCommit });
+    let options: BranchOptions = { gitgraph: this, name: "", parentCommit };
+    if (typeof args === "string") {
+      options.name = args;
+    } else {
+      options = { ...options, ...args };
+    }
+    const branch = new Branch(options);
 
     return branch;
   }

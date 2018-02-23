@@ -1,6 +1,8 @@
 import "jest";
-import GitGraph from "../gitgraph";
+import GitGraph, { GitGraphCommitOptions } from "../gitgraph";
 import Commit from "../commit";
+import { BranchOptions } from "../branch";
+const copy = (obj) => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
 
@@ -56,6 +58,67 @@ describe("Branch", () => {
 
       it("should have develop and head tags on three commit", () => {
         expect(three.refs).toEqual(["develop"]);
+      });
+    });
+
+    describe("style", () => {
+      let gitgraph: GitGraph;
+      const templateCommitStyle = {
+        color: null,
+        dot: {
+          color: null,
+          lineDash: [],
+          size: 14,
+          strokeColor: null,
+          strokeWidth: null,
+        },
+        message: {
+          color: null,
+          display: true,
+          displayAuthor: true,
+          displayBranch: true,
+          displayHash: true,
+          font: "normal 14pt Arial",
+        },
+        shouldDisplayTooltipsInCompactMode: true,
+        spacing: 80,
+        tag: {
+          color: null,
+          font: "normal 14pt Arial",
+        },
+        tooltipHTMLFormatter: null,
+        widthExtension: 0,
+      };
+      beforeEach(() => {
+        gitgraph = new G();
+      });
+      it("should have the style of the template by default", () => {
+        gitgraph.commit();
+        const [commit] = gitgraph.log();
+        expect(commit.style).toEqual(templateCommitStyle);
+      });
+
+      it("should be have a merge style with the defaultCommitOptions", () => {
+        gitgraph
+          .branch({ commitDefaultOptions: { style: { message: { color: "green" } } } } as BranchOptions)
+          .commit();
+
+        const [commit] = gitgraph.log();
+        const expected = copy(templateCommitStyle);
+        expected.message.color = "green";
+        expect(commit.style).toEqual(expected);
+      });
+
+      it("should be have a merge style with the commit", () => {
+        gitgraph
+          .branch({ commitDefaultOptions: { style: { message: { color: "green" } } } } as BranchOptions)
+          .commit({ style: { message: { display: false } } } as GitGraphCommitOptions);
+
+        const [commit] = gitgraph.log();
+        const expected = copy(templateCommitStyle);
+        expected.message.color = "green";
+        expected.message.display = false;
+        expect(commit.style).toEqual(expected);
       });
     });
   });

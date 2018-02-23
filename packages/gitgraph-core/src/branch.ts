@@ -1,6 +1,12 @@
 import Commit from "./commit";
 import { GitGraph, GitGraphCommitOptions } from "./gitgraph";
-import { isString } from "./utils";
+import { CommitStyle } from "./template";
+
+export interface BranchCommitDefaultOptions {
+  author?: string;
+  subject?: string;
+  style?: CommitStyle;
+}
 
 export interface BranchOptions {
   /**
@@ -18,7 +24,7 @@ export interface BranchOptions {
   /**
    * Default options for commits
    */
-  commitDefaultOptions?: any;
+  commitDefaultOptions?: BranchCommitDefaultOptions;
 }
 
 /**
@@ -26,7 +32,7 @@ export interface BranchOptions {
  */
 export class Branch {
   public name: string;
-  public commitDefaultOptions: any;
+  public commitDefaultOptions: BranchCommitDefaultOptions;
 
   private gitgraph: GitGraph;
   private parentCommit: Commit | undefined;
@@ -39,15 +45,22 @@ export class Branch {
     this.gitgraph = options.gitgraph;
     this.name = options.name;
     this.parentCommit = options.parentCommit;
-    // TODO deal with this default commit options
-    this.commitDefaultOptions = options.commitDefaultOptions;
+    this.commitDefaultOptions = options.commitDefaultOptions || { style: {} };
   }
 
   /**
    * Add a new commit in the branch (as `git commit`).
    *
+   * @param subject Commit subject
+   */
+  public commit(subject?: string): Branch;
+  /**
+   * Add a new commit in the branch (as `git commit`).
+   *
    * @param options Options of the commit
    */
+  // tslint:disable-next-line:unified-signatures
+  public commit(options?: GitGraphCommitOptions): Branch;
   public commit(options?: GitGraphCommitOptions | string): Branch {
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options as string };
@@ -62,9 +75,10 @@ export class Branch {
     }
 
     const commit = new Commit({
-      author: this.gitgraph.options.author,
-      subject: this.gitgraph.options.commitMessage as string,
+      author: this.commitDefaultOptions.author || this.gitgraph.options.author,
+      subject: this.commitDefaultOptions.subject || this.gitgraph.options.commitMessage as string,
       ...options,
+      style: this.getCommitStyle(options.style),
     });
 
     if (parentOnSameBranch) {
@@ -114,6 +128,38 @@ export class Branch {
    */
   public tag() {
     throw new Error("not implemented");
+  }
+
+  /**
+   * Get the consolidate style for one commit
+   *
+   * This consolidate the styling rules in this order:
+   * - template commit base
+   * - branch override
+   * - commit override
+   * @param style
+   */
+  private getCommitStyle(style: CommitStyle = {}): CommitStyle {
+    return {
+      ...this.gitgraph.template.commit,
+      ...this.commitDefaultOptions.style,
+      ...style,
+      tag: {
+        ...this.gitgraph.template.commit.tag,
+        ...(this.commitDefaultOptions.style as CommitStyle).tag,
+        ...style.tag,
+      },
+      message: {
+        ...this.gitgraph.template.commit.message,
+        ...(this.commitDefaultOptions.style as CommitStyle).message,
+        ...style.message,
+      },
+      dot: {
+        ...this.gitgraph.template.commit.dot,
+        ...(this.commitDefaultOptions.style as CommitStyle).dot,
+        ...style.dot,
+      },
+    } as CommitStyle;
   }
 }
 

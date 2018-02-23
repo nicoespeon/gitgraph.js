@@ -1,3 +1,5 @@
+import { CommitStyle } from "./template";
+
 export interface CommitOptions {
   author: string;
   subject: string;
@@ -7,6 +9,7 @@ export interface CommitOptions {
   tree?: string;
   commit?: string;
   parent?: string;
+  style: CommitStyle;
 }
 
 /**
@@ -96,6 +99,10 @@ export class Commit {
    * Notes
    */
   public notes: string;
+  /**
+   * Style
+   */
+  public style: CommitStyle;
 
   constructor(options: CommitOptions) {
     // Set author & committer
@@ -127,6 +134,9 @@ export class Commit {
 
     // Set ref
     this.refs = options.refs || [];
+
+    // Set style
+    this.style = options.style;
   }
 
 }
