@@ -1,5 +1,6 @@
 import Branch from "./branch";
 import Commit from "./commit";
+import { Template, metroTemplate, blackArrowTemplate } from "./template";
 import Refs from "./refs";
 
 export enum OrientationsEnum {
@@ -18,7 +19,7 @@ export enum TemplateEnum {
 }
 
 export interface GitGraphOptions {
-  template?: TemplateEnum;
+  template?: TemplateEnum | Template;
   orientation?: OrientationsEnum;
   reverseArrow?: boolean;
   initCommitOffsetX?: number;
@@ -40,6 +41,7 @@ export interface GitGraphCommitOptions {
 }
 
 const defaultGitGraphOptions: GitGraphOptions = {
+  template: metroTemplate,
   author: "Sergio Flores <saxo-guy@epic.com>",
   commitMessage: "He doesn't like George Michael! Boooo!",
   initCommitOffsetX: 0,
@@ -49,6 +51,7 @@ const defaultGitGraphOptions: GitGraphOptions = {
 
 export abstract class GitGraph {
   public options: GitGraphOptions;
+  public template: Template;
   public refs = new Refs();
   public commits: Commit[] = [];
   public currentBranch: Branch;
@@ -57,6 +60,16 @@ export abstract class GitGraph {
     this.options = { ...defaultGitGraphOptions, ...options };
     this.withRefs = this.withRefs.bind(this);
     this.currentBranch = new Branch({ name: "master", gitgraph: this });
+
+    // Resolve template
+    if (typeof this.options.template === "string") {
+      this.template = {
+        [TemplateEnum.BlackArrow]: blackArrowTemplate,
+        [TemplateEnum.Metro]: metroTemplate,
+      }[this.options.template];
+    } else {
+      this.template = this.options.template as Template;
+    }
   }
 
   /**

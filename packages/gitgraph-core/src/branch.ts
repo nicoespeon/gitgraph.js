@@ -1,5 +1,6 @@
 import Commit from "./commit";
 import { GitGraph, GitGraphCommitOptions } from "./gitgraph";
+import { isString } from "./utils";
 
 export interface BranchOptions {
   /**
@@ -78,10 +79,8 @@ export class Branch {
     // Add the new commit
     this.gitgraph.commits.push(commit);
 
-    // Move HEAD if we are on the current branch
-    if (this.gitgraph.currentBranch === this) {
-      this.gitgraph.refs.set("HEAD", commit);
-    }
+    // Move HEAD on the last commit
+    this.gitgraph.refs.set("HEAD", commit);
 
     return this;
   }

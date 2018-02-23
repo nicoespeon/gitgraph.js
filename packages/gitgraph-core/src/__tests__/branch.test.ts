@@ -51,11 +51,11 @@ describe("Branch", () => {
       });
 
       it("should have master tag on four commit", () => {
-        expect(four.refs).toEqual(["master"]);
+        expect(four.refs).toEqual(["master", "HEAD"]);
       });
 
       it("should have develop and head tags on three commit", () => {
-        expect(three.refs).toEqual(["develop", "HEAD"]);
+        expect(three.refs).toEqual(["develop"]);
       });
     });
   });

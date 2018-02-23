@@ -97,7 +97,7 @@ export class Commit {
    */
   public notes: string;
 
-  public constructor(options: CommitOptions) {
+  constructor(options: CommitOptions) {
     // Set author & committer
     let name, email;
     try {
