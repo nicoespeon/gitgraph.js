@@ -10,6 +10,7 @@ export interface CommitOptions {
   commit?: string;
   parent?: string;
   style: CommitStyle;
+  innerText?: string;
 }
 
 /**
@@ -103,6 +104,10 @@ export class Commit {
    * Style
    */
   public style: CommitStyle;
+  /**
+   * Inner text
+   */
+  public innerText?: string;
 
   constructor(options: CommitOptions) {
     // Set author & committer
@@ -137,6 +142,9 @@ export class Commit {
 
     // Set style
     this.style = options.style;
+
+    // Set inner text
+    this.innerText = options.innerText;
   }
 
 }
