@@ -181,22 +181,30 @@ export abstract class GitGraph {
     switch (this.orientation) {
       default:
         return {
-          ...commit, x: 0, y: this.template.commit.spacing * (length - 1 - i),
+          ...commit,
+          x: this.initCommitOffsetX,
+          y: this.initCommitOffsetY + this.template.commit.spacing * (length - 1 - i),
         };
 
       case OrientationsEnum.VerticalReverse:
         return {
-          ...commit, x: 0, y: this.template.commit.spacing * i,
+          ...commit,
+          x: this.initCommitOffsetX,
+          y: this.initCommitOffsetY + this.template.commit.spacing * i,
         };
 
       case OrientationsEnum.Horizontal:
         return {
-          ...commit, x: this.template.commit.spacing * i, y: 0,
+          ...commit,
+          x: this.initCommitOffsetX + this.template.commit.spacing * i,
+          y: this.initCommitOffsetY,
         };
 
       case OrientationsEnum.HorizontalReverse:
         return {
-          ...commit, x: this.template.commit.spacing * (length - 1 - i), y: 0,
+          ...commit,
+          x: this.initCommitOffsetX + this.template.commit.spacing * (length - 1 - i),
+          y: this.initCommitOffsetY,
         };
     }
   }
