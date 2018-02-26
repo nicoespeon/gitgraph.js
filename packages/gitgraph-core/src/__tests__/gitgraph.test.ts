@@ -143,15 +143,15 @@ describe("GitGraph", () => {
 
       expect(one).toMatchObject({
         x: 0,
-        y: -0,
+        y: 160,
       });
       expect(two).toMatchObject({
         x: 0,
-        y: -80,
+        y: 80,
       });
       expect(three).toMatchObject({
         x: 0,
-        y: -160,
+        y: 0,
       });
     });
 
@@ -208,15 +208,15 @@ describe("GitGraph", () => {
       const [one, two, three] = log;
 
       expect(one).toMatchObject({
-        x: -0,
+        x: 160,
         y: 0,
       });
       expect(two).toMatchObject({
-        x: -80,
+        x: 80,
         y: 0,
       });
       expect(three).toMatchObject({
-        x: -160,
+        x: 0,
         y: 0,
       });
     });

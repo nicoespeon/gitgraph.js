@@ -168,11 +168,12 @@ export abstract class GitGraph {
    * @param commit One commit
    * @param i index
    */
-  private withPosition(commit: Commit, i: number): Commit {
+  private withPosition(commit: Commit, i: number, arr: Commit[]): Commit {
+    const { length } = arr;
     switch (this.options.orientation) {
       default:
         return {
-          ...commit, x: 0, y: this.template.commit.spacing * i * -1,
+          ...commit, x: 0, y: this.template.commit.spacing * (length - 1 - i),
         };
 
       case OrientationsEnum.VerticalReverse:
@@ -187,7 +188,7 @@ export abstract class GitGraph {
 
       case OrientationsEnum.HorizontalReverse:
         return {
-          ...commit, x: this.template.commit.spacing * i * -1, y: 0,
+          ...commit, x: this.template.commit.spacing * (length - 1 - i), y: 0,
         };
     }
   }
