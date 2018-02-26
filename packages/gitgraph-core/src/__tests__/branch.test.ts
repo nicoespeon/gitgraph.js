@@ -148,5 +148,10 @@ describe("Branch", () => {
       const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
       expect(mergeCommit).toBeDefined();
     });
+
+    it("should have 2 parents commits", () => {
+      const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+      expect(mergeCommit.parents.length).toBe(2);
+    });
   });
 });

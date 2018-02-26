@@ -8,7 +8,7 @@ export interface CommitOptions {
   refs?: string[];
   tree?: string;
   commit?: string;
-  parent?: string;
+  parents?: string[];
   style: CommitStyle;
   innerText?: string;
 }
@@ -142,7 +142,7 @@ export class Commit {
     this.treeAbbrev = this.tree.substring(0, 7);
 
     // Set parent hash
-    this.parents = options.parent ? [options.parent] : [];
+    this.parents = options.parents ? options.parents : [];
     this.parentsAbbrev = this.parents.map((commit) => commit.substring(0, 7));
 
     // Set style

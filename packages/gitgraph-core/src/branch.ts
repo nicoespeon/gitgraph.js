@@ -67,11 +67,12 @@ export class Branch {
     if (!options) options = {};
 
     let parentOnSameBranch;
+    if (!options.parents) options.parents = [];
     if (this.gitgraph.refs.has(this.name)) {
       parentOnSameBranch = this.gitgraph.refs.get(this.name) as Commit;
-      options.parent = parentOnSameBranch.commit;
+      options.parents.push(parentOnSameBranch.commit);
     } else if (this.parentCommit) {
-      options.parent = this.parentCommit.commit;
+      options.parents.push(this.parentCommit.commit);
     }
 
     const commit = new Commit({
@@ -105,7 +106,9 @@ export class Branch {
    * @param branchName Branch name
    */
   public merge(branchName: string) {
-    this.commit(`Merge branch ${branchName}`);
+    const parentCommit = this.gitgraph.refs.get(branchName) as Commit;
+    if (!parentCommit) throw new Error(`The branch called "${branchName}" is unknown`);
+    this.commit({ subject: `Merge branch ${branchName}`, parents: [parentCommit.commit] });
     return this;
   }
 
