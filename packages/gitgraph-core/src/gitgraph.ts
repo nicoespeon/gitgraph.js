@@ -25,7 +25,7 @@ export interface GitGraphOptions {
   initCommitOffsetX?: number;
   initCommitOffsetY?: number;
   mode?: ModeEnum;
-  author: string;
+  author?: string;
   commitMessage?: string;
 }
 

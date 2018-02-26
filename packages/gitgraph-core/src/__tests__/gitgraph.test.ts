@@ -1,5 +1,5 @@
 import "jest";
-import { GitGraph, TemplateEnum } from "../gitgraph";
+import { GitGraph, TemplateEnum, OrientationsEnum } from "../gitgraph";
 
 describe("GitGraph", () => {
   class G extends GitGraph { public render(): void { return null; } }
@@ -132,7 +132,7 @@ describe("GitGraph", () => {
     });
   });
 
-  describe("rendering", () => {
+  describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {
       const gitgraph: GitGraph = new G();
 
@@ -152,6 +152,28 @@ describe("GitGraph", () => {
       expect(three).toMatchObject({
         x: 0,
         y: -160,
+      });
+    });
+
+    it("should deal with 3 straight commits (reverse)", () => {
+      const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.VerticalReverse });
+
+      gitgraph.commit().commit().commit();
+
+      const log = gitgraph.log();
+      const [one, two, three] = log;
+
+      expect(one).toMatchObject({
+        x: 0,
+        y: 0,
+      });
+      expect(two).toMatchObject({
+        x: 0,
+        y: 80,
+      });
+      expect(three).toMatchObject({
+        x: 0,
+        y: 160,
       });
     });
   });
