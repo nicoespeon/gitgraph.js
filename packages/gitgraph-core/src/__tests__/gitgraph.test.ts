@@ -1,5 +1,6 @@
 import "jest";
 import { GitGraph, TemplateEnum, OrientationsEnum } from "../gitgraph";
+import { metroTemplate } from "../template";
 
 describe("GitGraph", () => {
   class G extends GitGraph { public render(): void { return null; } }
@@ -8,7 +9,7 @@ describe("GitGraph", () => {
     it("should have the correct default options", () => {
       const gitgraph: GitGraph = new G();
 
-      expect(gitgraph.options).toMatchObject({
+      expect(gitgraph).toMatchObject({
         author: "Sergio Flores <saxo-guy@epic.com>",
         initCommitOffsetX: 0,
         initCommitOffsetY: 0,
@@ -23,12 +24,12 @@ describe("GitGraph", () => {
         template: TemplateEnum.Metro,
       });
 
-      expect(gitgraph.options).toMatchObject({
+      expect(gitgraph).toMatchObject({
         author: "Fabien BERNARD <fabien0102@gmail.com>",
         initCommitOffsetX: 0,
         initCommitOffsetY: 0,
         reverseArrow: true,
-        template: "metro",
+        template: metroTemplate,
       });
     });
   });

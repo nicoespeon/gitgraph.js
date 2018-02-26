@@ -75,8 +75,8 @@ export class Branch {
     }
 
     const commit = new Commit({
-      author: this.commitDefaultOptions.author || this.gitgraph.options.author,
-      subject: this.commitDefaultOptions.subject || this.gitgraph.options.commitMessage as string,
+      author: this.commitDefaultOptions.author || this.gitgraph.author,
+      subject: this.commitDefaultOptions.subject || this.gitgraph.commitMessage as string,
       ...options,
       style: this.getCommitStyle(options.style),
     });

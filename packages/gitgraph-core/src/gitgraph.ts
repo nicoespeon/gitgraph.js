@@ -2,6 +2,7 @@ import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
 import { Template, metroTemplate, blackArrowTemplate, CommitStyle } from "./template";
 import Refs from "./refs";
+import { booleanOptionOr, numberOptionOr } from "./utils";
 
 export enum OrientationsEnum {
   VerticalReverse = "vertical-reverse",
@@ -53,37 +54,44 @@ export interface GitGraphBranchOptions {
   commitDefaultOptions?: BranchCommitDefaultOptions;
 }
 
-const defaultGitGraphOptions: GitGraphOptions = {
-  template: metroTemplate,
-  author: "Sergio Flores <saxo-guy@epic.com>",
-  commitMessage: "He doesn't like George Michael! Boooo!",
-  initCommitOffsetX: 0,
-  initCommitOffsetY: 0,
-  reverseArrow: false,
-};
-
 export abstract class GitGraph {
-  public options: GitGraphOptions;
+  public orientation?: OrientationsEnum;
+  public reverseArrow: boolean;
+  public initCommitOffsetX: number;
+  public initCommitOffsetY: number;
+  public mode?: ModeEnum;
+  public author: string;
+  public commitMessage: string;
   public template: Template;
+
   public refs = new Refs();
   public commits: Commit[] = [];
   public currentBranch: Branch;
 
-  constructor(options?: GitGraphOptions) {
-    this.options = { ...defaultGitGraphOptions, ...options };
-
+  constructor(options: GitGraphOptions = {}) {
     // Set a default `master` branch
     this.currentBranch = new Branch({ name: "master", gitgraph: this });
 
     // Resolve template
-    if (typeof this.options.template === "string") {
+    if (typeof options.template === "string") {
       this.template = {
         [TemplateEnum.BlackArrow]: blackArrowTemplate,
         [TemplateEnum.Metro]: metroTemplate,
-      }[this.options.template];
+      }[options.template];
+    } else if (options.template) {
+      this.template = options.template as Template;
     } else {
-      this.template = this.options.template as Template;
+      this.template = metroTemplate;
     }
+
+    // Set all options with default values
+    this.orientation = options.orientation;
+    this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
+    this.initCommitOffsetX = numberOptionOr(options.initCommitOffsetX, 0) as number;
+    this.initCommitOffsetY = numberOptionOr(options.initCommitOffsetY, 0) as number;
+    this.mode = options.mode;
+    this.author = options.author || "Sergio Flores <saxo-guy@epic.com>";
+    this.commitMessage = options.commitMessage || "He doesn't like George Michael! Boooo!";
 
     // Context binding
     this.withRefs = this.withRefs.bind(this);
@@ -170,7 +178,7 @@ export abstract class GitGraph {
    */
   private withPosition(commit: Commit, i: number, arr: Commit[]): Commit {
     const { length } = arr;
-    switch (this.options.orientation) {
+    switch (this.orientation) {
       default:
         return {
           ...commit, x: 0, y: this.template.commit.spacing * (length - 1 - i),
