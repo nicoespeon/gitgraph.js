@@ -176,5 +176,49 @@ describe("GitGraph", () => {
         y: 160,
       });
     });
+
+    it("should deal with 3 straight commits (horizontal)", () => {
+      const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.Horizontal });
+
+      gitgraph.commit().commit().commit();
+
+      const log = gitgraph.log();
+      const [one, two, three] = log;
+
+      expect(one).toMatchObject({
+        x: 0,
+        y: 0,
+      });
+      expect(two).toMatchObject({
+        x: 80,
+        y: 0,
+      });
+      expect(three).toMatchObject({
+        x: 160,
+        y: 0,
+      });
+    });
+
+    it("should deal with 3 straight commits (horizontal-reverse)", () => {
+      const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.HorizontalReverse });
+
+      gitgraph.commit().commit().commit();
+
+      const log = gitgraph.log();
+      const [one, two, three] = log;
+
+      expect(one).toMatchObject({
+        x: -0,
+        y: 0,
+      });
+      expect(two).toMatchObject({
+        x: -80,
+        y: 0,
+      });
+      expect(three).toMatchObject({
+        x: -160,
+        y: 0,
+      });
+    });
   });
 });
