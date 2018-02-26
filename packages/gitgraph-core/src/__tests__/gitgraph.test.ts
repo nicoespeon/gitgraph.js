@@ -131,4 +131,28 @@ describe("GitGraph", () => {
       });
     });
   });
+
+  describe("rendering", () => {
+    it("should deal with 3 straight commits", () => {
+      const gitgraph: GitGraph = new G();
+
+      gitgraph.commit().commit().commit();
+
+      const log = gitgraph.log();
+      const [one, two, three] = log;
+
+      expect(one).toMatchObject({
+        x: 0,
+        y: -0,
+      });
+      expect(two).toMatchObject({
+        x: 0,
+        y: -80,
+      });
+      expect(three).toMatchObject({
+        x: 0,
+        y: -160,
+      });
+    });
+  });
 });

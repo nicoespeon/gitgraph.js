@@ -27,9 +27,17 @@ const getRandomHash = () => (
 
 export class Commit {
   /**
-   * Ref names
+   * Ref names (injected by Gitgraph.withRefs)
    */
-  public refs: string[];
+  public refs: string[] = [];
+  /**
+   * Commit x position (injected by Gitgraph.withPosition)
+   */
+  public x: number = 0;
+  /**
+   * Commit y position (injected by Gitgraph.withPosition)
+   */
+  public y: number = 0;
   /**
    * Commit hash
    */
@@ -136,9 +144,6 @@ export class Commit {
     // Set parent hash
     this.parents = options.parent ? [options.parent] : [];
     this.parentsAbbrev = this.parents.map((commit) => commit.substring(0, 7));
-
-    // Set ref
-    this.refs = options.refs || [];
 
     // Set style
     this.style = options.style;

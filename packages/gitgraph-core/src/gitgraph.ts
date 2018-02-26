@@ -71,7 +71,8 @@ export abstract class GitGraph {
 
   constructor(options?: GitGraphOptions) {
     this.options = { ...defaultGitGraphOptions, ...options };
-    this.withRefs = this.withRefs.bind(this);
+
+    // Set a default `master` branch
     this.currentBranch = new Branch({ name: "master", gitgraph: this });
 
     // Resolve template
@@ -83,13 +84,19 @@ export abstract class GitGraph {
     } else {
       this.template = this.options.template as Template;
     }
+
+    // Context binding
+    this.withRefs = this.withRefs.bind(this);
+    this.withPosition = this.withPosition.bind(this);
   }
 
   /**
    * Return the list of all commits (as `git log`).
    */
   public log(): Commit[] {
-    return this.commits.map(this.withRefs);
+    return this.commits
+      .map(this.withRefs)
+      .map(this.withPosition);
   }
 
   /**
@@ -145,13 +152,26 @@ export abstract class GitGraph {
   public abstract render(): void;
 
   /**
-   * Add refs info to on commit.
+   * Add refs info to one commit.
    *
    * @param commit One commit
    */
   private withRefs(commit: Commit) {
     return {
       ...commit, refs: (this.refs.get(commit) as string[]) || [],
+    };
+  }
+
+  /**
+   * Add position to one commit.
+   *
+   * @param commit One commit
+   * @param i index
+   */
+  private withPosition(commit: Commit, i: number): Commit {
+    const yOrientation = this.options.orientation === OrientationsEnum.VerticalReverse ? 1 : -1;
+    return {
+      ...commit, x: 0, y: this.template.commit.spacing * i * yOrientation,
     };
   }
 }
