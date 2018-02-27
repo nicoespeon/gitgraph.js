@@ -15,6 +15,16 @@ export class Refs {
         return this.refs.get(key);
     }
 
+    public keys(): string[] {
+        return Array.from(this.refs.keys())
+            .filter((i) => typeof i === "string") as string[];
+    }
+
+    public values(): Commit[] {
+        return Array.from(this.refs.values())
+            .filter((i) => i instanceof Commit) as Commit[];
+    }
+
     public set(name: string, commit: Commit): void {
         // Remove old links
         const prevCommit = this.refs.get(name) as Commit;
