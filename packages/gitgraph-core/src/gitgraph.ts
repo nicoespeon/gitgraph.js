@@ -37,7 +37,7 @@ export interface GitGraphCommitOptions {
   notes?: string;
   refs?: string[];
   tree?: string;
-  commit?: string;
+  hash?: string;
   parents?: string[];
   style?: CommitStyle;
   innerText?: string;

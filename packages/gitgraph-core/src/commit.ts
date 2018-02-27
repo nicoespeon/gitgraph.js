@@ -7,7 +7,7 @@ export interface CommitOptions {
   notes?: string;
   refs?: string[];
   tree?: string;
-  commit?: string;
+  hash?: string;
   parents?: string[];
   style: CommitStyle;
   innerText?: string;
@@ -41,11 +41,11 @@ export class Commit {
   /**
    * Commit hash
    */
-  public commit: string;
+  public hash: string;
   /**
    * Abbreviated commit hash
    */
-  public commitAbbrev: string;
+  public hashAbbrev: string;
   /**
    * Tree hash
    */
@@ -134,8 +134,8 @@ export class Commit {
     this.notes = options.notes || "";
 
     // Set commit hash
-    this.commit = options.commit || getRandomHash();
-    this.commitAbbrev = this.commit.substring(0, 7);
+    this.hash = options.hash || getRandomHash();
+    this.hashAbbrev = this.hash.substring(0, 7);
 
     // Set tree hash
     this.tree = options.tree || getRandomHash();

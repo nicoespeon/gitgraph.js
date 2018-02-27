@@ -127,8 +127,8 @@ describe("GitGraph", () => {
       });
 
       it("should have the first commit as parent refs", () => {
-        expect(two.parents).toEqual([one.commit]);
-        expect(two.parentsAbbrev).toEqual([one.commitAbbrev]);
+        expect(two.parents).toEqual([one.hash]);
+        expect(two.parentsAbbrev).toEqual([one.hashAbbrev]);
       });
     });
   });
@@ -137,20 +137,23 @@ describe("GitGraph", () => {
     it("should deal with 3 straight commits", () => {
       const gitgraph: GitGraph = new G();
 
-      gitgraph.commit().commit().commit();
+      gitgraph.commit("one").commit("two").commit("three");
 
       const log = gitgraph.log();
       const [one, two, three] = log;
 
       expect(one).toMatchObject({
+        subject: "one",
         x: 0,
         y: 160,
       });
       expect(two).toMatchObject({
+        subject: "two",
         x: 0,
         y: 80,
       });
       expect(three).toMatchObject({
+        subject: "three",
         x: 0,
         y: 0,
       });
@@ -159,20 +162,23 @@ describe("GitGraph", () => {
     it("should deal with 3 straight commits (reverse)", () => {
       const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.VerticalReverse });
 
-      gitgraph.commit().commit().commit();
+      gitgraph.commit("one").commit("two").commit("three");
 
       const log = gitgraph.log();
       const [one, two, three] = log;
 
       expect(one).toMatchObject({
+        subject: "one",
         x: 0,
         y: 0,
       });
       expect(two).toMatchObject({
+        subject: "two",
         x: 0,
         y: 80,
       });
       expect(three).toMatchObject({
+        subject: "three",
         x: 0,
         y: 160,
       });
@@ -181,20 +187,23 @@ describe("GitGraph", () => {
     it("should deal with 3 straight commits (horizontal)", () => {
       const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.Horizontal });
 
-      gitgraph.commit().commit().commit();
+      gitgraph.commit("one").commit("two").commit("three");
 
       const log = gitgraph.log();
       const [one, two, three] = log;
 
       expect(one).toMatchObject({
+        subject: "one",
         x: 0,
         y: 0,
       });
       expect(two).toMatchObject({
+        subject: "two",
         x: 80,
         y: 0,
       });
       expect(three).toMatchObject({
+        subject: "three",
         x: 160,
         y: 0,
       });
@@ -203,20 +212,23 @@ describe("GitGraph", () => {
     it("should deal with 3 straight commits (horizontal-reverse)", () => {
       const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.HorizontalReverse });
 
-      gitgraph.commit().commit().commit();
+      gitgraph.commit("one").commit("two").commit("three");
 
       const log = gitgraph.log();
       const [one, two, three] = log;
 
       expect(one).toMatchObject({
+        subject: "one",
         x: 160,
         y: 0,
       });
       expect(two).toMatchObject({
+        subject: "two",
         x: 80,
         y: 0,
       });
       expect(three).toMatchObject({
+        subject: "three",
         x: 0,
         y: 0,
       });

@@ -33,7 +33,7 @@ describe("Branch", () => {
       });
 
       it("should have the correct parents set", () => {
-        expect(three.parents).toEqual([two.commit]);
+        expect(three.parents).toEqual([two.hash]);
       });
     });
 
