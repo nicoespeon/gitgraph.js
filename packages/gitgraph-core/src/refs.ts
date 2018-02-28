@@ -25,6 +25,10 @@ export class Refs {
             .filter((i) => i instanceof Commit) as Commit[];
     }
 
+    public branches(): string[] {
+        return this.keys().filter((i) => i !== "HEAD");
+    }
+
     public set(name: string, commit: Commit): void {
         // Remove old links
         const prevCommit = this.refs.get(name) as Commit;
