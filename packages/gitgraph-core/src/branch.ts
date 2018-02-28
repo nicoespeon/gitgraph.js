@@ -59,7 +59,6 @@ export class Branch {
    *
    * @param options Options of the commit
    */
-  // tslint:disable-next-line:unified-signatures
   public commit(options?: GitGraphCommitOptions): Branch;
   public commit(options?: GitGraphCommitOptions | string): Branch {
     // Deal with shorter syntax
@@ -103,9 +102,17 @@ export class Branch {
   /**
    * Create a merge commit.
    *
+   * @param branch Branch
+   */
+  public merge(branch: Branch): Branch;
+  /**
+   * Create a merge commit.
+   *
    * @param branchName Branch name
    */
-  public merge(branchName: string) {
+  public merge(branchName: string): Branch;
+  public merge(branch: string | Branch): Branch {
+    const branchName = (typeof branch === "string") ? branch : branch.name;
     const parentCommit = this.gitgraph.refs.get(branchName) as Commit;
     if (!parentCommit) throw new Error(`The branch called "${branchName}" is unknown`);
     this.commit({ subject: `Merge branch ${branchName}`, parents: [parentCommit.hash] });

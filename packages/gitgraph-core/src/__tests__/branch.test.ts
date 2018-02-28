@@ -125,33 +125,75 @@ describe("Branch", () => {
 
   describe("merge", () => {
     let log: Commit[];
-    beforeEach(() => {
-      const gitgraph = new G();
+    describe("with string parameter", () => {
+      beforeEach(() => {
+        const gitgraph = new G();
 
-      const master = gitgraph.branch("master");
-      master.commit("master 1");
-      master.commit("master 2");
+        const master = gitgraph.branch("master");
+        master.commit("master 1");
+        master.commit("master 2");
 
-      const develop = gitgraph.branch("develop");
-      develop.commit("develop 1");
-      develop.commit("develop 2");
-      develop.commit("develop 3");
-      master.commit("master 3");
+        const develop = gitgraph.branch("develop");
+        develop.commit("develop 1");
+        develop.commit("develop 2");
+        develop.commit("develop 3");
+        master.commit("master 3");
 
-      master.merge("develop");
-      master.commit("master 4");
+        master.merge("develop"); // <- string
+        master.commit("master 4");
 
-      log = gitgraph.log();
+        log = gitgraph.log();
+      });
+
+      it("should create a merge commit into master", () => {
+        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        expect(mergeCommit).toBeDefined();
+      });
+
+      it("should have 2 parents commits", () => {
+        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        expect(mergeCommit.parents.length).toBe(2);
+      });
+
+      it("should throw if the branch doesn't exist", () => {
+        const gitgraph = new G();
+
+        const master = gitgraph.branch("master");
+        master.commit("master 1");
+        master.commit("master 2");
+        expect(() => master.merge("no-exists")).toThrow(`The branch called "no-exists" is unknown`);
+      });
     });
 
-    it("should create a merge commit into master", () => {
-      const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
-      expect(mergeCommit).toBeDefined();
-    });
+    describe("with branch parameter", () => {
+      beforeEach(() => {
+        const gitgraph = new G();
 
-    it("should have 2 parents commits", () => {
-      const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
-      expect(mergeCommit.parents.length).toBe(2);
+        const master = gitgraph.branch("master");
+        master.commit("master 1");
+        master.commit("master 2");
+
+        const develop = gitgraph.branch("develop");
+        develop.commit("develop 1");
+        develop.commit("develop 2");
+        develop.commit("develop 3");
+        master.commit("master 3");
+
+        master.merge(develop); // <- branch
+        master.commit("master 4");
+
+        log = gitgraph.log();
+      });
+
+      it("should create a merge commit into master", () => {
+        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        expect(mergeCommit).toBeDefined();
+      });
+
+      it("should have 2 parents commits", () => {
+        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        expect(mergeCommit.parents.length).toBe(2);
+      });
     });
   });
 });
