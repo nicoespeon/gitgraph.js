@@ -133,6 +133,43 @@ describe("GitGraph", () => {
     });
   });
 
+  describe("withBranches", () => {
+    it("should deal one branch (no merge)", () => {
+      const gitgraph: GitGraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+
+      const log = gitgraph.log();
+      const [one, two, three, four, five] = log;
+
+      expect(one).toMatchObject({
+        subject: "one",
+        branches: ["master", "dev"],
+      });
+      expect(two).toMatchObject({
+        subject: "two",
+        x: 0,
+        branches: ["master", "dev"],
+      });
+      expect(three).toMatchObject({
+        subject: "three",
+        branches: ["dev"],
+      });
+      expect(four).toMatchObject({
+        subject: "four",
+        branches: ["master"],
+      });
+      expect(five).toMatchObject({
+        subject: "five",
+        branches: ["dev"],
+      });
+    });
+  });
   describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {
       const gitgraph: GitGraph = new G();
@@ -230,6 +267,46 @@ describe("GitGraph", () => {
       expect(three).toMatchObject({
         subject: "three",
         x: 0,
+        y: 0,
+      });
+    });
+
+    it("should deal one branch (no merge)", () => {
+      const gitgraph: GitGraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+
+      const log = gitgraph.log();
+      const [one, two, three, four, five] = log;
+
+      expect(one).toMatchObject({
+        subject: "one",
+        x: 0,
+        y: 80 * 4,
+      });
+      expect(two).toMatchObject({
+        subject: "two",
+        x: 0,
+        y: 80 * 3,
+      });
+      expect(three).toMatchObject({
+        subject: "three",
+        x: 50, // dev
+        y: 80 * 2,
+      });
+      expect(four).toMatchObject({
+        subject: "four",
+        x: 0,
+        y: 80,
+      });
+      expect(five).toMatchObject({
+        subject: "five",
+        x: 50, // dev
         y: 0,
       });
     });
