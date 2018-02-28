@@ -144,131 +144,102 @@ describe("GitGraph", () => {
       master.commit("four");
       dev.commit("five");
 
-      const log = gitgraph.log();
-      const [one, two, three, four, five] = log;
-
-      expect(one).toMatchObject({
+      expect(gitgraph.log()).toMatchObject([{
         subject: "one",
         branches: ["master", "dev"],
-      });
-      expect(two).toMatchObject({
+      },
+      {
         subject: "two",
-        x: 0,
         branches: ["master", "dev"],
-      });
-      expect(three).toMatchObject({
+      },
+      {
         subject: "three",
         branches: ["dev"],
-      });
-      expect(four).toMatchObject({
+      }, {
         subject: "four",
         branches: ["master"],
-      });
-      expect(five).toMatchObject({
+      },
+      {
         subject: "five",
         branches: ["dev"],
-      });
+      }]);
     });
   });
   describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {
       const gitgraph: GitGraph = new G();
-
       gitgraph.commit("one").commit("two").commit("three");
 
-      const log = gitgraph.log();
-      const [one, two, three] = log;
-
-      expect(one).toMatchObject({
+      expect(gitgraph.log()).toMatchObject([{
         subject: "one",
         x: 0,
         y: 160,
-      });
-      expect(two).toMatchObject({
+      }, {
         subject: "two",
         x: 0,
         y: 80,
-      });
-      expect(three).toMatchObject({
+      }, {
         subject: "three",
         x: 0,
         y: 0,
-      });
+      }]);
     });
 
     it("should deal with 3 straight commits (reverse)", () => {
       const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.VerticalReverse });
-
       gitgraph.commit("one").commit("two").commit("three");
 
-      const log = gitgraph.log();
-      const [one, two, three] = log;
-
-      expect(one).toMatchObject({
+      expect(gitgraph.log()).toMatchObject([{
         subject: "one",
         x: 0,
         y: 0,
-      });
-      expect(two).toMatchObject({
+      }, {
         subject: "two",
         x: 0,
         y: 80,
-      });
-      expect(three).toMatchObject({
+      }, {
         subject: "three",
         x: 0,
         y: 160,
-      });
+      }]);
     });
 
     it("should deal with 3 straight commits (horizontal)", () => {
       const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.Horizontal });
-
       gitgraph.commit("one").commit("two").commit("three");
 
-      const log = gitgraph.log();
-      const [one, two, three] = log;
-
-      expect(one).toMatchObject({
+      expect(gitgraph.log()).toMatchObject([{
         subject: "one",
         x: 0,
         y: 0,
-      });
-      expect(two).toMatchObject({
+      }, {
         subject: "two",
         x: 80,
         y: 0,
-      });
-      expect(three).toMatchObject({
+      }, {
         subject: "three",
         x: 160,
         y: 0,
-      });
+      }]);
     });
 
     it("should deal with 3 straight commits (horizontal-reverse)", () => {
       const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.HorizontalReverse });
-
       gitgraph.commit("one").commit("two").commit("three");
 
-      const log = gitgraph.log();
-      const [one, two, three] = log;
-
-      expect(one).toMatchObject({
+      expect(gitgraph.log()).toMatchObject([{
         subject: "one",
         x: 160,
         y: 0,
-      });
-      expect(two).toMatchObject({
+      }, {
         subject: "two",
         x: 80,
         y: 0,
-      });
-      expect(three).toMatchObject({
+      }, {
         subject: "three",
         x: 0,
         y: 0,
-      });
+      }]);
     });
 
     it("should deal one branch (no merge)", () => {
@@ -281,34 +252,27 @@ describe("GitGraph", () => {
       master.commit("four");
       dev.commit("five");
 
-      const log = gitgraph.log();
-      const [one, two, three, four, five] = log;
-
-      expect(one).toMatchObject({
+      expect(gitgraph.log()).toMatchObject([{
         subject: "one",
         x: 0,
         y: 80 * 4,
-      });
-      expect(two).toMatchObject({
+      }, {
         subject: "two",
         x: 0,
         y: 80 * 3,
-      });
-      expect(three).toMatchObject({
+      }, {
         subject: "three",
         x: 50, // dev
         y: 80 * 2,
-      });
-      expect(four).toMatchObject({
+      }, {
         subject: "four",
         x: 0,
         y: 80,
-      });
-      expect(five).toMatchObject({
+      }, {
         subject: "five",
         x: 50, // dev
         y: 0,
-      });
+      }]);
     });
   });
 });
