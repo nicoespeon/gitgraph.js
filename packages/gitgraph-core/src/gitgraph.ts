@@ -124,7 +124,6 @@ export abstract class GitGraph {
    *
    * @param options Options of the commit
    */
-  // tslint:disable-next-line:unified-signatures
   public commit(options?: GitGraphCommitOptions): GitGraph;
   public commit(options?: any): GitGraph {
     this.currentBranch.commit(options);
@@ -142,7 +141,6 @@ export abstract class GitGraph {
    *
    * @param name name of the created branch
    */
-  // tslint:disable-next-line:unified-signatures
   public branch(name: string): Branch;
   public branch(args: any): Branch {
     const parentCommit = this.refs.get("HEAD") as Commit;
