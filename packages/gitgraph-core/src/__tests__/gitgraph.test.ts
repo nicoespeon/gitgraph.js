@@ -164,6 +164,42 @@ describe("GitGraph", () => {
         branches: ["dev"],
       }]);
     });
+    it("should deal one branch (with merge)", () => {
+      const gitgraph: GitGraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+      master.merge(dev);
+
+      expect(gitgraph.log()).toMatchObject([{
+        subject: "one",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "two",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "three",
+        branches: ["master", "dev"],
+      }, {
+        subject: "four",
+        branches: ["master"],
+      },
+      {
+        subject: "five",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "Merge branch dev",
+        branches: ["master"],
+      },
+      ]);
+    });
   });
   describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {

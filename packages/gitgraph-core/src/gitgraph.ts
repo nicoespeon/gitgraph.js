@@ -184,21 +184,26 @@ export abstract class GitGraph {
    */
   private withBranches(commits: Commit[]): Commit[] {
     const branches = this.refs.branches();
-    const refs = new Map<Commit["hash"], Array<Branch["name"]>>();
+    const refs = new Map<Commit["hash"], Set<Branch["name"]>>();
+    const queue: Commit[] = [];
     branches.forEach((branch: string) => {
-      const lastCommit = this.refs.get(branch) as Commit;
-      const currentBranches = refs.get(lastCommit.hash) || [];
-      refs.set(lastCommit.hash, [...currentBranches, branch]);
+      queue.push(this.refs.get(branch) as Commit);
 
-      let parent = commits.find(({ hash }) => hash === lastCommit.parents[0]);
-      while (parent) {
-        const currentParentBranches = refs.get(parent.hash) || [];
-        refs.set(parent.hash, [...currentParentBranches, branch]);
-        parent = commits.find(({ hash }) => hash === (parent as Commit).parents[0]);
+      while (queue.length > 0) {
+        const current = queue.pop() as Commit;
+        const prevBranches = refs.get(current.hash) || new Set<Branch["name"]>();
+        prevBranches.add(branch);
+        refs.set(current.hash, prevBranches);
+        if (current.parents.length > 0) {
+          queue.push(...commits.filter(({ hash }) => current.parents.includes(hash)));
+        }
       }
     });
 
-    return commits.map((commit) => ({ ...commit, branches: refs.get(commit.hash) }));
+    return commits.map((commit) => ({
+      ...commit,
+      branches: Array.from((refs.get(commit.hash) || new Set()).values()),
+    }));
   }
 
   /**
