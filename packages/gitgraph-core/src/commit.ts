@@ -116,6 +116,10 @@ export class Commit {
    * Inner text
    */
   public innerText?: string;
+  /**
+   * List of branches attached (injected by Gitgraph.withBranches)
+   */
+  public branches?: string[];
 
   constructor(options: CommitOptions) {
     // Set author & committer
