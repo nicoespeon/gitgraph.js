@@ -130,17 +130,17 @@ describe("Branch", () => {
         const gitgraph = new G();
 
         const master = gitgraph.branch("master");
-        master.commit("master 1");
-        master.commit("master 2");
+        master.commit("master 1"); // 0
+        master.commit("master 2"); // 1
 
         const develop = gitgraph.branch("develop");
-        develop.commit("develop 1");
-        develop.commit("develop 2");
-        develop.commit("develop 3");
-        master.commit("master 3");
+        develop.commit("develop 1"); // 2
+        develop.commit("develop 2"); // 3
+        develop.commit("develop 3"); // 4
+        master.commit("master 3"); // 5
 
-        master.merge("develop"); // <- string
-        master.commit("master 4");
+        master.merge("develop"); // 6 (merge with string)
+        master.commit("master 4"); // 7
 
         log = gitgraph.log();
       });
@@ -162,6 +162,11 @@ describe("Branch", () => {
         master.commit("master 1");
         master.commit("master 2");
         expect(() => master.merge("no-exists")).toThrow(`The branch called "no-exists" is unknown`);
+      });
+
+      it("should have the last master commit as first parent and dev as second parent", () => {
+        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        expect(mergeCommit.parents).toEqual([log[5].hash, log[4].hash]);
       });
     });
 

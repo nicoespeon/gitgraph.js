@@ -69,9 +69,9 @@ export class Branch {
     if (!options.parents) options.parents = [];
     if (this.gitgraph.refs.has(this.name)) {
       parentOnSameBranch = this.gitgraph.refs.get(this.name) as Commit;
-      options.parents.push(parentOnSameBranch.hash);
+      options.parents.unshift(parentOnSameBranch.hash);
     } else if (this.parentCommit) {
-      options.parents.push(this.parentCommit.hash);
+      options.parents.unshift(this.parentCommit.hash);
     }
 
     const commit = new Commit({
