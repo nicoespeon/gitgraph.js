@@ -19,17 +19,22 @@ export function numberOptionOr(value: any, defaultValue: number | null): number 
 }
 
 /**
+ * Creates an object composed of the picked object properties.
+ * @param obj The source object
+ * @param paths The property paths to pick
+ */
+export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
+  return { ...paths.reduce((mem, key) => ({ ...mem, [key]: obj[key] }), {}) } as Pick<T, K>;
+}
+
+/**
  * Print a light version of commits into the console.
  * @param commits List of commits
- * @param whitelist List of picked keys
+ * @param paths The property paths to pick
  */
-export function debug(commits: Commit[], whitelist: Array<keyof Commit>): void {
+export function debug(commits: Commit[], paths: Array<keyof Commit>): void {
   // tslint:disable-next-line:no-console
   console.log(
-    JSON.stringify(commits.map((commit) =>
-      (Object.keys(commit) as Array<keyof Commit>)
-        .filter((key) => whitelist.includes(key))
-        .reduce((mem, key) => ({ ...mem, [key]: commit[key] }), {}))
-      , null, 2),
+    JSON.stringify(commits.map((commit) => pick(commit, paths)), null, 2),
   );
 }
