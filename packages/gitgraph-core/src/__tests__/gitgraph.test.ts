@@ -1,6 +1,9 @@
 import "jest";
 import { GitGraph, TemplateEnum, OrientationsEnum } from "../gitgraph";
 import { metroTemplate } from "../template";
+import { readFileSync } from "fs";
+import { join } from "path";
+import { debug } from "../utils";
 
 describe("GitGraph", () => {
   class G extends GitGraph { public render(): void { return null; } }
@@ -499,6 +502,26 @@ describe("GitGraph", () => {
         x: 0, // master
         y: 0,
       }]);
+    });
+
+    it("should also be able to calculate position from git2json output", () => {
+      const gitgraph = new G();
+
+      gitgraph.commits = JSON.parse(
+        readFileSync(join(__dirname, "./git2json-two-commits.json"), "utf-8"),
+      );
+
+      expect(gitgraph.log()).toMatchObject([
+        {
+          subject: "second",
+          x: 0,
+          y: 80,
+        },
+        {
+          subject: "first",
+          x: 0,
+          y: 0,
+        }]);
     });
   });
 });
