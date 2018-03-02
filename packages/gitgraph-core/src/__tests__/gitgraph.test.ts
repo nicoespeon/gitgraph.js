@@ -427,5 +427,78 @@ describe("GitGraph", () => {
         y: 0,
       }]);
     });
+
+    it("should deal with complex case", () => {
+      const gitgraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+
+      const feat = gitgraph.branch("feat");
+      feat.commit("six");
+
+      dev.commit("seven");
+      feat.commit("eight");
+      master.commit("nine");
+      dev.merge(feat);
+      master.merge(dev);
+
+      expect(gitgraph.log()).toMatchObject([{
+        subject: "one",
+        x: 0, // master
+        y: 80 * 10,
+      }, {
+        subject: "two",
+        x: 0, // master
+        y: 80 * 9,
+      }, {
+        subject: "three",
+        x: 50, // dev
+        y: 80 * 8,
+      }, {
+        subject: "four",
+        x: 0, // master
+        y: 80 * 7,
+      }, {
+        subject: "five",
+        x: 50, // dev
+        y: 80 * 6,
+      },
+      {
+        subject: "six",
+        x: 50 * 2, // feat
+        y: 80 * 5,
+      },
+      {
+        subject: "seven",
+        x: 50, // dev
+        y: 80 * 4,
+      },
+      {
+        subject: "eight",
+        x: 50 * 2, // feat
+        y: 80 * 3,
+      },
+      {
+        subject: "nine",
+        x: 0, // feat
+        y: 80 * 2,
+      },
+      {
+        subject: "Merge branch feat",
+        x: 50, // dev
+        y: 80,
+      },
+      {
+        subject: "Merge branch dev",
+        x: 0, // master
+        y: 0,
+      }]);
+    });
   });
 });
