@@ -1,4 +1,5 @@
 import { CommitStyle } from "./template";
+import Branch from "./branch";
 
 export interface CommitOptions {
   author: string;
@@ -29,7 +30,7 @@ export class Commit {
   /**
    * Ref names (injected by Gitgraph.withRefs)
    */
-  public refs: string[] = [];
+  public refs: Array<Branch["name"] | "HEAD"> = [];
   /**
    * Commit x position (injected by Gitgraph.withPosition)
    */
@@ -57,11 +58,11 @@ export class Commit {
   /**
    * Parent hashes
    */
-  public parents: string[];
+  public parents: Array<Commit["hash"]>;
   /**
    * Abbreviated parent hashed
    */
-  public parentsAbbrev: string[];
+  public parentsAbbrev: Array<Commit["hashAbbrev"]>;
   /**
    * Author
    */
@@ -119,7 +120,7 @@ export class Commit {
   /**
    * List of branches attached (injected by Gitgraph.withBranches)
    */
-  public branches?: string[];
+  public branches?: Array<Branch["name"]>;
 
   constructor(options: CommitOptions) {
     // Set author & committer
