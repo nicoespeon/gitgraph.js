@@ -310,5 +310,44 @@ describe("GitGraph", () => {
         y: 0,
       }]);
     });
+
+    it("should deal one branch (with merge)", () => {
+      const gitgraph: GitGraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+      master.merge(dev);
+
+      expect(gitgraph.log()).toMatchObject([{
+        subject: "one",
+        x: 0,
+        y: 80 * 5,
+      }, {
+        subject: "two",
+        x: 0,
+        y: 80 * 4,
+      }, {
+        subject: "three",
+        x: 50, // dev
+        y: 80 * 3,
+      }, {
+        subject: "four",
+        x: 0,
+        y: 80 * 2,
+      }, {
+        subject: "five",
+        x: 50, // dev
+        y: 80,
+      },
+      {
+        subject: "Merge branch dev",
+        x: 0,
+        y: 0,
+      }]);
+    });
   });
 });

@@ -106,11 +106,14 @@ export abstract class GitGraph {
     // 1. Add `refs` to each commit
     const commitsWithRefs = this.commits.map(this.withRefs);
 
-    // 2. Add `branches` to each commit
-    const commitsWithRefsAndBranches = this.withBranches(commitsWithRefs);
+    // 2. Add `branches` to each commit (without merge commits resolution)
+    const commitsWithRefsAndBranches = this.withBranches(commitsWithRefs, { firstParentOnly: true });
 
     // 3. Add position to each commit
-    return commitsWithRefsAndBranches.map(this.withPosition);
+    const commitsWithPosition = commitsWithRefsAndBranches.map(this.withPosition);
+
+    // 4. Add `branches` to each commit (with merge commits resolution)
+    return this.withBranches(commitsWithPosition);
   }
 
   /**
@@ -181,8 +184,13 @@ export abstract class GitGraph {
    * Add `branches` property to commits.
    *
    * @param commits List of commits
+   * @param options
+   * @param options.firstParentOnly Resolve the first parent of merge commit only
    */
-  private withBranches(commits: Commit[]): Commit[] {
+  private withBranches(
+    commits: Commit[],
+    { firstParentOnly } = { firstParentOnly: false },
+  ): Commit[] {
     const branches = this.refs.branches();
     const refs = new Map<Commit["hash"], Set<Branch["name"]>>();
     const queue: Commit[] = [];
@@ -195,7 +203,9 @@ export abstract class GitGraph {
         prevBranches.add(branch);
         refs.set(current.hash, prevBranches);
         if (current.parents.length > 0) {
-          queue.push(...commits.filter(({ hash }) => current.parents.includes(hash)));
+          firstParentOnly
+            ? queue.push(commits.find(({ hash }) => current.parents[0] === hash) as Commit)
+            : queue.push(...commits.filter(({ hash }) => current.parents.includes(hash)));
         }
       }
     });
@@ -216,7 +226,7 @@ export abstract class GitGraph {
    */
   private withPosition(commit: Commit, i: number, arr: Commit[]): Commit {
     const { length } = arr;
-    const column = (commit.branches || [])[0] === "master" ? 0 : 1;
+    const column = (commit.branches || []).includes("master") ? 0 : 1;
     switch (this.orientation) {
       default:
         return {
