@@ -133,6 +133,44 @@ describe("GitGraph", () => {
     });
   });
 
+  describe("clear", () => {
+    it("should clear everything", () => {
+      const gitgraph: GitGraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+
+      gitgraph.clear();
+      expect(gitgraph.log()).toEqual([]);
+      expect(gitgraph.refs.values()).toEqual([]);
+    });
+
+    it("should reset the currentBranch", () => {
+      const gitgraph = new G();
+      const dev = gitgraph.branch("dev").checkout();
+      expect(gitgraph.currentBranch.name).toBe("dev");
+
+      gitgraph.clear();
+      expect(gitgraph.currentBranch.name).toBe("master");
+    });
+
+    it("should be able to add normally a commit after a clear", () => {
+      const gitgraph = new G();
+      gitgraph.branch("dev").commit("one").commit("two");
+      gitgraph.clear();
+      gitgraph.branch("feat").commit("three").commit("four");
+
+      expect(gitgraph.log()).toMatchObject([
+        { subject: "three", branches: ["feat"] },
+        { subject: "four", branches: ["feat"] },
+      ]);
+    });
+  });
+
   describe("withBranches", () => {
     it("should deal one branch (no merge)", () => {
       const gitgraph: GitGraph = new G();

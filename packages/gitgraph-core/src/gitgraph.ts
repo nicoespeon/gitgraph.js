@@ -161,6 +161,17 @@ export abstract class GitGraph {
   }
 
   /**
+   * Clear everything. (as `rm -rf .git && git init`)
+   */
+  public clear(): GitGraph {
+    this.refs = new Refs();
+    this.commits = [];
+    this.columns = [];
+    this.currentBranch = new Branch({ name: "master", gitgraph: this });
+    return this;
+  }
+
+  /**
    * Render the graph.
    *
    * It must be implemented by children.
