@@ -311,6 +311,46 @@ describe("GitGraph", () => {
       }]);
     });
 
+    it("should deal two branches (no merge)", () => {
+      const gitgraph: GitGraph = new G();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+      const feat = gitgraph.branch("feat");
+      feat.commit("six");
+
+      expect(gitgraph.log()).toMatchObject([{
+        subject: "one",
+        x: 0,
+        y: 80 * 5,
+      }, {
+        subject: "two",
+        x: 0,
+        y: 80 * 4,
+      }, {
+        subject: "three",
+        x: 50, // dev
+        y: 80 * 3,
+      }, {
+        subject: "four",
+        x: 0,
+        y: 80 * 2,
+      }, {
+        subject: "five",
+        x: 50, // dev
+        y: 80 * 1,
+      },
+      {
+        subject: "six",
+        x: 50 * 2, // feat
+        y: 80 * 0,
+      }]);
+    });
+
     it("should deal one branch (with merge)", () => {
       const gitgraph: GitGraph = new G();
 

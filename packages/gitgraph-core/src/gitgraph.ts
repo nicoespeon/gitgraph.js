@@ -68,6 +68,8 @@ export abstract class GitGraph {
   public commits: Commit[] = [];
   public currentBranch: Branch;
 
+  private columns: Array<Branch["name"]> = [];
+
   constructor(options: GitGraphOptions = {}) {
     // Set a default `master` branch
     this.currentBranch = new Branch({ name: "master", gitgraph: this });
@@ -226,7 +228,12 @@ export abstract class GitGraph {
    */
   private withPosition(commit: Commit, i: number, arr: Commit[]): Commit {
     const { length } = arr;
-    const column = (commit.branches || []).includes("master") ? 0 : 1;
+
+    // Resolve branch's column index
+    const firstParent = (commit.branches as Array<Branch["name"]>)[0];
+    if (!this.columns.includes(firstParent)) this.columns.push(firstParent);
+    const column = this.columns.findIndex((col) => col === firstParent);
+
     switch (this.orientation) {
       default:
         return {
