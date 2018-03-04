@@ -43,10 +43,13 @@
   "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
   "devDependencies": {
     "@types/jest": "^21.1.8",
+    "@types/node": "^9.4.6",
     "browserify": "^14.5.0",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
+    "husky": "^0.14.3",
     "jest": "^21.2.1",
+    "lint-staged": "^7.0.0",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.51.8",
@@ -76,9 +79,5 @@
       "js",
       "json"
     ]
-  },
-  "dependencies": {
-    "husky": "^0.14.3",
-    "ts-lint": "^4.5.1"
   }
 }
