@@ -241,9 +241,9 @@ export abstract class GitGraph {
     const { length } = arr;
 
     // Resolve branch's column index
-    const firstParent = (commit.branches as Array<Branch["name"]>)[0];
-    if (!this.columns.includes(firstParent)) this.columns.push(firstParent);
-    const column = this.columns.findIndex((col) => col === firstParent);
+    const branch = (commit.branches as Array<Branch["name"]>)[0];
+    if (!this.columns.includes(branch)) this.columns.push(branch);
+    const column = this.columns.findIndex((col) => col === branch);
 
     switch (this.orientation) {
       default:
