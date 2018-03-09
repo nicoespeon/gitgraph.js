@@ -69,6 +69,8 @@ export abstract class GitGraph {
   public currentBranch: Branch;
 
   private columns: Array<Branch["name"]> = [];
+  private rows: Map<Commit["hash"], number> = new Map();
+  private maxRow: number = 0;
 
   constructor(options: GitGraphOptions = {}) {
     // Set a default `master` branch
@@ -99,6 +101,7 @@ export abstract class GitGraph {
     this.withRefs = this.withRefs.bind(this);
     this.withPosition = this.withPosition.bind(this);
     this.withBranches = this.withBranches.bind(this);
+    this.calculateRows = this.calculateRows.bind(this);
   }
 
   /**
@@ -111,10 +114,13 @@ export abstract class GitGraph {
     // 2. Add `branches` to each commit (without merge commits resolution)
     const commitsWithRefsAndBranches = this.withBranches(commitsWithRefs, { firstParentOnly: true });
 
-    // 3. Add position to each commit
+    // 3. Calculate `this.rows` and `this.maxRow`
+    this.calculateRows(commitsWithRefsAndBranches);
+
+    // 4. Add position to each commit
     const commitsWithPosition = commitsWithRefsAndBranches.map(this.withPosition);
 
-    // 4. Add `branches` to each commit (with merge commits resolution)
+    // 5. Add `branches` to each commit (with merge commits resolution)
     return this.withBranches(commitsWithPosition);
   }
 
@@ -230,47 +236,81 @@ export abstract class GitGraph {
   }
 
   /**
+   * Calculate row index for each commit
+   *
+   * It's set directly into `this.rows` and `this.maxRow`
+   * @param commits
+   */
+  private calculateRows(commits: Commit[]): void {
+    // Reset values
+    this.rows = new Map<Commit["hash"], number>();
+    this.maxRow = 0;
+
+    // Attribute a row index to each commit
+    commits
+      .forEach((commit, i): any => {
+        if (this.mode === ModeEnum.Compact) {
+          // Compact mode
+          if (i === 0) return this.rows.set(commit.hash, i);
+          const parentRow: number = this.rows.get(commit.parents[0]) as number;
+          const historyParent: Commit = commits[i - 1];
+          let newRow = Math.max(parentRow + 1, this.rows.get(historyParent.hash) as number);
+          if (commit.parents.length > 1) newRow++; // Merge case
+          this.rows.set(commit.hash, newRow);
+          this.maxRow = Math.max(this.maxRow, newRow + 1);
+        } else {
+          // Normal mode
+          this.rows.set(commit.hash, i);
+          this.maxRow = Math.max(this.maxRow, i + 1);
+        }
+      });
+  }
+
+  /**
    * Add position to one commit.
    *
-   * Note: You need to have `commit.branches` set in each commit before this.
+   * Functional requirements:
+   *  - You need to have `commit.branches` set in each commit. (without merge commits resolution)
+   *  - You need to have `this.rows` and `this.maxRow` set.
    *
    * @param commit One commit
    * @param i index
    */
   private withPosition(commit: Commit, i: number, arr: Commit[]): Commit {
-    const { length } = arr;
-
     // Resolve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
     if (!this.columns.includes(branch)) this.columns.push(branch);
     const column = this.columns.findIndex((col) => col === branch);
+
+    // Resolve row index
+    const row = this.rows.get(commit.hash) as number;
 
     switch (this.orientation) {
       default:
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
-          y: this.initCommitOffsetY + this.template.commit.spacing * (length - 1 - i),
+          y: this.initCommitOffsetY + this.template.commit.spacing * (this.maxRow - 1 - row),
         };
 
       case OrientationsEnum.VerticalReverse:
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
-          y: this.initCommitOffsetY + this.template.commit.spacing * i,
+          y: this.initCommitOffsetY + this.template.commit.spacing * row,
         };
 
       case OrientationsEnum.Horizontal:
         return {
           ...commit,
-          x: this.initCommitOffsetX + this.template.commit.spacing * i,
+          x: this.initCommitOffsetX + this.template.commit.spacing * row,
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         };
 
       case OrientationsEnum.HorizontalReverse:
         return {
           ...commit,
-          x: this.initCommitOffsetX + this.template.commit.spacing * (length - 1 - i),
+          x: this.initCommitOffsetX + this.template.commit.spacing * (this.maxRow - 1 - row),
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         };
     }
