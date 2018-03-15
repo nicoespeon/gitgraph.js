@@ -151,3 +151,25 @@ export default () =>
   </Gitgraph>
 }
 ```
+
+Functional component with render props:
+
+```js
+import React from "react";
+import Gitgraph from "gitgraph-react";
+
+export default () => 
+  <Gitgraph options={{template: "blackarrow"}}>
+    { gitgraph => {
+      const master = gitgraph.branch("master");
+      master.commit("hello").commit();
+      const develop = gitgraph.branch("develop");
+      develop.commit().commit();
+      master.commit();
+      master.checkout();
+      gitgraph.commit();
+      master.merge("develop");
+    } }
+  </Gitgraph>
+}
+```
