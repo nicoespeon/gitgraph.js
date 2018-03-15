@@ -28,7 +28,7 @@ const getRandomHash = () => (
 
 export class Commit {
   /**
-   * Ref names (injected by Gitgraph.withRefs)
+   * Ref names (injected by Gitgraph.withRefsAndTags)
    */
   public refs: Array<Branch["name"] | "HEAD"> = [];
   /**
@@ -122,7 +122,7 @@ export class Commit {
    */
   public branches?: Array<Branch["name"]>;
   /**
-   * List of tags attached (injected by Gitgraph.withTags)
+   * List of tags attached (injected by Gitgraph.withRefsAndTags)
    */
   public tags?: string[];
 
