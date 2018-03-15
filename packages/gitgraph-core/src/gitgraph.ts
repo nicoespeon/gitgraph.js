@@ -65,6 +65,7 @@ export abstract class GitGraph {
   public template: Template;
 
   public refs = new Refs();
+  public tags = new Refs();
   public commits: Commit[] = [];
   public currentBranch: Branch;
 
@@ -174,6 +175,31 @@ export abstract class GitGraph {
     this.commits = [];
     this.columns = [];
     this.currentBranch = new Branch({ name: "master", gitgraph: this });
+    return this;
+  }
+
+  /**
+   * Tag a specific commit. (as `git tag`)
+   *
+   * @param name Name of the tage
+   * @param ref Commit or branch name or commit hash
+   */
+  public tag(
+    name: string,
+    ref: Commit | Commit["hash"] | Branch["name"] = this.refs.get("HEAD") as Commit,
+  ): GitGraph {
+    if (typeof ref === "string") {
+      let commit = this.refs.get(ref);
+      if (!(commit instanceof Commit)) {
+        commit = this.commits.find(({ hash }) => hash === ref);
+        if (!commit) {
+          throw new Error("this ref not exists");
+        }
+      }
+      this.tags.set(name, commit);
+    } else {
+      this.tags.set(name, ref);
+    }
     return this;
   }
 

@@ -1,5 +1,6 @@
 import "jest";
 import { GitGraph, TemplateEnum, OrientationsEnum, ModeEnum } from "../gitgraph";
+import Commit from "../commit";
 import { metroTemplate } from "../template";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -242,6 +243,7 @@ describe("GitGraph", () => {
       ]);
     });
   });
+
   describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {
       const gitgraph: GitGraph = new G();
@@ -595,6 +597,37 @@ describe("GitGraph", () => {
         x: 0, // master
         y: 0,
       }]);
+    });
+  });
+
+  describe("tag", () => {
+    it("should add a tag to a commit", () => {
+      const gitgraph = new G();
+      const master = gitgraph.branch("master").commit({subject: "one-tagged", hash: "this-is-the-sha1-of-my-commit"});
+      const dev = gitgraph.branch("dev").commit("two").commit("three");
+      master.commit("four");
+      gitgraph.tag("this-one", "this-is-the-sha1-of-my-commit");
+
+      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("one-tagged");
+    });
+    it("should add a tag to a branch", () => {
+      const gitgraph = new G();
+      const master = gitgraph.branch("master").commit("one");
+      const dev = gitgraph.branch("dev").commit("two").commit("three-tagged");
+      master.commit("four");
+      gitgraph.tag("this-one", "dev");
+
+      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("three-tagged");
+    });
+
+    it("should add a tag to HEAD", () => {
+      const gitgraph = new G();
+      const master = gitgraph.branch("master").commit("one");
+      const dev = gitgraph.branch("dev").commit("two").commit("three");
+      master.commit("four-tagged");
+      gitgraph.tag("this-one");
+
+      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("four-tagged");
     });
   });
 });

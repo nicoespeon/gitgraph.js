@@ -201,4 +201,21 @@ describe("Branch", () => {
       });
     });
   });
+
+  describe("tag", () => {
+    it("should tag the last commit of the branch", () => {
+      const gitgraph = new G();
+
+      const master = gitgraph.branch("master");
+      const dev = gitgraph.branch("dev")
+        .commit("one")
+        .commit("two-tagged")
+        .tag("this-one");
+
+      master.commit("three");
+      dev.commit("four");
+
+      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("two-tagged");
+    });
+  });
 });

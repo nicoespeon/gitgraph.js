@@ -127,17 +127,13 @@ export class Branch {
   }
 
   /**
-   * Delete this branch
-   */
-  public delete() {
-    throw new Error("not implemented");
-  }
-
-  /**
    * Tag the last commit of the branch
+   *
+   * @param name Name of the tag
    */
-  public tag() {
-    throw new Error("not implemented");
+  public tag(name: string): Branch {
+    this.gitgraph.tag(name, this.name);
+    return this;
   }
 
   /**
