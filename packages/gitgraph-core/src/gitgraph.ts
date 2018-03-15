@@ -99,7 +99,7 @@ export abstract class GitGraph {
     this.commitMessage = options.commitMessage || "He doesn't like George Michael! Boooo!";
 
     // Context binding
-    this.withRefs = this.withRefs.bind(this);
+    this.withRefsAndTags = this.withRefsAndTags.bind(this);
     this.withPosition = this.withPosition.bind(this);
     this.withBranches = this.withBranches.bind(this);
     this.calculateRows = this.calculateRows.bind(this);
@@ -109,8 +109,8 @@ export abstract class GitGraph {
    * Return the list of all commits (as `git log`).
    */
   public log(): Commit[] {
-    // 1. Add `refs` to each commit
-    const commitsWithRefs = this.commits.map(this.withRefs);
+    // 1. Add `refs` and `tags` to each commit
+    const commitsWithRefs = this.commits.map(this.withRefsAndTags);
 
     // 2. Add `branches` to each commit (without merge commits resolution)
     const commitsWithRefsAndBranches = this.withBranches(commitsWithRefs, { firstParentOnly: true });
@@ -212,16 +212,18 @@ export abstract class GitGraph {
   public abstract render(): void;
 
   /**
-   * Add refs info to one commit.
+   * Add refs and tags info to one commit.
    *
    * Note: the `commit` must be the original object from `this.commits`
-   * due to the direct reference into `this.refs`
+   * due to the direct reference into `this.refs` and `this.tags`
    *
    * @param commit One commit
    */
-  private withRefs(commit: Commit) {
+  private withRefsAndTags(commit: Commit) {
     return {
-      ...commit, refs: (this.refs.get(commit) as string[]) || [],
+      ...commit,
+      refs: (this.refs.get(commit) as string[]) || [],
+      tags: (this.tags.get(commit) as string[]) || [],
     };
   }
 

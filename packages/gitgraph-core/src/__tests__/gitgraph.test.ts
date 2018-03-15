@@ -603,7 +603,7 @@ describe("GitGraph", () => {
   describe("tag", () => {
     it("should add a tag to a commit", () => {
       const gitgraph = new G();
-      const master = gitgraph.branch("master").commit({subject: "one-tagged", hash: "this-is-the-sha1-of-my-commit"});
+      const master = gitgraph.branch("master").commit({ subject: "one-tagged", hash: "this-is-the-sha1-of-my-commit" });
       const dev = gitgraph.branch("dev").commit("two").commit("three");
       master.commit("four");
       gitgraph.tag("this-one", "this-is-the-sha1-of-my-commit");
@@ -628,6 +628,21 @@ describe("GitGraph", () => {
       gitgraph.tag("this-one");
 
       expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("four-tagged");
+    });
+
+    it("should add tags into log() output", () => {
+      const gitgraph = new G();
+      const master = gitgraph.branch("master").commit("one");
+      const dev = gitgraph.branch("dev").commit("two").commit("three");
+      master.commit("four-tagged");
+      gitgraph.tag("tag-one").tag("tag-two");
+
+      expect(gitgraph.log()).toMatchObject([
+        { subject: "one", tags: [] },
+        { subject: "two", tags: [] },
+        { subject: "three", tags: [] },
+        { subject: "four-tagged", tags: ["tag-one", "tag-two"] },
+      ]);
     });
   });
 });

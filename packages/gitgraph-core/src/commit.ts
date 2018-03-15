@@ -121,6 +121,10 @@ export class Commit {
    * List of branches attached (injected by Gitgraph.withBranches)
    */
   public branches?: Array<Branch["name"]>;
+  /**
+   * List of tags attached (injected by Gitgraph.withTags)
+   */
+  public tags?: string[];
 
   constructor(options: CommitOptions) {
     // Set author & committer
