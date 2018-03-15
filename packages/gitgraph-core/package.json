@@ -1,7 +1,7 @@
 {
-  "name": "gitgraph",
+  "name": "gitgraph-core",
   "version": "2.0.0-alpha",
-  "description": "A JavaScript library to draw pretty git graphs in the browser",
+  "description": "Core of gitgraph, a JavaScript library to draw pretty git graphs in the browser",
   "contributors": [
     {
       "name": "Fabien Bernard",
