@@ -96,6 +96,9 @@ export class Branch {
     // Move HEAD on the last commit
     this.gitgraph.refs.set("HEAD", commit);
 
+    // Update the render
+    this.gitgraph.render();
+
     return this;
   }
 
@@ -122,8 +125,9 @@ export class Branch {
   /**
    * Checkout onto this branch
    */
-  public checkout() {
+  public checkout(): Branch {
     this.gitgraph.currentBranch = this;
+    return this;
   }
 
   /**

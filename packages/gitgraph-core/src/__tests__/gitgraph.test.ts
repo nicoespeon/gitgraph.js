@@ -610,6 +610,7 @@ describe("GitGraph", () => {
 
       expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("one-tagged");
     });
+
     it("should add a tag to a branch", () => {
       const gitgraph = new G();
       const master = gitgraph.branch("master").commit("one");
@@ -643,6 +644,38 @@ describe("GitGraph", () => {
         { subject: "three", tags: [] },
         { subject: "four-tagged", tags: ["tag-one", "tag-two"] },
       ]);
+    });
+  });
+
+  describe("render", () => {
+    let renderMock: jest.Mock<any>;
+    // tslint:disable-next-line:max-classes-per-file
+    class GitGraphRender extends GitGraph { public render(): void { return renderMock(); } }
+
+    beforeEach(() => {
+      renderMock = jest.fn();
+    });
+
+    it("should call render method on render", () => {
+      const gitgraph = new GitGraphRender();
+      gitgraph.render();
+      expect(renderMock.mock.calls.length).toBe(1);
+    });
+
+    it("should call render on each commit", () => {
+      const gitgraph = new GitGraphRender();
+      gitgraph.commit().commit().commit();
+
+      expect(renderMock.mock.calls.length).toBe(3);
+    });
+
+    it("should call render on merge", () => {
+      const gitgraph = new GitGraphRender();
+      const master = gitgraph.branch("master").commit().commit().commit();
+      const dev = gitgraph.branch("dev").commit().commit();
+      master.merge(dev);
+
+      expect(renderMock.mock.calls.length).toBe(6); // 5 commits + 1 merge commit
     });
   });
 });
