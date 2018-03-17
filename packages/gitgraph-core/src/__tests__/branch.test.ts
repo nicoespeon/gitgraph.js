@@ -37,27 +37,37 @@ describe("Branch", () => {
       });
     });
 
-    describe("with variables", () => {
-      let one, two, three, four;
-
-      beforeEach(() => {
+    describe("on branches", () => {
+      it("should have master on commit two", () => {
         const gitgraph = new G();
 
         const master = gitgraph.branch("master");
-        master.commit().commit(); // one, two
+        master.commit("one").commit("two");
         const dev = gitgraph.branch("develop");
-        dev.commit(); // tree
-        master.commit(); // four
+        dev.commit("three");
 
-        [one, two, three, four] = gitgraph.log();
+        expect(gitgraph.log()).toMatchObject([
+          { subject: "one", refs: [] },
+          { subject: "two", refs: ["master"] },
+          { subject: "three", refs: ["develop", "HEAD"] },
+        ]);
       });
 
-      it("should have master tag on four commit", () => {
-        expect(four.refs).toEqual(["master", "HEAD"]);
-      });
+      it("should have master and HEAD on commit four", () => {
+        const gitgraph = new G();
 
-      it("should have develop and head tags on three commit", () => {
-        expect(three.refs).toEqual(["develop"]);
+        const master = gitgraph.branch("master");
+        master.commit("one").commit("two");
+        const dev = gitgraph.branch("develop");
+        dev.commit("three");
+        master.commit("four");
+
+        expect(gitgraph.log()).toMatchObject([
+          { subject: "one", refs: [] },
+          { subject: "two", refs: [] },
+          { subject: "three", refs: ["develop"] },
+          { subject: "four", refs: ["master", "HEAD"] },
+        ]);
       });
     });
 
@@ -126,13 +136,13 @@ describe("Branch", () => {
       const gitgraph = new G();
       gitgraph
         .commit("one")
-        .commit({subject: "with tag", tag: "1.0.0"})
+        .commit({ subject: "with tag", tag: "1.0.0" })
         .commit("three");
 
       expect(gitgraph.log()).toMatchObject([
-        {subject: "one"},
-        {subject: "with tag", tags: ["1.0.0"]},
-        {subject: "three"},
+        { subject: "one" },
+        { subject: "with tag", tags: ["1.0.0"] },
+        { subject: "three" },
       ]);
     });
   });
