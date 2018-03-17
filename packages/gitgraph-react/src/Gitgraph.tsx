@@ -16,18 +16,24 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   constructor(props: GitgraphProps) {
     super(props);
-    this.gitgraph = new GitgraphReact(this.props.options || {});
-    props.children(this.gitgraph);
-    this.state = { commits: this.gitgraph.log() };
+    this.state = { commits: [] };
+    this.gitgraph = new GitgraphReact(this.props.options || {}, this);
   }
 
   public render() {
     return (
       <ul>
-        {this.state.commits.map((commit) => <li>{commit.subject}</li>)}
+        {this.state.commits.map((commit) => (
+          <li>[{commit.refs.join(", ")}] {commit.subject}</li>
+        ))}
       </ul>
     );
+  }
+
+  public componentDidMount() {
+    this.props.children(this.gitgraph);
   }
 }
 
 export default Gitgraph;
+export { Branch } from "gitgraph-core/lib/branch";
