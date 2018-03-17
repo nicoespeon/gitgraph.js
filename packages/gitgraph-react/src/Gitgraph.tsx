@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GitGraphOptions, Commit } from "gitgraph-core";
+import { GitGraphOptions, Commit } from "gitgraph-core/lib/index";
 import GitgraphReact from "./GitgraphReact";
 
 export interface GitgraphProps {
@@ -16,16 +16,16 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   constructor(props: GitgraphProps) {
     super(props);
-    this.state = { commits: [] };
-    this.gitgraph = new GitgraphReact(this.props.options, this.setState);
+    this.gitgraph = new GitgraphReact(this.props.options || {});
+    props.children(this.gitgraph);
+    this.state = { commits: this.gitgraph.log() };
   }
 
   public render() {
-    this.props.children(this.gitgraph);
     return (
-      <li>
-        {this.state.commits.map((commit) => <ul>{commit.subject}</ul>)}
-      </li>
+      <ul>
+        {this.state.commits.map((commit) => <li>{commit.subject}</li>)}
+      </ul>
     );
   }
 }
