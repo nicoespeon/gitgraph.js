@@ -41,6 +41,7 @@ export interface GitGraphCommitOptions {
   parents?: string[];
   style?: CommitStyle;
   innerText?: string;
+  tag?: string;
 }
 
 export interface GitGraphBranchOptions {

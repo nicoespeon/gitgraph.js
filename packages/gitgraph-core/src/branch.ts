@@ -74,10 +74,11 @@ export class Branch {
       options.parents.unshift(this.parentCommit.hash);
     }
 
+    const { tag, ...commitOptions } = options;
     const commit = new Commit({
       author: this.commitDefaultOptions.author || this.gitgraph.author,
       subject: this.commitDefaultOptions.subject || this.gitgraph.commitMessage as string,
-      ...options,
+      ...commitOptions,
       style: this.getCommitStyle(options.style),
     });
 
@@ -95,6 +96,9 @@ export class Branch {
 
     // Move HEAD on the last commit
     this.gitgraph.refs.set("HEAD", commit);
+
+    // Add a tag to the commit if `option.tag` is provide
+    if (tag) this.tag(tag);
 
     // Update the render
     this.gitgraph.render();

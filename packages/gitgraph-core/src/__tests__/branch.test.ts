@@ -121,6 +121,20 @@ describe("Branch", () => {
         expect(commit.style).toEqual(expected);
       });
     });
+
+    describe("with tag", () => {
+      const gitgraph = new G();
+      gitgraph
+        .commit("one")
+        .commit({subject: "with tag", tag: "1.0.0"})
+        .commit("three");
+
+      expect(gitgraph.log()).toMatchObject([
+        {subject: "one"},
+        {subject: "with tag", tags: ["1.0.0"]},
+        {subject: "three"},
+      ]);
+    });
   });
 
   describe("merge", () => {
