@@ -95,6 +95,7 @@ export class Branch {
     this.gitgraph.commits.push(commit);
 
     // Move HEAD on the last commit
+    this.checkout();
     this.gitgraph.refs.set("HEAD", commit);
 
     // Add a tag to the commit if `option.tag` is provide
