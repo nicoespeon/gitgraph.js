@@ -1,0 +1,101 @@
+{
+  "name": "gitgraph-react",
+  "version": "2.0.0-alpha",
+  "description": "Gitgraph with react, draw pretty git graphs in the browser",
+  "contributors": [
+    {
+      "name": "Fabien Bernard",
+      "email": "fabien0102@gmail.com"
+    }
+  ],
+  "main": "./lib/bundle.umd.js",
+  "module": "./lib/index.js",
+  "jsnext:main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "scripts": {
+    "cm": "git-cz",
+    "precommit": "lint-staged",
+    "lint": "tslint --fix src/**/*",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "watch": "tsc -w",
+    "build": "run-s build:*",
+    "build:clear": "rimraf ./lib",
+    "build:tsc": "tsc",
+    "build:bundle": "rollup -c rollup.config.js",
+    "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
+    "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  },
+  "keywords": [
+    "react",
+    "git",
+    "graph",
+    "javascript"
+  ],
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+  },
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "devDependencies": {
+    "@storybook/addon-actions": "^3.3.15",
+    "@storybook/addon-knobs": "^3.3.15",
+    "@storybook/addons": "^3.3.15",
+    "@storybook/react": "^3.3.15",
+    "@types/jest": "^21.1.8",
+    "@types/node": "^9.4.6",
+    "@types/react": "^16.0.40",
+    "@types/react-dom": "^16.0.4",
+    "@types/storybook__addon-actions": "^3.0.3",
+    "@types/storybook__addon-knobs": "^3.2.3",
+    "@types/storybook__react": "^3.0.7",
+    "babel-core": "^6.26.0",
+    "browserify": "^14.5.0",
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^0.14.3",
+    "jest": "^21.2.1",
+    "lint-staged": "^7.0.0",
+    "npm-run-all": "^4.1.2",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.51.8",
+    "ts-jest": "^21.2.3",
+    "ts-loader": "3.5.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2",
+    "uglifyjs": "^2.4.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  }
+}
