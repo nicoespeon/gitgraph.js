@@ -1,6 +1,7 @@
 {
   "name": "gitgraph.js",
-  "version": "1.11.4",
+  "private": true,
+  "version": "2.0.0-alpha",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "description": "A JavaScript library to draw pretty git graphs in the browser",
   "contributors": [
@@ -9,8 +10,6 @@
       "email": "fabien0102@gmail.com"
     }
   ],
-  "main": "./src/gitgraph.js",
-  "types": "./build/gitgraph.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/nicoespeon/gitgraph.js"
@@ -21,35 +20,18 @@
     "javascript"
   ],
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-copy": "~0.6.0",
-    "grunt-contrib-jasmine": "~0.5.1",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-uglify": "~0.6.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-express": "~1.4.1",
-    "grunt-jsdoc": "2.1.0",
-    "grunt-open": "~0.2.2",
-    "grunt-string-replace": "~1.0.0",
-    "jest": "^19.0.2",
-    "jsdoc-json": "^2.0.0",
-    "lerna": "^2.5.1",
-    "load-grunt-tasks": "~0.6.0",
-    "typescript": "^2.2.2",
-    "typescript-formatter": "^5.1.2"
+    "lerna": "^2.5.1"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "grunt server",
-    "test": "npm run test:scripts && npm run test:src",
-    "test:src": "grunt test",
-    "test:scripts": "jest scripts",
-    "doc": "grunt doc",
-    "dist": "grunt dist",
-    "release": "grunt release",
-    "tsd": "grunt tsd"
+    "bootstrap": "npm i && lerna bootstrap",
+    "postinstall": "lerna bootstrap",
+    "postbootstrap": "npm run build",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "clean": "lerna clean"
   },
   "license": "MIT"
 }
