@@ -19,7 +19,7 @@ export enum TemplateEnum {
   BlackArrow = "blackarrow",
 }
 
-export interface GitGraphOptions {
+export interface GitgraphOptions {
   template?: TemplateEnum | Template;
   orientation?: OrientationsEnum;
   reverseArrow?: boolean;
@@ -30,7 +30,7 @@ export interface GitGraphOptions {
   commitMessage?: string;
 }
 
-export interface GitGraphCommitOptions {
+export interface GitgraphCommitOptions {
   author?: string;
   subject?: string;
   body?: string;
@@ -44,7 +44,7 @@ export interface GitGraphCommitOptions {
   tag?: string;
 }
 
-export interface GitGraphBranchOptions {
+export interface GitgraphBranchOptions {
   /**
    * Branch name
    */
@@ -55,7 +55,7 @@ export interface GitGraphBranchOptions {
   commitDefaultOptions?: BranchCommitDefaultOptions;
 }
 
-export abstract class GitGraph {
+export abstract class GitgraphCore {
   public orientation?: OrientationsEnum;
   public reverseArrow: boolean;
   public initCommitOffsetX: number;
@@ -74,7 +74,7 @@ export abstract class GitGraph {
   private rows: Map<Commit["hash"], number> = new Map();
   private maxRow: number = 0;
 
-  constructor(options: GitGraphOptions = {}) {
+  constructor(options: GitgraphOptions = {}) {
     // Set a default `master` branch
     this.currentBranch = new Branch({ name: "master", gitgraph: this });
 
@@ -131,14 +131,14 @@ export abstract class GitGraph {
    *
    * @param subject Commit subject
    */
-  public commit(subject?: string): GitGraph;
+  public commit(subject?: string): GitgraphCore;
   /**
    * Add a new commit in the history (as `git commit`).
    *
    * @param options Options of the commit
    */
-  public commit(options?: GitGraphCommitOptions): GitGraph;
-  public commit(options?: any): GitGraph {
+  public commit(options?: GitgraphCommitOptions): GitgraphCore;
+  public commit(options?: any): GitgraphCore {
     this.currentBranch.commit(options);
     return this;
   }
@@ -148,7 +148,7 @@ export abstract class GitGraph {
    *
    * @param options options of the branch
    */
-  public branch(options: GitGraphBranchOptions): Branch;
+  public branch(options: GitgraphBranchOptions): Branch;
   /**
    * Create a new branch. (as `git branch`)
    *
@@ -171,7 +171,7 @@ export abstract class GitGraph {
   /**
    * Clear everything. (as `rm -rf .git && git init`)
    */
-  public clear(): GitGraph {
+  public clear(): GitgraphCore {
     this.refs = new Refs();
     this.commits = [];
     this.columns = [];
@@ -188,7 +188,7 @@ export abstract class GitGraph {
   public tag(
     name: string,
     ref: Commit | Commit["hash"] | Branch["name"] = this.refs.get("HEAD") as Commit,
-  ): GitGraph {
+  ): GitgraphCore {
     if (typeof ref === "string") {
       let commit = this.refs.get(ref);
       if (!(commit instanceof Commit)) {
@@ -346,4 +346,4 @@ export abstract class GitGraph {
   }
 }
 
-export default GitGraph;
+export default GitgraphCore;

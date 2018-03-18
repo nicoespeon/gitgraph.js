@@ -1,12 +1,12 @@
 import "jest";
-import GitGraph, { GitGraphCommitOptions } from "../gitgraph";
+import GitgraphCore, { GitgraphCommitOptions } from "../gitgraph";
 import Commit from "../commit";
 import { BranchOptions } from "../branch";
 const copy = (obj) => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
 
-  class G extends GitGraph { public render(): void { return null; } }
+  class G extends GitgraphCore { public render(): void { return null; } }
 
   describe("commit", () => {
     describe("on HEAD", () => {
@@ -72,7 +72,7 @@ describe("Branch", () => {
     });
 
     describe("style", () => {
-      let gitgraph: GitGraph;
+      let gitgraph: GitgraphCore;
       const templateCommitStyle = {
         color: null,
         dot: {
@@ -122,7 +122,7 @@ describe("Branch", () => {
       it("should be have a merge style with the commit", () => {
         gitgraph
           .branch({ commitDefaultOptions: { style: { message: { color: "green" } } } } as BranchOptions)
-          .commit({ style: { message: { display: false } } } as GitGraphCommitOptions);
+          .commit({ style: { message: { display: false } } } as GitgraphCommitOptions);
 
         const [commit] = gitgraph.log();
         const expected = copy(templateCommitStyle);
