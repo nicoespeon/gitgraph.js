@@ -1,11 +1,11 @@
 import Commit from "./commit";
 import { GitgraphCore, GitgraphCommitOptions } from "./gitgraph";
-import { CommitStyle } from "./template";
+import { CommitStyleOptions, CommitStyle } from "./template";
 
 export interface BranchCommitDefaultOptions {
   author?: string;
   subject?: string;
-  style?: CommitStyle;
+  style?: CommitStyleOptions;
 }
 
 export interface BranchOptions {
@@ -154,7 +154,7 @@ export class Branch {
    * - commit override
    * @param style
    */
-  private getCommitStyle(style: CommitStyle = {}): CommitStyle {
+  private getCommitStyle(style: CommitStyleOptions = {}): CommitStyle {
     return {
       ...this.gitgraph.template.commit,
       ...this.commitDefaultOptions.style,

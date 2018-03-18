@@ -16,142 +16,140 @@ export interface ArrowStyle {
   /**
    * Arrow color
    */
-  color?: string;
+  color: string | null;
   /**
    * Arrow size in pixel
    */
-  size?: number;
+  size: number | null;
   /**
    * Arrow offset in pixel
    */
-  offset?: number;
+  offset: number;
 }
+
+export type ArrowStyleOptions = Partial<ArrowStyle>;
 
 export interface BranchStyle {
   /**
    * Branch color
    */
-  color?: string;
+  color: string | null;
   /**
    * Branch line width in pixel
    */
-  lineWidth?: number;
+  lineWidth: number;
   /**
    * Branch line dash segments
    */
-  lineDash?: number[];
+  lineDash: number[];
   /**
    * Branch merge style
    */
-  mergeStyle?: MergeStyle;
+  mergeStyle: MergeStyle;
   /**
    * Space between branches
    */
-  spacing?: number;
+  spacing: number;
   /**
    * Show branch label policy
    */
-  showLabel?: boolean;
+  showLabel: boolean;
   /**
    * Branch label color
    */
-  labelColor?: string;
+  labelColor: string | null;
   /**
    * Branch label font
    */
-  labelFont?: string;
+  labelFont: string;
   /**
    * Rotation angle of brach label
    */
-  labelRotation?: number;
+  labelRotation?: number | null;
 }
+
+export type BranchStyleOptions = Partial<BranchStyle>;
 
 export interface CommitDotStyle {
   /**
    * Commit dot color
    */
-  color?: string;
+  color: string | null;
   /**
    * Commit dot size in pixel
    */
-  size?: number;
+  size: number;
   /**
    * Commit dot stroke width
    */
-  strokeWidth?: number;
+  strokeWidth: number | null;
   /**
    * Commit dot stroke color
    */
-  strokeColor?: string;
+  strokeColor: string | null;
   /**
    * Commit dot line dash
    */
   lineDash?: number[];
 }
 
+export type CommitDotStyleOptions = Partial<CommitDotStyle>;
+
 export interface CommitMessageStyle {
   /**
    * Commit message color
    */
-  color?: string;
+  color: string | null;
   /**
    * Commit message display policy
    */
-  display?: boolean;
+  display: boolean;
   /**
    * Commit message author display policy
    */
-  displayAuthor?: boolean;
+  displayAuthor: boolean;
   /**
    * Commit message branch display policy
    */
-  displayBranch?: boolean;
+  displayBranch: boolean;
   /**
    * Commit message hash display policy
    */
-  displayHash?: boolean;
+  displayHash: boolean;
   /**
    * Commit message font
    */
-  font?: string;
+  font: string;
 }
+
+export type CommitMessageStyleOptions = Partial<CommitMessageStyle>;
 
 export interface CommitTagStyle {
   /**
    * Commit tag color
    */
-  color?: string;
+  color?: string | null;
   /**
    * Commit tag font
    */
   font?: string;
 }
 
-export interface CommitStyle {
+export type CommitTagStyleOptions = Partial<CommitTagStyle>;
+
+export interface CommitStyleBase {
   /**
    * Spacing between commits
    */
-  spacing?: number;
+  spacing: number;
   /**
    * Commit color (dot & message)
    */
-  color?: string;
-  /**
-   * Commit message style
-   */
-  message?: CommitMessageStyle;
-  /**
-   * Commit dot style
-   */
-  dot?: CommitDotStyle;
-  /**
-   * Commit tag style
-   */
-  tag?: CommitTagStyle;
+  color: string | null;
   /**
    * Tooltips policy
    */
-  shouldDisplayTooltipsInCompactMode?: boolean;
+  shouldDisplayTooltipsInCompactMode: boolean;
   /**
    * Additional width to be added to the calculated width
    */
@@ -159,7 +157,37 @@ export interface CommitStyle {
   /**
    * Formatter for the tooltip content
    */
-  tooltipHTMLFormatter?: (commit: Commit) => HTMLBodyElement;
+  tooltipHTMLFormatter: ((commit: Commit) => HTMLBodyElement) | null;
+}
+
+export interface CommitStyle extends CommitStyleBase {
+  /**
+   * Commit message style
+   */
+  message: CommitMessageStyle;
+  /**
+   * Commit dot style
+   */
+  dot: CommitDotStyle;
+  /**
+   * Commit tag style
+   */
+  tag: CommitTagStyle;
+}
+
+export interface CommitStyleOptions extends Partial<CommitStyleBase> {
+  /**
+   * Commit message style
+   */
+  message?: CommitMessageStyleOptions;
+  /**
+   * Commit dot style
+   */
+  dot?: CommitDotStyleOptions;
+  /**
+   * Commit tag style
+   */
+  tag?: CommitTagStyleOptions;
 }
 
 export interface TemplateOptions {
@@ -170,15 +198,15 @@ export interface TemplateOptions {
   /**
    * Arrow style
    */
-  arrow?: ArrowStyle;
+  arrow?: ArrowStyleOptions;
   /**
    * Branch style
    */
-  branch?: BranchStyle;
+  branch?: BranchStyleOptions;
   /**
    * Commit style
    */
-  commit?: CommitStyle;
+  commit?: CommitStyleOptions;
 }
 
 /**
@@ -194,153 +222,15 @@ export class Template {
   /**
    * Arrow style
    */
-  public arrow: {
-    /**
-     * Arrow color
-     */
-    color: string | null;
-    /**
-     * Arrow size in pixel
-     */
-    size: number | null;
-    /**
-     * Arrow offset in pixel
-     */
-    offset: number;
-  };
+  public arrow: ArrowStyle;
   /**
    * Branch style
    */
-  public branch: {
-    /**
-     * Branch color
-     */
-    color: string | null;
-    /**
-     * Branch line width in pixel
-     */
-    lineWidth: number;
-    /**
-     * Branch line dash segments
-     */
-    lineDash: number[];
-    /**
-     * Branch merge style
-     */
-    mergeStyle: MergeStyle;
-    /**
-     * Space between branches
-     */
-    spacing: number;
-    /**
-     * Show branch label policy
-     */
-    showLabel: boolean;
-    /**
-     * Branch label color
-     */
-    labelColor: string | null;
-    /**
-     * Branch label font
-     */
-    labelFont: string;
-    /**
-     * Rotation angle of brach label
-     */
-    labelRotation?: number | null;
-  };
+  public branch: BranchStyle;
   /**
    * Commit style
    */
-  public commit: {
-    /**
-     * Spacing between commits
-     */
-    spacing: number;
-    /**
-     * Commit color (dot & message)
-     */
-    color: string | null;
-    /**
-     * Additional width to be added to the calculated width
-     */
-    widthExtension?: number;
-    /**
-     * Commit message style
-     */
-    message: {
-      /**
-       * Commit message color
-       */
-      color: string | null;
-      /**
-       * Commit message display policy
-       */
-      display: boolean;
-      /**
-       * Commit message author display policy
-       */
-      displayAuthor: boolean;
-      /**
-       * Commit message branch display policy
-       */
-      displayBranch: boolean;
-      /**
-       * Commit message hash display policy
-       */
-      displayHash: boolean;
-      /**
-       * Commit message font
-       */
-      font: string;
-    };
-    /**
-     * Commit dot style
-     */
-    dot: {
-      /**
-       * Commit dot color
-       */
-      color: string | null;
-      /**
-       * Commit dot size in pixel
-       */
-      size: number;
-      /**
-       * Commit dot stroke width
-       */
-      strokeWidth: number | null;
-      /**
-       * Commit dot stroke color
-       */
-      strokeColor: string | null;
-      /**
-       * Commit dot line dash
-       */
-      lineDash?: number[];
-    };
-    /**
-     * Commit tag style
-     */
-    tag: {
-      /**
-       * Commit tag color
-       */
-      color?: string | null;
-      /**
-       * Commit tag font
-       */
-      font?: string;
-    };
-    /**
-     * Tooltips policy
-     */
-    shouldDisplayTooltipsInCompactMode: boolean;
-    /**
-     * Formatter for the tooltip content
-     */
-    tooltipHTMLFormatter?: ((commit: Commit) => HTMLBodyElement) | null;
-  };
+  public commit: CommitStyle;
 
   constructor(options: TemplateOptions) {
     // Options

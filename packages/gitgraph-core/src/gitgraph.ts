@@ -1,6 +1,6 @@
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
-import { Template, metroTemplate, blackArrowTemplate, CommitStyle } from "./template";
+import { Template, metroTemplate, blackArrowTemplate, CommitStyleOptions } from "./template";
 import Refs from "./refs";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 
@@ -39,7 +39,7 @@ export interface GitgraphCommitOptions {
   tree?: string;
   hash?: string;
   parents?: string[];
-  style?: CommitStyle;
+  style?: CommitStyleOptions;
   innerText?: string;
   tag?: string;
 }
