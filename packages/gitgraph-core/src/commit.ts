@@ -4,13 +4,13 @@ import Branch from "./branch";
 export interface CommitOptions {
   author: string;
   subject: string;
+  style: CommitStyle;
   body?: string;
   notes?: string;
   refs?: string[];
   tree?: string;
   hash?: string;
   parents?: string[];
-  style: CommitStyle;
   innerText?: string;
 }
 
