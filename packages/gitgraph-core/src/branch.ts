@@ -1,5 +1,5 @@
 import Commit from "./commit";
-import { GitGraph, GitGraphCommitOptions } from "./gitgraph";
+import { GitgraphCore, GitgraphCommitOptions } from "./gitgraph";
 import { CommitStyle } from "./template";
 
 export interface BranchCommitDefaultOptions {
@@ -10,9 +10,9 @@ export interface BranchCommitDefaultOptions {
 
 export interface BranchOptions {
   /**
-   * GitGraph constructor
+   * Gitgraph constructor
    */
-  gitgraph: GitGraph;
+  gitgraph: GitgraphCore;
   /**
    * Branch name
    */
@@ -34,7 +34,7 @@ export class Branch {
   public name: string;
   public commitDefaultOptions: BranchCommitDefaultOptions;
 
-  private gitgraph: GitGraph;
+  private gitgraph: GitgraphCore;
   private parentCommit: Commit | undefined;
 
   /**
@@ -59,8 +59,8 @@ export class Branch {
    *
    * @param options Options of the commit
    */
-  public commit(options?: GitGraphCommitOptions): Branch;
-  public commit(options?: GitGraphCommitOptions | string): Branch {
+  public commit(options?: GitgraphCommitOptions): Branch;
+  public commit(options?: GitgraphCommitOptions | string): Branch {
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options as string };
     if (!options) options = {};

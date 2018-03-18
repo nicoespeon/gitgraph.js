@@ -1,17 +1,17 @@
 import "jest";
-import { GitGraph, TemplateEnum, OrientationsEnum, ModeEnum } from "../gitgraph";
+import { GitgraphCore, TemplateEnum, OrientationsEnum, ModeEnum } from "../gitgraph";
 import Commit from "../commit";
 import { metroTemplate } from "../template";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { debug } from "../utils";
 
-describe("GitGraph", () => {
-  class G extends GitGraph { public render(): void { return null; } }
+describe("Gitgraph", () => {
+  class G extends GitgraphCore { public render(): void { return null; } }
 
   describe("constructor", () => {
     it("should have the correct default options", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       expect(gitgraph).toMatchObject({
         author: "Sergio Flores <saxo-guy@epic.com>",
@@ -22,7 +22,7 @@ describe("GitGraph", () => {
     });
 
     it("should be able to override options", () => {
-      const gitgraph: GitGraph = new G({
+      const gitgraph: GitgraphCore = new G({
         author: "Fabien BERNARD <fabien0102@gmail.com>",
         reverseArrow: true,
         template: TemplateEnum.Metro,
@@ -41,7 +41,7 @@ describe("GitGraph", () => {
   describe("commit", () => {
     describe("initial commit", () => {
       it("should add the initial commit", () => {
-        const gitgraph: GitGraph = new G();
+        const gitgraph: GitgraphCore = new G();
 
         gitgraph.commit({ subject: "Initial commit" });
 
@@ -64,7 +64,7 @@ describe("GitGraph", () => {
       });
 
       it("should add the initial commit with another author", () => {
-        const gitgraph: GitGraph = new G();
+        const gitgraph: GitgraphCore = new G();
 
         gitgraph.commit({ subject: "Initial commit", author: "Fabien BERNARD <fabien0102@gmail.com>" });
 
@@ -87,7 +87,7 @@ describe("GitGraph", () => {
       });
 
       it("should works with the shorter commit message syntax", () => {
-        const gitgraph: GitGraph = new G();
+        const gitgraph: GitgraphCore = new G();
 
         gitgraph.commit("Initial commit");
 
@@ -113,7 +113,7 @@ describe("GitGraph", () => {
     describe("two commits", () => {
       let one, two;
       beforeEach(() => {
-        const gitgraph: GitGraph = new G();
+        const gitgraph: GitgraphCore = new G();
 
         gitgraph
           .commit("Initial commit")
@@ -139,7 +139,7 @@ describe("GitGraph", () => {
 
   describe("clear", () => {
     it("should clear everything", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -177,7 +177,7 @@ describe("GitGraph", () => {
 
   describe("withBranches", () => {
     it("should deal one branch (no merge)", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -207,7 +207,7 @@ describe("GitGraph", () => {
       }]);
     });
     it("should deal one branch (with merge)", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -246,7 +246,7 @@ describe("GitGraph", () => {
 
   describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
       gitgraph.commit("one").commit("two").commit("three");
 
       expect(gitgraph.log()).toMatchObject([{
@@ -265,7 +265,7 @@ describe("GitGraph", () => {
     });
 
     it("should deal with 3 straight commits (reverse)", () => {
-      const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.VerticalReverse });
+      const gitgraph: GitgraphCore = new G({ orientation: OrientationsEnum.VerticalReverse });
       gitgraph.commit("one").commit("two").commit("three");
 
       expect(gitgraph.log()).toMatchObject([{
@@ -284,7 +284,7 @@ describe("GitGraph", () => {
     });
 
     it("should deal with 3 straight commits (horizontal)", () => {
-      const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.Horizontal });
+      const gitgraph: GitgraphCore = new G({ orientation: OrientationsEnum.Horizontal });
       gitgraph.commit("one").commit("two").commit("three");
 
       expect(gitgraph.log()).toMatchObject([{
@@ -303,7 +303,7 @@ describe("GitGraph", () => {
     });
 
     it("should deal with 3 straight commits (horizontal-reverse)", () => {
-      const gitgraph: GitGraph = new G({ orientation: OrientationsEnum.HorizontalReverse });
+      const gitgraph: GitgraphCore = new G({ orientation: OrientationsEnum.HorizontalReverse });
       gitgraph.commit("one").commit("two").commit("three");
 
       expect(gitgraph.log()).toMatchObject([{
@@ -322,7 +322,7 @@ describe("GitGraph", () => {
     });
 
     it("should deal one branch (no merge)", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -355,7 +355,7 @@ describe("GitGraph", () => {
     });
 
     it("should deal two branches (no merge)", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -395,7 +395,7 @@ describe("GitGraph", () => {
     });
 
     it("should deal one branch (with merge)", () => {
-      const gitgraph: GitGraph = new G();
+      const gitgraph: GitgraphCore = new G();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -650,27 +650,27 @@ describe("GitGraph", () => {
   describe("render", () => {
     let renderMock: jest.Mock<any>;
     // tslint:disable-next-line:max-classes-per-file
-    class GitGraphRender extends GitGraph { public render(): void { return renderMock(); } }
+    class GitgraphRender extends GitgraphCore { public render(): void { return renderMock(); } }
 
     beforeEach(() => {
       renderMock = jest.fn();
     });
 
     it("should call render method on render", () => {
-      const gitgraph = new GitGraphRender();
+      const gitgraph = new GitgraphRender();
       gitgraph.render();
       expect(renderMock.mock.calls.length).toBe(1);
     });
 
     it("should call render on each commit", () => {
-      const gitgraph = new GitGraphRender();
+      const gitgraph = new GitgraphRender();
       gitgraph.commit().commit().commit();
 
       expect(renderMock.mock.calls.length).toBe(3);
     });
 
     it("should call render on merge", () => {
-      const gitgraph = new GitGraphRender();
+      const gitgraph = new GitgraphRender();
       const master = gitgraph.branch("master").commit().commit().commit();
       const dev = gitgraph.branch("dev").commit().commit();
       master.merge(dev);
