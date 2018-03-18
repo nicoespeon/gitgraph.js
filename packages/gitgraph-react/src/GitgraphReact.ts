@@ -1,15 +1,15 @@
 import { Component } from "react";
-import { GitGraph as GitGraphCore, GitGraphOptions } from "gitgraph-core/lib/index";
+import { GitgraphCore, GitgraphOptions } from "gitgraph-core/lib/index";
 
 /**
  * Implementation of gitgraph-core for react
  *
  * It simply update the state of the component on each render.
  */
-export class GitgraphReact extends GitGraphCore {
+export class GitgraphReact extends GitgraphCore {
   private component: Component;
 
-  constructor(options: GitGraphOptions, component: Component) {
+  constructor(options: GitgraphOptions, component: Component) {
     super(options);
     this.component = component;
   }

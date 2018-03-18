@@ -1,9 +1,9 @@
 import * as React from "react";
-import { GitGraphOptions, Commit } from "gitgraph-core/lib/index";
+import { GitgraphOptions, Commit } from "gitgraph-core/lib/index";
 import GitgraphReact from "./GitgraphReact";
 
 export interface GitgraphProps {
-  options?: GitGraphOptions;
+  options?: GitgraphOptions;
   children: (gitgraph: GitgraphReact) => void;
 }
 
@@ -22,11 +22,30 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   public render() {
     return (
-      <ul>
+      <svg width={1000} height={1000}>
         {this.state.commits.map((commit) => (
-          <li>[{commit.refs.join(", ")}] {commit.subject}</li>
+          // Commit
+          <g key={commit.hashAbbrev} transform={`translate(${commit.x}, ${commit.y})`}>
+            {/* Dot */}
+            <circle
+              cx={commit.style.dot.size}
+              cy={commit.style.dot.size}
+              r={commit.style.dot.size}
+              fill={commit.style.dot.color as string}
+            />
+
+            {/* Message */}
+            {commit.style.message.display &&
+              <text
+                x={commit.style.dot.size * 4}
+                y={commit.style.dot.size}
+              >
+                {commit.hashAbbrev} {commit.subject} - {commit.author.name} {`<${commit.author.email}>`}
+              </text>
+            }
+          </g>
         ))}
-      </ul>
+      </svg>
     );
   }
 
@@ -36,4 +55,4 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 }
 
 export default Gitgraph;
-export { Branch } from "gitgraph-core/lib/branch";
+export * from "gitgraph-core/lib/index";
