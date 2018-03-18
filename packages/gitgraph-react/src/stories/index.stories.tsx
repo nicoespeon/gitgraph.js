@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Gitgraph, Branch } from "../Gitgraph";
+import { Gitgraph, Branch, TemplateEnum } from "../Gitgraph";
 
 import { storiesOf } from "@storybook/react";
 
@@ -63,6 +63,17 @@ storiesOf("Gitgraph", module)
         .commit("one")
         .commit("two")
         .commit("three");
+    }}
+  </Gitgraph>)
+  .add("metro", () => <Gitgraph options={{ template: TemplateEnum.Metro }}>
+    {(gitgraph) => {
+      const master = gitgraph
+        .branch("master")
+        .commit("one")
+        .commit("two")
+        .commit("three");
+      const develop = gitgraph.branch("develop").commit("four");
+      master.merge(develop);
     }}
   </Gitgraph>)
   .add("with playground", () => <GitgraphPlayground />);
