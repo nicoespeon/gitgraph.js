@@ -25,10 +25,21 @@ describe("utils", () => {
   });
   describe("pick", () => {
     it("should return a partial object", () => {
-      expect(utils.pick({ a: "a", b: "b", c: "c" }, ["a", "c"])).toEqual({
-        a: "a",
-        c: "c",
-      });
+      expect(utils.pick({ a: "a", b: "b", c: "c" }, ["a", "c"]))
+        .toEqual({
+          a: "a",
+          c: "c",
+        });
+    });
+  });
+
+  describe("withoutUndefinedKeys", () => {
+    it("should remove undefined keys", () => {
+      expect(utils.withoutUndefinedKeys({ a: 1, b: undefined, c: "3" }))
+        .toEqual({
+          a: 1,
+          c: "3",
+        });
     });
   });
 });

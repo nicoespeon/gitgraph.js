@@ -38,3 +38,24 @@ export function debug(commits: Commit[], paths: Array<keyof Commit>): void {
     JSON.stringify(commits.map((commit) => pick(commit, paths)), null, 2),
   );
 }
+
+/**
+ * Return true if is undefined.
+ *
+ * @param obj
+ */
+export function isUndefined(obj: any): obj is undefined {
+  return obj === undefined;
+}
+
+/**
+ * Return a version of the object without any undefined keys.
+ *
+ * @todo implement awesome type checking when typescript 2.8 will be release
+ * @see https://blogs.msdn.microsoft.com/typescript/2018/03/15/announcing-typescript-2-8-rc/
+ * @param obj
+ */
+export function withoutUndefinedKeys(obj: any = {}): any {
+  return (Object.keys(obj))
+    .reduce<object>((mem, key) => isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] }, {});
+}
