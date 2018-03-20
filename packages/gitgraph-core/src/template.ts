@@ -33,7 +33,7 @@ export interface BranchStyle {
   /**
    * Branch color
    */
-  color: string | null;
+  color?: string;
   /**
    * Branch line width in pixel
    */
@@ -74,7 +74,7 @@ export interface CommitDotStyle {
   /**
    * Commit dot color
    */
-  color: string | null;
+  color?: string;
   /**
    * Commit dot size in pixel
    */
@@ -99,7 +99,7 @@ export interface CommitMessageStyle {
   /**
    * Commit message color
    */
-  color: string | null;
+  color?: string;
   /**
    * Commit message display policy
    */
@@ -128,7 +128,7 @@ export interface CommitTagStyle {
   /**
    * Commit tag color
    */
-  color?: string | null;
+  color?: string;
   /**
    * Commit tag font
    */
@@ -145,7 +145,7 @@ export interface CommitStyleBase {
   /**
    * Commit color (dot & message)
    */
-  color: string | null;
+  color?: string;
   /**
    * Tooltips policy
    */
@@ -246,7 +246,7 @@ export class Template {
 
     // Branch style
     this.branch = {
-      color: options.branch.color || null,
+      color: options.branch.color,
       lineWidth: options.branch.lineWidth || 2,
       lineDash: options.branch.lineDash || [],
       showLabel: options.branch.showLabel || false,
@@ -266,20 +266,20 @@ export class Template {
 
     // Commit style
     this.commit = {
-      color: options.commit.color || null,
+      color: options.commit.color,
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
       widthExtension: options.commit.widthExtension || 0,
       tooltipHTMLFormatter: options.commit.tooltipHTMLFormatter || null,
       shouldDisplayTooltipsInCompactMode: booleanOptionOr(options.commit.shouldDisplayTooltipsInCompactMode, true),
       dot: {
-        color: options.commit.dot.color || null,
+        color: options.commit.dot.color || options.commit.color,
         size: options.commit.dot.size || 3,
         strokeWidth: numberOptionOr(options.commit.dot.strokeWidth, null),
         strokeColor: options.commit.dot.strokeColor || null,
         lineDash: options.commit.dot.lineDash || this.branch.lineDash,
       },
       tag: {
-        color: options.commit.tag.color || options.commit.dot.color || null,
+        color: options.commit.tag.color || options.commit.color,
         font: options.commit.tag.font || options.commit.message.font || "normal 10pt Calibri",
       },
       message: {
@@ -287,7 +287,7 @@ export class Template {
         displayAuthor: booleanOptionOr(options.commit.message.displayAuthor, true),
         displayBranch: booleanOptionOr(options.commit.message.displayBranch, true),
         displayHash: booleanOptionOr(options.commit.message.displayHash, true),
-        color: options.commit.message.color || null,
+        color: options.commit.message.color || options.commit.color,
         font: options.commit.message.font || "normal 12pt Calibri",
       },
     };
