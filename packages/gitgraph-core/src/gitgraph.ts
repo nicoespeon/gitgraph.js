@@ -75,9 +75,6 @@ export abstract class GitgraphCore {
   private maxRow: number = 0;
 
   constructor(options: GitgraphOptions = {}) {
-    // Set a default `master` branch
-    this.currentBranch = new Branch({ name: "master", gitgraph: this });
-
     // Resolve template
     if (typeof options.template === "string") {
       this.template = {
@@ -89,6 +86,9 @@ export abstract class GitgraphCore {
     } else {
       this.template = metroTemplate;
     }
+
+    // Set a default `master` branch
+    this.currentBranch = this.branch("master");
 
     // Set all options with default values
     this.orientation = options.orientation;
