@@ -1,6 +1,7 @@
 import Commit from "./commit";
 import { GitgraphCore, GitgraphCommitOptions } from "./gitgraph";
-import { CommitStyleOptions, CommitStyle } from "./template";
+import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
+import { withoutUndefinedKeys } from "./utils";
 
 export interface BranchCommitDefaultOptions {
   author?: string;
@@ -18,6 +19,10 @@ export interface BranchOptions {
    */
   name: string;
   /**
+   * Branch style
+   */
+  style: BranchStyle;
+  /**
    * Parent commit
    */
   parentCommit?: Commit;
@@ -31,11 +36,12 @@ export interface BranchOptions {
  * Branch
  */
 export class Branch {
-  public name: string;
+  public name: BranchOptions["name"];
+  public style: BranchStyle;
   public commitDefaultOptions: BranchCommitDefaultOptions;
 
   private gitgraph: GitgraphCore;
-  private parentCommit: Commit | undefined;
+  private parentCommit: BranchOptions["parentCommit"];
 
   /**
    * Branch constructor
@@ -44,6 +50,7 @@ export class Branch {
   constructor(options: BranchOptions) {
     this.gitgraph = options.gitgraph;
     this.name = options.name;
+    this.style = options.style; // TODO Give the style from gitgraph (template and override)
     this.parentCommit = options.parentCommit;
     this.commitDefaultOptions = options.commitDefaultOptions || { style: {} };
   }
@@ -149,6 +156,7 @@ export class Branch {
    * Get the consolidate style for one commit
    *
    * This consolidate the styling rules in this order:
+   * - branch color
    * - template commit base
    * - branch override
    * - commit override
@@ -156,22 +164,26 @@ export class Branch {
    */
   private getCommitStyle(style: CommitStyleOptions = {}): CommitStyle {
     return {
-      ...this.gitgraph.template.commit,
-      ...this.commitDefaultOptions.style,
+      ...withoutUndefinedKeys({ color: this.style.color }),
+      ...withoutUndefinedKeys(this.gitgraph.template.commit),
+      ...withoutUndefinedKeys(this.commitDefaultOptions.style),
       ...style,
       tag: {
-        ...this.gitgraph.template.commit.tag,
-        ...(this.commitDefaultOptions.style as CommitStyle).tag,
+        ...withoutUndefinedKeys({ color: this.style.color }),
+        ...withoutUndefinedKeys(this.gitgraph.template.commit.tag),
+        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).tag),
         ...style.tag,
       },
       message: {
-        ...this.gitgraph.template.commit.message,
-        ...(this.commitDefaultOptions.style as CommitStyle).message,
+        ...withoutUndefinedKeys({ color: this.style.color }),
+        ...withoutUndefinedKeys(this.gitgraph.template.commit.message),
+        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).message),
         ...style.message,
       },
       dot: {
-        ...this.gitgraph.template.commit.dot,
-        ...(this.commitDefaultOptions.style as CommitStyle).dot,
+        ...withoutUndefinedKeys({ color: this.style.color }),
+        ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),
+        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).dot),
         ...style.dot,
       },
     } as CommitStyle;
