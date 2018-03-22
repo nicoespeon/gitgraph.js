@@ -1,7 +1,11 @@
 import "jest";
-import GitgraphCore, { GitgraphCommitOptions } from "../gitgraph";
-import Commit from "../commit";
-import { BranchOptions } from "../branch";
+import {
+  GitgraphCore,
+  GitgraphCommitOptions,
+  Commit,
+  BranchOptions,
+  metroTemplate,
+} from "../index";
 const copy = (obj) => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
@@ -73,17 +77,17 @@ describe("Branch", () => {
 
     describe("style", () => {
       let gitgraph: GitgraphCore;
-      const templateCommitStyle = {
-        color: null,
+      const expectedStyle = {
+        color: "#979797",
         dot: {
-          color: null,
+          color: "#979797",
           lineDash: [],
           size: 14,
           strokeColor: null,
           strokeWidth: null,
         },
         message: {
-          color: null,
+          color: "#979797",
           display: true,
           displayAuthor: true,
           displayBranch: true,
@@ -93,19 +97,21 @@ describe("Branch", () => {
         shouldDisplayTooltipsInCompactMode: true,
         spacing: 80,
         tag: {
-          color: null,
+          color: "#979797",
           font: "normal 14pt Arial",
         },
         tooltipHTMLFormatter: null,
         widthExtension: 0,
       };
+
       beforeEach(() => {
         gitgraph = new G();
       });
+
       it("should have the style of the template by default", () => {
         gitgraph.commit();
         const [commit] = gitgraph.log();
-        expect(commit.style).toEqual(templateCommitStyle);
+        expect(commit.style).toEqual(expectedStyle);
       });
 
       it("should be have a merge style with the defaultCommitOptions", () => {
@@ -114,7 +120,7 @@ describe("Branch", () => {
           .commit();
 
         const [commit] = gitgraph.log();
-        const expected = copy(templateCommitStyle);
+        const expected = copy(expectedStyle);
         expected.message.color = "green";
         expect(commit.style).toEqual(expected);
       });
@@ -125,10 +131,63 @@ describe("Branch", () => {
           .commit({ style: { message: { display: false } } } as GitgraphCommitOptions);
 
         const [commit] = gitgraph.log();
-        const expected = copy(templateCommitStyle);
+        const expected = copy(expectedStyle);
         expected.message.color = "green";
         expected.message.display = false;
         expect(commit.style).toEqual(expected);
+      });
+
+      it("should have the color depending of the branch (metro theme)", () => {
+        const master = gitgraph.branch("master").commit("one");
+        const dev = gitgraph.branch("dev").commit("two");
+        const feat1 = gitgraph.branch("feat1").commit("three");
+        const feat2 = gitgraph.branch("feat2").commit("four");
+        const feat3 = gitgraph.branch("feat3").commit("five");
+
+        const { colors } = metroTemplate;
+
+        expect(gitgraph.log()).toMatchObject([
+          {
+            subject: "one",
+            style: {
+              color: colors[0],
+              message: { color: colors[0] },
+              tag: { color: colors[0] },
+            },
+          },
+          {
+            subject: "two",
+            style: {
+              color: colors[1],
+              message: { color: colors[1] },
+              tag: { color: colors[1] },
+            },
+          },
+          {
+            subject: "three",
+            style: {
+              color: colors[2],
+              message: { color: colors[2] },
+              tag: { color: colors[2] },
+            },
+          },
+          {
+            subject: "four",
+            style: {
+              color: colors[0],
+              message: { color: colors[0] },
+              tag: { color: colors[0] },
+            },
+          },
+          {
+            subject: "five",
+            style: {
+              color: colors[1],
+              message: { color: colors[1] },
+              tag: { color: colors[1] },
+            },
+          },
+        ]);
       });
     });
 

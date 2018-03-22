@@ -1,6 +1,6 @@
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
-import { Template, metroTemplate, blackArrowTemplate, CommitStyleOptions } from "./template";
+import { Template, metroTemplate, blackArrowTemplate, CommitStyleOptions, BranchStyleOptions } from "./template";
 import Refs from "./refs";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 
@@ -53,6 +53,10 @@ export interface GitgraphBranchOptions {
    * Default options for commits
    */
   commitDefaultOptions?: BranchCommitDefaultOptions;
+  /**
+   * Branch style
+   */
+  style?: BranchStyleOptions;
 }
 
 export abstract class GitgraphCore {
@@ -102,6 +106,7 @@ export abstract class GitgraphCore {
     // Context binding
     this.withRefsAndTags = this.withRefsAndTags.bind(this);
     this.withPosition = this.withPosition.bind(this);
+    this.withColor = this.withColor.bind(this);
     this.withBranches = this.withBranches.bind(this);
     this.calculateRows = this.calculateRows.bind(this);
   }
@@ -110,20 +115,13 @@ export abstract class GitgraphCore {
    * Return the list of all commits (as `git log`).
    */
   public log(): Commit[] {
-    // 1. Add `refs` and `tags` to each commit
-    const commitsWithRefs = this.commits.map(this.withRefsAndTags);
-
-    // 2. Add `branches` to each commit (without merge commits resolution)
-    const commitsWithRefsAndBranches = this.withBranches(commitsWithRefs, { firstParentOnly: true });
-
-    // 3. Calculate `this.rows` and `this.maxRow`
-    this.calculateRows(commitsWithRefsAndBranches);
-
-    // 4. Add position to each commit
-    const commitsWithPosition = commitsWithRefsAndBranches.map(this.withPosition);
-
-    // 5. Add `branches` to each commit (with merge commits resolution)
-    return this.withBranches(commitsWithPosition);
+    let commits = this.commits.map(this.withRefsAndTags);
+    commits = this.withBranches(commits, { firstParentOnly: true });
+    this.calculateRows(commits);
+    commits = commits
+      .map(this.withPosition)
+      .map(this.withColor);
+    return this.withBranches(commits);
   }
 
   /**
@@ -157,7 +155,7 @@ export abstract class GitgraphCore {
   public branch(name: string): Branch;
   public branch(args: any): Branch {
     const parentCommit = this.refs.get("HEAD") as Commit;
-    let options: BranchOptions = { gitgraph: this, name: "", parentCommit };
+    let options: BranchOptions = { gitgraph: this, name: "", parentCommit, style: this.template.branch };
     if (typeof args === "string") {
       options.name = args;
     } else {
@@ -175,7 +173,7 @@ export abstract class GitgraphCore {
     this.refs = new Refs();
     this.commits = [];
     this.columns = [];
-    this.currentBranch = new Branch({ name: "master", gitgraph: this });
+    this.currentBranch = this.branch("master");
     return this;
   }
 
@@ -220,7 +218,7 @@ export abstract class GitgraphCore {
    *
    * @param commit One commit
    */
-  private withRefsAndTags(commit: Commit) {
+  private withRefsAndTags(commit: Commit): Commit {
     return {
       ...commit,
       refs: (this.refs.get(commit) as string[]) || [],
@@ -296,6 +294,40 @@ export abstract class GitgraphCore {
   }
 
   /**
+   * Add final color to one commit.
+   *
+   * It merge this.template.colors and commit colors override.
+   *
+   * @param commit One commit
+   */
+  private withColor(commit: Commit): Commit {
+    // Retrieve branch's column index
+    const branch = (commit.branches as Array<Branch["name"]>)[0];
+    const column = this.columns.findIndex((col) => col === branch);
+    const defaultColor = this.template.colors[column % this.template.colors.length];
+
+    return {
+      ...commit,
+      style: {
+        ...commit.style,
+        color: commit.style.color || defaultColor,
+        tag: {
+          ...commit.style.tag,
+          color: commit.style.tag.color || defaultColor,
+        },
+        dot: {
+          ...commit.style.dot,
+          color: commit.style.dot.color || defaultColor,
+        },
+        message: {
+          ...commit.style.message,
+          color: commit.style.message.color || defaultColor,
+        },
+      },
+    };
+  }
+
+  /**
    * Add position to one commit.
    *
    * Functional requirements:
@@ -303,9 +335,8 @@ export abstract class GitgraphCore {
    *  - You need to have `this.rows` and `this.maxRow` set.
    *
    * @param commit One commit
-   * @param i index
    */
-  private withPosition(commit: Commit, i: number, arr: Commit[]): Commit {
+  private withPosition(commit: Commit): Commit {
     // Resolve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
     if (!this.columns.includes(branch)) this.columns.push(branch);
