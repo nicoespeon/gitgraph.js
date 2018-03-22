@@ -1,4 +1,4 @@
-import { Component } from "react";
+import * as React from "react";
 import { GitgraphCore, GitgraphOptions } from "gitgraph-core/lib/index";
 
 /**
@@ -7,9 +7,9 @@ import { GitgraphCore, GitgraphOptions } from "gitgraph-core/lib/index";
  * It simply update the state of the component on each render.
  */
 export class GitgraphReact extends GitgraphCore {
-  private component: Component;
+  private component: React.Component;
 
-  constructor(options: GitgraphOptions, component: Component) {
+  constructor(options: GitgraphOptions, component: React.Component) {
     super(options);
     this.component = component;
   }
