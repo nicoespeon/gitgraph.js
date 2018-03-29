@@ -26,8 +26,7 @@
     "packages/*"
   ],
   "scripts": {
-    "bootstrap": "npm i && lerna bootstrap",
-    "postinstall": "lerna bootstrap",
+    "postinstall": "lerna bootstrap --concurrency=1",
     "postbootstrap": "npm run build",
     "build": "lerna run build",
     "test": "lerna run test",
