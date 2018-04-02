@@ -1,5 +1,5 @@
 import "jest";
-import { GitgraphCore, TemplateEnum, OrientationsEnum, ModeEnum } from "../gitgraph";
+import { GitgraphCore, TemplateEnum, OrientationsEnum, ModeEnum, GitgraphOptions } from "../gitgraph";
 import Commit from "../commit";
 import { metroTemplate } from "../template";
 import { readFileSync } from "fs";
@@ -7,11 +7,9 @@ import { join } from "path";
 import { debug } from "../utils";
 
 describe("Gitgraph", () => {
-  class G extends GitgraphCore { public render(): void { return null; } }
-
   describe("constructor", () => {
     it("should have the correct default options", () => {
-      const gitgraph: GitgraphCore = new G();
+      const gitgraph = new GitgraphCore({ onRender: () => null });
 
       expect(gitgraph).toMatchObject({
         author: "Sergio Flores <saxo-guy@epic.com>",
@@ -22,7 +20,8 @@ describe("Gitgraph", () => {
     });
 
     it("should be able to override options", () => {
-      const gitgraph: GitgraphCore = new G({
+      const gitgraph = new GitgraphCore({
+        onRender: () => null,
         author: "Fabien BERNARD <fabien0102@gmail.com>",
         reverseArrow: true,
         template: TemplateEnum.Metro,
@@ -41,14 +40,14 @@ describe("Gitgraph", () => {
   describe("commit", () => {
     describe("initial commit", () => {
       it("should add the initial commit", () => {
-        const gitgraph: GitgraphCore = new G();
+        let commits: Commit[];
+        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
         gitgraph.commit({ subject: "Initial commit" });
 
-        const log = gitgraph.log();
-        const [commit] = log;
+        const [commit] = commits;
 
-        expect(log.length).toBe(1);
+        expect(commits.length).toBe(1);
         expect(commit).toMatchObject({
           subject: "Initial commit",
           author: {
@@ -64,14 +63,14 @@ describe("Gitgraph", () => {
       });
 
       it("should add the initial commit with another author", () => {
-        const gitgraph: GitgraphCore = new G();
+        let commits: Commit[];
+        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
         gitgraph.commit({ subject: "Initial commit", author: "Fabien BERNARD <fabien0102@gmail.com>" });
 
-        const log = gitgraph.log();
-        const [commit] = log;
+        const [commit] = commits;
 
-        expect(log.length).toBe(1);
+        expect(commits.length).toBe(1);
         expect(commit).toMatchObject({
           subject: "Initial commit",
           refs: ["master", "HEAD"],
@@ -87,25 +86,25 @@ describe("Gitgraph", () => {
       });
 
       it("should works with the shorter commit message syntax", () => {
-        const gitgraph: GitgraphCore = new G();
+        let commits: Commit[];
+        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
         gitgraph.commit("Initial commit");
 
-        const log = gitgraph.log();
-        const [commit] = log;
+        const [commit] = commits;
 
-        expect(log.length).toBe(1);
+        expect(commits.length).toBe(1);
         expect(commit.subject).toBe("Initial commit");
       });
 
       it("should works without argument (default message)", () => {
-        const gitgraph = new G();
+        let commits: Commit[];
+        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
         gitgraph.commit();
 
-        const log = gitgraph.log();
-        const [commit] = log;
+        const [commit] = commits;
 
-        expect(log.length).toBe(1);
+        expect(commits.length).toBe(1);
         expect(commit.subject).toBe("He doesn't like George Michael! Boooo!");
       });
     });
@@ -113,13 +112,14 @@ describe("Gitgraph", () => {
     describe("two commits", () => {
       let one, two;
       beforeEach(() => {
-        const gitgraph: GitgraphCore = new G();
+        let commits: Commit[];
+        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
         gitgraph
           .commit("Initial commit")
           .commit("Second commit");
 
-        [one, two] = gitgraph.log();
+        [one, two] = commits;
       });
 
       it("should set the HEAD/master refs to the last commit", () => {
@@ -139,7 +139,8 @@ describe("Gitgraph", () => {
 
   describe("clear", () => {
     it("should clear everything", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -149,12 +150,15 @@ describe("Gitgraph", () => {
       dev.commit("five");
 
       gitgraph.clear();
-      expect(gitgraph.log()).toEqual([]);
-      expect(gitgraph.refs.values()).toEqual([]);
+
+      expect(commits).toEqual([]);
+      expect(Array.from(gitgraph.refs.values())).toEqual([]);
+      expect(Array.from(gitgraph.tags.values())).toEqual([]);
     });
 
     it("should reset the currentBranch", () => {
-      const gitgraph = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
       const dev = gitgraph.branch("dev").checkout();
       expect(gitgraph.currentBranch.name).toBe("dev");
 
@@ -163,12 +167,13 @@ describe("Gitgraph", () => {
     });
 
     it("should be able to add normally a commit after a clear", () => {
-      const gitgraph = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
       gitgraph.branch("dev").commit("one").commit("two");
       gitgraph.clear();
       gitgraph.branch("feat").commit("three").commit("four");
 
-      expect(gitgraph.log()).toMatchObject([
+      expect(commits).toMatchObject([
         { subject: "three", branches: ["feat"] },
         { subject: "four", branches: ["feat"] },
       ]);
@@ -177,7 +182,8 @@ describe("Gitgraph", () => {
 
   describe("withBranches", () => {
     it("should deal one branch (no merge)", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -186,7 +192,7 @@ describe("Gitgraph", () => {
       master.commit("four");
       dev.commit("five");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         branches: ["master", "dev"],
       },
@@ -207,7 +213,8 @@ describe("Gitgraph", () => {
       }]);
     });
     it("should deal one branch (with merge)", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -217,7 +224,7 @@ describe("Gitgraph", () => {
       dev.commit("five");
       master.merge(dev);
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         branches: ["master", "dev"],
       },
@@ -246,10 +253,11 @@ describe("Gitgraph", () => {
 
   describe("withPosition", () => {
     it("should deal with 3 straight commits", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
       gitgraph.commit("one").commit("two").commit("three");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0,
         y: 160,
@@ -265,10 +273,14 @@ describe("Gitgraph", () => {
     });
 
     it("should deal with 3 straight commits (reverse)", () => {
-      const gitgraph: GitgraphCore = new G({ orientation: OrientationsEnum.VerticalReverse });
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({
+        onRender: (c) => commits = c,
+        orientation: OrientationsEnum.VerticalReverse,
+      });
       gitgraph.commit("one").commit("two").commit("three");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0,
         y: 0,
@@ -284,10 +296,14 @@ describe("Gitgraph", () => {
     });
 
     it("should deal with 3 straight commits (horizontal)", () => {
-      const gitgraph: GitgraphCore = new G({ orientation: OrientationsEnum.Horizontal });
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({
+        onRender: (c) => commits = c,
+        orientation: OrientationsEnum.Horizontal,
+      });
       gitgraph.commit("one").commit("two").commit("three");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0,
         y: 0,
@@ -303,10 +319,14 @@ describe("Gitgraph", () => {
     });
 
     it("should deal with 3 straight commits (horizontal-reverse)", () => {
-      const gitgraph: GitgraphCore = new G({ orientation: OrientationsEnum.HorizontalReverse });
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({
+        onRender: (c) => commits = c,
+        orientation: OrientationsEnum.HorizontalReverse,
+      });
       gitgraph.commit("one").commit("two").commit("three");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 160,
         y: 0,
@@ -322,7 +342,8 @@ describe("Gitgraph", () => {
     });
 
     it("should deal one branch (no merge)", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -331,7 +352,7 @@ describe("Gitgraph", () => {
       master.commit("four");
       dev.commit("five");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0,
         y: 80 * 4,
@@ -355,7 +376,8 @@ describe("Gitgraph", () => {
     });
 
     it("should deal two branches (no merge)", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -366,7 +388,7 @@ describe("Gitgraph", () => {
       const feat = gitgraph.branch("feat");
       feat.commit("six");
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0,
         y: 80 * 5,
@@ -395,7 +417,8 @@ describe("Gitgraph", () => {
     });
 
     it("should deal one branch (with merge)", () => {
-      const gitgraph: GitgraphCore = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -405,7 +428,7 @@ describe("Gitgraph", () => {
       dev.commit("five");
       master.merge(dev);
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0,
         y: 80 * 5,
@@ -434,7 +457,8 @@ describe("Gitgraph", () => {
     });
 
     it("should deal with complex case", () => {
-      const gitgraph = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -453,7 +477,7 @@ describe("Gitgraph", () => {
       dev.merge(feat);
       master.merge(dev);
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0, // master
         y: 80 * 10,
@@ -508,13 +532,14 @@ describe("Gitgraph", () => {
 
     // TODO deal with commit style
     it.skip("should also be able to calculate position from git2json output", () => {
-      const gitgraph = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
 
       gitgraph.commits = JSON.parse(
         readFileSync(join(__dirname, "./git2json-two-commits.json"), "utf-8"),
       );
 
-      expect(gitgraph.log()).toMatchObject([
+      expect(commits).toMatchObject([
         {
           subject: "second",
           x: 0,
@@ -528,7 +553,11 @@ describe("Gitgraph", () => {
     });
 
     it("should deal with the compact mode", () => {
-      const gitgraph = new G({ mode: ModeEnum.Compact });
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({
+        onRender: (c) => commits = c,
+        mode: ModeEnum.Compact,
+      });
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -547,7 +576,7 @@ describe("Gitgraph", () => {
       dev.merge(feat);
       master.merge(dev);
 
-      expect(gitgraph.log()).toMatchObject([{
+      expect(commits).toMatchObject([{
         subject: "one",
         x: 0, // master
         y: 80 * 7,
@@ -603,43 +632,47 @@ describe("Gitgraph", () => {
 
   describe("tag", () => {
     it("should add a tag to a commit", () => {
-      const gitgraph = new G();
-      const master = gitgraph.branch("master").commit({ subject: "one-tagged", hash: "this-is-the-sha1-of-my-commit" });
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const master = gitgraph.branch("master").commit({ subject: "one-tagged", hash: "one-tagged-hash" });
       const dev = gitgraph.branch("dev").commit("two").commit("three");
       master.commit("four");
-      gitgraph.tag("this-one", "this-is-the-sha1-of-my-commit");
+      gitgraph.tag("this-one", "one-tagged-hash");
 
-      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("one-tagged");
+      expect(gitgraph.tags.get("this-one")).toEqual("one-tagged-hash");
     });
 
     it("should add a tag to a branch", () => {
-      const gitgraph = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
       const master = gitgraph.branch("master").commit("one");
-      const dev = gitgraph.branch("dev").commit("two").commit("three-tagged");
+      const dev = gitgraph.branch("dev").commit("two").commit({ subject: "three-tagged", hash: "three-tagged-hash" });
       master.commit("four");
       gitgraph.tag("this-one", "dev");
 
-      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("three-tagged");
+      expect(gitgraph.tags.get("this-one")).toEqual("three-tagged-hash");
     });
 
     it("should add a tag to HEAD", () => {
-      const gitgraph = new G();
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
       const master = gitgraph.branch("master").commit("one");
       const dev = gitgraph.branch("dev").commit("two").commit("three");
-      master.commit("four-tagged");
+      master.commit({ subject: "four-tagged", hash: "four-tagged-hash" });
       gitgraph.tag("this-one");
 
-      expect((gitgraph.tags.get("this-one") as Commit).subject).toEqual("four-tagged");
+      expect(gitgraph.tags.get("this-one")).toEqual("four-tagged-hash");
     });
 
-    it("should add tags into log() output", () => {
-      const gitgraph = new G();
+    it("should add tags into render output", () => {
+      let commits: Commit[];
+      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
       const master = gitgraph.branch("master").commit("one");
       const dev = gitgraph.branch("dev").commit("two").commit("three");
       master.commit("four-tagged");
       gitgraph.tag("tag-one").tag("tag-two");
 
-      expect(gitgraph.log()).toMatchObject([
+      expect(commits).toMatchObject([
         { subject: "one", tags: [] },
         { subject: "two", tags: [] },
         { subject: "three", tags: [] },
@@ -649,34 +682,97 @@ describe("Gitgraph", () => {
   });
 
   describe("render", () => {
-    let renderMock: jest.Mock<any>;
-    // tslint:disable-next-line:max-classes-per-file
-    class GitgraphRender extends GitgraphCore { public render(): void { return renderMock(); } }
+    let gitgraph: GitgraphCore;
 
     beforeEach(() => {
-      renderMock = jest.fn();
+      gitgraph = new GitgraphCore({ onRender: jest.fn() });
     });
 
     it("should call render method on render", () => {
-      const gitgraph = new GitgraphRender();
       gitgraph.render();
-      expect(renderMock.mock.calls.length).toBe(1);
+      expect((gitgraph.onRender as jest.Mock<GitgraphOptions["onRender"]>).mock.calls.length).toBe(1);
     });
 
     it("should call render on each commit", () => {
-      const gitgraph = new GitgraphRender();
       gitgraph.commit().commit().commit();
 
-      expect(renderMock.mock.calls.length).toBe(3);
+      expect((gitgraph.onRender as jest.Mock<GitgraphOptions["onRender"]>).mock.calls.length).toBe(3);
     });
 
     it("should call render on merge", () => {
-      const gitgraph = new GitgraphRender();
       const master = gitgraph.branch("master").commit().commit().commit();
       const dev = gitgraph.branch("dev").commit().commit();
       master.merge(dev);
 
-      expect(renderMock.mock.calls.length).toBe(6); // 5 commits + 1 merge commit
+      expect((gitgraph.onRender as jest.Mock<GitgraphOptions["onRender"]>).mock.calls.length).toBe(6);
+    });
+  });
+
+  describe("getBranchesPaths", () => {
+    it("should generate branches paths for a simple case", () => {
+      let branchesPaths;
+      const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      dev.commit("three");
+      master.commit("four");
+      dev.commit("five");
+      master.merge(dev);
+
+      // We can't use `toMatchObject` here due to circular ref inside Branch.
+      const result = Array.from(branchesPaths);
+      expect(result[0][0].name).toBe("master");
+      expect(result[0][1]).toEqual([
+        { x: 0, y: 80 * 5 }, // one
+        { x: 0, y: 80 * 4 }, // two
+        { x: 0, y: 80 * 3 },
+        { x: 0, y: 80 * 2 }, // four
+        { x: 0, y: 80 * 1 },
+        { x: 0, y: 0 }, // Merge commit
+      ]);
+      expect(result[1][0].name).toBe("dev");
+      expect(result[1][1]).toEqual([
+        { x: 0, y: 80 * 4 }, // two - start branch
+        { x: 50, y: 80 * 3 }, // three
+        { x: 50, y: 80 * 2 },
+        { x: 50, y: 80 * 1 }, // five
+        { x: 0, y: 0 }, // Merge commit
+      ]);
+    });
+
+    it("should generate branches paths if I'm waiting to commit on dev", () => {
+      let branchesPaths;
+      const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("dev");
+      master.commit("three");
+      master.commit("four");
+      dev.commit("five");
+      master.merge(dev);
+
+      // We can't use `toMatchObject` here due to circular ref inside Branch.
+      const result = Array.from(branchesPaths);
+      expect(result[0][0].name).toBe("master");
+      expect(result[0][1]).toEqual([
+        { x: 0, y: 80 * 5 }, // one
+        { x: 0, y: 80 * 4 }, // two
+        { x: 0, y: 80 * 3 }, // three
+        { x: 0, y: 80 * 2 }, // four
+        { x: 0, y: 80 * 1 },
+        { x: 0, y: 0 }, // Merge commit
+      ]);
+      expect(result[1][0].name).toBe("dev");
+      expect(result[1][1]).toEqual([
+        { x: 0, y: 80 * 4 }, // two - start branch
+        { x: 50, y: 80 * 3 },
+        { x: 50, y: 80 * 2 },
+        { x: 50, y: 80 * 1 }, // five
+        { x: 0, y: 0 }, // Merge commit
+      ]);
     });
   });
 });
