@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "target": "es5",
+    "target": "es6",
     "module": "es2015",
     "lib": [
       "dom",

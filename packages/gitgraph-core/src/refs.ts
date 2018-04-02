@@ -1,51 +1,33 @@
 import Commit from "./commit";
 
-export class Refs {
-    private refs: Map<string | Commit, Commit | string[]>;
-
-    constructor() {
-        this.refs = new Map<string | Commit, Commit | string[]>();
-    }
-
-    public has(key: string | Commit): boolean {
-        return this.refs.has(key);
-    }
-
-    public get(key: string | Commit): string[] | Commit | undefined {
-        return this.refs.get(key);
-    }
-
-    public keys(): string[] {
-        return Array.from(this.refs.keys())
-            .filter((i) => typeof i === "string") as string[];
-    }
-
-    public values(): Commit[] {
-        return Array.from(this.refs.values())
-            .filter((i) => i instanceof Commit) as Commit[];
-    }
-
-    public branches(): string[] {
-        return this.keys().filter((i) => i !== "HEAD");
-    }
-
-    public set(name: string, commit: Commit): void {
+export class Refs extends Map<Commit["hash"] | string, string[] | Commit["hash"]> {
+    /**
+     * Set a new ref.
+     * This ref will be available with:
+     * - `refs.get(${commitHash})` -> ref[]
+     * - `refs.get(${refName})` -> Commit["hash"]
+     *
+     * @param name Name of the ref (ex: "master", "HEAD")
+     * @param commitHash Commit hash
+     */
+    public set(name: string, commitHash: Commit["hash"]): this {
         // Remove old links
-        const prevCommit = this.refs.get(name) as Commit;
+        const prevCommitHash = super.get(name) as Commit["hash"];
         let prevRefs;
-        if (prevCommit) {
-            prevRefs = (this.refs.get(prevCommit) || []) as string[];
-            this.refs.set(prevCommit, prevRefs.filter((ref: string) => ref !== name));
+        if (prevCommitHash) {
+            prevRefs = (super.get(prevCommitHash) || []) as string[];
+            super.set(prevCommitHash, prevRefs.filter((ref: string) => ref !== name));
         }
 
-        // Update the ref -> commit link
-        this.refs.set(name, commit);
+        // Update the ref -> commitHash link
+        super.set(name, commitHash);
 
-        // Update the commit -> [refs] link
-        prevRefs = this.refs.get(commit) as string[] | undefined;
+        // Update the commitHash -> [refs] link
+        prevRefs = super.get(commitHash) as string[] | undefined;
         const nextRefs = prevRefs ? [...prevRefs, name] : [name];
-        this.refs.set(commit, nextRefs);
+        super.set(commitHash, nextRefs);
 
+        return this;
     }
 }
 

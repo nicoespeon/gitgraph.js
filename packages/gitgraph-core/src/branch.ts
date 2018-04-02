@@ -25,7 +25,7 @@ export interface BranchOptions {
   /**
    * Parent commit
    */
-  parentCommit?: Commit;
+  parentCommitHash?: Commit["hash"];
   /**
    * Default options for commits
    */
@@ -41,7 +41,7 @@ export class Branch {
   public commitDefaultOptions: BranchCommitDefaultOptions;
 
   private gitgraph: GitgraphCore;
-  private parentCommit: BranchOptions["parentCommit"];
+  private parentCommitHash: BranchOptions["parentCommitHash"];
 
   /**
    * Branch constructor
@@ -50,8 +50,8 @@ export class Branch {
   constructor(options: BranchOptions) {
     this.gitgraph = options.gitgraph;
     this.name = options.name;
-    this.style = options.style; // TODO Give the style from gitgraph (template and override)
-    this.parentCommit = options.parentCommit;
+    this.style = options.style;
+    this.parentCommitHash = options.parentCommitHash;
     this.commitDefaultOptions = options.commitDefaultOptions || { style: {} };
   }
 
@@ -75,10 +75,10 @@ export class Branch {
     let parentOnSameBranch;
     if (!options.parents) options.parents = [];
     if (this.gitgraph.refs.has(this.name)) {
-      parentOnSameBranch = this.gitgraph.refs.get(this.name) as Commit;
-      options.parents.unshift(parentOnSameBranch.hash);
-    } else if (this.parentCommit) {
-      options.parents.unshift(this.parentCommit.hash);
+      parentOnSameBranch = this.gitgraph.refs.get(this.name) as Commit["hash"];
+      options.parents.unshift(parentOnSameBranch);
+    } else if (this.parentCommitHash) {
+      options.parents.unshift(this.parentCommitHash);
     }
 
     const { tag, ...commitOptions } = options;
@@ -92,10 +92,10 @@ export class Branch {
     if (parentOnSameBranch) {
       // Take all the refs from the parent
       const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) || []) as string[];
-      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit));
+      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref
-      this.gitgraph.refs.set(this.name, commit);
+      this.gitgraph.refs.set(this.name, commit.hash);
     }
 
     // Add the new commit
@@ -103,7 +103,7 @@ export class Branch {
 
     // Move HEAD on the last commit
     this.checkout();
-    this.gitgraph.refs.set("HEAD", commit);
+    this.gitgraph.refs.set("HEAD", commit.hash);
 
     // Add a tag to the commit if `option.tag` is provide
     if (tag) this.tag(tag);
@@ -128,9 +128,9 @@ export class Branch {
   public merge(branchName: string): Branch;
   public merge(branch: string | Branch): Branch {
     const branchName = (typeof branch === "string") ? branch : branch.name;
-    const parentCommit = this.gitgraph.refs.get(branchName) as Commit;
-    if (!parentCommit) throw new Error(`The branch called "${branchName}" is unknown`);
-    this.commit({ subject: `Merge branch ${branchName}`, parents: [parentCommit.hash] });
+    const parentCommitHash = this.gitgraph.refs.get(branchName) as Commit["hash"];
+    if (!parentCommitHash) throw new Error(`The branch called "${branchName}" is unknown`);
+    this.commit({ subject: `Merge branch ${branchName}`, parents: [parentCommitHash] });
     return this;
   }
 
