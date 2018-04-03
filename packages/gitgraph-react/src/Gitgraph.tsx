@@ -1,8 +1,9 @@
 import * as React from "react";
 import { GitgraphCore, GitgraphOptions, Commit } from "gitgraph-core/lib/index";
+import { Omit } from "gitgraph-core/lib/utils";
 
 export interface GitgraphProps {
-  options?: Partial<GitgraphOptions>;
+  options?: Omit<GitgraphOptions, "onRender">;
   children: (gitgraph: GitgraphCore) => void;
 }
 
@@ -11,6 +12,10 @@ export interface GitgraphState {
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
+  public static defaultProps: Partial<GitgraphProps> = {
+    options: {},
+  };
+
   private gitgraph: GitgraphCore;
 
   constructor(props: GitgraphProps) {
@@ -18,7 +23,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.state = { commits: [] };
     this.gitgraph = new GitgraphCore({
       onRender: this.onGitgraphCoreRender.bind(this),
-      ...(this.props.options || {}),
+      ...props.options,
     });
   }
 
