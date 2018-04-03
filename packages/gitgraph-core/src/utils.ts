@@ -1,6 +1,25 @@
 import { Commit } from "./commit";
 
 /**
+ * Omit some keys from an original type.
+ */
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
+/**
+ * Get all property names not matching a type.
+ *
+ * @ref http://tycho01.github.io/typical/modules/_object_nonmatchingpropsnames_.html
+ */
+export type NonMatchingPropNames<T, X> = { [K in keyof T]: T[K] extends X ? never : K; }[keyof T];
+
+/**
+ * Get all properties with names not matching a type.
+ *
+ * @ref http://tycho01.github.io/typical/modules/_object_nonmatchingprops_.html
+ */
+export type NonMatchingProp<T, X> = Pick<T, NonMatchingPropNames<T, X>>;
+
+/**
  * Provide a default value to a boolean.
  * @param value
  * @param defaultValue
@@ -51,11 +70,10 @@ export function isUndefined(obj: any): obj is undefined {
 /**
  * Return a version of the object without any undefined keys.
  *
- * @todo implement awesome type checking when typescript 2.8 will be release
- * @see https://blogs.msdn.microsoft.com/typescript/2018/03/15/announcing-typescript-2-8-rc/
  * @param obj
  */
-export function withoutUndefinedKeys(obj: any = {}): any {
-  return (Object.keys(obj))
-    .reduce<object>((mem, key) => isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] }, {});
+export function withoutUndefinedKeys<T extends object>(obj: T = {} as T)
+  : NonMatchingProp<T, undefined> {
+  return (Object.keys(obj) as [keyof T])
+    .reduce<T>((mem: any, key) => isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] }, {} as T);
 }
