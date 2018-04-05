@@ -65,7 +65,7 @@ storiesOf("Gitgraph", module)
         .commit("three");
     }}
   </Gitgraph>)
-  .add("metro", () => <Gitgraph options={{ template: TemplateEnum.Metro }}>
+  .add("blackArrow", () => <Gitgraph options={{ template: TemplateEnum.BlackArrow }}>
     {(gitgraph) => {
       const master = gitgraph
         .branch("master")
@@ -74,6 +74,22 @@ storiesOf("Gitgraph", module)
         .commit("three");
       const develop = gitgraph.branch("develop").commit("four");
       master.merge(develop);
+    }}
+  </Gitgraph>)
+  .add("merge party", () => <Gitgraph>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master");
+      const dev = gitgraph.branch("dev");
+      const feat = gitgraph.branch("feat");
+      master.commit("one").commit("two");
+      dev.commit("three").commit("four");
+      master.commit("five");
+      dev.merge(master);
+      master.commit("six");
+      dev.commit("seven");
+      feat.commit("eight");
+      master.merge(feat);
+      master.merge(dev);
     }}
   </Gitgraph>)
   .add("with playground", () => <GitgraphPlayground />);
