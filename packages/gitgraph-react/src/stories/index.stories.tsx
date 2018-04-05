@@ -20,6 +20,7 @@ class GitgraphPlayground extends React.Component<any, any> {
   }
 
   public addBranch = () => {
+    if (this.state.branches.map((b: Branch) => b.name).includes(this.state.branchName)) return;
     this.setState((state: any) => ({
       branches: [...state.branches, this.state.gitgraph.branch(this.state.branchName)],
     }));
@@ -29,7 +30,15 @@ class GitgraphPlayground extends React.Component<any, any> {
     this.setState({ [name]: e.currentTarget.value });
   }
 
+  public clear = () => {
+    this.state.gitgraph.clear();
+    this.setState({
+      branches: [],
+    });
+  }
+
   public render() {
+    const branches: Branch[] = this.state.branches;
     return (
       <div>
         <form onSubmit={(e) => e.preventDefault() || this.addCommit()}>
@@ -40,7 +49,7 @@ class GitgraphPlayground extends React.Component<any, any> {
           <input type="text" onChange={this.handleChange("branchName")} />
           <button>Add a branch</button>
         </form>
-        {this.state.branches.map((branch: Branch) =>
+        {branches.map((branch) =>
           <form key={branch.name} onSubmit={(e) => e.preventDefault() || this.addCommit(branch)}>
             <input
               type="text"
@@ -49,6 +58,20 @@ class GitgraphPlayground extends React.Component<any, any> {
             />
             <button>Commit on {branch.name}</button>
           </form>)}
+        {branches.map((to) =>
+          branches
+            .filter((from) => to.name !== from.name)
+            .map((from) =>
+              <button
+                key={`${to.name}->${from.name}`}
+                onClick={() => from.merge(to)}
+              >Merge {to.name} into {from.name}</button>,
+          ))}
+        <button
+          onClick={this.clear}
+          style={{ position: "absolute", right: 10, top: 10 }}
+        >clear</button>
+        <br />
         <Gitgraph children={(gitgraph) => this.setState({ gitgraph })} />
       </div>
     );
@@ -58,11 +81,43 @@ class GitgraphPlayground extends React.Component<any, any> {
 storiesOf("Gitgraph", module)
   .add("default", () => <Gitgraph>
     {(gitgraph) => {
-      gitgraph
+      const master = gitgraph.branch("master").commit("Initial commit");
+      const develop = gitgraph.branch("develop");
+      develop.commit("six");
+      master.commit("five");
+      develop.commit("six");
+      master.merge(develop);
+    }}
+  </Gitgraph>)
+  .add("should stop on last commit", () => <Gitgraph>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master").commit("Initial commit");
+      const develop = gitgraph.branch("develop");
+      const feat = gitgraph.branch("feat");
+      feat.commit();
+      master.commit("five");
+      develop.commit("six");
+      master.merge(develop);
+    }}
+  </Gitgraph>)
+  .add("should deal with the second branch commit", () => <Gitgraph>
+    {(gitgraph) => {
+      gitgraph.branch("master").commit("Initial commit");
+      gitgraph.branch("develop").commit().commit();
+    }}
+  </Gitgraph>)
+  .add("commit after merge", () => <Gitgraph>
+    {(gitgraph) => {
+      const master = gitgraph
         .branch("master")
         .commit("one")
         .commit("two")
         .commit("three");
+      const develop = gitgraph.branch("develop").commit("four");
+      master.commit("five");
+      develop.commit("six");
+      master.merge(develop);
+      develop.commit("seven");
     }}
   </Gitgraph>)
   .add("blackArrow", () => <Gitgraph options={{ template: TemplateEnum.BlackArrow }}>
@@ -79,9 +134,9 @@ storiesOf("Gitgraph", module)
   .add("merge party", () => <Gitgraph>
     {(gitgraph) => {
       const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
       const dev = gitgraph.branch("dev");
       const feat = gitgraph.branch("feat");
-      master.commit("one").commit("two");
       dev.commit("three").commit("four");
       master.commit("five");
       dev.merge(master);
