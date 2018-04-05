@@ -1,4 +1,5 @@
 import { Commit } from "./commit";
+import { Coordinate } from "./gitgraph";
 
 /**
  * Omit some keys from an original type.
@@ -76,4 +77,13 @@ export function withoutUndefinedKeys<T extends object>(obj: T = {} as T)
   : NonMatchingProp<T, undefined> {
   return (Object.keys(obj) as [keyof T])
     .reduce<T>((mem: any, key) => isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] }, {} as T);
+}
+
+/**
+ * Return a string ready to use in `svg.path.d` from coordinates
+ *
+ * @param coordinates Collection of coordinates
+ */
+export function toSvgPath(coordinates: Coordinate[]): string {
+  return "M" + coordinates.map(({ x, y }) => `L ${x} ${y}`).join(" ").slice(1);
 }
