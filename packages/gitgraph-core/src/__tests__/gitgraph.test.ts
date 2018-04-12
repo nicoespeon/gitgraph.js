@@ -795,5 +795,42 @@ describe("Gitgraph", () => {
         { x: 50, y: 80 * 0 },
       ]);
     });
+
+    it("should stop on last commit", () => {
+      let branchesPaths;
+      const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
+
+      const master = gitgraph.branch("master").commit("Initial commit");
+      const develop = gitgraph.branch("dev");
+      const feat = gitgraph.branch("feat");
+      feat.commit();
+      master.commit("five");
+      develop.commit("six");
+      master.merge(develop);
+
+      // We can't use `toMatchObject` here due to circular ref inside Branch.
+      const result = Array.from(branchesPaths);
+      expect(result[0][0].name).toBe("master");
+      expect(result[0][1]).toEqual([
+        { x: 0, y: 80 * 4 },
+        { x: 0, y: 80 * 3 },
+        { x: 0, y: 80 * 2 },
+        { x: 0, y: 80 * 1 },
+        { x: 0, y: 80 * 0 },
+      ]);
+      expect(result[1][0].name).toBe("feat");
+      expect(result[1][1]).toEqual([
+        { x: 0, y: 80 * 4 },
+        { x: 50, y: 80 * 3 },
+      ]);
+      expect(result[2][0].name).toBe("dev");
+      expect(result[2][1]).toEqual([
+        { x: 0, y: 80 * 4 },
+        { x: 100, y: 80 * 3 },
+        { x: 100, y: 80 * 2 },
+        { x: 100, y: 80 * 1 },
+        { x: 0, y: 80 * 0 },
+      ]);
+    });
   });
 });
