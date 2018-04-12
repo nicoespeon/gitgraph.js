@@ -455,12 +455,12 @@ export class GitgraphCore {
    */
   private smoothBranchesPaths(branchesPaths: Map<Branch, Coordinate[]>) {
     branchesPaths.forEach((points, branch) => {
-      if (points.length === 1) return;
+      if (points.length <= 1) return;
       const firstPoint = points[0];
       const lastPoint = points[points.length - 1];
       const column = points[1].x;
       const branchSize = Math.round(
-        Math.abs(firstPoint.y - lastPoint.x) / this.template.commit.spacing,
+        Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
       ) - 1;
       const branchPoints = branchSize > 0 ? new Array(branchSize).fill(0).map(
         (_, i) => ({ x: column, y: points[0].y - this.template.commit.spacing * (i + 1) }),
