@@ -6,7 +6,7 @@ import {
   BranchOptions,
   metroTemplate,
 } from "../index";
-const copy = (obj) => JSON.parse(JSON.stringify(obj));
+const copy = obj => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
   describe("commit", () => {
@@ -14,8 +14,7 @@ describe("Branch", () => {
       let one, two, three;
 
       beforeEach(() => {
-        let commits: Commit[];
-        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        const gitgraph = new GitgraphCore();
 
         gitgraph
           .commit()
@@ -23,6 +22,7 @@ describe("Branch", () => {
           .branch("develop")
           .commit();
 
+        const { commits } = gitgraph.getRenderedData();
         [one, two, three] = commits;
       });
 
@@ -41,13 +41,14 @@ describe("Branch", () => {
 
     describe("on branches", () => {
       it("should have master on commit two", () => {
-        let commits: Commit[];
-        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        const gitgraph = new GitgraphCore();
 
         const master = gitgraph.branch("master");
         master.commit("one").commit("two");
         const dev = gitgraph.branch("develop");
         dev.commit("three");
+
+        const { commits } = gitgraph.getRenderedData();
 
         expect(commits).toMatchObject([
           { subject: "one", refs: [] },
@@ -57,14 +58,15 @@ describe("Branch", () => {
       });
 
       it("should have master and HEAD on commit four", () => {
-        let commits: Commit[];
-        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        const gitgraph = new GitgraphCore();
 
         const master = gitgraph.branch("master");
         master.commit("one").commit("two");
         const dev = gitgraph.branch("develop");
         dev.commit("three");
         master.commit("four");
+
+        const { commits } = gitgraph.getRenderedData();
 
         expect(commits).toMatchObject([
           { subject: "one", refs: [] },
@@ -77,7 +79,7 @@ describe("Branch", () => {
 
     describe("style", () => {
       let gitgraph: GitgraphCore;
-      let commits: Commit[];
+
       const expectedStyle = {
         color: "#979797",
         dot: {
@@ -106,20 +108,24 @@ describe("Branch", () => {
       };
 
       beforeEach(() => {
-        gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        gitgraph = new GitgraphCore();
       });
 
       it("should have the style of the template by default", () => {
         gitgraph.commit();
+        const { commits } = gitgraph.getRenderedData();
         const [commit] = commits;
         expect(commit.style).toEqual(expectedStyle);
       });
 
       it("should be have a merge style with the defaultCommitOptions", () => {
         gitgraph
-          .branch({ commitDefaultOptions: { style: { message: { color: "green" } } } } as BranchOptions)
+          .branch({
+            commitDefaultOptions: { style: { message: { color: "green" } } },
+          } as BranchOptions)
           .commit();
 
+        const { commits } = gitgraph.getRenderedData();
         const [commit] = commits;
         const expected = copy(expectedStyle);
         expected.message.color = "green";
@@ -128,9 +134,14 @@ describe("Branch", () => {
 
       it("should be have a merge style with the commit", () => {
         gitgraph
-          .branch({ commitDefaultOptions: { style: { message: { color: "green" } } } } as BranchOptions)
-          .commit({ style: { message: { display: false } } } as GitgraphCommitOptions);
+          .branch({
+            commitDefaultOptions: { style: { message: { color: "green" } } },
+          } as BranchOptions)
+          .commit({
+            style: { message: { display: false } },
+          } as GitgraphCommitOptions);
 
+        const { commits } = gitgraph.getRenderedData();
         const [commit] = commits;
         const expected = copy(expectedStyle);
         expected.message.color = "green";
@@ -146,6 +157,7 @@ describe("Branch", () => {
         const feat3 = gitgraph.branch("feat3").commit("five");
 
         const { colors } = metroTemplate;
+        const { commits } = gitgraph.getRenderedData();
 
         expect(commits).toMatchObject([
           {
@@ -193,13 +205,12 @@ describe("Branch", () => {
     });
 
     describe("with tag", () => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
       gitgraph
         .commit("one")
         .commit({ subject: "with tag", tag: "1.0.0" })
         .commit("three");
-
+      const { commits } = gitgraph.getRenderedData();
       expect(commits).toMatchObject([
         { subject: "one" },
         { subject: "with tag", tags: ["1.0.0"] },
@@ -212,8 +223,7 @@ describe("Branch", () => {
     let log: Commit[];
     describe("with string parameter", () => {
       beforeEach(() => {
-        let commits: Commit[];
-        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        const gitgraph = new GitgraphCore();
 
         const master = gitgraph.branch("master");
         master.commit("master 1"); // 0
@@ -227,40 +237,40 @@ describe("Branch", () => {
 
         master.merge("develop"); // 6 (merge with string)
         master.commit("master 4"); // 7
-
+        const { commits } = gitgraph.getRenderedData();
         log = commits;
       });
 
       it("should create a merge commit into master", () => {
-        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
         expect(mergeCommit).toBeDefined();
       });
 
       it("should have 2 parents commits", () => {
-        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
         expect(mergeCommit.parents.length).toBe(2);
       });
 
       it("should throw if the branch doesn't exist", () => {
-        let commits: Commit[];
-        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        const gitgraph = new GitgraphCore();
 
         const master = gitgraph.branch("master");
         master.commit("master 1");
         master.commit("master 2");
-        expect(() => master.merge("no-exists")).toThrow(`The branch called "no-exists" is unknown`);
+        expect(() => master.merge("no-exists")).toThrow(
+          `The branch called "no-exists" is unknown`,
+        );
       });
 
       it("should have the last master commit as first parent and dev as second parent", () => {
-        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
         expect(mergeCommit.parents).toEqual([log[5].hash, log[4].hash]);
       });
     });
 
     describe("with branch parameter", () => {
       beforeEach(() => {
-        let commits: Commit[];
-        const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+        const gitgraph = new GitgraphCore();
 
         const master = gitgraph.branch("master");
         master.commit("master 1");
@@ -274,17 +284,17 @@ describe("Branch", () => {
 
         master.merge(develop); // <- branch
         master.commit("master 4");
-
+        const { commits } = gitgraph.getRenderedData();
         log = commits;
       });
 
       it("should create a merge commit into master", () => {
-        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
         expect(mergeCommit).toBeDefined();
       });
 
       it("should have 2 parents commits", () => {
-        const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
         expect(mergeCommit.parents.length).toBe(2);
       });
     });
@@ -292,13 +302,13 @@ describe("Branch", () => {
 
   describe("tag", () => {
     it("should tag the last commit of the branch", () => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
 
       const master = gitgraph.branch("master");
-      const dev = gitgraph.branch("dev")
+      const dev = gitgraph
+        .branch("dev")
         .commit("one")
-        .commit({subject: "two-tagged", hash: "two-tagged-hash"})
+        .commit({ subject: "two-tagged", hash: "two-tagged-hash" })
         .tag("this-one");
 
       master.commit("three");

@@ -242,7 +242,13 @@ export class Template {
     options.commit.message = options.commit.message || {};
 
     // One color per column
-    this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
+    this.colors = options.colors || [
+      "#6963FF",
+      "#47E8D4",
+      "#6BDB52",
+      "#E84BA5",
+      "#FFA657",
+    ];
 
     // Branch style
     this.branch = {
@@ -270,7 +276,10 @@ export class Template {
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
       widthExtension: options.commit.widthExtension || 0,
       tooltipHTMLFormatter: options.commit.tooltipHTMLFormatter || null,
-      shouldDisplayTooltipsInCompactMode: booleanOptionOr(options.commit.shouldDisplayTooltipsInCompactMode, true),
+      shouldDisplayTooltipsInCompactMode: booleanOptionOr(
+        options.commit.shouldDisplayTooltipsInCompactMode,
+        true,
+      ),
       dot: {
         color: options.commit.dot.color || options.commit.color,
         size: options.commit.dot.size || 3,
@@ -280,12 +289,21 @@ export class Template {
       },
       tag: {
         color: options.commit.tag.color || options.commit.color,
-        font: options.commit.tag.font || options.commit.message.font || "normal 10pt Calibri",
+        font:
+          options.commit.tag.font ||
+          options.commit.message.font ||
+          "normal 10pt Calibri",
       },
       message: {
         display: booleanOptionOr(options.commit.message.display, true),
-        displayAuthor: booleanOptionOr(options.commit.message.displayAuthor, true),
-        displayBranch: booleanOptionOr(options.commit.message.displayBranch, true),
+        displayAuthor: booleanOptionOr(
+          options.commit.message.displayAuthor,
+          true,
+        ),
+        displayBranch: booleanOptionOr(
+          options.commit.message.displayBranch,
+          true,
+        ),
         displayHash: booleanOptionOr(options.commit.message.displayHash, true),
         color: options.commit.message.color || options.commit.color,
         font: options.commit.message.font || "normal 12pt Calibri",

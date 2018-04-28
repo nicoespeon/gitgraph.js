@@ -84,15 +84,18 @@ export class Branch {
     const { tag, ...commitOptions } = options;
     const commit = new Commit({
       author: this.commitDefaultOptions.author || this.gitgraph.author,
-      subject: this.commitDefaultOptions.subject || this.gitgraph.commitMessage as string,
+      subject:
+        this.commitDefaultOptions.subject ||
+        (this.gitgraph.commitMessage as string),
       ...commitOptions,
       style: this.getCommitStyle(options.style),
     });
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
-      const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) || []) as string[];
-      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
+      const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) ||
+        []) as string[];
+      parentRefs.forEach(ref => this.gitgraph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref
       this.gitgraph.refs.set(this.name, commit.hash);
@@ -109,7 +112,7 @@ export class Branch {
     if (tag) this.tag(tag);
 
     // Update the render
-    this.gitgraph.render();
+    this.gitgraph.next();
 
     return this;
   }
@@ -127,10 +130,16 @@ export class Branch {
    */
   public merge(branchName: string): Branch;
   public merge(branch: string | Branch): Branch {
-    const branchName = (typeof branch === "string") ? branch : branch.name;
-    const parentCommitHash = this.gitgraph.refs.get(branchName) as Commit["hash"];
-    if (!parentCommitHash) throw new Error(`The branch called "${branchName}" is unknown`);
-    this.commit({ subject: `Merge branch ${branchName}`, parents: [parentCommitHash] });
+    const branchName = typeof branch === "string" ? branch : branch.name;
+    const parentCommitHash = this.gitgraph.refs.get(
+      branchName,
+    ) as Commit["hash"];
+    if (!parentCommitHash)
+      throw new Error(`The branch called "${branchName}" is unknown`);
+    this.commit({
+      subject: `Merge branch ${branchName}`,
+      parents: [parentCommitHash],
+    });
     return this;
   }
 
@@ -171,19 +180,19 @@ export class Branch {
       tag: {
         ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.tag),
-        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).tag),
+        ...withoutUndefinedKeys(this.commitDefaultOptions.style!.tag),
         ...style.tag,
       },
       message: {
         ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.message),
-        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).message),
+        ...withoutUndefinedKeys(this.commitDefaultOptions.style!.message),
         ...style.message,
       },
       dot: {
         ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),
-        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).dot),
+        ...withoutUndefinedKeys(this.commitDefaultOptions.style!.dot),
         ...style.dot,
       },
     } as CommitStyle;

@@ -1,10 +1,9 @@
 import "jest";
-import {GitgraphCore, Commit} from "../index";
+import { GitgraphCore, Commit } from "../index";
 
 describe("Gitgraph.withBranches", () => {
   it("should deal one branch (no merge)", () => {
-    let commits: Commit[];
-    const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+    const gitgraph = new GitgraphCore();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -13,29 +12,33 @@ describe("Gitgraph.withBranches", () => {
     master.commit("four");
     dev.commit("five");
 
-    expect(commits).toMatchObject([{
-      subject: "one",
-      branches: ["master", "dev"],
-    },
-    {
-      subject: "two",
-      branches: ["master", "dev"],
-    },
-    {
-      subject: "three",
-      branches: ["dev"],
-    }, {
-      subject: "four",
-      branches: ["master"],
-    },
-    {
-      subject: "five",
-      branches: ["dev"],
-    }]);
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "two",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "three",
+        branches: ["dev"],
+      },
+      {
+        subject: "four",
+        branches: ["master"],
+      },
+      {
+        subject: "five",
+        branches: ["dev"],
+      },
+    ]);
   });
   it("should deal one branch (with merge)", () => {
-    let commits: Commit[];
-    const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+    const gitgraph = new GitgraphCore();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -45,29 +48,33 @@ describe("Gitgraph.withBranches", () => {
     dev.commit("five");
     master.merge(dev);
 
-    expect(commits).toMatchObject([{
-      subject: "one",
-      branches: ["master", "dev"],
-    },
-    {
-      subject: "two",
-      branches: ["master", "dev"],
-    },
-    {
-      subject: "three",
-      branches: ["master", "dev"],
-    }, {
-      subject: "four",
-      branches: ["master"],
-    },
-    {
-      subject: "five",
-      branches: ["master", "dev"],
-    },
-    {
-      subject: "Merge branch dev",
-      branches: ["master"],
-    },
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "two",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "three",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "four",
+        branches: ["master"],
+      },
+      {
+        subject: "five",
+        branches: ["master", "dev"],
+      },
+      {
+        subject: "Merge branch dev",
+        branches: ["master"],
+      },
     ]);
   });
 });

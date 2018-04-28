@@ -11,7 +11,9 @@ export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
  *
  * @ref http://tycho01.github.io/typical/modules/_object_nonmatchingpropsnames_.html
  */
-export type NonMatchingPropNames<T, X> = { [K in keyof T]: T[K] extends X ? never : K; }[keyof T];
+export type NonMatchingPropNames<T, X> = {
+  [K in keyof T]: T[K] extends X ? never : K
+}[keyof T];
 
 /**
  * Get all properties with names not matching a type.
@@ -34,7 +36,10 @@ export function booleanOptionOr(value: any, defaultValue: boolean): boolean {
  * @param value
  * @param defaultValue
  */
-export function numberOptionOr(value: any, defaultValue: number | null): number | null {
+export function numberOptionOr(
+  value: any,
+  defaultValue: number | null,
+): number | null {
   return typeof value === "number" ? value : defaultValue;
 }
 
@@ -44,7 +49,9 @@ export function numberOptionOr(value: any, defaultValue: number | null): number 
  * @param paths The property paths to pick
  */
 export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
-  return { ...paths.reduce((mem, key) => ({ ...mem, [key]: obj[key] }), {}) } as Pick<T, K>;
+  return {
+    ...paths.reduce((mem, key) => ({ ...mem, [key]: obj[key] }), {}),
+  } as Pick<T, K>;
 }
 
 /**
@@ -55,7 +62,7 @@ export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
 export function debug(commits: Commit[], paths: Array<keyof Commit>): void {
   // tslint:disable-next-line:no-console
   console.log(
-    JSON.stringify(commits.map((commit) => pick(commit, paths)), null, 2),
+    JSON.stringify(commits.map(commit => pick(commit, paths)), null, 2),
   );
 }
 
@@ -73,10 +80,14 @@ export function isUndefined(obj: any): obj is undefined {
  *
  * @param obj
  */
-export function withoutUndefinedKeys<T extends object>(obj: T = {} as T)
-  : NonMatchingProp<T, undefined> {
-  return (Object.keys(obj) as [keyof T])
-    .reduce<T>((mem: any, key) => isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] }, {} as T);
+export function withoutUndefinedKeys<T extends object>(
+  obj: T = {} as T,
+): NonMatchingProp<T, undefined> {
+  return (Object.keys(obj) as [keyof T]).reduce<T>(
+    (mem: any, key) =>
+      isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] },
+    {} as T,
+  );
 }
 
 /**
@@ -85,5 +96,11 @@ export function withoutUndefinedKeys<T extends object>(obj: T = {} as T)
  * @param coordinates Collection of coordinates
  */
 export function toSvgPath(coordinates: Coordinate[]): string {
-  return "M" + coordinates.map(({ x, y }) => `L ${x} ${y}`).join(" ").slice(1);
+  return (
+    "M" +
+    coordinates
+      .map(({ x, y }) => `L ${x} ${y}`)
+      .join(" ")
+      .slice(1)
+  );
 }

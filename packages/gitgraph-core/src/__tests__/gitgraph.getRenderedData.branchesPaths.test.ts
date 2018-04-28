@@ -2,10 +2,13 @@ import "jest";
 import { GitgraphCore } from "../index";
 
 describe("Gitgraph.render.branchesPaths", () => {
-  it("should generate branches paths for a simple case", () => {
-    let branchesPaths;
-    const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
+  let gitgraph: GitgraphCore;
 
+  beforeEach(() => {
+    gitgraph = new GitgraphCore();
+  });
+
+  it("should generate branches paths for a simple case", () => {
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
     const dev = gitgraph.branch("dev");
@@ -13,6 +16,8 @@ describe("Gitgraph.render.branchesPaths", () => {
     master.commit("four");
     dev.commit("five");
     master.merge(dev);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -36,9 +41,6 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should generate branches paths if I'm waiting to commit on dev", () => {
-    let branchesPaths;
-    const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
-
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
     const dev = gitgraph.branch("dev");
@@ -46,6 +48,8 @@ describe("Gitgraph.render.branchesPaths", () => {
     master.commit("four");
     dev.commit("five");
     master.merge(dev);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -69,18 +73,18 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should deal with the second commit", () => {
-    let branchesPaths;
-    const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
-
     gitgraph.branch("master").commit("Initial commit");
-    gitgraph.branch("dev").commit().commit();
+    gitgraph
+      .branch("dev")
+      .commit()
+      .commit();
+
+    const { branchesPaths } = gitgraph.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
     expect(result[0][0].name).toBe("master");
-    expect(result[0][1]).toEqual([
-      { x: 0, y: 80 * 2 },
-    ]);
+    expect(result[0][1]).toEqual([{ x: 0, y: 80 * 2 }]);
     expect(result[1][0].name).toBe("dev");
     expect(result[1][1]).toEqual([
       { x: 0, y: 80 * 2 },
@@ -90,9 +94,6 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should stop on last commit", () => {
-    let branchesPaths;
-    const gitgraph = new GitgraphCore({ onRender: (c, b) => branchesPaths = b });
-
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
     const feat = gitgraph.branch("feat");
@@ -100,6 +101,8 @@ describe("Gitgraph.render.branchesPaths", () => {
     master.commit("five");
     develop.commit("six");
     master.merge(develop);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -112,10 +115,7 @@ describe("Gitgraph.render.branchesPaths", () => {
       { x: 0, y: 80 * 0 },
     ]);
     expect(result[1][0].name).toBe("feat");
-    expect(result[1][1]).toEqual([
-      { x: 0, y: 80 * 4 },
-      { x: 50, y: 80 * 3 },
-    ]);
+    expect(result[1][1]).toEqual([{ x: 0, y: 80 * 4 }, { x: 50, y: 80 * 3 }]);
     expect(result[2][0].name).toBe("dev");
     expect(result[2][1]).toEqual([
       { x: 0, y: 80 * 4 },
@@ -123,6 +123,38 @@ describe("Gitgraph.render.branchesPaths", () => {
       { x: 100, y: 80 * 2 },
       { x: 100, y: 80 * 1 },
       { x: 0, y: 80 * 0 },
+    ]);
+  });
+
+  // TODO deal with multiple paths by branch
+  it.skip("should deal with a commit after a merge", () => {
+    const master = gitgraph.branch("master").commit();
+    const dev = gitgraph.branch("dev").commit();
+    master.commit();
+    dev.merge(master);
+    master.commit();
+
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    // We can't use `toMatchObject` here due to circular ref inside Branch.
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].name).toBe("master");
+    expect(result[0][1]).toEqual([
+      [
+        { x: 0, y: 320 },
+        { x: 0, y: 240 },
+        { x: 0, y: 160 }, // commit before merge
+      ],
+      [
+        { x: 50, y: 240 }, // merge commit
+        { x: 0, y: 160 },
+        { x: 0, y: 80 },
+        { x: 0, y: 0 },
+      ],
+    ]);
+    expect(result[1][0].name).toBe("dev");
+    expect(result[1][1]).toEqual([
+      [{ x: 50, y: 240 }, { x: 50, y: 160 }, { x: 50, y: 80 }, { x: 0, y: 0 }],
     ]);
   });
 });

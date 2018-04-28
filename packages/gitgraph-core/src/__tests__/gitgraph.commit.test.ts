@@ -1,14 +1,14 @@
 import "jest";
-import { GitgraphCore, Commit} from "../index";
+import { GitgraphCore, Commit } from "../index";
 
 describe("Gitgraph.commit", () => {
   describe("initial commit", () => {
     it("should add the initial commit", () => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
 
       gitgraph.commit({ subject: "Initial commit" });
 
+      const { commits } = gitgraph.getRenderedData();
       const [commit] = commits;
 
       expect(commits.length).toBe(1);
@@ -27,11 +27,14 @@ describe("Gitgraph.commit", () => {
     });
 
     it("should add the initial commit with another author", () => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
 
-      gitgraph.commit({ subject: "Initial commit", author: "Fabien BERNARD <fabien0102@gmail.com>" });
+      gitgraph.commit({
+        subject: "Initial commit",
+        author: "Fabien BERNARD <fabien0102@gmail.com>",
+      });
 
+      const { commits } = gitgraph.getRenderedData();
       const [commit] = commits;
 
       expect(commits.length).toBe(1);
@@ -50,11 +53,11 @@ describe("Gitgraph.commit", () => {
     });
 
     it("should works with the shorter commit message syntax", () => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
 
       gitgraph.commit("Initial commit");
 
+      const { commits } = gitgraph.getRenderedData();
       const [commit] = commits;
 
       expect(commits.length).toBe(1);
@@ -62,10 +65,10 @@ describe("Gitgraph.commit", () => {
     });
 
     it("should works without argument (default message)", () => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
       gitgraph.commit();
 
+      const { commits } = gitgraph.getRenderedData();
       const [commit] = commits;
 
       expect(commits.length).toBe(1);
@@ -76,13 +79,11 @@ describe("Gitgraph.commit", () => {
   describe("two commits", () => {
     let one, two;
     beforeEach(() => {
-      let commits: Commit[];
-      const gitgraph = new GitgraphCore({ onRender: (c) => commits = c });
+      const gitgraph = new GitgraphCore();
 
-      gitgraph
-        .commit("Initial commit")
-        .commit("Second commit");
+      gitgraph.commit("Initial commit").commit("Second commit");
 
+      const { commits } = gitgraph.getRenderedData();
       [one, two] = commits;
     });
 

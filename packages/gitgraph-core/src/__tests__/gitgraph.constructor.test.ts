@@ -3,7 +3,7 @@ import { GitgraphCore, TemplateEnum, metroTemplate } from "../index";
 
 describe("Gitgraph.constructor", () => {
   it("should have the correct default options", () => {
-    const gitgraph = new GitgraphCore({ onRender: () => null });
+    const gitgraph = new GitgraphCore();
 
     expect(gitgraph).toMatchObject({
       author: "Sergio Flores <saxo-guy@epic.com>",
@@ -15,7 +15,6 @@ describe("Gitgraph.constructor", () => {
 
   it("should be able to override options", () => {
     const gitgraph = new GitgraphCore({
-      onRender: () => null,
       author: "Fabien BERNARD <fabien0102@gmail.com>",
       reverseArrow: true,
       template: TemplateEnum.Metro,

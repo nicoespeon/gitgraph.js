@@ -19,12 +19,21 @@ export interface CommitOptions {
  *
  * @return {string} hex string with 40 chars
  */
-const getRandomHash = () => (
-  (Math.random()).toString(16).substring(3) +
-  (Math.random()).toString(16).substring(3) +
-  (Math.random()).toString(16).substring(3) +
-  (Math.random()).toString(16).substring(3)
-).substring(0, 40);
+const getRandomHash = () =>
+  (
+    Math.random()
+      .toString(16)
+      .substring(3) +
+    Math.random()
+      .toString(16)
+      .substring(3) +
+    Math.random()
+      .toString(16)
+      .substring(3) +
+    Math.random()
+      .toString(16)
+      .substring(3)
+  ).substring(0, 40);
 
 export class Commit {
   /**
@@ -152,7 +161,7 @@ export class Commit {
 
     // Set parent hash
     this.parents = options.parents ? options.parents : [];
-    this.parentsAbbrev = this.parents.map((commit) => commit.substring(0, 7));
+    this.parentsAbbrev = this.parents.map(commit => commit.substring(0, 7));
 
     // Set style
     this.style = options.style;
@@ -160,7 +169,6 @@ export class Commit {
     // Set inner text
     this.innerText = options.innerText;
   }
-
 }
 
 export default Commit;

@@ -131,6 +131,15 @@ storiesOf("Gitgraph", module)
       master.merge(develop);
     }}
   </Gitgraph>)
+  .add("multiple merge", () => <Gitgraph>
+  {(gitgraph) => {
+    const master = gitgraph.branch("master").commit();
+    const dev = gitgraph.branch("dev").commit();
+    master.commit();
+    dev.merge(master);
+    master.commit();
+  }}
+</Gitgraph>)
   .add("merge party", () => <Gitgraph>
     {(gitgraph) => {
       const master = gitgraph.branch("master");
