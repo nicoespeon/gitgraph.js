@@ -95,12 +95,15 @@ export function withoutUndefinedKeys<T extends object>(
  *
  * @param coordinates Collection of coordinates
  */
-export function toSvgPath(coordinates: Coordinate[]): string {
-  return (
-    "M" +
-    coordinates
-      .map(({ x, y }) => `L ${x} ${y}`)
-      .join(" ")
-      .slice(1)
-  );
+export function toSvgPath(coordinates: Coordinate[][]): string {
+  return coordinates
+    .map(
+      path =>
+        "M" +
+        path
+          .map(({ x, y }) => `L ${x} ${y}`)
+          .join(" ")
+          .slice(1),
+    )
+    .join(" ");
 }
