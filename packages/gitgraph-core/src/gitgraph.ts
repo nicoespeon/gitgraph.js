@@ -8,7 +8,7 @@ import {
   BranchStyleOptions,
 } from "./template";
 import Refs from "./refs";
-import { booleanOptionOr, numberOptionOr } from "./utils";
+import { booleanOptionOr, numberOptionOr, pick } from "./utils";
 
 export enum OrientationsEnum {
   VerticalReverse = "vertical-reverse",
@@ -30,6 +30,10 @@ export interface Coordinate {
   y: number;
 }
 
+interface InternalCoordinate extends Coordinate {
+  mergeCommit?: boolean;
+}
+
 export interface GitgraphOptions {
   template?: TemplateEnum | Template;
   orientation?: OrientationsEnum;
@@ -43,7 +47,7 @@ export interface GitgraphOptions {
 
 export interface RenderedData {
   commits: Commit[];
-  branchesPaths: Map<Branch, Coordinate[]>;
+  branchesPaths: Map<Branch, Coordinate[][]>;
 }
 
 export interface GitgraphCommitOptions {
@@ -148,13 +152,14 @@ export class GitgraphCore {
     commits = this.withBranches(commits, { firstParentOnly: true });
     this.calculateRows(commits);
     commits = commits.map(this.withPosition).map(this.withColor);
-    const branchesPaths = commits.reduce(
+    const flatBranchesPaths = commits.reduce(
       this.initBranchesPaths,
-      new Map<Branch, Coordinate[]>(),
+      new Map<Branch, InternalCoordinate[]>(),
     );
     commits = this.withBranches(commits);
-    this.addMergeCommitsIntoBranchesPaths(commits, branchesPaths);
-    this.smoothBranchesPaths(branchesPaths);
+    this.addMergeCommitsIntoBranchesPaths(commits, flatBranchesPaths);
+    const branchesPaths = this.smoothBranchesPaths(flatBranchesPaths);
+
     return { commits, branchesPaths };
   }
 
@@ -467,11 +472,11 @@ export class GitgraphCore {
    * @param commits All commits (with only the first branch resolve)
    */
   private initBranchesPaths(
-    branchesPaths: Map<Branch, Coordinate[]>,
+    branchesPaths: Map<Branch, InternalCoordinate[]>,
     commit: Commit,
     index: number,
     commits: Commit[],
-  ): Map<Branch, Coordinate[]> {
+  ): Map<Branch, InternalCoordinate[]> {
     const branch = this.branches.get(
       (commit.branches as Array<Branch["name"]>)[0],
     ) as Branch;
@@ -508,45 +513,96 @@ export class GitgraphCore {
    */
   private addMergeCommitsIntoBranchesPaths(
     commits: Commit[],
-    branchesPaths: Map<Branch, Coordinate[]>,
+    branchesPaths: Map<Branch, InternalCoordinate[]>,
   ) {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
-    mergeCommits.forEach(commit => {
-      const branch = this.branches.get(
-        ((commits.find(({ hash }) => hash === commit.parents[1]) as Commit)
-          .branches as string[])[1],
-      ) as Branch;
-      branchesPaths.set(branch, [
-        ...(branchesPaths.get(branch) as Coordinate[]),
-        { x: commit.x, y: commit.y },
-      ]);
+    mergeCommits.forEach(mergeCommit => {
+      mergeCommit.parents.forEach(parent => {
+        const parentCommit = commits.find(({ hash }) => hash === parent)!;
+        parentCommit.branches!.forEach(branchName => {
+          const branch = this.branches.get(branchName)!;
+          const lastPoints = [...(branchesPaths.get(branch) || [])];
+
+          const prevMergeCommitIndex = lastPoints.findIndex(
+            point => mergeCommit.x === point.x && mergeCommit.y === point.y,
+          );
+
+          if (prevMergeCommitIndex === -1) {
+            branchesPaths.set(branch, [
+              ...lastPoints,
+              { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
+            ]);
+          } else {
+            lastPoints.splice(prevMergeCommitIndex, 1, {
+              x: mergeCommit.x,
+              y: mergeCommit.y,
+              mergeCommit: true,
+            });
+            branchesPaths.set(branch, lastPoints);
+          }
+        });
+      });
     });
   }
 
   /**
    * Smooth all paths by putting points on each row.
    *
-   * @param branchesPaths Map of coordinates of each branch
+   * @param flatBranchesPaths Map of coordinates of each branch
    */
-  private smoothBranchesPaths(branchesPaths: Map<Branch, Coordinate[]>) {
-    branchesPaths.forEach((points, branch) => {
-      if (points.length <= 1) return;
-      const firstPoint = points[0];
-      const lastPoint = points[points.length - 1];
-      const column = points[1].x;
-      const branchSize =
-        Math.round(
-          Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
-        ) - 1;
-      const branchPoints =
-        branchSize > 0
-          ? new Array(branchSize).fill(0).map((_, i) => ({
-              x: column,
-              y: points[0].y - this.template.commit.spacing * (i + 1),
-            }))
-          : [];
-      branchesPaths.set(branch, [firstPoint, ...branchPoints, lastPoint]);
+  private smoothBranchesPaths(
+    flatBranchesPaths: Map<Branch, InternalCoordinate[]>,
+  ): Map<Branch, Coordinate[][]> {
+    const branchesPaths = new Map<Branch, Coordinate[][]>();
+
+    flatBranchesPaths.forEach((points, branch) => {
+      if (points.length <= 1) {
+        branchesPaths.set(branch, [points]);
+        return;
+      }
+
+      // Cut path on each merge commits
+      // Coordinate[] -> Coordinate[][]
+      points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
+      const paths = points.reduce<Coordinate[][]>(
+        (mem, point, i) => {
+          if (point.mergeCommit) {
+            mem[mem.length - 1].push(pick(point, ["x", "y"]));
+            mem.push([points[i - 1]]);
+          } else {
+            mem[mem.length - 1].push(point);
+          }
+          return mem;
+        },
+        [[]],
+      );
+
+      // Add intermediate points on each sub paths
+      paths.forEach(subPath => {
+        if (subPath.length <= 1) return;
+        const firstPoint = subPath[0];
+        const lastPoint = subPath[subPath.length - 1];
+        const column = subPath[1].x;
+        const branchSize =
+          Math.round(
+            Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
+          ) - 1;
+        const branchPoints =
+          branchSize > 0
+            ? new Array(branchSize).fill(0).map((_, i) => ({
+                x: column,
+                y: subPath[0].y - this.template.commit.spacing * (i + 1),
+              }))
+            : [];
+        const lastSubPaths = branchesPaths.get(branch) || [];
+        branchesPaths.set(branch, [
+          ...lastSubPaths,
+          [firstPoint, ...branchPoints, lastPoint],
+        ]);
+      });
     });
+
+    return branchesPaths;
   }
 }
 

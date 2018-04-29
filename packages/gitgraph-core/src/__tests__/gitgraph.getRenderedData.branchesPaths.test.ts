@@ -22,7 +22,7 @@ describe("Gitgraph.render.branchesPaths", () => {
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
     expect(result[0][0].name).toBe("master");
-    expect(result[0][1]).toEqual([
+    expect(result[0][1][0]).toEqual([
       { x: 0, y: 80 * 5 }, // one
       { x: 0, y: 80 * 4 }, // two
       { x: 0, y: 80 * 3 },
@@ -31,7 +31,7 @@ describe("Gitgraph.render.branchesPaths", () => {
       { x: 0, y: 0 }, // Merge commit
     ]);
     expect(result[1][0].name).toBe("dev");
-    expect(result[1][1]).toEqual([
+    expect(result[1][1][0]).toEqual([
       { x: 0, y: 80 * 4 }, // two - start branch
       { x: 50, y: 80 * 3 }, // three
       { x: 50, y: 80 * 2 },
@@ -54,7 +54,7 @@ describe("Gitgraph.render.branchesPaths", () => {
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
     expect(result[0][0].name).toBe("master");
-    expect(result[0][1]).toEqual([
+    expect(result[0][1][0]).toEqual([
       { x: 0, y: 80 * 5 }, // one
       { x: 0, y: 80 * 4 }, // two
       { x: 0, y: 80 * 3 }, // three
@@ -63,7 +63,7 @@ describe("Gitgraph.render.branchesPaths", () => {
       { x: 0, y: 0 }, // Merge commit
     ]);
     expect(result[1][0].name).toBe("dev");
-    expect(result[1][1]).toEqual([
+    expect(result[1][1][0]).toEqual([
       { x: 0, y: 80 * 4 }, // two - start branch
       { x: 50, y: 80 * 3 },
       { x: 50, y: 80 * 2 },
@@ -84,9 +84,9 @@ describe("Gitgraph.render.branchesPaths", () => {
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
     expect(result[0][0].name).toBe("master");
-    expect(result[0][1]).toEqual([{ x: 0, y: 80 * 2 }]);
+    expect(result[0][1][0]).toEqual([{ x: 0, y: 80 * 2 }]);
     expect(result[1][0].name).toBe("dev");
-    expect(result[1][1]).toEqual([
+    expect(result[1][1][0]).toEqual([
       { x: 0, y: 80 * 2 },
       { x: 50, y: 80 * 1 },
       { x: 50, y: 80 * 0 },
@@ -107,7 +107,7 @@ describe("Gitgraph.render.branchesPaths", () => {
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
     expect(result[0][0].name).toBe("master");
-    expect(result[0][1]).toEqual([
+    expect(result[0][1][0]).toEqual([
       { x: 0, y: 80 * 4 },
       { x: 0, y: 80 * 3 },
       { x: 0, y: 80 * 2 },
@@ -115,9 +115,12 @@ describe("Gitgraph.render.branchesPaths", () => {
       { x: 0, y: 80 * 0 },
     ]);
     expect(result[1][0].name).toBe("feat");
-    expect(result[1][1]).toEqual([{ x: 0, y: 80 * 4 }, { x: 50, y: 80 * 3 }]);
+    expect(result[1][1][0]).toEqual([
+      { x: 0, y: 80 * 4 },
+      { x: 50, y: 80 * 3 },
+    ]);
     expect(result[2][0].name).toBe("dev");
-    expect(result[2][1]).toEqual([
+    expect(result[2][1][0]).toEqual([
       { x: 0, y: 80 * 4 },
       { x: 100, y: 80 * 3 },
       { x: 100, y: 80 * 2 },
@@ -126,8 +129,7 @@ describe("Gitgraph.render.branchesPaths", () => {
     ]);
   });
 
-  // TODO deal with multiple paths by branch
-  it.skip("should deal with a commit after a merge", () => {
+  it("should deal with a commit after a merge", () => {
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
@@ -144,17 +146,18 @@ describe("Gitgraph.render.branchesPaths", () => {
         { x: 0, y: 320 },
         { x: 0, y: 240 },
         { x: 0, y: 160 }, // commit before merge
+        { x: 50, y: 80 }, // merge commit
       ],
-      [
-        { x: 50, y: 240 }, // merge commit
-        { x: 0, y: 160 },
-        { x: 0, y: 80 },
-        { x: 0, y: 0 },
-      ],
+      [{ x: 0, y: 160 }, { x: 0, y: 80 }, { x: 0, y: 0 }],
     ]);
     expect(result[1][0].name).toBe("dev");
     expect(result[1][1]).toEqual([
-      [{ x: 50, y: 240 }, { x: 50, y: 160 }, { x: 50, y: 80 }, { x: 0, y: 0 }],
+      [
+        { x: 0, y: 320 },
+        { x: 50, y: 240 },
+        { x: 50, y: 160 },
+        { x: 50, y: 80 }, // merge commit
+      ],
     ]);
   });
 });
