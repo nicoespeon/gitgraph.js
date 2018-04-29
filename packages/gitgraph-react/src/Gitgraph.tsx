@@ -6,16 +6,16 @@ import {
   Branch,
   Coordinate,
 } from "gitgraph-core/lib/index";
-import { Omit, toSvgPath } from "gitgraph-core/lib/utils";
+import { toSvgPath } from "gitgraph-core/lib/utils";
 
 export interface GitgraphProps {
-  options?: Omit<GitgraphOptions, "onRender">;
+  options?: GitgraphOptions;
   children: (gitgraph: GitgraphCore) => void;
 }
 
 export interface GitgraphState {
   commits: Commit[];
-  branchesPaths: Map<Branch, Coordinate[]>;
+  branchesPaths: Map<Branch, Coordinate[][]>;
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -28,10 +28,8 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   constructor(props: GitgraphProps) {
     super(props);
     this.state = { commits: [], branchesPaths: new Map() };
-    this.gitgraph = new GitgraphCore({
-      onRender: this.onGitgraphCoreRender.bind(this),
-      ...props.options,
-    });
+    this.gitgraph = new GitgraphCore(props.options);
+    this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
   }
 
   public render() {
@@ -54,21 +52,26 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
    */
   private renderBranches() {
     const offset = this.gitgraph.template.commit.dot.size;
-    return Array.from(this.state.branchesPaths).map(([branch, coordinates], i) => (
-      <path
-        key={branch.name}
-        d={toSvgPath(coordinates)}
-        fill="transparent"
-        stroke={this.gitgraph.template.colors[i]}
-        strokeWidth={branch.style.lineWidth}
-        transform={`translate(${offset}, ${offset})`}
-      />
-    ));
+    return Array.from(this.state.branchesPaths).map(
+      ([branch, coordinates], i) => (
+        <path
+          key={branch.name}
+          d={toSvgPath(coordinates)}
+          fill="transparent"
+          stroke={this.gitgraph.template.colors[i]}
+          strokeWidth={branch.style.lineWidth}
+          transform={`translate(${offset}, ${offset})`}
+        />
+      ),
+    );
   }
 
   private renderCommits() {
-    return this.state.commits.map((commit) => (
-      <g key={commit.hashAbbrev} transform={`translate(${commit.x}, ${commit.y})`}>
+    return this.state.commits.map(commit => (
+      <g
+        key={commit.hashAbbrev}
+        transform={`translate(${commit.x}, ${commit.y})`}
+      >
         {/* Dot */}
         <circle
           cx={commit.style.dot.size}
@@ -78,19 +81,18 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         />
 
         {/* Message */}
-        {commit.style.message.display &&
-          <text
-            x={commit.style.dot.size * 4}
-            y={commit.style.dot.size}
-          >
-            {commit.hashAbbrev} {commit.subject} - {commit.author.name} {`<${commit.author.email}>`}
+        {commit.style.message.display && (
+          <text x={commit.style.dot.size * 4} y={commit.style.dot.size}>
+            {commit.hashAbbrev} {commit.subject} - {commit.author.name}{" "}
+            {`<${commit.author.email}>`}
           </text>
-        }
+        )}
       </g>
     ));
   }
 
-  private onGitgraphCoreRender(commits: Commit[], branchesPaths: Map<Branch, Coordinate[]>) {
+  private onGitgraphCoreRender() {
+    const { commits, branchesPaths } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths });
   }
 }
