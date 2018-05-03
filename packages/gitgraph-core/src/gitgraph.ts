@@ -160,6 +160,11 @@ export class GitgraphCore {
     this.addMergeCommitsIntoBranchesPaths(commits, flatBranchesPaths);
     const branchesPaths = this.smoothBranchesPaths(flatBranchesPaths);
 
+    // Compute branch color
+    Array.from(branchesPaths).forEach(([branch], i) => {
+      branch.computedColor = branch.style.color || this.template.colors[i];
+    });
+
     return { commits, branchesPaths };
   }
 

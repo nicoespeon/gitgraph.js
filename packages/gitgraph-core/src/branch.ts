@@ -39,6 +39,7 @@ export class Branch {
   public name: BranchOptions["name"];
   public style: BranchStyle;
   public commitDefaultOptions: BranchCommitDefaultOptions;
+  public computedColor?: BranchStyle["color"];
 
   private gitgraph: GitgraphCore;
   private parentCommitHash: BranchOptions["parentCommitHash"];

@@ -1,5 +1,5 @@
 import "jest";
-import { GitgraphCore } from "../index";
+import { GitgraphCore, metroTemplate, TemplateEnum } from "../index";
 
 describe("Gitgraph.render.branchesPaths", () => {
   let gitgraph: GitgraphCore;
@@ -159,5 +159,52 @@ describe("Gitgraph.render.branchesPaths", () => {
         { x: 50, y: 80 }, // merge commit
       ],
     ]);
+  });
+  it("should have the correct computed color for each branch", () => {
+    const master = gitgraph.branch("master").commit("Initial commit");
+    const develop = gitgraph.branch("dev");
+    const feat = gitgraph.branch("feat");
+    feat.commit();
+    master.commit("five");
+    develop.commit("six");
+    master.merge(develop);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].computedColor).toBe(metroTemplate.colors[0]);
+    expect(result[1][0].computedColor).toBe(metroTemplate.colors[1]);
+    expect(result[2][0].computedColor).toBe(metroTemplate.colors[2]);
+  });
+  it("should have the correct computed color for each branch with a specific color", () => {
+    const master = gitgraph.branch("master").commit("Initial commit");
+    const develop = gitgraph.branch("dev");
+    const feat = gitgraph.branch({name: "feat", style: {color: "red"}});
+    feat.commit();
+    master.commit("five");
+    develop.commit("six");
+    master.merge(develop);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    const result = Array.from(branchesPaths);
+    expect(result[1][0].name).toBe("feat");
+    expect(result[1][0].computedColor).toBe("red");
+  });
+  it("should have the correct computed color for each branch with a specific color", () => {
+    const gitgraphWithSingleColorTemplate = new GitgraphCore({template: TemplateEnum.BlackArrow});
+    const master = gitgraphWithSingleColorTemplate.branch("master").commit("Initial commit");
+    const develop = gitgraphWithSingleColorTemplate.branch("dev");
+    const feat = gitgraphWithSingleColorTemplate.branch("feat");
+    feat.commit();
+    master.commit("five");
+    develop.commit("six");
+    master.merge(develop);
+
+    const { branchesPaths } = gitgraphWithSingleColorTemplate.getRenderedData();
+
+    const result = Array.from(branchesPaths);
+    expect(result[1][0].name).toBe("feat");
+    expect(result[1][0].computedColor).toBe("#000000");
   });
 });
