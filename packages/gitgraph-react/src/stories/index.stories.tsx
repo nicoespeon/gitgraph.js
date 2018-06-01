@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Gitgraph, Branch, TemplateEnum } from "../Gitgraph";
+import { Gitgraph, Branch, TemplateEnum, OrientationsEnum } from "../Gitgraph";
 
 import { storiesOf } from "@storybook/react";
 
@@ -83,9 +83,9 @@ storiesOf("Gitgraph", module)
     {(gitgraph) => {
       const master = gitgraph.branch("master").commit("Initial commit");
       const develop = gitgraph.branch("develop");
-      develop.commit("six");
-      master.commit("five");
-      develop.commit("six");
+      develop.commit("one");
+      master.commit("two");
+      develop.commit("three");
       master.merge(develop);
     }}
   </Gitgraph>)
@@ -157,3 +157,35 @@ storiesOf("Gitgraph", module)
     }}
   </Gitgraph>)
   .add("with playground", () => <GitgraphPlayground />);
+
+storiesOf("Gitgraph orientations", module)
+  .add("vertical reverse", () => <Gitgraph options={{orientation: OrientationsEnum.VerticalReverse}}>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master").commit("Initial commit");
+      const develop = gitgraph.branch("develop");
+      develop.commit("one");
+      master.commit("two");
+      develop.commit("three");
+      master.merge(develop);
+    }}
+  </Gitgraph>)
+  .add("horizontal", () => <Gitgraph options={{orientation: OrientationsEnum.Horizontal}}>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master").commit("Initial commit");
+      const develop = gitgraph.branch("develop");
+      develop.commit("one");
+      master.commit("two");
+      develop.commit("three");
+      master.merge(develop);
+    }}
+  </Gitgraph>)
+  .add("horizontal reverse", () => <Gitgraph options={{orientation: OrientationsEnum.HorizontalReverse}}>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master").commit("Initial commit");
+      const develop = gitgraph.branch("develop");
+      develop.commit("one");
+      master.commit("two");
+      develop.commit("three");
+      master.merge(develop);
+    }}
+  </Gitgraph>);

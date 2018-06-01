@@ -573,7 +573,7 @@ export class GitgraphCore {
         (mem, point, i) => {
           if (point.mergeCommit) {
             mem[mem.length - 1].push(pick(point, ["x", "y"]));
-            mem.push([points[i - 1]]);
+            if (points[i - 1]) mem.push([points[i - 1]]);
           } else {
             mem[mem.length - 1].push(point);
           }

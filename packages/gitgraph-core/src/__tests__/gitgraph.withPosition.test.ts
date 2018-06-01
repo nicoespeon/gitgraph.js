@@ -258,6 +258,53 @@ describe("Gitgraph.withPosition", () => {
     ]);
   });
 
+  it("should deal one branch (with merge) (vertical-reverse)", () => {
+    const gitgraph = new GitgraphCore({orientation: OrientationsEnum.VerticalReverse});
+
+    const master = gitgraph.branch("master");
+    master.commit("one").commit("two");
+    const dev = gitgraph.branch("dev");
+    dev.commit("three");
+    master.commit("four");
+    dev.commit("five");
+    master.merge(dev);
+
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        x: 0,
+        y: 0,
+      },
+      {
+        subject: "two",
+        x: 0,
+        y: 80,
+      },
+      {
+        subject: "three",
+        x: 50, // dev
+        y: 80 * 2,
+      },
+      {
+        subject: "four",
+        x: 0,
+        y: 80 * 3,
+      },
+      {
+        subject: "five",
+        x: 50, // dev
+        y: 80 * 4,
+      },
+      {
+        subject: "Merge branch dev",
+        x: 0,
+        y: 80 * 5,
+      },
+    ]);
+  });
+
   it("should deal with complex case", () => {
     const gitgraph = new GitgraphCore();
 
