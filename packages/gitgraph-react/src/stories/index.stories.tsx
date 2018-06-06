@@ -177,6 +177,7 @@ storiesOf("Gitgraph orientations", module)
       master.commit("two");
       develop.commit("three");
       master.merge(develop);
+      master.commit();
     }}
   </Gitgraph>)
   .add("horizontal reverse", () => <Gitgraph options={{orientation: OrientationsEnum.HorizontalReverse}}>
@@ -187,5 +188,6 @@ storiesOf("Gitgraph orientations", module)
       master.commit("two");
       develop.commit("three");
       master.merge(develop);
+      master.commit();
     }}
   </Gitgraph>);
