@@ -568,7 +568,13 @@ export class GitgraphCore {
 
       // Cut path on each merge commits
       // Coordinate[] -> Coordinate[][]
-      points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
+      // TODO: sort appropriately for all orientations
+      if(this.orientation === OrientationsEnum.Horizontal) {
+        points = points.sort((a, b) => (a.x <= b.x ? -1 : 1));
+      } else {
+        points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
+      }
+
       const paths = points.reduce<Coordinate[][]>(
         (mem, point, i) => {
           if (point.mergeCommit) {
@@ -583,28 +589,54 @@ export class GitgraphCore {
       );
 
       // Add intermediate points on each sub paths
-      paths.forEach(subPath => {
-        if (subPath.length <= 1) return;
-        const firstPoint = subPath[0];
-        const lastPoint = subPath[subPath.length - 1];
-        const column = subPath[1].x;
-        const branchSize =
-          Math.round(
-            Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
-          ) - 1;
-        const branchPoints =
-          branchSize > 0
-            ? new Array(branchSize).fill(0).map((_, i) => ({
-                x: column,
-                y: subPath[0].y - this.template.commit.spacing * (i + 1),
-              }))
-            : [];
-        const lastSubPaths = branchesPaths.get(branch) || [];
-        branchesPaths.set(branch, [
-          ...lastSubPaths,
-          [firstPoint, ...branchPoints, lastPoint],
-        ]);
-      });
+      // TODO: clean this big if/else
+      if(this.orientation === OrientationsEnum.Horizontal) {
+        paths.forEach(subPath => {
+          if (subPath.length <= 1) return;
+          const firstPoint = subPath[0];
+          const lastPoint = subPath[subPath.length - 1];
+          const column = subPath[1].y;
+          const branchSize =
+            Math.round(
+              Math.abs(firstPoint.x - lastPoint.x) / this.template.commit.spacing,
+            ) - 1;
+          const branchPoints =
+            branchSize > 0
+              ? new Array(branchSize).fill(0).map((_, i) => ({
+                  y: column,
+                  x: subPath[0].x + this.template.commit.spacing * (i + 1),
+                }))
+              : [];
+          const lastSubPaths = branchesPaths.get(branch) || [];
+          branchesPaths.set(branch, [
+            ...lastSubPaths,
+            [firstPoint, ...branchPoints, lastPoint],
+          ]);
+        });
+      } else {
+        paths.forEach(subPath => {
+          if (subPath.length <= 1) return;
+          const firstPoint = subPath[0];
+          const lastPoint = subPath[subPath.length - 1];
+          const column = subPath[1].x;
+          const branchSize =
+            Math.round(
+              Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
+            ) - 1;
+          const branchPoints =
+            branchSize > 0
+              ? new Array(branchSize).fill(0).map((_, i) => ({
+                  x: column,
+                  y: subPath[0].y - this.template.commit.spacing * (i + 1),
+                }))
+              : [];
+          const lastSubPaths = branchesPaths.get(branch) || [];
+          branchesPaths.set(branch, [
+            ...lastSubPaths,
+            [firstPoint, ...branchPoints, lastPoint],
+          ]);
+        });
+      }
     });
 
     return branchesPaths;

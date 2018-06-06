@@ -1,5 +1,5 @@
 import "jest";
-import { GitgraphCore, metroTemplate, TemplateEnum } from "../index";
+import { GitgraphCore, metroTemplate, TemplateEnum, OrientationsEnum } from "../index";
 
 describe("Gitgraph.render.branchesPaths", () => {
   let gitgraph: GitgraphCore;
@@ -160,6 +160,41 @@ describe("Gitgraph.render.branchesPaths", () => {
       ],
     ]);
   });
+
+  it("should deal with horizontal orientation", () => {
+    gitgraph = new GitgraphCore({orientation: OrientationsEnum.Horizontal});
+    const master = gitgraph.branch("master").commit();
+    const dev = gitgraph.branch("dev").commit();
+    master.commit();
+    dev.commit();
+    master.merge(dev);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    // We can't use `toMatchObject` here due to circular ref inside Branch.
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].name).toBe("master");
+    expect(result[0][1]).toEqual([
+      [
+        { x: 0, y: 0 },
+        { x: 80, y: 0 },
+        { x: 160, y: 0 },
+        { x: 240, y: 0 },
+        { x: 320, y: 0 }, // merge commit
+      ]
+    ]);
+    expect(result[1][0].name).toBe("dev");
+    expect(result[1][1]).toEqual([
+      [
+        { x: 0, y: 0 },
+        { x: 80, y: 50 },
+        { x: 160, y: 50 },
+        { x: 240, y: 50 },
+        { x: 320, y: 0 }, // merge commit
+      ],
+    ]);
+  });
+
   it("should have the correct computed color for each branch", () => {
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
@@ -176,6 +211,7 @@ describe("Gitgraph.render.branchesPaths", () => {
     expect(result[1][0].computedColor).toBe(metroTemplate.colors[1]);
     expect(result[2][0].computedColor).toBe(metroTemplate.colors[2]);
   });
+
   it("should have the correct computed color for each branch with a specific color", () => {
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
@@ -191,6 +227,7 @@ describe("Gitgraph.render.branchesPaths", () => {
     expect(result[1][0].name).toBe("feat");
     expect(result[1][0].computedColor).toBe("red");
   });
+
   it("should have the correct computed color for each branch with a specific color", () => {
     const gitgraphWithSingleColorTemplate = new GitgraphCore({template: TemplateEnum.BlackArrow});
     const master = gitgraphWithSingleColorTemplate.branch("master").commit("Initial commit");
