@@ -195,6 +195,40 @@ describe("Gitgraph.render.branchesPaths", () => {
     ]);
   });
 
+  it("should deal with horizontal-reverse orientation", () => {
+    gitgraph = new GitgraphCore({orientation: OrientationsEnum.HorizontalReverse});
+    const master = gitgraph.branch("master").commit();
+    const dev = gitgraph.branch("dev").commit();
+    master.commit();
+    dev.commit();
+    master.merge(dev);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    // We can't use `toMatchObject` here due to circular ref inside Branch.
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].name).toBe("master");
+    expect(result[0][1]).toEqual([
+      [
+        { x: 0, y: 0 },
+        { x: 80, y: 0 },
+        { x: 160, y: 0 },
+        { x: 240, y: 0 },
+        { x: 320, y: 0 }, // merge commit
+      ]
+    ]);
+    expect(result[1][0].name).toBe("dev");
+    expect(result[1][1]).toEqual([
+      [
+        { x: 0, y: 0 },
+        { x: 80, y: 50 },
+        { x: 160, y: 50 },
+        { x: 240, y: 50 },
+        { x: 320, y: 0 }, // merge commit
+      ],
+    ]);
+  });
+
   it("should have the correct computed color for each branch", () => {
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
