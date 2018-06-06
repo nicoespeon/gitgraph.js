@@ -163,7 +163,7 @@ describe("Gitgraph.withPosition", () => {
     ]);
   });
 
-  it("should deal two branches (no merge)", () => {
+  it("should deal with two branches (no merge)", () => {
     const gitgraph = new GitgraphCore();
 
     const master = gitgraph.branch("master");
@@ -211,7 +211,7 @@ describe("Gitgraph.withPosition", () => {
     ]);
   });
 
-  it("should deal one branch (with merge)", () => {
+  it("should deal with one branch (with merge)", () => {
     const gitgraph = new GitgraphCore();
 
     const master = gitgraph.branch("master");
@@ -258,7 +258,7 @@ describe("Gitgraph.withPosition", () => {
     ]);
   });
 
-  it("should deal one branch (with merge) (vertical-reverse)", () => {
+  it("should deal with one branch (with merge) (vertical-reverse)", () => {
     const gitgraph = new GitgraphCore({orientation: OrientationsEnum.VerticalReverse});
 
     const master = gitgraph.branch("master");
