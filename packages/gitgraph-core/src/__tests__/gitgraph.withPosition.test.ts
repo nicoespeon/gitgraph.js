@@ -305,6 +305,100 @@ describe("Gitgraph.withPosition", () => {
     ]);
   });
 
+  it("should deal with one branch (with merge) (horizontal)", () => {
+    const gitgraph = new GitgraphCore({orientation: OrientationsEnum.Horizontal});
+
+    const master = gitgraph.branch("master");
+    master.commit("one").commit("two");
+    const dev = gitgraph.branch("dev");
+    dev.commit("three");
+    master.commit("four");
+    dev.commit("five");
+    master.merge(dev);
+
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        x: 0,
+        y: 0,
+      },
+      {
+        subject: "two",
+        x: 80,
+        y: 0,
+      },
+      {
+        subject: "three",
+        x: 80 * 2, // dev
+        y: 50,
+      },
+      {
+        subject: "four",
+        x: 80 * 3,
+        y: 0,
+      },
+      {
+        subject: "five",
+        x: 80 * 4, // dev
+        y: 50,
+      },
+      {
+        subject: "Merge branch dev",
+        x: 80 * 5,
+        y: 0,
+      },
+    ]);
+  });
+
+  it("should deal with one branch (with merge) (horizontal-reverse)", () => {
+    const gitgraph = new GitgraphCore({orientation: OrientationsEnum.HorizontalReverse});
+
+    const master = gitgraph.branch("master");
+    master.commit("one").commit("two");
+    const dev = gitgraph.branch("dev");
+    dev.commit("three");
+    master.commit("four");
+    dev.commit("five");
+    master.merge(dev);
+
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        x: 80 * 5,
+        y: 0,
+      },
+      {
+        subject: "two",
+        x: 80 * 4,
+        y: 0,
+      },
+      {
+        subject: "three",
+        x: 80 * 3, // dev
+        y: 50,
+      },
+      {
+        subject: "four",
+        x: 80 * 2,
+        y: 0,
+      },
+      {
+        subject: "five",
+        x: 80, // dev
+        y: 50,
+      },
+      {
+        subject: "Merge branch dev",
+        x: 0,
+        y: 0,
+      },
+    ]);
+  });
+
   it("should deal with complex case", () => {
     const gitgraph = new GitgraphCore();
 
