@@ -1,5 +1,9 @@
 import Commit from "./commit";
-import { GitgraphCore, GitgraphCommitOptions } from "./gitgraph";
+import {
+  GitgraphCore,
+  GitgraphCommitOptions,
+  OrientationsEnum
+} from "./gitgraph";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
 
@@ -89,7 +93,7 @@ export class Branch {
         this.commitDefaultOptions.subject ||
         (this.gitgraph.commitMessage as string),
       ...commitOptions,
-      style: this.getCommitStyle(options.style),
+      style: this.getCommitStyle(options.style)
     });
 
     if (parentOnSameBranch) {
@@ -133,13 +137,13 @@ export class Branch {
   public merge(branch: string | Branch): Branch {
     const branchName = typeof branch === "string" ? branch : branch.name;
     const parentCommitHash = this.gitgraph.refs.get(
-      branchName,
+      branchName
     ) as Commit["hash"];
     if (!parentCommitHash)
       throw new Error(`The branch called "${branchName}" is unknown`);
     this.commit({
       subject: `Merge branch ${branchName}`,
-      parents: [parentCommitHash],
+      parents: [parentCommitHash]
     });
     return this;
   }
@@ -200,8 +204,8 @@ export class Branch {
         ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),
         ...withoutUndefinedKeys(this.commitDefaultOptions.style!.dot),
-        ...style.dot,
-      },
+        ...style.dot
+      }
     } as CommitStyle;
   }
 }
