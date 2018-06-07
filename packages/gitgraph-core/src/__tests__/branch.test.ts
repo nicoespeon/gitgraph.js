@@ -202,6 +202,30 @@ describe("Branch", () => {
           },
         ]);
       });
+
+      it("should hide commit message if orientation is horizontal", () => {
+        const gitgraphHorizontal = new GitgraphCore({
+          orientation: OrientationsEnum.Horizontal
+        });
+        gitgraphHorizontal.commit();
+
+        const { commits } = gitgraphHorizontal.getRenderedData();
+        const [commit] = commits;
+
+        expect(commit.style.message.display).toBe(false);
+      });
+
+      it("should hide commit message if orientation is horizontal-reverse", () => {
+        const gitgraphHorizontalReverse = new GitgraphCore({
+          orientation: OrientationsEnum.HorizontalReverse
+        });
+        gitgraphHorizontalReverse.commit();
+
+        const { commits } = gitgraphHorizontalReverse.getRenderedData();
+        const [commit] = commits;
+
+        expect(commit.style.message.display).toBe(false);
+      });
     });
 
     describe("with tag", () => {

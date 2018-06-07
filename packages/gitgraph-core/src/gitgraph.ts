@@ -81,6 +81,7 @@ export interface GitgraphBranchOptions {
 
 export class GitgraphCore {
   public orientation?: OrientationsEnum;
+  public isVertical: boolean;
   public reverseArrow: boolean;
   public initCommitOffsetX: number;
   public initCommitOffsetY: number;
@@ -118,6 +119,10 @@ export class GitgraphCore {
 
     // Set all options with default values
     this.orientation = options.orientation;
+    this.isVertical = [
+      undefined, // default value = Vertical
+      OrientationsEnum.VerticalReverse
+    ].includes(this.orientation);
     this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
     this.initCommitOffsetX = numberOptionOr(
       options.initCommitOffsetX,
@@ -559,11 +564,6 @@ export class GitgraphCore {
     flatBranchesPaths: Map<Branch, InternalCoordinate[]>,
   ): Map<Branch, Coordinate[][]> {
     const branchesPaths = new Map<Branch, Coordinate[][]>();
-    // TODO: distinct these 2 implementations
-    const isVertical = [
-      undefined,
-      OrientationsEnum.VerticalReverse
-    ].includes(this.orientation);
 
     flatBranchesPaths.forEach((points, branch) => {
       if (points.length <= 1) {
@@ -573,7 +573,7 @@ export class GitgraphCore {
 
       // Cut path on each merge commits
       // Coordinate[] -> Coordinate[][]
-      if(isVertical) {
+      if(this.isVertical) {
         points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
       } else {
         points = points.sort((a, b) => (a.x > b.x ? 1 : -1));
@@ -593,7 +593,7 @@ export class GitgraphCore {
       );
 
       // Add intermediate points on each sub paths
-      if(isVertical) {
+      if(this.isVertical) {
         paths.forEach(subPath => {
           if (subPath.length <= 1) return;
           const firstPoint = subPath[0];

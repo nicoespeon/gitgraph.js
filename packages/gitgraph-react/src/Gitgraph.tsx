@@ -5,7 +5,6 @@ import {
   Commit,
   Branch,
   Coordinate,
-  OrientationsEnum,
 } from "gitgraph-core/lib/index";
 import { toSvgPath } from "gitgraph-core/lib/utils";
 
@@ -68,11 +67,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderCommits() {
-    const isGraphVertical = [
-      undefined,
-      OrientationsEnum.VerticalReverse,
-    ].includes(this.gitgraph.orientation);
-
     return this.state.commits.map(commit => (
       <g
         key={commit.hashAbbrev}
@@ -87,7 +81,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         />
 
         {/* Message */}
-        {isGraphVertical && commit.style.message.display && (
+        {commit.style.message.display && (
           <text x={commit.style.dot.size * 4} y={commit.style.dot.size}>
             {commit.hashAbbrev} {commit.subject} - {commit.author.name}{" "}
             {`<${commit.author.email}>`}
