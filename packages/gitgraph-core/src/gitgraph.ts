@@ -48,6 +48,7 @@ export interface GitgraphOptions {
 export interface RenderedData {
   commits: Commit[];
   branchesPaths: Map<Branch, Coordinate[][]>;
+  commitMessagesX: number;
 }
 
 export interface GitgraphCommitOptions {
@@ -170,7 +171,11 @@ export class GitgraphCore {
       branch.computedColor = branch.style.color || this.template.colors[i];
     });
 
-    return { commits, branchesPaths };
+    // Compute messages position
+    const numberOfColumns = Array.from(branchesPaths).length;
+    const commitMessagesX = numberOfColumns * this.template.branch.spacing;
+
+    return { commits, branchesPaths, commitMessagesX };
   }
 
   /**

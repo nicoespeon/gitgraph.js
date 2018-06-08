@@ -16,6 +16,7 @@ export interface GitgraphProps {
 export interface GitgraphState {
   commits: Commit[];
   branchesPaths: Map<Branch, Coordinate[][]>;
+  commitMessagesX: number;
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -27,7 +28,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   constructor(props: GitgraphProps) {
     super(props);
-    this.state = { commits: [], branchesPaths: new Map() };
+    this.state = { commits: [], branchesPaths: new Map(), commitMessagesX: 0 };
     this.gitgraph = new GitgraphCore(props.options);
     this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
   }
@@ -80,7 +81,10 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
         {/* Message */}
         {commit.style.message.display && (
-          <text x={commit.style.dot.size * 4} y={commit.style.dot.size}>
+          <text
+            x={this.state.commitMessagesX - commit.x}
+            y={commit.style.dot.size}
+          >
             {commit.hashAbbrev} {commit.subject} - {commit.author.name}{" "}
             {`<${commit.author.email}>`}
           </text>
@@ -90,8 +94,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private onGitgraphCoreRender() {
-    const { commits, branchesPaths } = this.gitgraph.getRenderedData();
-    this.setState({ commits, branchesPaths });
+    const {
+      commits,
+      branchesPaths,
+      commitMessagesX,
+    } = this.gitgraph.getRenderedData();
+    this.setState({ commits, branchesPaths, commitMessagesX });
   }
 }
 
