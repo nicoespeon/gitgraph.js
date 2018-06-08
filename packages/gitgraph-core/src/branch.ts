@@ -2,7 +2,6 @@ import Commit from "./commit";
 import {
   GitgraphCore,
   GitgraphCommitOptions,
-  OrientationsEnum
 } from "./gitgraph";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
