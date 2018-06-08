@@ -121,7 +121,7 @@ export class GitgraphCore {
     this.orientation = options.orientation;
     this.isVertical = [
       undefined, // default value = Vertical
-      OrientationsEnum.VerticalReverse
+      OrientationsEnum.VerticalReverse,
     ].includes(this.orientation);
     this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
     this.initCommitOffsetX = numberOptionOr(
@@ -573,7 +573,7 @@ export class GitgraphCore {
 
       // Cut path on each merge commits
       // Coordinate[] -> Coordinate[][]
-      if(this.isVertical) {
+      if (this.isVertical) {
         points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
       } else {
         points = points.sort((a, b) => (a.x > b.x ? 1 : -1));
@@ -593,7 +593,7 @@ export class GitgraphCore {
       );
 
       // Add intermediate points on each sub paths
-      if(this.isVertical) {
+      if (this.isVertical) {
         paths.forEach(subPath => {
           if (subPath.length <= 1) return;
           const firstPoint = subPath[0];
@@ -601,7 +601,8 @@ export class GitgraphCore {
           const column = subPath[1].x;
           const branchSize =
             Math.round(
-              Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
+              Math.abs(firstPoint.y - lastPoint.y) /
+                this.template.commit.spacing,
             ) - 1;
           const branchPoints =
             branchSize > 0
@@ -624,7 +625,8 @@ export class GitgraphCore {
           const column = subPath[1].y;
           const branchSize =
             Math.round(
-              Math.abs(firstPoint.x - lastPoint.x) / this.template.commit.spacing,
+              Math.abs(firstPoint.x - lastPoint.x) /
+                this.template.commit.spacing,
             ) - 1;
           const branchPoints =
             branchSize > 0
