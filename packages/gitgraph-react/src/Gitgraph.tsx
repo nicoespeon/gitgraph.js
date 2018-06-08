@@ -46,9 +46,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   /**
-   * TODO:
-   * - Add branch color
-   * - Bezier \o/
+   * TODO: Bezier \o/
    */
   private renderBranches() {
     const offset = this.gitgraph.template.commit.dot.size;
