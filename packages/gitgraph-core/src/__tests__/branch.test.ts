@@ -4,7 +4,7 @@ import {
   GitgraphCommitOptions,
   Commit,
   BranchOptions,
-  metroTemplate
+  metroTemplate,
 } from "../index";
 import { OrientationsEnum } from "../gitgraph";
 const copy = obj => JSON.parse(JSON.stringify(obj));
@@ -54,7 +54,7 @@ describe("Branch", () => {
         expect(commits).toMatchObject([
           { subject: "one", refs: [] },
           { subject: "two", refs: ["master"] },
-          { subject: "three", refs: ["develop", "HEAD"] }
+          { subject: "three", refs: ["develop", "HEAD"] },
         ]);
       });
 
@@ -73,7 +73,7 @@ describe("Branch", () => {
           { subject: "one", refs: [] },
           { subject: "two", refs: [] },
           { subject: "three", refs: ["develop"] },
-          { subject: "four", refs: ["master", "HEAD"] }
+          { subject: "four", refs: ["master", "HEAD"] },
         ]);
       });
     });
@@ -88,7 +88,7 @@ describe("Branch", () => {
           lineDash: [],
           size: 14,
           strokeColor: null,
-          strokeWidth: null
+          strokeWidth: null,
         },
         message: {
           color: "#979797",
@@ -96,16 +96,16 @@ describe("Branch", () => {
           displayAuthor: true,
           displayBranch: true,
           displayHash: true,
-          font: "normal 14pt Arial"
+          font: "normal 14pt Arial",
         },
         shouldDisplayTooltipsInCompactMode: true,
         spacing: 80,
         tag: {
           color: "#979797",
-          font: "normal 14pt Arial"
+          font: "normal 14pt Arial",
         },
         tooltipHTMLFormatter: null,
-        widthExtension: 0
+        widthExtension: 0,
       };
 
       beforeEach(() => {
@@ -122,7 +122,7 @@ describe("Branch", () => {
       it("should be have a merge style with the defaultCommitOptions", () => {
         gitgraph
           .branch({
-            commitDefaultOptions: { style: { message: { color: "green" } } }
+            commitDefaultOptions: { style: { message: { color: "green" } } },
           } as BranchOptions)
           .commit();
 
@@ -136,10 +136,10 @@ describe("Branch", () => {
       it("should be have a merge style with the commit", () => {
         gitgraph
           .branch({
-            commitDefaultOptions: { style: { message: { color: "green" } } }
+            commitDefaultOptions: { style: { message: { color: "green" } } },
           } as BranchOptions)
           .commit({
-            style: { message: { display: false } }
+            style: { message: { display: false } },
           } as GitgraphCommitOptions);
 
         const { commits } = gitgraph.getRenderedData();
@@ -166,47 +166,47 @@ describe("Branch", () => {
             style: {
               color: colors[0],
               message: { color: colors[0] },
-              tag: { color: colors[0] }
-            }
+              tag: { color: colors[0] },
+            },
           },
           {
             subject: "two",
             style: {
               color: colors[1],
               message: { color: colors[1] },
-              tag: { color: colors[1] }
-            }
+              tag: { color: colors[1] },
+            },
           },
           {
             subject: "three",
             style: {
               color: colors[2],
               message: { color: colors[2] },
-              tag: { color: colors[2] }
-            }
+              tag: { color: colors[2] },
+            },
           },
           {
             subject: "four",
             style: {
               color: colors[0],
               message: { color: colors[0] },
-              tag: { color: colors[0] }
-            }
+              tag: { color: colors[0] },
+            },
           },
           {
             subject: "five",
             style: {
               color: colors[1],
               message: { color: colors[1] },
-              tag: { color: colors[1] }
-            }
-          }
+              tag: { color: colors[1] },
+            },
+          },
         ]);
       });
 
       it("should hide commit message if orientation is horizontal", () => {
         const gitgraphHorizontal = new GitgraphCore({
-          orientation: OrientationsEnum.Horizontal
+          orientation: OrientationsEnum.Horizontal,
         });
         gitgraphHorizontal.commit();
 
@@ -218,7 +218,7 @@ describe("Branch", () => {
 
       it("should hide commit message if orientation is horizontal-reverse", () => {
         const gitgraphHorizontalReverse = new GitgraphCore({
-          orientation: OrientationsEnum.HorizontalReverse
+          orientation: OrientationsEnum.HorizontalReverse,
         });
         gitgraphHorizontalReverse.commit();
 
@@ -239,7 +239,7 @@ describe("Branch", () => {
       expect(commits).toMatchObject([
         { subject: "one" },
         { subject: "with tag", tags: ["1.0.0"] },
-        { subject: "three" }
+        { subject: "three" },
       ]);
     });
   });
@@ -283,7 +283,7 @@ describe("Branch", () => {
         master.commit("master 1");
         master.commit("master 2");
         expect(() => master.merge("no-exists")).toThrow(
-          `The branch called "no-exists" is unknown`
+          `The branch called "no-exists" is unknown`,
         );
       });
 
