@@ -153,9 +153,10 @@ describe("Branch", () => {
       it("should have the color depending of the branch (metro theme)", () => {
         const master = gitgraph.branch("master").commit("one");
         const dev = gitgraph.branch("dev").commit("two");
-        const feat1 = gitgraph.branch("feat1").commit("three");
-        const feat2 = gitgraph.branch("feat2").commit("four");
-        const feat3 = gitgraph.branch("feat3").commit("five");
+        master.merge(dev);
+        gitgraph.branch("feat1").commit("three");
+        gitgraph.branch("feat2").commit("four");
+        gitgraph.branch("feat3").commit("five");
 
         const { colors } = metroTemplate;
         const { commits } = gitgraph.getRenderedData();
@@ -167,6 +168,7 @@ describe("Branch", () => {
               color: colors[0],
               message: { color: colors[0] },
               tag: { color: colors[0] },
+              dot: { color: colors[0] },
             },
           },
           {
@@ -175,7 +177,11 @@ describe("Branch", () => {
               color: colors[1],
               message: { color: colors[1] },
               tag: { color: colors[1] },
+              dot: { color: colors[1] },
             },
+          },
+          {
+            subject: "Merge branch dev"
           },
           {
             subject: "three",
@@ -183,6 +189,7 @@ describe("Branch", () => {
               color: colors[2],
               message: { color: colors[2] },
               tag: { color: colors[2] },
+              dot: { color: colors[2] },
             },
           },
           {
@@ -191,6 +198,7 @@ describe("Branch", () => {
               color: colors[0],
               message: { color: colors[0] },
               tag: { color: colors[0] },
+              dot: { color: colors[0] },
             },
           },
           {
@@ -199,6 +207,7 @@ describe("Branch", () => {
               color: colors[1],
               message: { color: colors[1] },
               tag: { color: colors[1] },
+              dot: { color: colors[1] },
             },
           },
         ]);

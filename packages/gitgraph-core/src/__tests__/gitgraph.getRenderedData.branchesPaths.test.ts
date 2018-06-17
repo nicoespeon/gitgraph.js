@@ -230,20 +230,20 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should have the correct computed color for each branch", () => {
-    const master = gitgraph.branch("master").commit("Initial commit");
-    const develop = gitgraph.branch("dev");
-    const feat = gitgraph.branch("feat");
-    feat.commit();
-    master.commit("five");
-    develop.commit("six");
-    master.merge(develop);
+    gitgraph.branch("master").commit();
+    gitgraph.branch("dev").commit();
+    gitgraph.branch("feat1").commit();
+    gitgraph.branch("feat2").commit();
+    gitgraph.branch("feat3").commit();
 
     const { branchesPaths } = gitgraph.getRenderedData();
 
-    const result = Array.from(branchesPaths);
-    expect(result[0][0].computedColor).toBe(metroTemplate.colors[0]);
-    expect(result[1][0].computedColor).toBe(metroTemplate.colors[1]);
-    expect(result[2][0].computedColor).toBe(metroTemplate.colors[2]);
+    const branches = [...branchesPaths.keys()];
+    expect(branches[0].computedColor).toBe(metroTemplate.colors[0]);
+    expect(branches[1].computedColor).toBe(metroTemplate.colors[1]);
+    expect(branches[2].computedColor).toBe(metroTemplate.colors[2]);
+    expect(branches[3].computedColor).toBe(metroTemplate.colors[0]);
+    expect(branches[4].computedColor).toBe(metroTemplate.colors[1]);
   });
 
   it("should have the correct computed color for each branch with a specific color", () => {

@@ -57,7 +57,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           key={branch.name}
           d={toSvgPath(coordinates)}
           fill="transparent"
-          stroke={this.gitgraph.template.colors[i]}
+          stroke={branch.computedColor}
           strokeWidth={branch.style.lineWidth}
           transform={`translate(${offset}, ${offset})`}
         />

@@ -168,7 +168,10 @@ export class GitgraphCore {
 
     // Compute branch color
     Array.from(branchesPaths).forEach(([branch], i) => {
-      branch.computedColor = branch.style.color || this.template.colors[i];
+      const defaultColor = this.template.colors[
+        i % this.template.colors.length
+      ];
+      branch.computedColor = branch.style.color || defaultColor;
     });
 
     // Compute messages position

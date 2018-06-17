@@ -131,6 +131,18 @@ storiesOf("Gitgraph", module)
       master.merge(develop);
     }}
   </Gitgraph>)
+  .add("branch colors", () => <Gitgraph>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master").commit("one");
+      const develop = gitgraph.branch("develop").commit("two");
+      const feat1 = gitgraph.branch("feat1").commit("three");
+      const feat2 = gitgraph.branch("feat2").commit("four");
+      master.commit("five");
+      develop.commit("six");
+      feat1.commit("seven");
+      feat2.commit("height");
+    }}
+  </Gitgraph>)
   .add("multiple merge", () => <Gitgraph>
   {(gitgraph) => {
     const master = gitgraph.branch("master").commit();
