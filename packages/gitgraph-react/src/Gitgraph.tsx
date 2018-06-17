@@ -85,6 +85,8 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             x={this.state.commitMessagesX - commit.x}
             y={commit.style.dot.size}
             alignmentBaseline="central"
+            fill={commit.style.message.color}
+            style={{font: commit.style.message.font}}
           >
             {commit.hashAbbrev} {commit.subject} - {commit.author.name}{" "}
             {`<${commit.author.email}>`}
