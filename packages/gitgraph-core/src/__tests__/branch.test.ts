@@ -6,7 +6,7 @@ import {
   BranchOptions,
   metroTemplate,
 } from "../index";
-import { OrientationsEnum } from "../gitgraph";
+import { OrientationsEnum, ModeEnum } from "../gitgraph";
 const copy = obj => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
@@ -232,6 +232,18 @@ describe("Branch", () => {
         gitgraphHorizontalReverse.commit();
 
         const { commits } = gitgraphHorizontalReverse.getRenderedData();
+        const [commit] = commits;
+
+        expect(commit.style.message.display).toBe(false);
+      });
+
+      it("should hide commit message if mode is compact", () => {
+        const gitgraphCompact = new GitgraphCore({
+          mode: ModeEnum.Compact,
+        });
+        gitgraphCompact.commit();
+
+        const { commits } = gitgraphCompact.getRenderedData();
         const [commit] = commits;
 
         expect(commit.style.message.display).toBe(false);

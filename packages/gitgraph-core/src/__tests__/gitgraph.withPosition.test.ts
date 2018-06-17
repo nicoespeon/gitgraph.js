@@ -504,7 +504,91 @@ describe("Gitgraph.withPosition", () => {
     ]);
   });
 
-  it("should deal with the compact mode", () => {
+  it("should deal with the compact mode (simple case)", () => {
+    const gitgraph = new GitgraphCore({
+      mode: ModeEnum.Compact,
+      // Orientate the graph from top to bottom to simplify tests.
+      orientation: OrientationsEnum.VerticalReverse
+    });
+
+    const master = gitgraph.branch("master").commit("one").commit("two");
+
+    // Branch has more commits.
+    const dev = gitgraph.branch("dev").commit("three");
+    master.merge(dev);
+
+      // Branch & master have as much commits.
+    const feat1 = gitgraph.branch("feat1").commit("four");
+    master.commit("five");
+    master.merge(feat1);
+
+    // Master has more commits.
+    const feat2 = gitgraph.branch("feat2").commit("six");
+    master.commit("seven").commit("eight");
+    master.merge(feat2);
+
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        x: 0, // master
+        y: 0,
+      },
+      {
+        subject: "two",
+        x: 0, // master
+        y: 80,
+      },
+      {
+        subject: "three",
+        x: 50, // dev
+        y: 80 * 2,
+      },
+      {
+        subject: "Merge branch dev",
+        x: 0, // master
+        y: 80 * 3,
+      },
+      {
+        subject: "four",
+        x: 100, // feat1
+        y: 80 * 4,
+      },
+      {
+        subject: "five",
+        x: 0, // master
+        y: 80 * 4,
+      },
+      {
+        subject: "Merge branch feat1",
+        x: 0, // master
+        y: 80 * 5,
+      },
+      {
+        subject: "six",
+        x: 150, // feat2
+        y: 80 * 6,
+      },
+      {
+        subject: "seven",
+        x: 0, // master
+        y: 80 * 6,
+      },
+      {
+        subject: "eight",
+        x: 0, // master
+        y: 80 * 7,
+      },
+      {
+        subject: "Merge branch feat2",
+        x: 0, // master
+        y: 80 * 8,
+      },
+    ]);
+  });
+
+  it("should deal with the compact mode (complex case)", () => {
     const gitgraph = new GitgraphCore({
       mode: ModeEnum.Compact,
     });

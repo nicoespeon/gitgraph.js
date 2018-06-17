@@ -380,7 +380,13 @@ export class GitgraphCore {
         let newRow = Math.max(parentRow + 1, this.rows.get(
           historyParent.hash,
         ) as number);
-        if (commit.parents.length > 1) newRow++; // Merge case
+        const isMergeCommit = (commit.parents.length > 1);
+        if (isMergeCommit) {
+          // Push commit to next row to avoid collision when the branch in which
+          // the merge happens has more commits than the merged branch.
+          const mergeTargetParentRow: number = this.rows.get(commit.parents[1]) as number;
+          if (parentRow < mergeTargetParentRow) newRow++;
+        }
         this.rows.set(commit.hash, newRow);
         this.maxRow = Math.max(this.maxRow, newRow + 1);
       } else {

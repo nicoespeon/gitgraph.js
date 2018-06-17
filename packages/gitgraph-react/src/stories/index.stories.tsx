@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Gitgraph, Branch, TemplateEnum, OrientationsEnum } from "../Gitgraph";
+import { Gitgraph, Branch, TemplateEnum, OrientationsEnum, ModeEnum } from "../Gitgraph";
 
 import { storiesOf } from "@storybook/react";
 
@@ -141,6 +141,25 @@ storiesOf("Gitgraph", module)
       develop.commit("six");
       feat1.commit("seven");
       feat2.commit("height");
+    }}
+  </Gitgraph>)
+  .add("compact mode", () => <Gitgraph options={{ mode: ModeEnum.Compact }}>
+    {(gitgraph) => {
+      const master = gitgraph.branch("master").commit().commit();
+
+      // Branch has more commits.
+      const develop = gitgraph.branch("develop").commit();
+      master.merge(develop);
+
+      // Branch & master have as much commits.
+      const feat1 = gitgraph.branch("feat1").commit();
+      master.commit();
+      master.merge(feat1);
+
+      // Master has more commits.
+      const feat2 = gitgraph.branch("feat2").commit();
+      master.commit().commit();
+      master.merge(feat2);
     }}
   </Gitgraph>)
   .add("multiple merge", () => <Gitgraph>

@@ -2,6 +2,7 @@ import Commit from "./commit";
 import {
   GitgraphCore,
   GitgraphCommitOptions,
+  ModeEnum,
 } from "./gitgraph";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
@@ -183,7 +184,7 @@ export class Branch {
       ...style.message
     };
 
-    if (!this.gitgraph.isVertical) {
+    if (!this.gitgraph.isVertical || this.gitgraph.mode === ModeEnum.Compact) {
       message.display = false;
     }
 
