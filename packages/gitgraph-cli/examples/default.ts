@@ -1,11 +1,6 @@
 import { gitgraph, renderGraph } from "../src";
 
-gitgraph()
-  .commit("one")
-  .commit("two")
-  .commit("three")
-  .commit("four")
-  .commit("five")
-  .commit();
+gitgraph.branch("master").commit("Initial commit");
+gitgraph.branch("develop").commit("First commit on develop");
 
 renderGraph();

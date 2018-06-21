@@ -3,17 +3,10 @@ import chalk from "chalk";
 
 import render, { IRenderGraph } from "./render";
 
-export { gitgraph, renderGraph };
-export * from "gitgraph-core/lib/index";
-
 let graph: RenderedData;
 
-function gitgraph(): GitgraphCore {
-  const gitgraphCore = new GitgraphCore();
-  gitgraphCore.subscribe(() => graph = gitgraphCore.getRenderedData());
-
-  return gitgraphCore;
-}
+const gitgraph = new GitgraphCore();
+gitgraph.subscribe(() => graph = gitgraph.getRenderedData());
 
 /* tslint:disable:no-console */
 const consoleGraphRenderer: IRenderGraph = {
@@ -25,3 +18,6 @@ const consoleGraphRenderer: IRenderGraph = {
 function renderGraph() {
   render(consoleGraphRenderer, graph);
 }
+
+export { gitgraph, renderGraph };
+export * from "gitgraph-core/lib/index";
