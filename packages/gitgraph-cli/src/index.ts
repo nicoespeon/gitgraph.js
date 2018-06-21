@@ -10,14 +10,28 @@ gitgraph.subscribe(() => graph = gitgraph.getRenderedData());
 
 /* tslint:disable:no-console */
 const consoleGraphRenderer: IRenderGraph = {
-  commit(hash, refs, subject) {
-    if (refs.length > 0) {
-      refs = refs.map((ref) =>  (ref === "HEAD") ? chalk.bold(ref) : ref);
-      const refsText = chalk.blue(`(${refs.join(", ")})`);
-      console.log(`* ${chalk.green(hash)} ${refsText} ${subject}`);
-    } else {
-      console.log(`* ${chalk.green(hash)} ${subject}`);
+  commit(hash, refs, subject, isOnBranch) {
+    let commitText = `* ${chalk.green(hash)} `;
+
+    if (isOnBranch) {
+      commitText = `${chalk.red("|")} ${commitText}`;
     }
+
+    if (refs.length > 0) {
+      const parsedRefs = refs.map((ref) => {
+        return (ref === "HEAD") ? chalk.bold(ref) : ref;
+      });
+      commitText += chalk.blue(`(${parsedRefs.join(", ")})`);
+      commitText += " ";
+    }
+
+    commitText += `${subject}`;
+
+    console.log(commitText);
+  },
+
+  branchOpen() {
+    console.log(chalk.red("|\\"));
   }
 };
 
