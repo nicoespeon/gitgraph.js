@@ -1,6 +1,10 @@
 import { gitgraph, renderGraph } from "../src";
 
-gitgraph.branch("master").commit("Initial commit");
-gitgraph.branch("develop").commit("First commit on develop");
+const master = gitgraph.branch("master");
+master.commit("Initial commit");
+
+const develop = gitgraph.branch("develop");
+develop.commit("First commit on develop");
+master.commit("Another commit on master");
 
 renderGraph();
