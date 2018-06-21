@@ -25,7 +25,7 @@ const consoleGraphRenderer: IRenderGraph = {
     console.log(commitText);
   },
 
-  branchOpen() {
+  openBranch() {
     console.log(chalk.red("|\\"));
   }
 };

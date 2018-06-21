@@ -10,7 +10,7 @@ beforeEach(() => {
   master = gitgraph.branch("master");
   logger = {
     commit: jest.fn(),
-    branchOpen: jest.fn()
+    openBranch: jest.fn()
   };
 });
 
@@ -74,5 +74,5 @@ it("should log a branch with commits on both branches", () => {
     [expect.any(String), ["master", "HEAD"], "three", false]
   ]);
 
-  expect(logger.branchOpen).toHaveBeenCalledTimes(1);
+  expect(logger.openBranch).toHaveBeenCalledTimes(1);
 });
