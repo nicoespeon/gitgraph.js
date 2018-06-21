@@ -10,8 +10,14 @@ gitgraph.subscribe(() => graph = gitgraph.getRenderedData());
 
 /* tslint:disable:no-console */
 const consoleGraphRenderer: IRenderGraph = {
-  commit(hash, subject) {
-    console.log(`* ${chalk.green(hash)} ${subject}`);
+  commit(hash, refs, subject) {
+    if (refs.length > 0) {
+      refs = refs.map((ref) =>  (ref === "HEAD") ? chalk.bold(ref) : ref);
+      const refsText = chalk.blue(`(${refs.join(", ")})`);
+      console.log(`* ${chalk.green(hash)} ${refsText} ${subject}`);
+    } else {
+      console.log(`* ${chalk.green(hash)} ${subject}`);
+    }
   }
 };
 
