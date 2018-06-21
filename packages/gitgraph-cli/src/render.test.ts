@@ -21,7 +21,7 @@ it("should log commit message for a single commit", () => {
 
   render(logger, gitgraph.getRenderedData());
 
-  expect(logger.commit).toBeCalledWith("9a58c0b", "Hello");
+  expect(logger.commit).toBeCalledWith("9a58c0b", ["master", "HEAD"], "Hello");
   expect(logger.commit).toHaveBeenCalledTimes(1);
 });
 
@@ -39,8 +39,8 @@ it("should log commit messages for multiple commits", () => {
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    ["9a58c0b", "Hello"],
-    ["8b4581a", "World!"]
+    ["9a58c0b", [], "Hello"],
+    ["8b4581a", ["master", "HEAD"], "World!"]
   ]);
 });
 
@@ -54,7 +54,7 @@ it("should log a branch with one commit like it was a single line", () => {
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn).toHaveBeenCalledTimes(2);
   expect(commitFn.mock.calls).toEqual([
-    [expect.any(String), "one"],
-    [expect.any(String), "two"]
+    [expect.any(String), ["master"], "one"],
+    [expect.any(String), ["develop", "HEAD"], "two"]
   ]);
 });
