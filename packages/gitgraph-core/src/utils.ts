@@ -38,7 +38,7 @@ export function booleanOptionOr(value: any, defaultValue: boolean): boolean {
  */
 export function numberOptionOr(
   value: any,
-  defaultValue: number | null,
+  defaultValue: number | null
 ): number | null {
   return typeof value === "number" ? value : defaultValue;
 }
@@ -50,7 +50,7 @@ export function numberOptionOr(
  */
 export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
   return {
-    ...paths.reduce((mem, key) => ({ ...mem, [key]: obj[key] }), {}),
+    ...paths.reduce((mem, key) => ({ ...mem, [key]: obj[key] }), {})
   } as Pick<T, K>;
 }
 
@@ -62,7 +62,7 @@ export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
 export function debug(commits: Commit[], paths: Array<keyof Commit>): void {
   // tslint:disable-next-line:no-console
   console.log(
-    JSON.stringify(commits.map(commit => pick(commit, paths)), null, 2),
+    JSON.stringify(commits.map(commit => pick(commit, paths)), null, 2)
   );
 }
 
@@ -81,12 +81,12 @@ export function isUndefined(obj: any): obj is undefined {
  * @param obj
  */
 export function withoutUndefinedKeys<T extends object>(
-  obj: T = {} as T,
+  obj: T = {} as T
 ): NonMatchingProp<T, undefined> {
   return (Object.keys(obj) as [keyof T]).reduce<T>(
     (mem: any, key) =>
       isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] },
-    {} as T,
+    {} as T
   );
 }
 
@@ -95,15 +95,38 @@ export function withoutUndefinedKeys<T extends object>(
  *
  * @param coordinates Collection of coordinates
  */
-export function toSvgPath(coordinates: Coordinate[][]): string {
+export function toSvgPath(
+  coordinates: Coordinate[][],
+  isBezier: boolean,
+  isVertical: boolean
+): string {
   return coordinates
     .map(
       path =>
         "M" +
         path
-          .map(({ x, y }) => `L ${x} ${y}`)
+          .map(({ x, y }, i, points) => {
+            if (
+              isBezier &&
+              points.length > 1 &&
+              (i === 1 || i === points.length - 1)
+            ) {
+              if (isVertical) {
+                const middleY = (points[i - 1].y + y) / 2;
+                return `C ${
+                  points[i - 1].x
+                } ${middleY} ${x} ${middleY} ${x} ${y}`;
+              } else {
+                const middleX = (points[i - 1].x + x) / 2;
+                return `C ${middleX} ${
+                  points[i - 1].y
+                } ${middleX} ${y} ${x} ${y}`;
+              }
+            }
+            return `L ${x} ${y}`;
+          })
           .join(" ")
-          .slice(1),
+          .slice(1)
     )
     .join(" ");
 }

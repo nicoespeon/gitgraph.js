@@ -5,6 +5,7 @@ import {
   Commit,
   Branch,
   Coordinate,
+  MergeStyle
 } from "gitgraph-core/lib/index";
 import { toSvgPath } from "gitgraph-core/lib/utils";
 
@@ -21,7 +22,7 @@ export interface GitgraphState {
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public static defaultProps: Partial<GitgraphProps> = {
-    options: {},
+    options: {}
   };
 
   private gitgraph: GitgraphCore;
@@ -46,22 +47,21 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.props.children(this.gitgraph);
   }
 
-  /**
-   * TODO: Bezier \o/
-   */
   private renderBranches() {
     const offset = this.gitgraph.template.commit.dot.size;
+    const isBezier =
+      this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
     return Array.from(this.state.branchesPaths).map(
       ([branch, coordinates], i) => (
         <path
           key={branch.name}
-          d={toSvgPath(coordinates)}
+          d={toSvgPath(coordinates, isBezier, this.gitgraph.isVertical)}
           fill="transparent"
           stroke={branch.computedColor}
           strokeWidth={branch.style.lineWidth}
           transform={`translate(${offset}, ${offset})`}
         />
-      ),
+      )
     );
   }
 
@@ -86,7 +86,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             y={commit.style.dot.size}
             alignmentBaseline="central"
             fill={commit.style.message.color}
-            style={{font: commit.style.message.font}}
+            style={{ font: commit.style.message.font }}
           >
             {commit.hashAbbrev} {commit.subject} - {commit.author.name}{" "}
             {`<${commit.author.email}>`}
@@ -100,7 +100,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const {
       commits,
       branchesPaths,
-      commitMessagesX,
+      commitMessagesX
     } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths, commitMessagesX });
   }
