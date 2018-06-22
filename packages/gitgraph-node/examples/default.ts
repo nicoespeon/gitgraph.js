@@ -1,4 +1,4 @@
-import { gitgraph, renderGraph } from "../src";
+import { gitgraph, render } from "../src";
 
 const master = gitgraph.branch("master");
 master.commit("Initial commit");
@@ -8,4 +8,4 @@ develop.commit("First commit on develop");
 master.commit("Another commit on master");
 develop.commit("Commit on develop, again");
 
-renderGraph();
+render();

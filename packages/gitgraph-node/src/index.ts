@@ -1,16 +1,17 @@
-import { GitgraphCore } from "gitgraph-core/lib/index";
+import { GitgraphCore } from "gitgraph-core/lib";
 
 // Domain (rendering logic)
-import render from "./render";
+import computeGraphMap from "./compute-graph-map";
 
-// Infrastructure (renderer implementations)
-import consoleGraphRenderer from "./console-graph-renderer";
+// Infrastructure (logger implementations)
+import consoleGraphLogger from "./console-graph-logger";
 
 const gitgraph = new GitgraphCore();
 
-function renderGraph() {
-  render(consoleGraphRenderer, gitgraph);
+function render() {
+  const graphMap = computeGraphMap(gitgraph);
+  consoleGraphLogger(graphMap);
 }
 
-export { gitgraph, renderGraph };
-export * from "gitgraph-core/lib/index";
+export { gitgraph, render };
+export * from "gitgraph-core/lib";
