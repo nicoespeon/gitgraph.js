@@ -5,14 +5,11 @@ import { IRenderGraph } from "./render";
 
 // Implements the domain interface with system's console.
 const consoleGraphRenderer: IRenderGraph = {
-  commit(hash, refs, subject, isOnBranch, messageOffset) {
-    let commitText = `* `;
+  commit(hash, refs, subject, branchOffset, messageOffset) {
+    let commitText = `${chalk.red("|")} `.repeat(branchOffset);
+    commitText += `* `;
     commitText += "  ".repeat(messageOffset);
     commitText += `${chalk.green(hash)} `;
-
-    if (isOnBranch) {
-      commitText = `${chalk.red("|")} ${commitText}`;
-    }
 
     if (refs.length > 0) {
       const parsedRefs = refs.map((ref) => {

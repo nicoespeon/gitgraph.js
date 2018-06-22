@@ -4,7 +4,7 @@ import { includes } from "lodash";
 export default render;
 
 export interface IRenderGraph {
-  commit(hash: string, refs: string[], subject: string, isOnBranch: boolean, messageOffset: number): void;
+  commit(hash: string, refs: string[], subject: string, branchOffset: number, messageOffset: number): void;
   openBranch(): void;
 }
 
@@ -29,11 +29,8 @@ function render(logger: IRenderGraph, gitgraph: GitgraphCore): void {
       }
     }
 
-    const isOnBranch = (commit.x !== 0);
-    let messageOffset = (commitMessagesX / branchSpacing) - 1;
-    if (isOnBranch) {
-      messageOffset -= 1;
-    }
-    logger.commit(commit.hashAbbrev, commit.refs, commit.subject, isOnBranch, messageOffset);
+    const branchOffset = (commit.x !== 0) ? 1 : 0;
+    const messageOffset = (commitMessagesX / branchSpacing) - 1 - branchOffset;
+    logger.commit(commit.hashAbbrev, commit.refs, commit.subject, branchOffset, messageOffset);
   });
 }
