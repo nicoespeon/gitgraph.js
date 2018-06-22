@@ -1,7 +1,7 @@
 {
-  "name": "gitgraph-cli",
+  "name": "gitgraph-node",
   "version": "2.0.0-alpha",
-  "description": "Gitgraph CLI, draw pretty git graphs in the terminal",
+  "description": "Gitgraph with node.js, draw pretty git graphs in the terminal",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
     {
