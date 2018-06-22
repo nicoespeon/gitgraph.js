@@ -22,7 +22,14 @@ it("should log commit message for a single commit on a single branch", () => {
 
   render(logger, gitgraph);
 
-  expect(logger.commit).toBeCalledWith("9a58c0b", ["master", "HEAD"], "Hello", 0, 0);
+  expect(logger.commit).toBeCalledWith(
+    "9a58c0b",
+    ["master", "HEAD"],
+    "Hello",
+    0,
+    0,
+    0
+  );
   expect(logger.commit).toHaveBeenCalledTimes(1);
 });
 
@@ -40,8 +47,8 @@ it("should log commit messages for multiple commits on a single branch", () => {
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    ["9a58c0b", [], "Hello", 0, 0],
-    ["8b4581a", ["master", "HEAD"], "World!", 0, 0]
+    ["9a58c0b", [], "Hello", 0, 0, 0],
+    ["8b4581a", ["master", "HEAD"], "World!", 0, 0, 0]
   ]);
 });
 
@@ -54,8 +61,8 @@ it("should log commit messages for multiple commits that could be fast-forwarded
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    [expect.any(String), ["master"], "one", 0, 1],
-    [expect.any(String), ["develop", "HEAD"], "two", 1, 0]
+    [expect.any(String), ["master"], "one", 0, 0, 1],
+    [expect.any(String), ["develop", "HEAD"], "two", 1, 0, 0]
   ]);
 });
 
@@ -70,10 +77,10 @@ it("should log commit messages for multiple commits on 2 branches", () => {
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    [expect.any(String), [], "one", 0, 1],
-    [expect.any(String), [], "two", 1, 0],
-    [expect.any(String), ["master"], "three", 0, 1],
-    [expect.any(String), ["develop", "HEAD"], "four", 1, 0]
+    [expect.any(String), [], "one", 0, 0, 1],
+    [expect.any(String), [], "two", 1, 0, 0],
+    [expect.any(String), ["master"], "three", 0, 1, 0],
+    [expect.any(String), ["develop", "HEAD"], "four", 1, 0, 0]
   ]);
 
   expect(logger.openBranch).toHaveBeenCalledTimes(1);

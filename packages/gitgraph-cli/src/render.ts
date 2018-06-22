@@ -4,7 +4,14 @@ import { includes } from "lodash";
 export default render;
 
 export interface IRenderGraph {
-  commit(hash: string, refs: string[], subject: string, branchOffset: number, messageOffset: number): void;
+  commit(
+    hash: string,
+    refs: string[],
+    subject: string,
+    branchOffsetLeft: number,
+    branchOffsetRight: number,
+    messageOffset: number
+  ): void;
   openBranch(): void;
 }
 
@@ -21,16 +28,27 @@ function render(logger: IRenderGraph, gitgraph: GitgraphCore): void {
   const openedBranches = firstCommitBranches ? [firstCommitBranches![0]] : [];
 
   commits.forEach((commit) => {
+    let branchIndex = 0;
     if (commit.branches) {
       const isFirstCommitOfNewBranch = !includes(openedBranches, commit.branches[0]);
       if (isFirstCommitOfNewBranch) {
         logger.openBranch();
         openedBranches.push(commit.branches[0]);
       }
+
+      branchIndex = openedBranches.indexOf(commit.branches[0]);
     }
 
-    const branchOffset = (commit.x !== 0) ? 1 : 0;
-    const messageOffset = (commitMessagesX / branchSpacing) - 1 - branchOffset;
-    logger.commit(commit.hashAbbrev, commit.refs, commit.subject, branchOffset, messageOffset);
+    const branchOffsetLeft = (commit.x / branchSpacing);
+    const branchOffsetRight = openedBranches.length - (branchIndex + 1);
+    const messageOffset = (commitMessagesX / branchSpacing) - 1 - branchOffsetLeft - branchOffsetRight;
+    logger.commit(
+      commit.hashAbbrev,
+      commit.refs,
+      commit.subject,
+      branchOffsetLeft,
+      branchOffsetRight,
+      messageOffset
+    );
   });
 }
