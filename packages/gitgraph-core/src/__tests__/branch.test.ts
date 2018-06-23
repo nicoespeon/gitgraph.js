@@ -181,7 +181,7 @@ describe("Branch", () => {
             },
           },
           {
-            subject: "Merge branch dev"
+            subject: "Merge branch dev",
           },
           {
             subject: "three",

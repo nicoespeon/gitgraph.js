@@ -1,5 +1,10 @@
 import "jest";
-import { GitgraphCore, metroTemplate, TemplateEnum, OrientationsEnum } from "../index";
+import {
+  GitgraphCore,
+  metroTemplate,
+  TemplateEnum,
+  OrientationsEnum,
+} from "../index";
 
 describe("Gitgraph.render.branchesPaths", () => {
   let gitgraph: GitgraphCore;
@@ -148,7 +153,11 @@ describe("Gitgraph.render.branchesPaths", () => {
         { x: 0, y: 160 }, // commit before merge
         { x: 50, y: 80 }, // merge commit
       ],
-      [{ x: 0, y: 160 }, { x: 0, y: 80 }, { x: 0, y: 0 }],
+      [
+        { x: 0, y: 160 },
+        { x: 0, y: 80 },
+        { x: 0, y: 0 },
+      ],
     ]);
     expect(result[1][0].name).toBe("dev");
     expect(result[1][1]).toEqual([
@@ -162,7 +171,7 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should deal with horizontal orientation", () => {
-    gitgraph = new GitgraphCore({orientation: OrientationsEnum.Horizontal});
+    gitgraph = new GitgraphCore({ orientation: OrientationsEnum.Horizontal });
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
@@ -181,7 +190,7 @@ describe("Gitgraph.render.branchesPaths", () => {
         { x: 160, y: 0 },
         { x: 240, y: 0 },
         { x: 320, y: 0 }, // merge commit
-      ]
+      ],
     ]);
     expect(result[1][0].name).toBe("dev");
     expect(result[1][1]).toEqual([
@@ -196,7 +205,9 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should deal with horizontal-reverse orientation", () => {
-    gitgraph = new GitgraphCore({orientation: OrientationsEnum.HorizontalReverse});
+    gitgraph = new GitgraphCore({
+      orientation: OrientationsEnum.HorizontalReverse,
+    });
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
@@ -215,7 +226,7 @@ describe("Gitgraph.render.branchesPaths", () => {
         { x: 160, y: 0 },
         { x: 240, y: 0 },
         { x: 320, y: 0 }, // merge commit
-      ]
+      ],
     ]);
     expect(result[1][0].name).toBe("dev");
     expect(result[1][1]).toEqual([
@@ -246,10 +257,10 @@ describe("Gitgraph.render.branchesPaths", () => {
     expect(branches[4].computedColor).toBe(metroTemplate.colors[1]);
   });
 
-  it("should have the correct computed color for each branch with a specific color", () => {
+  it("should have the correct computed color for branch with a specific color set", () => {
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
-    const feat = gitgraph.branch({name: "feat", style: {color: "red"}});
+    const feat = gitgraph.branch({ name: "feat", style: { color: "red" } });
     feat.commit();
     master.commit("five");
     develop.commit("six");
@@ -262,17 +273,19 @@ describe("Gitgraph.render.branchesPaths", () => {
     expect(result[1][0].computedColor).toBe("red");
   });
 
-  it("should have the correct computed color for each branch with a specific color", () => {
-    const gitgraphWithSingleColorTemplate = new GitgraphCore({template: TemplateEnum.BlackArrow});
-    const master = gitgraphWithSingleColorTemplate.branch("master").commit("Initial commit");
-    const develop = gitgraphWithSingleColorTemplate.branch("dev");
-    const feat = gitgraphWithSingleColorTemplate.branch("feat");
+  it("should have the correct computed color for BlackArrow template", () => {
+    const gitgraphBlackArrow = new GitgraphCore({
+      template: TemplateEnum.BlackArrow,
+    });
+    const master = gitgraphBlackArrow.branch("master").commit("Initial commit");
+    const develop = gitgraphBlackArrow.branch("dev");
+    const feat = gitgraphBlackArrow.branch("feat");
     feat.commit();
     master.commit("five");
     develop.commit("six");
     master.merge(develop);
 
-    const { branchesPaths } = gitgraphWithSingleColorTemplate.getRenderedData();
+    const { branchesPaths } = gitgraphBlackArrow.getRenderedData();
 
     const result = Array.from(branchesPaths);
     expect(result[1][0].name).toBe("feat");

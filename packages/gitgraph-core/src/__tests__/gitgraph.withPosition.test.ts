@@ -259,7 +259,9 @@ describe("Gitgraph.withPosition", () => {
   });
 
   it("should deal with one branch (with merge) (vertical-reverse)", () => {
-    const gitgraph = new GitgraphCore({orientation: OrientationsEnum.VerticalReverse});
+    const gitgraph = new GitgraphCore({
+      orientation: OrientationsEnum.VerticalReverse,
+    });
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -306,7 +308,9 @@ describe("Gitgraph.withPosition", () => {
   });
 
   it("should deal with one branch (with merge) (horizontal)", () => {
-    const gitgraph = new GitgraphCore({orientation: OrientationsEnum.Horizontal});
+    const gitgraph = new GitgraphCore({
+      orientation: OrientationsEnum.Horizontal,
+    });
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -353,7 +357,9 @@ describe("Gitgraph.withPosition", () => {
   });
 
   it("should deal with one branch (with merge) (horizontal-reverse)", () => {
-    const gitgraph = new GitgraphCore({orientation: OrientationsEnum.HorizontalReverse});
+    const gitgraph = new GitgraphCore({
+      orientation: OrientationsEnum.HorizontalReverse,
+    });
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -508,16 +514,19 @@ describe("Gitgraph.withPosition", () => {
     const gitgraph = new GitgraphCore({
       mode: ModeEnum.Compact,
       // Orientate the graph from top to bottom to simplify tests.
-      orientation: OrientationsEnum.VerticalReverse
+      orientation: OrientationsEnum.VerticalReverse,
     });
 
-    const master = gitgraph.branch("master").commit("one").commit("two");
+    const master = gitgraph
+      .branch("master")
+      .commit("one")
+      .commit("two");
 
     // Branch has more commits.
     const dev = gitgraph.branch("dev").commit("three");
     master.merge(dev);
 
-      // Branch & master have as much commits.
+    // Branch & master have as much commits.
     const feat1 = gitgraph.branch("feat1").commit("four");
     master.commit("five");
     master.merge(feat1);

@@ -2,7 +2,7 @@ import "jest";
 import { GitgraphCore, Commit } from "../index";
 
 describe("Gitgraph.withBranches", () => {
-  it("should deal one branch (no merge)", () => {
+  it("should deal with one branch (no merge)", () => {
     const gitgraph = new GitgraphCore();
 
     const master = gitgraph.branch("master");
@@ -37,7 +37,8 @@ describe("Gitgraph.withBranches", () => {
       },
     ]);
   });
-  it("should deal one branch (with merge)", () => {
+
+  it("should deal with one branch (with merge)", () => {
     const gitgraph = new GitgraphCore();
 
     const master = gitgraph.branch("master");
