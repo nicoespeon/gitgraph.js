@@ -530,9 +530,9 @@ export class GitgraphCore {
   }
 
   /**
-   * Second step to build `branchesPaths`
+   * Second step to build `branchesPaths`.
    *
-   * @param commits All commits (with all branches resolves)
+   * @param commits All commits (with all branches resolved)
    * @param branchesPaths Map of coordinates of each branch
    */
   private addMergeCommitsIntoBranchesPaths(
@@ -540,32 +540,23 @@ export class GitgraphCore {
     branchesPaths: Map<Branch, InternalCoordinate[]>,
   ) {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
+
     mergeCommits.forEach(mergeCommit => {
-      mergeCommit.parents.forEach(parent => {
-        const parentCommit = commits.find(({ hash }) => hash === parent)!;
-        parentCommit.branches!.forEach(branchName => {
-          const branch = this.branches.get(branchName)!;
-          const lastPoints = [...(branchesPaths.get(branch) || [])];
-
-          const prevMergeCommitIndex = lastPoints.findIndex(
-            point => mergeCommit.x === point.x && mergeCommit.y === point.y,
-          );
-
-          if (prevMergeCommitIndex === -1) {
-            branchesPaths.set(branch, [
-              ...lastPoints,
-              { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
-            ]);
-          } else {
-            lastPoints.splice(prevMergeCommitIndex, 1, {
-              x: mergeCommit.x,
-              y: mergeCommit.y,
-              mergeCommit: true,
-            });
-            branchesPaths.set(branch, lastPoints);
-          }
-        });
+      const parentOnOriginBranch = commits.find(({hash}) => {
+        return hash === mergeCommit.parents[1];
       });
+      if (!parentOnOriginBranch) return;
+
+      // This may not always be true.If you have a better solution, go ahead!
+      const originBranchName = parentOnOriginBranch.branches![1];
+      const branch = this.branches.get(originBranchName);
+      if (!branch) return;
+
+      const lastPoints = [...(branchesPaths.get(branch) || [])];
+      branchesPaths.set(branch, [
+        ...lastPoints,
+        { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
+      ]);
     });
   }
 
