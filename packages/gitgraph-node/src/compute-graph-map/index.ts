@@ -1,5 +1,5 @@
 import { GitgraphCore, Commit } from "gitgraph-core/lib";
-import { chain, fill, includes } from "lodash";
+import { chain, fill, includes, range } from "lodash";
 
 import connectBranchCommits from "./connect-branch-commits";
 
@@ -35,8 +35,8 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   const graphSize = xToIndex(commitMessagesX);
   const openedBranches = [commits[0].x];
 
-  const graph: GraphMap = [];
-  commits.forEach((commit) => {
+  let graph: GraphMap = [];
+  commits.forEach((commit, index) => {
     const graphLine = emptyLine();
 
     // Commit message should always be at the end of the graph.
@@ -50,7 +50,8 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
 
     const isFirstCommitOfNewBranch = !includes(openedBranches, commit.x);
     if (isFirstCommitOfNewBranch) {
-      graph.push(openBranchLineTo(commit));
+      const previousCommit = commits[index - 1];
+      graph = graph.concat(openBranchLines(previousCommit, commit));
       openedBranches.push(commit.x);
     }
 
@@ -78,12 +79,15 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
     return fill(Array(graphSize), GraphSymbol.Empty);
   }
 
-  function openBranchLineTo(commit: Commit): GraphLine {
-    const line = emptyLine();
-    const openBranchIndex = (commit.x / branchSpacing);
-    line[openBranchIndex] = GraphSymbol.BranchOpen;
+  function openBranchLines(origin: Commit, target: Commit): GraphLine[] {
+    const start = xToIndex(origin.x) + 1;
+    const end = xToIndex(target.x);
 
-    return line;
+    return range(start, end).map((index) => {
+      const line = emptyLine();
+      line[index] = GraphSymbol.BranchOpen;
+      return line;
+    });
   }
 
   function mergeBranchLineTo(commit: Commit): GraphLine {
