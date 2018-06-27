@@ -111,3 +111,31 @@ it("should log graph for multiple commits on 2 branches (no fast-forward)", () =
     [" ", " ", "*", graphCommit4],
   ]);
 });
+
+it("should log graph for 2 branches with merge", () => {
+  master.commit("one");
+  const develop = gitgraph.branch("develop");
+  develop.commit("two");
+  master.merge(develop);
+
+  const graphMap = computeGraphMap(gitgraph);
+
+  const masterGraphCommit = expect.objectContaining({
+    message: "one",
+    refs: []
+  });
+  const developGraphCommit = expect.objectContaining({
+    message: "two",
+    refs: ["develop"]
+  });
+  const mergeCommit = expect.objectContaining({
+    refs: ["master", "HEAD"]
+  });
+  expect(graphMap).toEqual([
+    ["*", " ", " ", masterGraphCommit],
+    ["|", "\\", " ", " "],
+    ["|", " ", "*", developGraphCommit],
+    ["|", "/", " ", " "],
+    ["*", " ", " ", mergeCommit],
+  ]);
+});
