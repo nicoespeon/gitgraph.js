@@ -139,3 +139,77 @@ it("should log graph for 2 branches with merge", () => {
     ["*", " ", " ", mergeCommit],
   ]);
 });
+
+it("should log graph for 3 branches (consecutive)", () => {
+  master.commit("one");
+
+  const feat1 = gitgraph.branch("feat1");
+  feat1.commit("two");
+
+  const feat2 = gitgraph.branch("feat2");
+  feat2.commit("three");
+
+  const graphMap = computeGraphMap(gitgraph);
+
+  const masterCommit = expect.objectContaining({
+    message: "one",
+    refs: ["master"]
+  });
+  const feat1Commit = expect.objectContaining({
+    message: "two",
+    refs: ["feat1"]
+  });
+  const feat2Commit = expect.objectContaining({
+    message: "three",
+    refs: ["feat2", "HEAD"]
+  });
+  expect(graphMap).toEqual([
+    ["*", " ", " ", " ", " ", masterCommit],
+    [" ", "\\", " ", " ", " ", " "],
+    [" ", " ", "*", " ", " ", feat1Commit],
+    [" ", " ", " ", "\\", " ", " "],
+    [" ", " ", " ", " ", "*", feat2Commit],
+  ]);
+});
+
+it("should log graph for 3 branches (from master)", () => {
+  master.commit("one");
+
+  const feat1 = gitgraph.branch("feat1");
+  feat1.commit("two");
+
+  // Reset HEAD to master
+  master.commit("three");
+
+  const feat2 = gitgraph.branch("feat2");
+  feat2.commit("four");
+
+  const graphMap = computeGraphMap(gitgraph);
+
+  const masterCommit1 = expect.objectContaining({
+    message: "one",
+    refs: []
+  });
+  const feat1Commit = expect.objectContaining({
+    message: "two",
+    refs: ["feat1"]
+  });
+  const masterCommit2 = expect.objectContaining({
+    message: "three",
+    refs: ["master"]
+  });
+  const feat2Commit = expect.objectContaining({
+    message: "four",
+    refs: ["feat2", "HEAD"]
+  });
+  expect(graphMap).toEqual([
+    ["*", " ", " ", " ", " ", masterCommit1],
+    ["|", "\\", " ", " ", " ", " "],
+    ["|", " ", "*", " ", " ", feat1Commit],
+    ["*", " ", " ", " ", " ", masterCommit2],
+    [" ", "\\", " ", " ", " ", " "],
+    [" ", " ", "\\", " ", " ", " "],
+    [" ", " ", " ", "\\", " ", " "],
+    [" ", " ", " ", " ", "*", feat2Commit],
+  ]);
+});
