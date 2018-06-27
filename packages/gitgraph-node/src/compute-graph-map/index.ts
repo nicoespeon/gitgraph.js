@@ -33,9 +33,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   const { commits, commitMessagesX } = gitgraph.getRenderedData();
   const branchSpacing = gitgraph.template.branch.spacing;
   const graphSize = xToIndex(commitMessagesX);
-
-  const firstCommitBranches = commits[0].branches;
-  const openedBranches = firstCommitBranches ? [firstCommitBranches![0]] : [];
+  const openedBranches = [commits[0].x];
 
   const graph: GraphMap = [];
   commits.forEach((commit) => {
@@ -50,12 +48,15 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
 
     graphLine[xToIndex(commit.x)] = GraphSymbol.Commit;
 
-    if (commit.branches) {
-      const isFirstCommitOfNewBranch = !includes(openedBranches, commit.branches[0]);
-      if (isFirstCommitOfNewBranch) {
-        graph.push(openBranchLineTo(commit));
-        openedBranches.push(commit.branches[0]);
-      }
+    const isFirstCommitOfNewBranch = !includes(openedBranches, commit.x);
+    if (isFirstCommitOfNewBranch) {
+      graph.push(openBranchLineTo(commit));
+      openedBranches.push(commit.x);
+    }
+
+    const isMergeCommit = (commit.parents.length > 1);
+    if (isMergeCommit) {
+      graph.push(mergeBranchLineTo(commit));
     }
 
     graph.push(graphLine);
@@ -81,6 +82,14 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
     const line = emptyLine();
     const openBranchIndex = (commit.x / branchSpacing);
     line[openBranchIndex] = GraphSymbol.BranchOpen;
+
+    return line;
+  }
+
+  function mergeBranchLineTo(commit: Commit): GraphLine {
+    const line = emptyLine();
+    const mergedBranchIndex = (commit.x / branchSpacing) + 1;
+    line[mergedBranchIndex] = GraphSymbol.BranchMerge;
 
     return line;
   }
