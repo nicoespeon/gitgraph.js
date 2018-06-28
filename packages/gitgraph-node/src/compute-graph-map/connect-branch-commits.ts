@@ -6,8 +6,8 @@ export default connectBranchCommits;
 
 function connectBranchCommits(line: GraphLine): GraphLine {
   const branchPaths = chain(line)
-    .reduce((point, cell, index) => {
-      if (cell === GraphSymbol.Commit) point.push(index);
+    .reduce((point, { value }, index) => {
+      if (value === GraphSymbol.Commit) point.push(index);
       return point;
     }, [] as number[])
     .map((point, index, points) => {
@@ -22,7 +22,9 @@ function connectBranchCommits(line: GraphLine): GraphLine {
     .value();
 
   return line.map((cell, index) =>
-    branchPaths.some(isInBranchPath(index)) ? GraphSymbol.Branch : cell
+    branchPaths.some(isInBranchPath(index))
+      ? { value: GraphSymbol.Branch }
+      : cell;
   );
 }
 
