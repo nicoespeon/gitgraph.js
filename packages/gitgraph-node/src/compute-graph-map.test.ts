@@ -1,4 +1,4 @@
-import { GitgraphCore, Branch } from "gitgraph-core/lib";
+import { GitgraphCore, Branch, Template } from "gitgraph-core/lib";
 
 import computeGraphMap, { GraphCommit, GraphMap } from "./compute-graph-map";
 
@@ -223,6 +223,57 @@ describe("compute cells values", () => {
       [" ", " ", "\\", " ", " ", " "],
       [" ", " ", " ", "\\", " ", " "],
       [" ", " ", " ", " ", "*", feat2Commit],
+    ]);
+  });
+});
+
+describe("compute cells colors", () => {
+  function expectGraphMapColors(graphMap: GraphMap) {
+    return {
+      toEqual(expected: any): void {
+        const graphMapColors = graphMap.map((line) =>
+          line.map(({ color }) => color)
+        );
+        return expect(graphMapColors).toEqual(expected);
+      }
+    };
+  }
+
+  beforeEach(() => {
+    const template = new Template({
+      colors: ["red", "green", "blue"]
+    });
+    gitgraph = new GitgraphCore({ template });
+    master = gitgraph.branch("master");
+  });
+
+  it("for commits on a single branch", () => {
+    master.commit().commit();
+
+    const graphMap = computeGraphMap(gitgraph);
+
+    expectGraphMapColors(graphMap).toEqual([
+      ["red", "red"],
+      ["red", "red"],
+    ]);
+  });
+
+  it("for commits on 2 branches", () => {
+    master.commit().commit();
+    const develop = gitgraph.branch("develop");
+    develop.commit();
+    master.commit();
+    develop.commit();
+
+    const graphMap = computeGraphMap(gitgraph);
+
+    expectGraphMapColors(graphMap).toEqual([
+      ["red", "", "", "red"],
+      ["red", "", "", "red"],
+      ["red", "green", "", ""],
+      ["red", "", "green", "green"],
+      ["red", "", "green", "red"],
+      ["", "", "green", "green"],
     ]);
   });
 });
