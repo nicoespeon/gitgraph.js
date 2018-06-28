@@ -4,7 +4,7 @@ import { GraphLine, GraphSymbol } from "./index";
 
 export default connectBranchCommits;
 
-function connectBranchCommits(line: GraphLine): GraphLine {
+function connectBranchCommits(branchColor: string, line: GraphLine): GraphLine {
   const branchPaths = chain(line)
     .reduce((point, { value }, index) => {
       if (value === GraphSymbol.Commit) point.push(index);
@@ -23,8 +23,8 @@ function connectBranchCommits(line: GraphLine): GraphLine {
 
   return line.map((cell, index) =>
     branchPaths.some(isInBranchPath(index))
-      ? { value: GraphSymbol.Branch }
-      : cell;
+      ? { value: GraphSymbol.Branch, color: branchColor }
+      : cell
   );
 }
 

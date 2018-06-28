@@ -21,6 +21,7 @@ export enum GraphSymbol {
 }
 interface GraphCell {
   value: GraphSymbol | GraphCommit;
+  color: string;
 }
 export type GraphLine = GraphCell[];
 export type GraphMap = GraphLine[];
@@ -33,7 +34,8 @@ export type ILogGraph = (graph: GraphMap) => void;
 // Rendering is a bit different in CLI since we don't have pixels.
 // Thus, we should translate data to have "line-per-line" instructions.
 function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
-  const { commits, commitMessagesX } = gitgraph.getRenderedData();
+  const { branchesPaths, commits, commitMessagesX } = gitgraph.getRenderedData();
+  const branchesColors = Array.from(branchesPaths).map(([branch]) => branch.computedColor!);
   const branchSpacing = gitgraph.template.branch.spacing;
   const graphSize = xToIndex(commitMessagesX);
   const openedBranches = [commits[0].x];
@@ -48,10 +50,11 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
         hash: commit.hashAbbrev,
         message: commit.subject,
         refs: commit.refs
-      }
+      },
+      color: commit.style.color!
     };
 
-    graphLine[xToIndex(commit.x)] = { value: GraphSymbol.Commit };
+    graphLine[xToIndex(commit.x)] = { value: GraphSymbol.Commit, color: commit.style.color! };
 
     const isFirstCommitOfNewBranch = !includes(openedBranches, commit.x);
     if (isFirstCommitOfNewBranch) {
@@ -71,7 +74,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   return chain(graph)
     // Transpose the graph so columns => lines (easier to map).
     .unzip()
-    .map(connectBranchCommits)
+    .map((line, index) => connectBranchCommits(branchColorFor(index), line))
     // Transpose again to return the proper graph.
     .unzip()
     .value();
@@ -81,7 +84,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   }
 
   function emptyLine(): GraphLine {
-    return fill(Array(graphSize), { value: GraphSymbol.Empty });
+    return fill(Array(graphSize), { value: GraphSymbol.Empty, color: "" });
   }
 
   function openBranchLines(origin: Commit, target: Commit): GraphLine[] {
@@ -90,7 +93,10 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
 
     return range(start, end).map((index) => {
       const line = emptyLine();
-      line[index] = { value: GraphSymbol.BranchOpen };
+      line[index] = {
+        value: GraphSymbol.BranchOpen,
+        color: branchColorFor(end)
+      };
       return line;
     });
   }
@@ -98,8 +104,15 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   function mergeBranchLineTo(commit: Commit): GraphLine {
     const line = emptyLine();
     const mergedBranchIndex = (commit.x / branchSpacing) + 1;
-    line[mergedBranchIndex] = { value: GraphSymbol.BranchMerge };
+    line[mergedBranchIndex] = {
+      value: GraphSymbol.BranchMerge,
+      color: branchColorFor(mergedBranchIndex)
+    };
 
     return line;
+  }
+
+  function branchColorFor(branchCommitsIndex: number): string {
+    return branchesColors[branchCommitsIndex / 2];
   }
 }
