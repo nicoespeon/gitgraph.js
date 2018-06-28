@@ -10,7 +10,10 @@ it("should not modify an empty line", () => {
 });
 
 it("should not modify a line full of empty symbols", () => {
-  const emptySymbols = [GraphSymbol.Empty, GraphSymbol.Empty];
+  const emptySymbols = [
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Empty }
+  ];
 
   const newLine = connectBranchCommits(emptySymbols);
 
@@ -19,9 +22,9 @@ it("should not modify a line full of empty symbols", () => {
 
 it("should not modify a line with only one commit symbol", () => {
   const oneCommitSymbol = [
-    GraphSymbol.Commit,
-    GraphSymbol.Empty,
-    GraphSymbol.Empty
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Empty }
   ];
 
   const newLine = connectBranchCommits(oneCommitSymbol);
@@ -31,44 +34,44 @@ it("should not modify a line with only one commit symbol", () => {
 
 it("should fill cells between 2 commits with branch symbols", () => {
   const oneCommitSymbol = [
-    GraphSymbol.Empty,
-    GraphSymbol.Commit,
-    GraphSymbol.Empty,
-    GraphSymbol.Empty,
-    GraphSymbol.Commit,
-    GraphSymbol.Empty
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Empty }
   ];
 
   const newLine = connectBranchCommits(oneCommitSymbol);
 
   const expectedLine = [
-    GraphSymbol.Empty,
-    GraphSymbol.Commit,
-    GraphSymbol.Branch,
-    GraphSymbol.Branch,
-    GraphSymbol.Commit,
-    GraphSymbol.Empty
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Branch },
+    { value: GraphSymbol.Branch },
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Empty }
   ];
   expect(newLine).toEqual(expectedLine);
 });
 
 it("should fill cells between all commits with branch symbols", () => {
   const oneCommitSymbol = [
-    GraphSymbol.Commit,
-    GraphSymbol.Empty,
-    GraphSymbol.Commit,
-    GraphSymbol.Empty,
-    GraphSymbol.Commit
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Empty },
+    { value: GraphSymbol.Commit }
   ];
 
   const newLine = connectBranchCommits(oneCommitSymbol);
 
   const expectedLine = [
-    GraphSymbol.Commit,
-    GraphSymbol.Branch,
-    GraphSymbol.Commit,
-    GraphSymbol.Branch,
-    GraphSymbol.Commit
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Branch },
+    { value: GraphSymbol.Commit },
+    { value: GraphSymbol.Branch },
+    { value: GraphSymbol.Commit }
   ];
   expect(newLine).toEqual(expectedLine);
 });

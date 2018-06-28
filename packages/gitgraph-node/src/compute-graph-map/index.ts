@@ -19,8 +19,11 @@ export enum GraphSymbol {
   BranchOpen = "\\",
   BranchMerge = "/"
 }
-export type GraphLine = Array<GraphSymbol|GraphCommit>;
-type GraphMap = GraphLine[];
+interface GraphCell {
+  value: GraphSymbol | GraphCommit;
+}
+export type GraphLine = GraphCell[];
+export type GraphMap = GraphLine[];
 
 export type ILogGraph = (graph: GraphMap) => void;
 
@@ -41,12 +44,14 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
 
     // Commit message should always be at the end of the graph.
     graphLine[graphLine.length - 1] = {
-      hash: commit.hashAbbrev,
-      message: commit.subject,
-      refs: commit.refs
+      value: {
+        hash: commit.hashAbbrev,
+        message: commit.subject,
+        refs: commit.refs
+      }
     };
 
-    graphLine[xToIndex(commit.x)] = GraphSymbol.Commit;
+    graphLine[xToIndex(commit.x)] = { value: GraphSymbol.Commit };
 
     const isFirstCommitOfNewBranch = !includes(openedBranches, commit.x);
     if (isFirstCommitOfNewBranch) {
@@ -76,7 +81,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   }
 
   function emptyLine(): GraphLine {
-    return fill(Array(graphSize), GraphSymbol.Empty);
+    return fill(Array(graphSize), { value: GraphSymbol.Empty });
   }
 
   function openBranchLines(origin: Commit, target: Commit): GraphLine[] {
@@ -85,7 +90,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
 
     return range(start, end).map((index) => {
       const line = emptyLine();
-      line[index] = GraphSymbol.BranchOpen;
+      line[index] = { value: GraphSymbol.BranchOpen };
       return line;
     });
   }
@@ -93,7 +98,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   function mergeBranchLineTo(commit: Commit): GraphLine {
     const line = emptyLine();
     const mergedBranchIndex = (commit.x / branchSpacing) + 1;
-    line[mergedBranchIndex] = GraphSymbol.BranchMerge;
+    line[mergedBranchIndex] = { value: GraphSymbol.BranchMerge };
 
     return line;
   }

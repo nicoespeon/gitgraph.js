@@ -1,9 +1,20 @@
 import { GitgraphCore, Branch } from "gitgraph-core/lib";
 
-import computeGraphMap, { GraphCommit } from "./compute-graph-map";
+import computeGraphMap, { GraphCommit, GraphMap } from "./compute-graph-map";
 
 let gitgraph: GitgraphCore;
 let master: Branch;
+
+function expectGraphMapValues(graphMap: GraphMap) {
+  return {
+    toEqual(expected: any): void {
+      const graphMapValues = graphMap.map((line) =>
+        line.map(({ value }) => value)
+      );
+      return expect(graphMapValues).toEqual(expected);
+    }
+  };
+}
 
 beforeEach(() => {
   gitgraph = new GitgraphCore();
@@ -23,7 +34,7 @@ it("should log graph for a single commit on a single branch", () => {
     message: "Hello",
     refs: ["master", "HEAD"]
   };
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", graphCommit]
   ]);
 });
@@ -50,7 +61,7 @@ it("should log graph for multiple commits on a single branch", () => {
     message: "World!",
     refs: ["master", "HEAD"]
   };
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", graphCommit1],
     ["*", graphCommit2]
   ]);
@@ -71,7 +82,7 @@ it("should log graph for multiple commits on 2 branches (fast-forward)", () => {
     message: "two",
     refs: ["develop", "HEAD"]
   });
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", " ", " ", masterGraphCommit],
     [" ", "\\", " ", " "],
     [" ", " ", "*", developGraphCommit]
@@ -103,7 +114,7 @@ it("should log graph for multiple commits on 2 branches (no fast-forward)", () =
     message: "four",
     refs: ["develop", "HEAD"]
   });
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", " ", " ", graphCommit1],
     ["|", "\\", " ", " "],
     ["|", " ", "*", graphCommit2],
@@ -131,7 +142,7 @@ it("should log graph for 2 branches with merge", () => {
   const mergeCommit = expect.objectContaining({
     refs: ["master", "HEAD"]
   });
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", " ", " ", masterGraphCommit],
     ["|", "\\", " ", " "],
     ["|", " ", "*", developGraphCommit],
@@ -163,7 +174,7 @@ it("should log graph for 3 branches (consecutive)", () => {
     message: "three",
     refs: ["feat2", "HEAD"]
   });
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", " ", " ", " ", " ", masterCommit],
     [" ", "\\", " ", " ", " ", " "],
     [" ", " ", "*", " ", " ", feat1Commit],
@@ -202,7 +213,7 @@ it("should log graph for 3 branches (from master)", () => {
     message: "four",
     refs: ["feat2", "HEAD"]
   });
-  expect(graphMap).toEqual([
+  expectGraphMapValues(graphMap).toEqual([
     ["*", " ", " ", " ", " ", masterCommit1],
     ["|", "\\", " ", " ", " ", " "],
     ["|", " ", "*", " ", " ", feat1Commit],
