@@ -1053,6 +1053,7 @@
    * @param {number[]} [options.lineDash = this.template.commit.dot.lineDash]
    *
    * @param {string} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
+   * @param {string} [options.message] - short commit message (A few chars) to appear on the commit dot
    * @param {string} [options.messageColor = options.color] - Specific message color
    * @param {string} [options.messageFont = this.template.commit.message.font] - Font of the message
    * @param {boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message display policy
@@ -1085,7 +1086,8 @@
     this.date = options.date || new Date().toUTCString();
     this.detail = options.detail || null;
     this.sha1 = options.sha1 || (Math.random(100)).toString(16).substring(3, 10);
-    this.message = options.message || "He doesn't like George Michael! Boooo!";
+    this.message = options.message || options.messageShort || "He doesn't like George Michael! Boooo!";
+    this.messageShort = options.messageShort;
     this.arrowDisplay = options.arrowDisplay;
     this.messageDisplay = _booleanOptionOr(options.messageDisplay, this.template.commit.message.display);
     this.messageAuthorDisplay = _booleanOptionOr(options.messageAuthorDisplay, this.template.commit.message.displayAuthor);
@@ -1203,6 +1205,16 @@
       } else {
         this.detail.style.top = detailPositionTop + DETAIL_OFFSET_TOP_IN_PX + "px";
       }
+    }
+
+    if (this.messageShort !== undefined) {
+      //this.context.textAlign="start"; 
+      this.context.fillStyle = "#000";
+      var oldTextBaseline = this.context.textBaseline;
+      this.context.textAlign="center";
+      this.context.textBaseline = 'middle';
+      this.context.fillText(this.messageShort, this.x, this.y); 
+      this.context.textBaseline = oldTextBaseline;
     }
 
     // Message
