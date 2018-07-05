@@ -1208,13 +1208,16 @@
     }
 
     if (this.messageShort !== undefined) {
-      //this.context.textAlign="start"; 
+      var previousTextBaseline = this.context.textBaseline;
+      var previousTextAlign = this.context.textAlign;
+      
       this.context.fillStyle = "#000";
-      var oldTextBaseline = this.context.textBaseline;
-      this.context.textAlign="center";
+      this.context.textAlign = "center";
       this.context.textBaseline = 'middle';
       this.context.fillText(this.messageShort, this.x, this.y); 
-      this.context.textBaseline = oldTextBaseline;
+
+      this.context.textBaseline = previousTextBaseline;
+      this.context.textAlign = previousTextAlign;
     }
 
     // Message
