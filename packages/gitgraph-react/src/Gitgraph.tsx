@@ -99,7 +99,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     let message = "";
 
     if (commit.style.message.displayBranch) {
-      message += `[${commit.branches![commit.branches!.length - 1]}] `;
+      message += `[${commit.branches![commit.branches!.length - 1]}`;
+      // TODO: create a displayTag. Handle color / font?
+      if (commit.tags!.length) {
+        message += `, ${commit.tags!.join(", ")}`;
+      }
+      message += `] `;
     }
 
     if (commit.style.message.displayHash) {

@@ -116,6 +116,7 @@ storiesOf("Gitgraph", module)
       master.commit("two");
       develop.commit("three");
       master.merge(develop);
+      master.tag("v1.0");
     }}
   </Gitgraph>)
   .add("should stop on last commit", () => <Gitgraph>
