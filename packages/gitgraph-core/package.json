@@ -1,14 +1,28 @@
 {
   "name": "gitgraph-core",
   "version": "2.0.0-alpha",
-  "description":
-    "Core of gitgraph, a JavaScript library to draw pretty git graphs in the browser",
+  "description": "Core of gitgraph, a JavaScript library to draw pretty git graphs",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
     {
       "name": "Fabien Bernard",
       "email": "fabien0102@gmail.com"
     }
   ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+  },
+  "keywords": [
+    "git",
+    "graph",
+    "javascript"
+  ],
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
   "main": "./lib/bundle.umd.js",
   "module": "./lib/index.js",
   "jsnext:main": "./lib/index.js",
@@ -25,17 +39,6 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
-  },
-  "keywords": ["git", "graph", "javascript"],
-  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
-  },
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
   "devDependencies": {
     "@types/jest": "^21.1.8",
     "@types/node": "^9.4.6",
@@ -62,6 +65,10 @@
       ".(ts)": "<rootDir>/../../node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "js", "json"]
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
   }
 }

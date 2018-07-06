@@ -1,13 +1,29 @@
 {
   "name": "gitgraph-react",
   "version": "2.0.0-alpha",
-  "description": "Gitgraph with react, draw pretty git graphs in the browser",
+  "description": "Draw pretty git graphs in the browser, with React",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
     {
       "name": "Fabien Bernard",
       "email": "fabien0102@gmail.com"
     }
   ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+  },
+  "keywords": [
+    "react",
+    "git",
+    "graph",
+    "javascript"
+  ],
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
   "main": "./lib/bundle.umd.js",
   "module": "./lib/index.js",
   "jsnext:main": "./lib/index.js",
@@ -27,22 +43,11 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  "dependencies": {
+    "gitgraph-core": "^2.0.0-alpha",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
-  "keywords": [
-    "react",
-    "git",
-    "graph",
-    "javascript"
-  ],
-  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
-  },
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.15",
     "@storybook/addon-knobs": "^3.3.15",
@@ -85,10 +90,5 @@
       "js",
       "json"
     ]
-  },
-  "dependencies": {
-    "gitgraph-core": "^2.0.0-alpha",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
   }
 }
