@@ -15,7 +15,6 @@
   "typings": "./lib/index.d.ts",
   "scripts": {
     "cm": "git-cz",
-    "lint": "prettier",
     "test": "jest",
     "test:watch": "jest --watch",
     "watch": "tsc -w",
