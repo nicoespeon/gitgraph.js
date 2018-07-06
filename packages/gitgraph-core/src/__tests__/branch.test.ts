@@ -7,7 +7,7 @@ import {
   metroTemplate,
 } from "../index";
 import { OrientationsEnum, ModeEnum } from "../gitgraph";
-const copy = obj => JSON.parse(JSON.stringify(obj));
+const copy = (obj) => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
   describe("commit", () => {
@@ -288,12 +288,16 @@ describe("Branch", () => {
       });
 
       it("should create a merge commit into master", () => {
-        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(
+          (c) => c.subject === "Merge branch develop",
+        );
         expect(mergeCommit).toBeDefined();
       });
 
       it("should have 2 parents commits", () => {
-        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(
+          (c) => c.subject === "Merge branch develop",
+        );
         expect(mergeCommit.parents.length).toBe(2);
       });
 
@@ -309,7 +313,9 @@ describe("Branch", () => {
       });
 
       it("should have the last master commit as first parent and dev as second parent", () => {
-        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(
+          (c) => c.subject === "Merge branch develop",
+        );
         expect(mergeCommit.parents).toEqual([log[5].hash, log[4].hash]);
       });
     });
@@ -335,12 +341,16 @@ describe("Branch", () => {
       });
 
       it("should create a merge commit into master", () => {
-        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(
+          (c) => c.subject === "Merge branch develop",
+        );
         expect(mergeCommit).toBeDefined();
       });
 
       it("should have 2 parents commits", () => {
-        const mergeCommit = log.find(c => c.subject === "Merge branch develop");
+        const mergeCommit = log.find(
+          (c) => c.subject === "Merge branch develop",
+        );
         expect(mergeCommit.parents.length).toBe(2);
       });
     });

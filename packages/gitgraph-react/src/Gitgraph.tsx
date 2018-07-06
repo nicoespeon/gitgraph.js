@@ -5,7 +5,7 @@ import {
   Commit,
   Branch,
   Coordinate,
-  MergeStyle
+  MergeStyle,
 } from "gitgraph-core/lib/index";
 import { toSvgPath } from "gitgraph-core/lib/utils";
 
@@ -22,7 +22,7 @@ export interface GitgraphState {
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public static defaultProps: Partial<GitgraphProps> = {
-    options: {}
+    options: {},
   };
 
   private gitgraph: GitgraphCore;
@@ -61,12 +61,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           strokeWidth={branch.style.lineWidth}
           transform={`translate(${offset}, ${offset})`}
         />
-      )
+      ),
     );
   }
 
   private renderCommits() {
-    return this.state.commits.map(commit => (
+    return this.state.commits.map((commit) => (
       <g
         key={commit.hashAbbrev}
         transform={`translate(${commit.x}, ${commit.y})`}
@@ -124,7 +124,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const {
       commits,
       branchesPaths,
-      commitMessagesX
+      commitMessagesX,
     } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths, commitMessagesX });
   }

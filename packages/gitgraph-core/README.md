@@ -12,11 +12,11 @@ Project page: <http://gitgraphjs.com/>
 
 You have different options to start with the library:
 
-- [Download the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest).
-- Clone the repo: `git clone git@github.com:nicoespeon/gitgraph.js.git`.
-- Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
-- Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
-- Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
+* [Download the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest).
+* Clone the repo: `git clone git@github.com:nicoespeon/gitgraph.js.git`.
+* Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
+* Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
+* Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
 
 Production files are available under the `build/` directory.
 
@@ -28,13 +28,12 @@ issue](https://github.com/nicoespeon/gitgraph.js/issues).
 Please have a look at the [Issue Guidelines][] from [Nicolas Gallagher][] before
 doing so.
 
-[Issue Guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
-[Nicolas Gallagher]: https://github.com/necolas
+[issue guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
+[nicolas gallagher]: https://github.com/necolas
 
 ## Documentation
 
 The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
-
 
 ### Available commands
 
@@ -68,11 +67,11 @@ Releases will be numbered with the following format:
 
 And constructed with the following guidelines:
 
-- Breaking backward compatibility bumps the `<major>` (and resets the `<minor>`
+* Breaking backward compatibility bumps the `<major>` (and resets the `<minor>`
   and `<patch>`)
-- New additions without breaking backward compatibility bump the `<minor>` (and
+* New additions without breaking backward compatibility bump the `<minor>` (and
   reset the `<patch>`)
-- Bug fixes and misc. changes bump the `<patch>`
+* Bug fixes and misc. changes bump the `<patch>`
 
 ## Authors and contributors
 
@@ -84,6 +83,6 @@ And constructed with the following guidelines:
 
 Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][]
 
-[MIT license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
+[mit license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
 
 [> What does that mean?](http://choosealicense.com/licenses/mit/)
