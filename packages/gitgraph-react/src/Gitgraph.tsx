@@ -88,12 +88,31 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             fill={commit.style.message.color}
             style={{ font: commit.style.message.font }}
           >
-            {commit.hashAbbrev} {commit.subject} - {commit.author.name}{" "}
-            {`<${commit.author.email}>`}
+            {this.getMessage(commit)}
           </text>
         )}
       </g>
     ));
+  }
+
+  private getMessage(commit: Commit): string {
+    let message = "";
+
+    if (commit.style.message.displayBranch) {
+      message += `[${commit.branches![commit.branches!.length - 1]}] `;
+    }
+
+    if (commit.style.message.displayHash) {
+      message += `${commit.hashAbbrev} `;
+    }
+
+    message += commit.subject;
+
+    if (commit.style.message.displayAuthor) {
+      message += ` - ${commit.author.name} <${commit.author.email}>`;
+    }
+
+    return message;
   }
 
   private onGitgraphCoreRender() {

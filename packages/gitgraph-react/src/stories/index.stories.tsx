@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Gitgraph, Branch, TemplateEnum, OrientationsEnum, ModeEnum } from "../Gitgraph";
+import {
+  Gitgraph,
+  Branch,
+  Template,
+  TemplateEnum,
+  OrientationsEnum,
+  ModeEnum
+} from "../Gitgraph";
 
 import { storiesOf } from "@storybook/react";
 
@@ -78,6 +85,28 @@ class GitgraphPlayground extends React.Component<any, any> {
   }
 }
 
+const templateWithoutHash = new Template({
+  commit: {
+    message: {
+      displayHash: false,
+    },
+  },
+});
+const templateWithoutAuthor = new Template({
+  commit: {
+    message: {
+      displayAuthor: false,
+    },
+  },
+});
+const templateWithoutBranch = new Template({
+  commit: {
+    message: {
+      displayBranch: false,
+    },
+  },
+});
+
 storiesOf("Gitgraph", module)
   .add("default", () => <Gitgraph>
     {(gitgraph) => {
@@ -131,6 +160,36 @@ storiesOf("Gitgraph", module)
       master.merge(develop);
     }}
   </Gitgraph>)
+  .add("without commit hash", () => (
+    <Gitgraph options={{ template: templateWithoutHash }}>
+      {gitgraph => {
+        gitgraph
+          .commit("one")
+          .commit("two")
+          .commit("three");
+      }}
+    </Gitgraph>
+  ))
+  .add("without commit author", () => (
+    <Gitgraph options={{ template: templateWithoutAuthor }}>
+      {gitgraph => {
+        gitgraph
+          .commit("one")
+          .commit("two")
+          .commit("three");
+      }}
+    </Gitgraph>
+  ))
+  .add("without commit branch", () => (
+    <Gitgraph options={{ template: templateWithoutBranch }}>
+      {gitgraph => {
+        gitgraph
+          .commit("one")
+          .commit("two")
+          .commit("three");
+      }}
+    </Gitgraph>
+  ))
   .add("branch colors", () => <Gitgraph>
     {(gitgraph) => {
       const master = gitgraph.branch("master").commit("one");
