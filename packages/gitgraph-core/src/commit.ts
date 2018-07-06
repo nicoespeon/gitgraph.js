@@ -161,7 +161,7 @@ export class Commit {
 
     // Set parent hash
     this.parents = options.parents ? options.parents : [];
-    this.parentsAbbrev = this.parents.map(commit => commit.substring(0, 7));
+    this.parentsAbbrev = this.parents.map((commit) => commit.substring(0, 7));
 
     // Set style
     this.style = options.style;

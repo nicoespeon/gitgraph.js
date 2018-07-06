@@ -1,9 +1,5 @@
 import Commit from "./commit";
-import {
-  GitgraphCore,
-  GitgraphCommitOptions,
-  ModeEnum,
-} from "./gitgraph";
+import { GitgraphCore, GitgraphCommitOptions, ModeEnum } from "./gitgraph";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
 
@@ -93,14 +89,14 @@ export class Branch {
         this.commitDefaultOptions.subject ||
         (this.gitgraph.commitMessage as string),
       ...commitOptions,
-      style: this.getCommitStyle(options.style)
+      style: this.getCommitStyle(options.style),
     });
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
       const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) ||
         []) as string[];
-      parentRefs.forEach(ref => this.gitgraph.refs.set(ref, commit.hash));
+      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref
       this.gitgraph.refs.set(this.name, commit.hash);
@@ -137,13 +133,13 @@ export class Branch {
   public merge(branch: string | Branch): Branch {
     const branchName = typeof branch === "string" ? branch : branch.name;
     const parentCommitHash = this.gitgraph.refs.get(
-      branchName
+      branchName,
     ) as Commit["hash"];
     if (!parentCommitHash)
       throw new Error(`The branch called "${branchName}" is unknown`);
     this.commit({
       subject: `Merge branch ${branchName}`,
-      parents: [parentCommitHash]
+      parents: [parentCommitHash],
     });
     return this;
   }
@@ -181,7 +177,7 @@ export class Branch {
       ...withoutUndefinedKeys({ color: this.style.color }),
       ...withoutUndefinedKeys(this.gitgraph.template.commit.message),
       ...withoutUndefinedKeys(this.commitDefaultOptions.style!.message),
-      ...style.message
+      ...style.message,
     };
 
     if (!this.gitgraph.isVertical || this.gitgraph.mode === ModeEnum.Compact) {
@@ -197,15 +193,15 @@ export class Branch {
         ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.tag),
         ...withoutUndefinedKeys(this.commitDefaultOptions.style!.tag),
-        ...style.tag
+        ...style.tag,
       },
       message,
       dot: {
         ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),
         ...withoutUndefinedKeys(this.commitDefaultOptions.style!.dot),
-        ...style.dot
-      }
+        ...style.dot,
+      },
     } as CommitStyle;
   }
 }

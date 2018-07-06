@@ -298,7 +298,7 @@ export class GitgraphCore {
    * Called on each graph modification.
    */
   public next() {
-    this.listeners.forEach(listener => listener());
+    this.listeners.forEach((listener) => listener());
   }
 
   /**
@@ -353,7 +353,7 @@ export class GitgraphCore {
       }
     });
 
-    return commits.map(commit => ({
+    return commits.map((commit) => ({
       ...commit,
       branches: Array.from((refs.get(commit.hash) || new Set()).values()),
     }));
@@ -371,30 +371,34 @@ export class GitgraphCore {
     this.maxRow = 0;
 
     // Attribute a row index to each commit
-    commits.forEach((commit, i): any => {
-      if (this.mode === ModeEnum.Compact) {
-        // Compact mode
-        if (i === 0) return this.rows.set(commit.hash, i);
-        const parentRow: number = this.rows.get(commit.parents[0]) as number;
-        const historyParent: Commit = commits[i - 1];
-        let newRow = Math.max(parentRow + 1, this.rows.get(
-          historyParent.hash,
-        ) as number);
-        const isMergeCommit = (commit.parents.length > 1);
-        if (isMergeCommit) {
-          // Push commit to next row to avoid collision when the branch in which
-          // the merge happens has more commits than the merged branch.
-          const mergeTargetParentRow: number = this.rows.get(commit.parents[1]) as number;
-          if (parentRow < mergeTargetParentRow) newRow++;
+    commits.forEach(
+      (commit, i): any => {
+        if (this.mode === ModeEnum.Compact) {
+          // Compact mode
+          if (i === 0) return this.rows.set(commit.hash, i);
+          const parentRow: number = this.rows.get(commit.parents[0]) as number;
+          const historyParent: Commit = commits[i - 1];
+          let newRow = Math.max(parentRow + 1, this.rows.get(
+            historyParent.hash,
+          ) as number);
+          const isMergeCommit = commit.parents.length > 1;
+          if (isMergeCommit) {
+            // Push commit to next row to avoid collision when the branch in which
+            // the merge happens has more commits than the merged branch.
+            const mergeTargetParentRow: number = this.rows.get(
+              commit.parents[1],
+            ) as number;
+            if (parentRow < mergeTargetParentRow) newRow++;
+          }
+          this.rows.set(commit.hash, newRow);
+          this.maxRow = Math.max(this.maxRow, newRow + 1);
+        } else {
+          // Normal mode
+          this.rows.set(commit.hash, i);
+          this.maxRow = Math.max(this.maxRow, i + 1);
         }
-        this.rows.set(commit.hash, newRow);
-        this.maxRow = Math.max(this.maxRow, newRow + 1);
-      } else {
-        // Normal mode
-        this.rows.set(commit.hash, i);
-        this.maxRow = Math.max(this.maxRow, i + 1);
-      }
-    });
+      },
+    );
   }
 
   /**
@@ -407,7 +411,7 @@ export class GitgraphCore {
   private withColor(commit: Commit): Commit {
     // Retrieve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
-    const column = this.columns.findIndex(col => col === branch);
+    const column = this.columns.findIndex((col) => col === branch);
     const defaultColor = this.template.colors[
       column % this.template.colors.length
     ];
@@ -446,7 +450,7 @@ export class GitgraphCore {
     // Resolve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
     if (!this.columns.includes(branch)) this.columns.push(branch);
-    const column = this.columns.findIndex(col => col === branch);
+    const column = this.columns.findIndex((col) => col === branch);
 
     // Resolve row index
     const row = this.rows.get(commit.hash) as number;
@@ -541,8 +545,8 @@ export class GitgraphCore {
   ) {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
 
-    mergeCommits.forEach(mergeCommit => {
-      const parentOnOriginBranch = commits.find(({hash}) => {
+    mergeCommits.forEach((mergeCommit) => {
+      const parentOnOriginBranch = commits.find(({ hash }) => {
         return hash === mergeCommit.parents[1];
       });
       if (!parentOnOriginBranch) return;
@@ -599,7 +603,7 @@ export class GitgraphCore {
 
       // Add intermediate points on each sub paths
       if (this.isVertical) {
-        paths.forEach(subPath => {
+        paths.forEach((subPath) => {
           if (subPath.length <= 1) return;
           const firstPoint = subPath[0];
           const lastPoint = subPath[subPath.length - 1];
@@ -623,7 +627,7 @@ export class GitgraphCore {
           ]);
         });
       } else {
-        paths.forEach(subPath => {
+        paths.forEach((subPath) => {
           if (subPath.length <= 1) return;
           const firstPoint = subPath[0];
           const lastPoint = subPath[subPath.length - 1];
