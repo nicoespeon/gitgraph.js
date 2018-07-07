@@ -20,7 +20,10 @@
     "javascript"
   ],
   "devDependencies": {
-    "lerna": "^2.5.1"
+    "husky": "1.0.0-rc.12",
+    "lerna": "^2.5.1",
+    "prettier": "1.13.7",
+    "pretty-quick": "1.6.0"
   },
   "workspaces": [
     "packages/*"
@@ -30,6 +33,11 @@
     "watch": "lerna run watch",
     "test": "lerna run test",
     "clean": "lerna clean"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "license": "MIT"
 }

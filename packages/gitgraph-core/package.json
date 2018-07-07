@@ -42,11 +42,8 @@
     "browserify": "^14.5.0",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
-    "husky": "^0.14.3",
     "jest": "^21.2.1",
     "npm-run-all": "^4.1.2",
-    "prettier": "^1.12.1",
-    "pretty-quick": "^1.6.0",
     "rimraf": "^2.6.2",
     "rollup": "^0.51.8",
     "ts-jest": "^21.2.3",
@@ -58,11 +55,6 @@
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
     }
   },
   "jest": {
