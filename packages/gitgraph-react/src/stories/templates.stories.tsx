@@ -1,23 +1,23 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, Template, TemplateEnum } from "../Gitgraph";
+import { Gitgraph, templateExtend, TemplateEnum } from "../Gitgraph";
 
-const templateWithoutHash = new Template({
+const templateWithoutHash = templateExtend(TemplateEnum.Metro, {
   commit: {
     message: {
       displayHash: false,
     },
   },
 });
-const templateWithoutAuthor = new Template({
+const templateWithoutAuthor = templateExtend(TemplateEnum.Metro, {
   commit: {
     message: {
       displayAuthor: false,
     },
   },
 });
-const templateWithoutBranch = new Template({
+const templateWithoutBranch = templateExtend(TemplateEnum.Metro, {
   commit: {
     message: {
       displayBranch: false,

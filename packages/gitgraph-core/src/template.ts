@@ -1,5 +1,8 @@
+import * as merge from "lodash.merge";
+
 import Commit from "./commit";
 import { booleanOptionOr, numberOptionOr } from "./utils";
+import { TemplateEnum } from "./gitgraph";
 
 /**
  * Branch merge style enum
@@ -360,3 +363,26 @@ export const metroTemplate = new Template({
     },
   },
 });
+
+/**
+ * Extend an existing template with new options.
+ *
+ * @param selectedTemplate Template to extend
+ * @param options Template options
+ */
+export function templateExtend(
+  selectedTemplate: TemplateEnum,
+  options: TemplateOptions,
+): Template {
+  return merge({}, getTemplate(selectedTemplate), options);
+}
+
+function getTemplate(selectedTemplate: TemplateEnum): Template {
+  switch (selectedTemplate) {
+    case TemplateEnum.Metro:
+      return metroTemplate;
+
+    case TemplateEnum.BlackArrow:
+      return blackArrowTemplate;
+  }
+}
