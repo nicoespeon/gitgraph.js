@@ -2,10 +2,10 @@ import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
 import {
   Template,
-  metroTemplate,
-  blackArrowTemplate,
+  TemplateEnum,
   CommitStyleOptions,
   BranchStyleOptions,
+  getTemplate,
 } from "./template";
 import Refs from "./refs";
 import { booleanOptionOr, numberOptionOr, pick } from "./utils";
@@ -18,11 +18,6 @@ export enum OrientationsEnum {
 
 export enum ModeEnum {
   Compact = "compact",
-}
-
-export enum TemplateEnum {
-  Metro = "metro",
-  BlackArrow = "blackarrow",
 }
 
 export interface Coordinate {
@@ -103,17 +98,7 @@ export class GitgraphCore {
   private listeners: Array<() => void> = [];
 
   constructor(options: GitgraphOptions = {}) {
-    // Resolve template
-    if (typeof options.template === "string") {
-      this.template = {
-        [TemplateEnum.BlackArrow]: blackArrowTemplate,
-        [TemplateEnum.Metro]: metroTemplate,
-      }[options.template];
-    } else if (options.template) {
-      this.template = options.template as Template;
-    } else {
-      this.template = metroTemplate;
-    }
+    this.template = getTemplate(options.template);
 
     // Set a default `master` branch
     this.currentBranch = this.branch("master");

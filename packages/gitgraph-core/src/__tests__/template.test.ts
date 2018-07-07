@@ -1,5 +1,4 @@
-import { templateExtend, metroTemplate } from "../template";
-import { TemplateEnum } from "../gitgraph";
+import { templateExtend, TemplateEnum, metroTemplate } from "../template";
 
 describe("templateExtend", () => {
   it("should return the given template if we pass no new options", () => {
