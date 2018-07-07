@@ -271,4 +271,21 @@ describe("compute cells colors", () => {
       ["", "", "green", "green"],
     ]);
   });
+
+  it("for 2 branches with merge", () => {
+    master.commit("one");
+    const develop = gitgraph.branch("develop");
+    develop.commit("two");
+    master.merge(develop);
+
+    const graphMap = computeGraphMap(gitgraph);
+
+    expectGraphMapColors(graphMap).toEqual([
+      ["red", "", "", "red"],
+      ["red", "green", "", ""],
+      ["red", "", "green", "green"],
+      ["red", "green", "", ""],
+      ["red", "", "", "red"],
+    ]);
+  });
 });

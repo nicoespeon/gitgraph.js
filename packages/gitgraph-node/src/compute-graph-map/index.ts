@@ -124,6 +124,7 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
   }
 
   function branchColorFor(branchCommitsIndex: number): string {
-    return branchesColors[branchCommitsIndex / 2];
+    const colorIndex = Math.ceil(branchCommitsIndex / 2);
+    return branchesColors[colorIndex];
   }
 }
