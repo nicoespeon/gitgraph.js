@@ -16,10 +16,7 @@ it("should not modify an empty line", () => {
 });
 
 it("should not modify a line full of empty cells", () => {
-  const emptyCellsLine = [
-    EMPTY_CELL,
-    EMPTY_CELL
-  ];
+  const emptyCellsLine = [EMPTY_CELL, EMPTY_CELL];
 
   const newLine = connectBranchCommits(BRANCH_COLOR, emptyCellsLine);
 
@@ -27,11 +24,7 @@ it("should not modify a line full of empty cells", () => {
 });
 
 it("should not modify a line with only one commit cell", () => {
-  const oneCommitCellLine = [
-    COMMIT_CELL,
-    EMPTY_CELL,
-    EMPTY_CELL
-  ];
+  const oneCommitCellLine = [COMMIT_CELL, EMPTY_CELL, EMPTY_CELL];
 
   const newLine = connectBranchCommits(BRANCH_COLOR, oneCommitCellLine);
 
@@ -45,7 +38,7 @@ it("should fill cells between 2 commits with branch cells", () => {
     EMPTY_CELL,
     EMPTY_CELL,
     COMMIT_CELL,
-    EMPTY_CELL
+    EMPTY_CELL,
   ];
 
   const newLine = connectBranchCommits(BRANCH_COLOR, line);
@@ -56,19 +49,13 @@ it("should fill cells between 2 commits with branch cells", () => {
     BRANCH_CELL,
     BRANCH_CELL,
     COMMIT_CELL,
-    EMPTY_CELL
+    EMPTY_CELL,
   ];
   expect(newLine).toEqual(expectedLine);
 });
 
 it("should fill cells between all commits with branch cells", () => {
-  const line = [
-    COMMIT_CELL,
-    EMPTY_CELL,
-    COMMIT_CELL,
-    EMPTY_CELL,
-    COMMIT_CELL
-  ];
+  const line = [COMMIT_CELL, EMPTY_CELL, COMMIT_CELL, EMPTY_CELL, COMMIT_CELL];
 
   const newLine = connectBranchCommits(BRANCH_COLOR, line);
 
@@ -77,7 +64,7 @@ it("should fill cells between all commits with branch cells", () => {
     BRANCH_CELL,
     COMMIT_CELL,
     BRANCH_CELL,
-    COMMIT_CELL
+    COMMIT_CELL,
   ];
   expect(newLine).toEqual(expectedLine);
 });
