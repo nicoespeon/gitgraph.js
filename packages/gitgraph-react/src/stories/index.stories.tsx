@@ -138,7 +138,19 @@ storiesOf("Gitgraph", module)
         master.commit("two");
         develop.commit("three");
         master.merge(develop);
+      }}
+    </Gitgraph>
+  ))
+  .add("with tags", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master");
+        master.commit("one");
         master.tag("v1.0");
+        master.commit({
+          subject: "two",
+          tag: "v2.0",
+        });
       }}
     </Gitgraph>
   ))
