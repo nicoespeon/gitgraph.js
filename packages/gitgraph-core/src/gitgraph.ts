@@ -246,7 +246,7 @@ export class GitgraphCore {
   /**
    * Tag a specific commit. (as `git tag`)
    *
-   * @param name Name of the tage
+   * @param name Name of the tag
    * @param ref Commit or branch name or commit hash
    */
   public tag(
