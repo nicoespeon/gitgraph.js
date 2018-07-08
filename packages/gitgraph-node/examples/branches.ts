@@ -22,4 +22,6 @@ feat1.commit("Feat 1 - 3rd commit");
 feat2.commit("Feat 2 - 3rd commit");
 feat3.commit("Feat 3 - 3rd commit");
 
+master.merge(feat3);
+
 render();

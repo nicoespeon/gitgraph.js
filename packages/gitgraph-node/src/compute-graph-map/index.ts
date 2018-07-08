@@ -65,16 +65,16 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
       color: commit.style.color!,
     };
 
+    const previousCommit = commits[index - 1];
     const isFirstCommitOfNewBranch = !includes(openedBranches, commit.x);
     if (isFirstCommitOfNewBranch) {
-      const previousCommit = commits[index - 1];
       graph = graph.concat(openBranchLines(previousCommit, commit));
       openedBranches.push(commit.x);
     }
 
     const isMergeCommit = commit.parents.length > 1;
     if (isMergeCommit) {
-      graph.push(mergeBranchLineTo(commit));
+      graph = graph.concat(mergeBranchLines(previousCommit, commit));
     }
 
     graph.push(graphLine);
@@ -112,15 +112,18 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
     });
   }
 
-  function mergeBranchLineTo(commit: Commit): GraphLine {
-    const line = emptyLine();
-    const mergedBranchIndex = commit.x / branchSpacing + 1;
-    line[mergedBranchIndex] = {
-      value: GraphSymbol.BranchMerge,
-      color: branchColorFor(mergedBranchIndex),
-    };
+  function mergeBranchLines(origin: Commit, target: Commit): GraphLine[] {
+    const start = xToIndex(origin.x) - 1;
+    const end = xToIndex(target.x);
 
-    return line;
+    return range(start, end, -1).map((index) => {
+      const line = emptyLine();
+      line[index] = {
+        value: GraphSymbol.BranchMerge,
+        color: branchColorFor(start),
+      };
+      return line;
+    });
   }
 
   function branchColorFor(branchCommitsIndex: number): string {

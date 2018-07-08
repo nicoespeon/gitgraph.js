@@ -150,6 +150,44 @@ describe("compute cells values", () => {
     ]);
   });
 
+  it("for 2 branches merge (last branch into master)", () => {
+    master.commit("one");
+    const develop = gitgraph.branch("develop");
+    develop.commit("two");
+    const feat = gitgraph.branch("feat");
+    feat.commit("three");
+    master.merge(feat);
+
+    const graphMap = computeGraphMap(gitgraph);
+
+    const masterGraphCommit = expect.objectContaining({
+      message: "one",
+      refs: [],
+    });
+    const developGraphCommit = expect.objectContaining({
+      message: "two",
+      refs: ["develop"],
+    });
+    const featGraphCommit = expect.objectContaining({
+      message: "three",
+      refs: ["feat"],
+    });
+    const mergeCommit = expect.objectContaining({
+      refs: ["master", "HEAD"],
+    });
+    expectGraphMapValues(graphMap).toEqual([
+      ["*", " ", " ", " ", " ", masterGraphCommit],
+      ["|", "\\", " ", " ", " ", " "],
+      ["|", " ", "*", " ", " ", developGraphCommit],
+      ["|", " ", " ", "\\", " ", " "],
+      ["|", " ", " ", " ", "*", featGraphCommit],
+      ["|", " ", " ", "/", " ", " "],
+      ["|", " ", "/", " ", " ", " "],
+      ["|", "/", " ", " ", " ", " "],
+      ["*", " ", " ", " ", " ", mergeCommit],
+    ]);
+  });
+
   it("for 3 branches (consecutive)", () => {
     master.commit("one");
 
