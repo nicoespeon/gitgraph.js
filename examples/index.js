@@ -77,6 +77,7 @@ var commitConfig = {
   dotStrokeWidth: 10,
   messageHashDisplay: false,
   messageAuthorDisplay: true,
+  commitDotText: "C1",
   message: "Alors c'est qui le papa ?",
   tooltipDisplay: false,
   author: "Me <me@planee.fr>"
@@ -128,7 +129,8 @@ test.merge(master, "My special merge commit message");
 
 // Then, continue committing on the "test" branch
 test.commit({
-  message: "It works !"
+  message: "It works !",
+  commitDotText: "C2"
 });
 
 var fastForwardBranch = test.branch("fast-forward");
