@@ -1211,11 +1211,11 @@
     if (this.commitDotText) {
       var previousTextBaseline = this.context.textBaseline;
       var previousTextAlign = this.context.textAlign;
-      
+
       this.context.fillStyle = "#000";
       this.context.textAlign = "center";
-      this.context.textBaseline = 'middle';
-      this.context.fillText(this.commitDotText, this.x, this.y); 
+      this.context.textBaseline = "middle";
+      this.context.fillText(this.commitDotText, this.x, this.y);
 
       this.context.textBaseline = previousTextBaseline;
       this.context.textAlign = previousTextAlign;
