@@ -174,7 +174,6 @@ export class Branch {
    */
   private getCommitStyle(style: CommitStyleOptions = {}): CommitStyle {
     const message = {
-      ...withoutUndefinedKeys({ color: this.style.color }),
       ...withoutUndefinedKeys(this.gitgraph.template.commit.message),
       ...withoutUndefinedKeys(this.commitDefaultOptions.style!.message),
       ...style.message,
@@ -185,19 +184,16 @@ export class Branch {
     }
 
     return {
-      ...withoutUndefinedKeys({ color: this.style.color }),
       ...withoutUndefinedKeys(this.gitgraph.template.commit),
       ...withoutUndefinedKeys(this.commitDefaultOptions.style),
       ...style,
       tag: {
-        ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.tag),
         ...withoutUndefinedKeys(this.commitDefaultOptions.style!.tag),
         ...style.tag,
       },
       message,
       dot: {
-        ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),
         ...withoutUndefinedKeys(this.commitDefaultOptions.style!.dot),
         ...style.dot,

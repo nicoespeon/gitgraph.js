@@ -321,6 +321,7 @@ export class Template {
  * Black arrow template
  */
 export const blackArrowTemplate = new Template({
+  colors: ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"],
   branch: {
     color: "#000000",
     lineWidth: 4,
