@@ -151,9 +151,8 @@ describe("Branch", () => {
       });
 
       it("should have the color depending of the branch (metro theme)", () => {
-        const master = gitgraph.branch("master").commit("one");
-        const dev = gitgraph.branch("dev").commit("two");
-        master.merge(dev);
+        gitgraph.branch("master").commit("one");
+        gitgraph.branch("dev").commit("two");
         gitgraph.branch("feat1").commit("three");
         gitgraph.branch("feat2").commit("four");
         gitgraph.branch("feat3").commit("five");
@@ -179,9 +178,6 @@ describe("Branch", () => {
               tag: { color: colors[1] },
               dot: { color: colors[1] },
             },
-          },
-          {
-            subject: "Merge branch dev",
           },
           {
             subject: "three",
