@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@types/jest": "^21.1.8",
+    "@types/lodash.merge": "^4.6.3",
     "@types/node": "^9.4.6",
     "browserify": "^14.5.0",
     "commitizen": "^2.9.6",
