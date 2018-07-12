@@ -23,6 +23,7 @@
   "scripts": {
     "build": "lerna run build",
     "watch": "lerna run watch",
+    "pretest": "npm run build",
     "test": "lerna run test",
     "clean": "lerna clean"
   },
