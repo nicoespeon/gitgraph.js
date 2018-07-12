@@ -244,13 +244,7 @@ export class Template {
     options.commit.message = options.commit.message || {};
 
     // One color per column
-    this.colors = options.colors || [
-      "#6963FF",
-      "#47E8D4",
-      "#6BDB52",
-      "#E84BA5",
-      "#FFA657",
-    ];
+    this.colors = options.colors || ["#000000"];
 
     // Branch style
     this.branch = {
