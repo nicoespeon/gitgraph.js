@@ -118,7 +118,7 @@ describe("Branch", () => {
         expect(commit.style).toEqual(expectedStyle);
       });
 
-      it("should be have a merge style with the defaultCommitOptions", () => {
+      it("should have a merge style with the defaultCommitOptions", () => {
         gitgraph
           .branch({
             commitDefaultOptions: { style: { message: { color: "green" } } },
@@ -132,7 +132,7 @@ describe("Branch", () => {
         expect(commit.style).toEqual(expected);
       });
 
-      it("should be have a merge style with the commit", () => {
+      it("should have a merge style with the commit", () => {
         gitgraph
           .branch({
             commitDefaultOptions: { style: { message: { color: "green" } } },
