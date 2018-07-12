@@ -331,9 +331,9 @@ export const blackArrowTemplate = new Template({
   commit: {
     spacing: 60,
     dot: {
-      size: 12,
+      size: 16,
       strokeColor: "#000000",
-      strokeWidth: 7,
+      strokeWidth: 4,
     },
     message: {
       color: "black",
