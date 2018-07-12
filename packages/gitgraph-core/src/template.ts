@@ -84,11 +84,11 @@ export interface CommitDotStyle {
   /**
    * Commit dot stroke width
    */
-  strokeWidth: number | null;
+  strokeWidth?: number;
   /**
    * Commit dot stroke color
    */
-  strokeColor: string | null;
+  strokeColor?: string;
   /**
    * Commit dot line dash
    */
@@ -285,8 +285,11 @@ export class Template {
       dot: {
         color: options.commit.dot.color || options.commit.color,
         size: options.commit.dot.size || 3,
-        strokeWidth: numberOptionOr(options.commit.dot.strokeWidth, null),
-        strokeColor: options.commit.dot.strokeColor || null,
+        strokeWidth: numberOptionOr(
+          options.commit.dot.strokeWidth,
+          0,
+        ) as number,
+        strokeColor: options.commit.dot.strokeColor,
         lineDash: options.commit.dot.lineDash || this.branch.lineDash,
       },
       tag: {

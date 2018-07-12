@@ -87,8 +87,7 @@ describe("Branch", () => {
           color: "#979797",
           lineDash: [],
           size: 14,
-          strokeColor: null,
-          strokeWidth: null,
+          strokeWidth: 0,
         },
         message: {
           color: "#979797",
