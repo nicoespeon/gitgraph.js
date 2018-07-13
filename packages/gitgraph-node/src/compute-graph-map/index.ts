@@ -1,5 +1,6 @@
 import { GitgraphCore, Commit } from "gitgraph-core/lib";
-import { chain, fill, includes, range } from "lodash";
+import { flow, fill, includes, range } from "lodash";
+import { unzip } from "lodash/fp";
 
 import connectBranchCommits from "./connect-branch-commits";
 
@@ -80,15 +81,16 @@ function computeGraphMap(gitgraph: GitgraphCore): GraphMap {
     graph.push(graphLine);
   });
 
-  return (
-    chain(graph)
-      // Transpose the graph so columns => lines (easier to map).
-      .unzip()
-      .map((line, index) => connectBranchCommits(branchColorFor(index), line))
-      // Transpose again to return the proper graph.
-      .unzip()
-      .value()
-  );
+  return flow<GraphMap, GraphMap, GraphMap, GraphMap>(
+    // Transpose the graph so columns => lines (easier to map).
+    unzip,
+    (transposedGraph) =>
+      transposedGraph.map((line, index) =>
+        connectBranchCommits(branchColorFor(index), line),
+      ),
+    // Transpose again to return the proper graph.
+    unzip,
+  )(graph);
 
   function xToIndex(x: number): number {
     return (x / branchSpacing) * 2;
