@@ -1,9 +1,10 @@
-import { RenderedData, Commit } from "gitgraph-core/lib/index";
+import { GitgraphCore } from "gitgraph-core/lib/index";
+import { includes } from "lodash";
 
 export default render;
 
 export interface IRenderGraph {
-  commit(hash: string, refs: string[], subject: string, isOnBranch: boolean): void;
+  commit(hash: string, refs: string[], subject: string, isOnBranch: boolean, messageOffset: number): void;
   openBranch(): void;
 }
 
@@ -12,15 +13,27 @@ export interface IRenderGraph {
 // This is necessary because rendered data are optimized for browsers.
 // Rendering is a bit different in CLI since we don't have pixels.
 // Thus, we should translate data to have "line-per-line" instructions.
-function render(logger: IRenderGraph, { commits }: RenderedData): void {
-  commits.forEach((commit, index) => {
-    const remainingCommits = commits.slice(index + 1);
-    const isOnBranch = (commit.x !== 0 && !canFastForward(remainingCommits));
-    if (isOnBranch) logger.openBranch();
-    logger.commit(commit.hashAbbrev, commit.refs, commit.subject, isOnBranch);
-  });
-}
+function render(logger: IRenderGraph, gitgraph: GitgraphCore): void {
+  const { commits, commitMessagesX } = gitgraph.getRenderedData();
+  const branchSpacing = gitgraph.template.branch.spacing;
 
-function canFastForward(commits: Commit[]): boolean {
-  return (commits.length === 0);
+  const firstCommitBranches = commits[0].branches;
+  const openedBranches = firstCommitBranches ? [firstCommitBranches![0]] : [];
+
+  commits.forEach((commit) => {
+    if (commit.branches) {
+      const isFirstCommitOfNewBranch = !includes(openedBranches, commit.branches[0]);
+      if (isFirstCommitOfNewBranch) {
+        logger.openBranch();
+        openedBranches.push(commit.branches[0]);
+      }
+    }
+
+    const isOnBranch = (commit.x !== 0);
+    let messageOffset = (commitMessagesX / branchSpacing) - 1;
+    if (isOnBranch) {
+      messageOffset -= 1;
+    }
+    logger.commit(commit.hashAbbrev, commit.refs, commit.subject, isOnBranch, messageOffset);
+  });
 }
