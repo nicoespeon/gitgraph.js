@@ -19,7 +19,9 @@ Then, use it in your node.js scripts.
 Let's pretend this is your `index.js`:
 
 ```js
-const { gitgraph, render } = require("gitgraph-node");
+const { createGitgraph, render } = require("gitgraph-node");
+
+const gitgraph = createGitgraph();
 
 // Simulate git commands with Gitgraph API.
 const master = gitgraph.branch("master");
@@ -40,7 +42,7 @@ develop.commit("Prepare v1");
 master.merge(develop).tag("v1.0.0");
 
 // Call `render` to log the graph in terminal.
-render();
+render(gitgraph);
 ```
 
 Running `node index.js` will produce following output:
