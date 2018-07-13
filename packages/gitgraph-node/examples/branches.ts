@@ -1,4 +1,6 @@
-import { gitgraph, render } from "../src";
+import { createGitgraph, render } from "../src";
+
+const gitgraph = createGitgraph();
 
 const master = gitgraph.branch("master");
 master.commit("Master - 1st commit");
@@ -24,4 +26,4 @@ feat3.commit("Feat 3 - 3rd commit");
 
 master.merge(feat3);
 
-render();
+render(gitgraph);

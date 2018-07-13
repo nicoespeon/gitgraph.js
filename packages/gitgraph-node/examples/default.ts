@@ -1,4 +1,6 @@
-import { gitgraph, render } from "../src";
+import { createGitgraph, render } from "../src";
+
+const gitgraph = createGitgraph();
 
 const master = gitgraph.branch("master");
 master.commit("Initial commit");
@@ -11,4 +13,4 @@ master.merge(develop);
 
 develop.commit("A new commit on develop");
 
-render();
+render(gitgraph);
