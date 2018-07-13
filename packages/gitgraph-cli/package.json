@@ -1,0 +1,68 @@
+{
+  "name": "gitgraph-cli",
+  "version": "2.0.0-alpha",
+  "description": "Gitgraph CLI, draw pretty git graphs in the terminal",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "contributors": [
+    {
+      "name": "Fabien Bernard",
+      "email": "fabien0102@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+  },
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "main": "./src/index.ts",
+  "scripts": {
+    "precommit": "lint-staged",
+    "lint": "tslint src/**/*",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "example:default": "ts-node examples/default.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  },
+  "keywords": [
+    "node",
+    "git",
+    "graph",
+    "javascript"
+  ],
+  "devDependencies": {
+    "@types/jest": "^23.1.1",
+    "@types/node": "^9.4.6",
+    "jest": "^23.1.0",
+    "lint-staged": "^7.0.0",
+    "ts-jest": "^21.2.3",
+    "ts-node": "^6.1.1",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "gitgraph-core": "^2.0.0-alpha"
+  }
+}
