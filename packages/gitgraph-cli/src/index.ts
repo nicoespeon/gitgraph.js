@@ -1,4 +1,6 @@
 import { GitgraphCore, RenderedData } from "gitgraph-core/lib/index";
+import chalk from "chalk";
+
 import render, { IRenderGraph } from "./render";
 
 export { gitgraph, renderGraph };
@@ -16,7 +18,7 @@ function gitgraph(): GitgraphCore {
 /* tslint:disable:no-console */
 const consoleGraphRenderer: IRenderGraph = {
   commit(hash, subject) {
-    console.log(`* ${hash} ${subject}`);
+    console.log(`* ${chalk.green(hash)} ${subject}`);
   }
 };
 
