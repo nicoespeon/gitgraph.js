@@ -14,19 +14,19 @@ beforeEach(() => {
   };
 });
 
-it("should log commit message for a single commit", () => {
+it("should log commit message for a single commit on a single branch", () => {
   master.commit({
     hash: "9a58c0b5939a20a929bf3ade9b2974e91106a83f",
     subject: "Hello"
   });
 
-  render(logger, gitgraph.getRenderedData());
+  render(logger, gitgraph);
 
-  expect(logger.commit).toBeCalledWith("9a58c0b", ["master", "HEAD"], "Hello", false);
+  expect(logger.commit).toBeCalledWith("9a58c0b", ["master", "HEAD"], "Hello", false, 0);
   expect(logger.commit).toHaveBeenCalledTimes(1);
 });
 
-it("should log commit messages for multiple commits", () => {
+it("should log commit messages for multiple commits on a single branch", () => {
   master.commit({
     hash: "9a58c0b5939a20a929bf3ade9b2974e91106a83f",
     subject: "Hello"
@@ -36,42 +36,44 @@ it("should log commit messages for multiple commits", () => {
     subject: "World!"
   });
 
-  render(logger, gitgraph.getRenderedData());
+  render(logger, gitgraph);
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    ["9a58c0b", [], "Hello", false],
-    ["8b4581a", ["master", "HEAD"], "World!", false]
+    ["9a58c0b", [], "Hello", false, 0],
+    ["8b4581a", ["master", "HEAD"], "World!", false, 0]
   ]);
 });
 
-it("should log a branch with one commit like it was a single line", () => {
+it("should log commit messages for multiple commits that could be fast-forwarded on 2 branches", () => {
   master.commit("one");
   const develop = gitgraph.branch("develop");
   develop.commit("two");
 
-  render(logger, gitgraph.getRenderedData());
+  render(logger, gitgraph);
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    [expect.any(String), ["master"], "one", false],
-    [expect.any(String), ["develop", "HEAD"], "two", false]
+    [expect.any(String), ["master"], "one", false, 1],
+    [expect.any(String), ["develop", "HEAD"], "two", true, 0]
   ]);
 });
 
-it("should log a branch with commits on both branches", () => {
+it("should log commit messages for multiple commits on 2 branches", () => {
   master.commit("one");
   const develop = gitgraph.branch("develop");
   develop.commit("two");
   master.commit("three");
+  develop.commit("four");
 
-  render(logger, gitgraph.getRenderedData());
+  render(logger, gitgraph);
 
   const commitFn = (logger.commit as jest.Mock);
   expect(commitFn.mock.calls).toEqual([
-    [expect.any(String), [], "one", false],
-    [expect.any(String), ["develop"], "two", true],
-    [expect.any(String), ["master", "HEAD"], "three", false]
+    [expect.any(String), [], "one", false, 1],
+    [expect.any(String), [], "two", true, 0],
+    [expect.any(String), ["master"], "three", false, 1],
+    [expect.any(String), ["develop", "HEAD"], "four", true, 0]
   ]);
 
   expect(logger.openBranch).toHaveBeenCalledTimes(1);
