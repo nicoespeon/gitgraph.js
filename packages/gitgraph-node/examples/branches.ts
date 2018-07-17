@@ -1,6 +1,6 @@
-import { createGitgraph, render } from "../src";
+import { Gitgraph, render } from "../src";
 
-const gitgraph = createGitgraph();
+const gitgraph = new Gitgraph();
 
 const master = gitgraph.branch("master");
 master.commit("Master - 1st commit");

@@ -19,9 +19,9 @@ Then, use it in your node.js scripts.
 Let's pretend this is your `index.js`:
 
 ```js
-const { createGitgraph, render } = require("gitgraph-node");
+const { Gitgraph, render } = require("gitgraph-node");
 
-const gitgraph = createGitgraph();
+const gitgraph = new Gitgraph();
 
 // Simulate git commands with Gitgraph API.
 const master = gitgraph.branch("master");

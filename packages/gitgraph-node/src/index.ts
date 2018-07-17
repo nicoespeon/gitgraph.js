@@ -6,16 +6,18 @@ import computeGraphMap from "./compute-graph-map";
 // Infrastructure (logger implementations)
 import consoleGraphLogger from "./console-graph-logger";
 
-function createGitgraph(): GitgraphCore {
+class Gitgraph extends GitgraphCore {
   // Limiting Gitgraph Core config options is intentional since most of them
   // are not yet implemented in node.js.
   // Templates options should be limited & customized for the console.
-  return new GitgraphCore();
+  constructor() {
+    super();
+  }
 }
 
-function render(gitgraph: GitgraphCore) {
+function render(gitgraph: Gitgraph) {
   const graphMap = computeGraphMap(gitgraph);
   consoleGraphLogger(graphMap);
 }
 
-export { createGitgraph, render };
+export { Gitgraph, render };
