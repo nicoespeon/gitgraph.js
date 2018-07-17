@@ -5,6 +5,7 @@ import computeGraphMap from "./compute-graph-map";
 
 // Infrastructure (logger implementations)
 import consoleGraphLogger from "./console-graph-logger";
+import bufferGraphLogger, { bufferLength } from "./buffer-graph-logger";
 
 class Gitgraph extends GitgraphCore {
   // Limiting Gitgraph Core config options is intentional since most of them
@@ -17,7 +18,10 @@ class Gitgraph extends GitgraphCore {
 
 function render(gitgraph: Gitgraph) {
   const graphMap = computeGraphMap(gitgraph);
-  consoleGraphLogger(graphMap);
+  const useBuffer = graphMap.length > bufferLength();
+
+  const logger = useBuffer ? bufferGraphLogger : consoleGraphLogger;
+  logger(graphMap);
 }
 
 export { Gitgraph, render };
