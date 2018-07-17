@@ -4,10 +4,9 @@ import { startsWith } from "lodash";
 
 import { ILogGraph, GraphSymbol, GraphCommit } from "./compute-graph-map";
 
-// Implements the domain interface with system's console.
-const consoleGraphRenderer: ILogGraph = (graph) => {
-  graph.map((line) => {
-    const lineText = line
+const consoleGraphLogger: ILogGraph = (graph) => {
+  const lines = graph.map((line) =>
+    line
       .map(({ value, color }) => {
         const colored = startsWith(color, "#")
           ? chalk.hex(color)
@@ -46,10 +45,10 @@ const consoleGraphRenderer: ILogGraph = (graph) => {
             return text;
         }
       })
-      .join("");
+      .join(""),
+  );
 
-    console.log(lineText);
-  });
+  console.log(lines.join("\n"));
 };
 
-export default consoleGraphRenderer;
+export default consoleGraphLogger;
