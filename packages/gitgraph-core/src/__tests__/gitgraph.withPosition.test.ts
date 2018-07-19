@@ -1,5 +1,5 @@
 import "jest";
-import { GitgraphCore, Commit, OrientationsEnum, ModeEnum } from "../index";
+import { GitgraphCore, OrientationsEnum, ModeEnum } from "../index";
 import { readFileSync } from "fs";
 import { join } from "path";
 
@@ -481,30 +481,6 @@ describe("Gitgraph.withPosition", () => {
       {
         subject: "Merge branch dev",
         x: 0, // master
-        y: 0,
-      },
-    ]);
-  });
-
-  // TODO deal with commit style
-  it.skip("should also be able to calculate position from git2json output", () => {
-    const gitgraph = new GitgraphCore();
-
-    gitgraph.commits = JSON.parse(
-      readFileSync(join(__dirname, "./git2json-two-commits.json"), "utf-8"),
-    );
-
-    const { commits } = gitgraph.getRenderedData();
-
-    expect(commits).toMatchObject([
-      {
-        subject: "second",
-        x: 0,
-        y: 80,
-      },
-      {
-        subject: "first",
-        x: 0,
         y: 0,
       },
     ]);

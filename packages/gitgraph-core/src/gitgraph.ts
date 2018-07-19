@@ -287,6 +287,49 @@ export class GitgraphCore {
   }
 
   /**
+   * Import a JSON.
+   *
+   * Note: because data come from a json, we can't be sure about the type
+   * of this one, it's why `data` is `any` here, and will be validate by the function
+   *
+   * @param data JSON from `git2json` output
+   */
+  public import(data: any) {
+    // TODO: validate data format with https://github.com/hapijs/joi
+    this.clear();
+
+    if (!(data instanceof Array)) {
+      throw new Error("You data should be an array (git2json output)");
+    }
+
+    this.commits = data.map((commit: any) => {
+      if (typeof commit === "object" && commit.refs instanceof Array) {
+        // Add refs & tags.
+        // TODO: add tags
+        commit.refs.forEach((ref: string) => this.refs.set(ref, commit.hash));
+      } else {
+        throw new Error(
+          "All your commits should be an object with a `refs` property",
+        );
+      }
+
+      return { ...commit, style: this.template.commit };
+    });
+
+    // Create branches.
+    this.withBranches(this.commits)
+      .reduce((mem, { branches }) => {
+        if (!branches) return mem;
+        branches.forEach((branch) => mem.add(branch));
+        return mem;
+      }, new Set())
+      .forEach((branch) => this.branch(branch));
+
+    this.next();
+    return this;
+  }
+
+  /**
    * Add refs and tags info to one commit.
    *
    * Note: the `commit` must be the original object from `this.commits`
