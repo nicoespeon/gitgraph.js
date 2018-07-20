@@ -2,6 +2,7 @@ import "jest";
 import { GitgraphCore } from "../";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { Template } from "../template";
 
 describe("Gitgraph.import", () => {
   it("should render two commits from git2json", () => {
@@ -51,6 +52,40 @@ describe("Gitgraph.import", () => {
         subject: "first",
         x: 0,
         y: 0,
+      },
+    ]);
+  });
+
+  it("should compute style for 2 branches", () => {
+    const data = JSON.parse(
+      readFileSync(join(__dirname, "./git2json-two-branches.json"), "utf-8"),
+    );
+
+    const template = new Template({
+      colors: ["red", "green", "blue"],
+    });
+    const gitgraph = new GitgraphCore({ template });
+    gitgraph.import(data);
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "third",
+        style: {
+          color: "red",
+        },
+      },
+      {
+        subject: "second",
+        style: {
+          color: "green",
+        },
+      },
+      {
+        subject: "first",
+        style: {
+          color: "red",
+        },
       },
     ]);
   });
