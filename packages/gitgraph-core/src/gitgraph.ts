@@ -1,3 +1,5 @@
+import Joi from "joi";
+
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
 import {
@@ -289,29 +291,27 @@ export class GitgraphCore {
   /**
    * Import a JSON.
    *
-   * Note: because data come from a json, we can't be sure about the type
-   * of this one, it's why `data` is `any` here, and will be validate by the function
+   * Data can't be typed since it comes from a JSON.
+   * We validate input format and throw early if something is invalid.
    *
    * @param data JSON from `git2json` output
    */
   public import(data: any) {
-    // TODO: validate data format with https://github.com/hapijs/joi
+    // Validate `data` format.
+    const schema = Joi.array().items(
+      Joi.object({
+        refs: Joi.array(),
+      }),
+    );
+    const { error, value } = Joi.validate(data, schema, { allowUnknown: true });
+    if (error) throw error;
+
+    // Use validated `value`.
     this.clear();
 
-    if (!(data instanceof Array)) {
-      throw new Error("You data should be an array (git2json output)");
-    }
-
-    this.commits = data.map((commit: any) => {
-      if (typeof commit === "object" && commit.refs instanceof Array) {
-        // Add refs & tags.
-        // TODO: add tags
-        commit.refs.forEach((ref: string) => this.refs.set(ref, commit.hash));
-      } else {
-        throw new Error(
-          "All your commits should be an object with a `refs` property",
-        );
-      }
+    this.commits = value.map((commit: any) => {
+      // TODO: add tags
+      commit.refs.forEach((ref: string) => this.refs.set(ref, commit.hash));
 
       return { ...commit, style: this.template.commit };
     });
@@ -326,6 +326,7 @@ export class GitgraphCore {
       .forEach((branch) => this.branch(branch));
 
     this.next();
+
     return this;
   }
 

@@ -5,6 +5,26 @@ import { join } from "path";
 import { Template } from "../template";
 
 describe("Gitgraph.import", () => {
+  describe("should throw on invalid input", () => {
+    it("input is not an array", () => {
+      const gitgraph = new GitgraphCore();
+
+      expect(() => gitgraph.import({})).toThrow();
+    });
+
+    it("commits are not objects", () => {
+      const gitgraph = new GitgraphCore();
+
+      expect(() => gitgraph.import(["invalid-commit"])).toThrow();
+    });
+
+    it("commits refs are not array", () => {
+      const gitgraph = new GitgraphCore();
+
+      expect(() => gitgraph.import([{ refs: "invalid-refs" }])).toThrow();
+    });
+  });
+
   it("should render two commits from git2json", () => {
     const data = JSON.parse(
       readFileSync(join(__dirname, "./git2json-two-commits.json"), "utf-8"),
