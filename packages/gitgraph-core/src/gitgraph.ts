@@ -309,9 +309,14 @@ export class GitgraphCore {
     // Use validated `value`.
     this.clear();
 
-    this.commits = value.map((commit: any) => {
-      // TODO: add tags
-      commit.refs.forEach((ref: string) => this.refs.set(ref, commit.hash));
+    this.commits = value.map((commit: Commit) => {
+      const tags = commit.refs
+        .map((ref) => ref.split("tag: "))
+        .map(([_, tag]) => tag)
+        .filter((tag) => typeof tag === "string");
+
+      tags.forEach((tag) => this.tags.set(tag, commit.hash));
+      commit.refs.forEach((ref) => this.refs.set(ref, commit.hash));
 
       return { ...commit, style: this.template.commit };
     });

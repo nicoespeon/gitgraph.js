@@ -109,4 +109,25 @@ describe("Gitgraph.import", () => {
       },
     ]);
   });
+
+  it("should compute tags", () => {
+    const data = JSON.parse(
+      readFileSync(join(__dirname, "./git2json-tags.json"), "utf-8"),
+    );
+
+    const gitgraph = new GitgraphCore();
+    gitgraph.import(data);
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "second",
+        tags: ["v1.0"],
+      },
+      {
+        subject: "first",
+        tags: ["stable"],
+      },
+    ]);
+  });
 });

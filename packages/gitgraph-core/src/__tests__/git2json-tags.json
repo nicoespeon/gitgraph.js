@@ -1,0 +1,68 @@
+[
+  {
+    "refs": [
+      "HEAD",
+      "master",
+      "tag: v1.0"
+    ],
+    "hash": "3cfdf08894ae0231520db5298ae4eb5a71a01f81",
+    "hashAbbrev": "3cfdf08",
+    "tree": "43b71c903ff52b9885bd36f3866324ef60e27b9b",
+    "treeAbbrev": "43b71c9",
+    "parents": [
+      "51baced692316ff6ec60166e30e6880a8aaef88a"
+    ],
+    "parentsAbbrev": [
+      "51baced"
+    ],
+    "author": {
+      "name": "fabien0102",
+      "email": "fabien0102@planee.fr",
+      "timestamp": 1520020515000
+    },
+    "committer": {
+      "name": "fabien0102",
+      "email": "fabien0102@planee.fr",
+      "timestamp": 1520020515000
+    },
+    "subject": "second",
+    "body": "",
+    "notes": "",
+    "stats": [
+      {
+        "additions": 1,
+        "deletions": 1,
+        "file": "README.md"
+      }
+    ]
+  },
+  {
+    "refs": ["tag: stable"],
+    "hash": "51baced692316ff6ec60166e30e6880a8aaef88a",
+    "hashAbbrev": "51baced",
+    "tree": "853694aae8816094a0d875fee7ea26278dbf5d0f",
+    "treeAbbrev": "853694a",
+    "parents": [],
+    "parentsAbbrev": [],
+    "author": {
+      "name": "fabien0102",
+      "email": "fabien0102@planee.fr",
+      "timestamp": 1520020456000
+    },
+    "committer": {
+      "name": "fabien0102",
+      "email": "fabien0102@planee.fr",
+      "timestamp": 1520020456000
+    },
+    "subject": "first",
+    "body": "",
+    "notes": "",
+    "stats": [
+      {
+        "additions": 1,
+        "deletions": 0,
+        "file": "README.md"
+      }
+    ]
+  }
+]
