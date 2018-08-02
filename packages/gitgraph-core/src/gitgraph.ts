@@ -301,6 +301,16 @@ export class GitgraphCore {
     const schema = Joi.array().items(
       Joi.object({
         refs: Joi.array(),
+        hash: Joi.string(),
+        hashAbbrev: Joi.string(),
+        parents: Joi.array().items(Joi.string()),
+        parentsAbbrev: Joi.array().items(Joi.string()),
+        author: Joi.object({
+          name: Joi.string(),
+          email: Joi.string(),
+        }),
+        subject: Joi.string(),
+        body: Joi.string().allow(""),
       }),
     );
     const { error, value } = Joi.validate(data, schema, { allowUnknown: true });
