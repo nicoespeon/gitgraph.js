@@ -130,4 +130,25 @@ describe("Gitgraph.import", () => {
       },
     ]);
   });
+
+  it("should not put tags in refs", () => {
+    const data = JSON.parse(
+      readFileSync(join(__dirname, "./git2json-tags.json"), "utf-8"),
+    );
+
+    const gitgraph = new GitgraphCore();
+    gitgraph.import(data);
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "second",
+        refs: ["HEAD", "master"],
+      },
+      {
+        subject: "first",
+        refs: [],
+      },
+    ]);
+  });
 });

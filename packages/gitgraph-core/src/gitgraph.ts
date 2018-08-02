@@ -320,13 +320,16 @@ export class GitgraphCore {
     this.clear();
 
     this.commits = value.map((commit: Commit) => {
+      const TAG_PREFIX = "tag: ";
       const tags = commit.refs
-        .map((ref) => ref.split("tag: "))
+        .map((ref) => ref.split(TAG_PREFIX))
         .map(([_, tag]) => tag)
         .filter((tag) => typeof tag === "string");
-
       tags.forEach((tag) => this.tags.set(tag, commit.hash));
-      commit.refs.forEach((ref) => this.refs.set(ref, commit.hash));
+
+      commit.refs
+        .filter((ref) => !ref.startsWith(TAG_PREFIX))
+        .forEach((ref) => this.refs.set(ref, commit.hash));
 
       return { ...commit, style: this.template.commit };
     });
