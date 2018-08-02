@@ -5,20 +5,20 @@ import { join } from "path";
 import { Template } from "../template";
 
 describe("Gitgraph.import", () => {
-  describe("should throw on invalid input", () => {
-    it("input is not an array", () => {
+  describe("on invalid input", () => {
+    it("should throw if input is not an array", () => {
       const gitgraph = new GitgraphCore();
 
       expect(() => gitgraph.import({})).toThrow();
     });
 
-    it("commits are not objects", () => {
+    it("should throw if commits are not objects", () => {
       const gitgraph = new GitgraphCore();
 
       expect(() => gitgraph.import(["invalid-commit"])).toThrow();
     });
 
-    it("commits refs are not array", () => {
+    it("should throw if commits refs are not array", () => {
       const gitgraph = new GitgraphCore();
 
       expect(() => gitgraph.import([{ refs: "invalid-refs" }])).toThrow();
