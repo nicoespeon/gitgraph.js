@@ -1,4 +1,6 @@
-import merge from "lodash.merge";
+// This import format is required for CommonJS compatibility:
+// https://stackoverflow.com/a/39415662/3911841
+import merge = require("lodash.merge");
 
 import Commit from "./commit";
 import { booleanOptionOr, numberOptionOr } from "./utils";
