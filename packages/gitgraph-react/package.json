@@ -73,7 +73,7 @@
     "tslint": "^5.9.1",
     "tslint-config-prettier": "1.13.0",
     "typescript": "^2.8.1",
-    "uglifyjs": "^2.4.11"
+    "uglify-es": "^3.3.9"
   },
   "config": {
     "commitizen": {
