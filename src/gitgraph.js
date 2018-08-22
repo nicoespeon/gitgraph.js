@@ -626,7 +626,7 @@
    * @property {string} [tagFont = this.template.commit.tag.font] - Font of the tag
    * @property {string} [displayTagBox = true] - If true, display a box around the tag
    *
-   * @property {string} [fotFont = this.template.commit.dot.font] - Font of the dot
+   * @property {string} [dotFont = this.template.commit.dot.font] - Font of the dot
    * @property {string} [dotColor = color] - Specific dot color
    * @property {number} [dotSize = this.template.commit.dot.size] - Dot size
    * @property {number} [dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
