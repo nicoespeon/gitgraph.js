@@ -39,16 +39,19 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js"
   },
+  "dependencies": {
+    "joi": "^13.4.0",
+    "lodash": "4.17.10"
+  },
   "devDependencies": {
     "@types/jest": "^21.1.8",
     "@types/joi": "^13.4.0",
-    "@types/lodash.merge": "^4.6.3",
+    "@types/lodash": "^4.14.116",
     "@types/node": "^9.4.6",
     "browserify": "^14.5.0",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^21.2.1",
-    "lodash.merge": "4.6.1",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.51.8",
@@ -73,8 +76,5 @@
       "js",
       "json"
     ]
-  },
-  "dependencies": {
-    "joi": "^13.4.0"
   }
 }

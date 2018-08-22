@@ -1,4 +1,4 @@
-import merge from "lodash.merge";
+import { merge } from "lodash";
 
 import Commit from "./commit";
 import { booleanOptionOr, numberOptionOr } from "./utils";
