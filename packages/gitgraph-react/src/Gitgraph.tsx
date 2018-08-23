@@ -125,8 +125,69 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             {this.getMessage(commit)}
           </text>
         )}
+
+        {/* Arrow */}
+        {this.gitgraph.template.arrow.size &&
+          commit.parents.map((parentHash) => {
+            // TODO: refactor in commit
+            const parent = this.state.commits.find(
+              ({ hash }) => hash === parentHash,
+            ) as Commit;
+            return this.drawArrow(parent, commit);
+          })}
       </g>
     ));
+  }
+
+  // TODO: test on different orientation
+  // TODO: isReverse
+  private drawArrow(parent: Commit, commit: Commit) {
+    // Delta between left & right (radian)
+    const delta = Math.PI / 7;
+
+    // Alpha angle between parent & commit (radian)
+    const alpha = Math.atan2(
+      // Angle always start from previous commit Y position:
+      //
+      // x
+      // | \
+      // x  |  <-- path is straight until last commit Y position
+      // |  x
+      // | /
+      // x
+      this.gitgraph.template.commit.spacing,
+      parent.x - commit.x,
+    );
+
+    const commitRadius = commit.style.dot.size;
+    const size = this.gitgraph.template.arrow.size!;
+    // TODO: offset should be added (change template value)
+    const h = commitRadius - this.gitgraph.template.arrow.offset;
+
+    // Top
+    const x1 = h * Math.cos(alpha);
+    const y1 = h * Math.sin(alpha);
+
+    // Bottom right
+    const x2 = (h + size) * Math.cos(alpha - delta);
+    const y2 = (h + size) * Math.sin(alpha - delta);
+
+    // Bottom center
+    const x3 = (h + size / 2) * Math.cos(alpha);
+    const y3 = (h + size / 2) * Math.sin(alpha);
+
+    // Bottom left
+    const x4 = (h + size) * Math.cos(alpha + delta);
+    const y4 = (h + size) * Math.sin(alpha + delta);
+
+    return (
+      <g transform={`translate(${commitRadius}, ${commitRadius})`}>
+        <path
+          d={`M${x1},${y1} L${x2},${y2} Q${x3},${y3} ${x4},${y4} L${x4},${y4}`}
+          fill={this.gitgraph.template.arrow.color!}
+        />
+      </g>
+    );
   }
 
   private getMessage(commit: Commit): string {
