@@ -40,7 +40,8 @@
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js"
   },
   "dependencies": {
-    "joi": "^13.4.0",
+    "joi": "13.6.0",
+    "joi-browser": "13.4.0",
     "lodash": "4.17.10"
   },
   "devDependencies": {
@@ -76,5 +77,8 @@
       "js",
       "json"
     ]
+  },
+  "browser": {
+    "joi": "joi-browser"
   }
 }
