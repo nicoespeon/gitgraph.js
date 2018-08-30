@@ -141,17 +141,26 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   // TODO: extract arrow logic into its own file
-  // TODO: reverse arrow
   private drawArrow(parent: Commit, commit: Commit) {
+    const commitRadius = commit.style.dot.size;
+    const size = this.gitgraph.template.arrow.size!;
+    const h = commitRadius + this.gitgraph.template.arrow.offset;
+
     // Delta between left & right (radian)
     const delta = Math.PI / 7;
 
     // Alpha angle between parent & commit (radian)
     const alpha = getAlpha(this.gitgraph, parent, commit);
 
-    const commitRadius = commit.style.dot.size;
-    const size = this.gitgraph.template.arrow.size!;
-    const h = commitRadius + this.gitgraph.template.arrow.offset;
+    // Starting point, relative to commit
+    const origin = {
+      x: this.gitgraph.reverseArrow
+        ? commitRadius + (parent.x - commit.x)
+        : commitRadius,
+      y: this.gitgraph.reverseArrow
+        ? commitRadius + (parent.y - commit.y)
+        : commitRadius,
+    };
 
     // Top
     const x1 = h * Math.cos(alpha);
@@ -170,7 +179,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const y4 = (h + size) * Math.sin(alpha + delta);
 
     return (
-      <g transform={`translate(${commitRadius}, ${commitRadius})`}>
+      <g transform={`translate(${origin.x}, ${origin.y})`}>
         <path
           d={`M${x1},${y1} L${x2},${y2} Q${x3},${y3} ${x4},${y4} L${x4},${y4}`}
           fill={this.gitgraph.template.arrow.color!}
@@ -215,40 +224,66 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 }
 
 function getAlpha(graph: GitgraphCore, parent: Commit, commit: Commit): number {
+  const deltaX = parent.x - commit.x;
+  const deltaY = parent.y - commit.y;
+  const commitSpacing = graph.template.commit.spacing;
+
   let alphaY;
   let alphaX;
 
   // Angle always start from previous commit Y position:
   //
-  // x
-  // | \
-  // x  |  <-- path is straight until last commit Y position
-  // |  x
-  // | /
-  // x
+  // o
+  // ↑ ↖ ︎
+  // o  |  <-- path is straight until last commit Y position
+  // ↑  o
+  // | ↗︎
+  // o
   //
   // So we need to default to commit spacing.
   // For horizontal orientation => same with commit X position.
   switch (graph.orientation) {
     case OrientationsEnum.Horizontal:
-      alphaY = parent.y - commit.y;
-      alphaX = -graph.template.commit.spacing;
+      alphaY = deltaY;
+      alphaX = -commitSpacing;
       break;
 
     case OrientationsEnum.HorizontalReverse:
-      alphaY = parent.y - commit.y;
-      alphaX = graph.template.commit.spacing;
+      alphaY = deltaY;
+      alphaX = commitSpacing;
       break;
 
     case OrientationsEnum.VerticalReverse:
-      alphaY = -graph.template.commit.spacing;
-      alphaX = parent.x - commit.x;
+      alphaY = -commitSpacing;
+      alphaX = deltaX;
       break;
 
     default:
-      alphaY = graph.template.commit.spacing;
-      alphaX = parent.x - commit.x;
+      alphaY = commitSpacing;
+      alphaX = deltaX;
       break;
+  }
+
+  if (graph.reverseArrow) {
+    alphaY *= -1;
+    alphaX *= -1;
+
+    // If arrow is reverse, the previous commit position is considered
+    // the same on the straight part of the curved path.
+    //
+    // o
+    // ↓ \
+    // o  ↓  <-- arrow is like previous commit was on same X position
+    // |  o
+    // ↓ ↙︎
+    // o
+    //
+    // For horizontal orientation => same with commit Y position.
+    if (graph.isVertical) {
+      if (Math.abs(deltaY) > commitSpacing) alphaX = 0;
+    } else {
+      if (Math.abs(deltaX) > commitSpacing) alphaY = 0;
+    }
   }
 
   return Math.atan2(alphaY, alphaX);

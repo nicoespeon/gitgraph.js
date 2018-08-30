@@ -53,6 +53,22 @@ storiesOf("Gitgraph templates", module)
       }}
     </Gitgraph>
   ))
+  .add("blackArrow with reverse arrow", () => (
+    <Gitgraph
+      options={{ template: TemplateEnum.BlackArrow, reverseArrow: true }}
+    >
+      {(gitgraph) => {
+        const master = gitgraph
+          .branch("master")
+          .commit("one")
+          .commit("two")
+          .commit("three");
+        const develop = gitgraph.branch("develop").commit("four");
+        master.commit("five");
+        master.merge(develop);
+      }}
+    </Gitgraph>
+  ))
   .add("without commit hash", () => (
     <Gitgraph options={{ template: templateWithoutHash }}>
       {(gitgraph) => {
