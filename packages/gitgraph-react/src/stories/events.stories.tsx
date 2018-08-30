@@ -48,4 +48,27 @@ storiesOf("Gitgraph events", module)
         });
       }}
     </Gitgraph>
+  ))
+  .add("on commit mouseout", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        function onMouseOut(commit: Commit) {
+          alert(
+            `Mouse is out commit ${commit.hashAbbrev}: "${commit.subject}"`,
+          );
+        }
+
+        const master = gitgraph.branch("master");
+        master.commit({
+          subject: "Hello",
+          body: "First commit",
+          onMouseOut,
+        });
+        master.commit({
+          subject: "World",
+          body: "Second commit",
+          onMouseOut,
+        });
+      }}
+    </Gitgraph>
   ));

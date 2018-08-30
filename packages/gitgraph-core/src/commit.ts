@@ -14,6 +14,7 @@ export interface CommitOptions {
   innerText?: string;
   onClick?: (commit: Commit) => void;
   onMouseOver?: (commit: Commit) => void;
+  onMouseOut?: (commit: Commit) => void;
 }
 
 /**
@@ -144,6 +145,10 @@ export class Commit {
    * Callback to execute on mouse over.
    */
   public onMouseOver: () => void;
+  /**
+   * Callback to execute on mouse out.
+   */
+  public onMouseOut: () => void;
 
   constructor(options: CommitOptions) {
     // Set author & committer
@@ -183,6 +188,8 @@ export class Commit {
     this.onClick = () => (options.onClick ? options.onClick(this) : undefined);
     this.onMouseOver = () =>
       options.onMouseOver ? options.onMouseOver(this) : undefined;
+    this.onMouseOut = () =>
+      options.onMouseOut ? options.onMouseOut(this) : undefined;
   }
 }
 

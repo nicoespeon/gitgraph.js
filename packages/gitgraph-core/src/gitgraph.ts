@@ -62,6 +62,7 @@ export interface GitgraphCommitOptions {
   tag?: string;
   onClick?: (commit: Commit) => void;
   onMouseOver?: (commit: Commit) => void;
+  onMouseOut?: (commit: Commit) => void;
 }
 
 export interface GitgraphBranchOptions {
