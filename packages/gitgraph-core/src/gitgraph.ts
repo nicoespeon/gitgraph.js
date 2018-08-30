@@ -60,6 +60,7 @@ export interface GitgraphCommitOptions {
   style?: CommitStyleOptions;
   innerText?: string;
   tag?: string;
+  onClick?: (commit: Commit) => void;
 }
 
 export interface GitgraphBranchOptions {

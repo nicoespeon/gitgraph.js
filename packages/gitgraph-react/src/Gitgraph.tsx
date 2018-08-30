@@ -71,6 +71,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <g
         key={commit.hashAbbrev}
         transform={`translate(${commit.x}, ${commit.y})`}
+        onClick={commit.onClick}
       >
         {/* Dot */}
         {/*

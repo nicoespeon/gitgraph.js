@@ -12,6 +12,7 @@ export interface CommitOptions {
   hash?: string;
   parents?: string[];
   innerText?: string;
+  onClick?: (commit: Commit) => void;
 }
 
 /**
@@ -134,6 +135,10 @@ export class Commit {
    * List of tags attached (injected by Gitgraph.withRefsAndTags)
    */
   public tags?: string[];
+  /**
+   * Callback to execute on click.
+   */
+  public onClick: () => void;
 
   constructor(options: CommitOptions) {
     // Set author & committer
@@ -168,6 +173,9 @@ export class Commit {
 
     // Set inner text
     this.innerText = options.innerText;
+
+    // Set callbacks
+    this.onClick = () => (options.onClick ? options.onClick(this) : undefined);
   }
 }
 
