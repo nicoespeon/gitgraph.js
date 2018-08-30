@@ -6,6 +6,7 @@ import {
   Branch,
   Coordinate,
   MergeStyle,
+  OrientationsEnum,
 } from "gitgraph-core/lib/index";
 import { toSvgPath } from "gitgraph-core/lib/utils";
 
@@ -139,25 +140,14 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     ));
   }
 
-  // TODO: test on different orientation
-  // TODO: isReverse
+  // TODO: extract arrow logic into its own file
+  // TODO: reverse arrow
   private drawArrow(parent: Commit, commit: Commit) {
     // Delta between left & right (radian)
     const delta = Math.PI / 7;
 
     // Alpha angle between parent & commit (radian)
-    const alpha = Math.atan2(
-      // Angle always start from previous commit Y position:
-      //
-      // x
-      // | \
-      // x  |  <-- path is straight until last commit Y position
-      // |  x
-      // | /
-      // x
-      this.gitgraph.template.commit.spacing,
-      parent.x - commit.x,
-    );
+    const alpha = getAlpha(this.gitgraph, parent, commit);
 
     const commitRadius = commit.style.dot.size;
     const size = this.gitgraph.template.arrow.size!;
@@ -223,6 +213,46 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths, commitMessagesX });
   }
+}
+
+function getAlpha(graph: GitgraphCore, parent: Commit, commit: Commit): number {
+  let alphaY;
+  let alphaX;
+
+  // Angle always start from previous commit Y position:
+  //
+  // x
+  // | \
+  // x  |  <-- path is straight until last commit Y position
+  // |  x
+  // | /
+  // x
+  //
+  // So we need to default to commit spacing.
+  // For horizontal orientation => same with commit X position.
+  switch (graph.orientation) {
+    case OrientationsEnum.Horizontal:
+      alphaY = parent.y - commit.y;
+      alphaX = -graph.template.commit.spacing;
+      break;
+
+    case OrientationsEnum.HorizontalReverse:
+      alphaY = parent.y - commit.y;
+      alphaX = graph.template.commit.spacing;
+      break;
+
+    case OrientationsEnum.VerticalReverse:
+      alphaY = -graph.template.commit.spacing;
+      alphaX = parent.x - commit.x;
+      break;
+
+    default:
+      alphaY = graph.template.commit.spacing;
+      alphaX = parent.x - commit.x;
+      break;
+  }
+
+  return Math.atan2(alphaY, alphaX);
 }
 
 export default Gitgraph;
