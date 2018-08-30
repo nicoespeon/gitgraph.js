@@ -71,7 +71,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <g
         key={commit.hashAbbrev}
         transform={`translate(${commit.x}, ${commit.y})`}
-        onClick={commit.onClick}
       >
         {/* Dot */}
         {/*
@@ -104,7 +103,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           </clipPath>
         </defs>
 
-        <g>
+        <g onClick={commit.onClick} onMouseOver={commit.onMouseOver}>
           <use
             xlinkHref={`#${commit.hash}`}
             clipPath={`url(#clip-${commit.hash})`}
