@@ -151,8 +151,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
     const commitRadius = commit.style.dot.size;
     const size = this.gitgraph.template.arrow.size!;
-    // TODO: offset should be added (change template value)
-    const h = commitRadius - this.gitgraph.template.arrow.offset;
+    const h = commitRadius + this.gitgraph.template.arrow.offset;
 
     // Top
     const x1 = h * Math.cos(alpha);

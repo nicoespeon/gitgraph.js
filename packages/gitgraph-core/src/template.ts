@@ -336,7 +336,7 @@ export const blackArrowTemplate = new Template({
   },
   arrow: {
     size: 16,
-    offset: 2.5,
+    offset: -2.5,
   },
 });
 
