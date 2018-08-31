@@ -133,7 +133,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {/* Arrow */}
         {this.gitgraph.template.arrow.size &&
           commit.parents.map((parentHash) => {
-            // TODO: refactor in commit
             const parent = this.state.commits.find(
               ({ hash }) => hash === parentHash,
             ) as Commit;
@@ -171,7 +170,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
     if (commit.style.message.displayBranch) {
       message += `[${commit.branches![commit.branches!.length - 1]}`;
-      // TODO: create a displayTag. Handle color / font?
       if (commit.tags!.length) {
         message += `, ${commit.tags!.join(", ")}`;
       }

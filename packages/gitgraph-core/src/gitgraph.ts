@@ -388,7 +388,6 @@ export class GitgraphCore {
 
       while (queue.length > 0) {
         const currentHash = queue.pop() as Commit["hash"];
-        // TODO: convert commits to a Map<Commit["hash"], Commit>
         const current = commits.find(
           ({ hash }) => hash === currentHash,
         ) as Commit;
