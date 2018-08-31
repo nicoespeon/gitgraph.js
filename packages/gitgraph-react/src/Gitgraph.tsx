@@ -6,9 +6,8 @@ import {
   Branch,
   Coordinate,
   MergeStyle,
-  OrientationsEnum,
 } from "gitgraph-core/lib/index";
-import { toSvgPath } from "gitgraph-core/lib/utils";
+import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
@@ -144,17 +143,8 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     ));
   }
 
-  // TODO: extract arrow logic into its own file
   private drawArrow(parent: Commit, commit: Commit) {
     const commitRadius = commit.style.dot.size;
-    const size = this.gitgraph.template.arrow.size!;
-    const h = commitRadius + this.gitgraph.template.arrow.offset;
-
-    // Delta between left & right (radian)
-    const delta = Math.PI / 7;
-
-    // Alpha angle between parent & commit (radian)
-    const alpha = getAlpha(this.gitgraph, parent, commit);
 
     // Starting point, relative to commit
     const origin = {
@@ -166,26 +156,10 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         : commitRadius,
     };
 
-    // Top
-    const x1 = h * Math.cos(alpha);
-    const y1 = h * Math.sin(alpha);
-
-    // Bottom right
-    const x2 = (h + size) * Math.cos(alpha - delta);
-    const y2 = (h + size) * Math.sin(alpha - delta);
-
-    // Bottom center
-    const x3 = (h + size / 2) * Math.cos(alpha);
-    const y3 = (h + size / 2) * Math.sin(alpha);
-
-    // Bottom left
-    const x4 = (h + size) * Math.cos(alpha + delta);
-    const y4 = (h + size) * Math.sin(alpha + delta);
-
     return (
       <g transform={`translate(${origin.x}, ${origin.y})`}>
         <path
-          d={`M${x1},${y1} L${x2},${y2} Q${x3},${y3} ${x4},${y4} L${x4},${y4}`}
+          d={arrowSvgPath(this.gitgraph, parent, commit)}
           fill={this.gitgraph.template.arrow.color!}
         />
       </g>
@@ -225,72 +199,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths, commitMessagesX });
   }
-}
-
-function getAlpha(graph: GitgraphCore, parent: Commit, commit: Commit): number {
-  const deltaX = parent.x - commit.x;
-  const deltaY = parent.y - commit.y;
-  const commitSpacing = graph.template.commit.spacing;
-
-  let alphaY;
-  let alphaX;
-
-  // Angle always start from previous commit Y position:
-  //
-  // o
-  // ↑ ↖ ︎
-  // o  |  <-- path is straight until last commit Y position
-  // ↑  o
-  // | ↗︎
-  // o
-  //
-  // So we need to default to commit spacing.
-  // For horizontal orientation => same with commit X position.
-  switch (graph.orientation) {
-    case OrientationsEnum.Horizontal:
-      alphaY = deltaY;
-      alphaX = -commitSpacing;
-      break;
-
-    case OrientationsEnum.HorizontalReverse:
-      alphaY = deltaY;
-      alphaX = commitSpacing;
-      break;
-
-    case OrientationsEnum.VerticalReverse:
-      alphaY = -commitSpacing;
-      alphaX = deltaX;
-      break;
-
-    default:
-      alphaY = commitSpacing;
-      alphaX = deltaX;
-      break;
-  }
-
-  if (graph.reverseArrow) {
-    alphaY *= -1;
-    alphaX *= -1;
-
-    // If arrow is reverse, the previous commit position is considered
-    // the same on the straight part of the curved path.
-    //
-    // o
-    // ↓ \
-    // o  ↓  <-- arrow is like previous commit was on same X position
-    // |  o
-    // ↓ ↙︎
-    // o
-    //
-    // For horizontal orientation => same with commit Y position.
-    if (graph.isVertical) {
-      if (Math.abs(deltaY) > commitSpacing) alphaX = 0;
-    } else {
-      if (Math.abs(deltaX) > commitSpacing) alphaY = 0;
-    }
-  }
-
-  return Math.atan2(alphaY, alphaX);
 }
 
 export default Gitgraph;

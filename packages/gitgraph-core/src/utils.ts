@@ -1,5 +1,5 @@
 import { Commit } from "./commit";
-import { Coordinate } from "./gitgraph";
+import { Coordinate, GitgraphCore, OrientationsEnum } from "./gitgraph";
 
 /**
  * Omit some keys from an original type.
@@ -126,4 +126,111 @@ export function toSvgPath(
           .slice(1),
     )
     .join(" ");
+}
+
+/**
+ * Return a string ready to use in `svg.path.d` to draw an arrow from params.
+ *
+ * @param graph Graph context
+ * @param parent Parent commit of the target commit
+ * @param commit Target commit
+ */
+export function arrowSvgPath(
+  graph: GitgraphCore,
+  parent: Commit,
+  commit: Commit,
+): string {
+  const commitRadius = commit.style.dot.size;
+  const size = graph.template.arrow.size!;
+  const h = commitRadius + graph.template.arrow.offset;
+
+  // Delta between left & right (radian)
+  const delta = Math.PI / 7;
+
+  // Alpha angle between parent & commit (radian)
+  const alpha = getAlpha(graph, parent, commit);
+
+  // Top
+  const x1 = h * Math.cos(alpha);
+  const y1 = h * Math.sin(alpha);
+
+  // Bottom right
+  const x2 = (h + size) * Math.cos(alpha - delta);
+  const y2 = (h + size) * Math.sin(alpha - delta);
+
+  // Bottom center
+  const x3 = (h + size / 2) * Math.cos(alpha);
+  const y3 = (h + size / 2) * Math.sin(alpha);
+
+  // Bottom left
+  const x4 = (h + size) * Math.cos(alpha + delta);
+  const y4 = (h + size) * Math.sin(alpha + delta);
+
+  return `M${x1},${y1} L${x2},${y2} Q${x3},${y3} ${x4},${y4} L${x4},${y4}`;
+}
+
+function getAlpha(graph: GitgraphCore, parent: Commit, commit: Commit): number {
+  const deltaX = parent.x - commit.x;
+  const deltaY = parent.y - commit.y;
+  const commitSpacing = graph.template.commit.spacing;
+
+  let alphaY;
+  let alphaX;
+
+  // Angle always start from previous commit Y position:
+  //
+  // o
+  // ↑ ↖ ︎
+  // o  |  <-- path is straight until last commit Y position
+  // ↑  o
+  // | ↗︎
+  // o
+  //
+  // So we need to default to commit spacing.
+  // For horizontal orientation => same with commit X position.
+  switch (graph.orientation) {
+    case OrientationsEnum.Horizontal:
+      alphaY = deltaY;
+      alphaX = -commitSpacing;
+      break;
+
+    case OrientationsEnum.HorizontalReverse:
+      alphaY = deltaY;
+      alphaX = commitSpacing;
+      break;
+
+    case OrientationsEnum.VerticalReverse:
+      alphaY = -commitSpacing;
+      alphaX = deltaX;
+      break;
+
+    default:
+      alphaY = commitSpacing;
+      alphaX = deltaX;
+      break;
+  }
+
+  if (graph.reverseArrow) {
+    alphaY *= -1;
+    alphaX *= -1;
+
+    // If arrow is reverse, the previous commit position is considered
+    // the same on the straight part of the curved path.
+    //
+    // o
+    // ↓ \
+    // o  ↓  <-- arrow is like previous commit was on same X position
+    // |  o
+    // ↓ ↙︎
+    // o
+    //
+    // For horizontal orientation => same with commit Y position.
+    if (graph.isVertical) {
+      if (Math.abs(deltaY) > commitSpacing) alphaX = 0;
+    } else {
+      if (Math.abs(deltaX) > commitSpacing) alphaY = 0;
+    }
+  }
+
+  return Math.atan2(alphaY, alphaX);
 }
