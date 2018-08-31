@@ -29,7 +29,6 @@
   "jsnext:main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
-    "cm": "git-cz",
     "lint": "tslint --fix src/**/*",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -62,8 +61,6 @@
     "@types/storybook__react": "^3.0.7",
     "babel-core": "^6.26.0",
     "browserify": "^14.5.0",
-    "commitizen": "^2.9.6",
-    "cz-conventional-changelog": "^2.1.0",
     "jest": "^21.2.1",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
@@ -74,11 +71,6 @@
     "tslint-config-prettier": "1.13.0",
     "typescript": "^2.8.1",
     "uglify-es": "^3.3.9"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
   },
   "jest": {
     "transform": {

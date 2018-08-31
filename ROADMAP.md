@@ -10,7 +10,6 @@
 - [rollup](https://rollupjs.org/) for the bundling with a [TypeScript](https://www.typescriptlang.org/) codebase
 - [tslint](https://palantir.github.io/tslint/) to lint our codebase
 - [husky](https://github.com/typicode/husky) with [lint-staged](https://github.com/okonet/lint-staged) to lint code automatically on commit hooks
-- [commitizen](http://commitizen.github.io/cz-cli/) to ensure consistent commits and generate automatic changelogs
 - [jest](http://facebook.github.io/jest/) for a delightful test environment
 
 ## 🗂 Repositories
