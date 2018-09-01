@@ -125,6 +125,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             alignmentBaseline="central"
             fill={commit.style.message.color}
             style={{ font: commit.style.message.font }}
+            onClick={commit.onMessageClick}
           >
             {this.getMessage(commit)}
           </text>

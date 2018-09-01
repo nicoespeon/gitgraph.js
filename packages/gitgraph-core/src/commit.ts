@@ -13,6 +13,7 @@ export interface CommitOptions {
   parents?: string[];
   innerText?: string;
   onClick?: (commit: Commit) => void;
+  onMessageClick?: (commit: Commit) => void;
   onMouseOver?: (commit: Commit) => void;
   onMouseOut?: (commit: Commit) => void;
 }
@@ -142,6 +143,10 @@ export class Commit {
    */
   public onClick: () => void;
   /**
+   * Callback to execute on click on the commit message.
+   */
+  public onMessageClick: () => void;
+  /**
    * Callback to execute on mouse over.
    */
   public onMouseOver: () => void;
@@ -186,6 +191,8 @@ export class Commit {
 
     // Set callbacks
     this.onClick = () => (options.onClick ? options.onClick(this) : undefined);
+    this.onMessageClick = () =>
+      options.onMessageClick ? options.onMessageClick(this) : undefined;
     this.onMouseOver = () =>
       options.onMouseOver ? options.onMouseOver(this) : undefined;
     this.onMouseOut = () =>
