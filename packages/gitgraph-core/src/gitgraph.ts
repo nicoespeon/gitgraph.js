@@ -1,4 +1,4 @@
-import Joi from "joi";
+import * as yup from "yup";
 
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
@@ -302,28 +302,28 @@ export class GitgraphCore {
    */
   public import(data: any) {
     // Validate `data` format.
-    const schema = Joi.array().items(
-      Joi.object({
-        refs: Joi.array(),
-        hash: Joi.string(),
-        hashAbbrev: Joi.string(),
-        parents: Joi.array().items(Joi.string()),
-        parentsAbbrev: Joi.array().items(Joi.string()),
-        author: Joi.object({
-          name: Joi.string(),
-          email: Joi.string(),
+    const schema = yup.array().of(
+      yup.object({
+        refs: yup.array(),
+        hash: yup.string(),
+        hashAbbrev: yup.string(),
+        parents: yup.array().of(yup.string()),
+        parentsAbbrev: yup.array().of(yup.string()),
+        author: yup.object({
+          name: yup.string(),
+          email: yup.string(),
         }),
-        subject: Joi.string(),
-        body: Joi.string().allow(""),
+        subject: yup.string(),
+        body: yup.string(),
       }),
     );
-    const { error, value } = Joi.validate(data, schema, { allowUnknown: true });
-    if (error) throw error;
+
+    const commits = schema.validateSync(data) as Commit[];
 
     // Use validated `value`.
     this.clear();
 
-    this.commits = value.map((commit: Commit) => {
+    this.commits = commits.map((commit) => {
       const TAG_PREFIX = "tag: ";
       const tags = commit.refs
         .map((ref) => ref.split(TAG_PREFIX))
