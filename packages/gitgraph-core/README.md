@@ -43,7 +43,7 @@ file.
 
 Please note that `examples/index.html` is the default file for testing ;)
 
-#### test code - `npm test` | `npm test:watch`
+#### test code - `npm test` | `npm run test:watch`
 
 Run unit tests with [Jest](https://facebook.github.io/jest/)
 
