@@ -28,8 +28,6 @@
   "scripts": {
     "lint": "tslint src/**/*",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
     "example:default": "ts-node examples/default.ts",
     "example:branches": "ts-node examples/branches.ts"
   },
@@ -39,27 +37,11 @@
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.1",
     "@types/lodash": "^4.14.110",
     "@types/node": "^9.4.6",
-    "jest": "^23.1.0",
-    "ts-jest": "^21.2.3",
     "ts-node": "^6.1.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "1.13.0",
     "typescript": "^2.8.1"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json"
-    ]
   }
 }

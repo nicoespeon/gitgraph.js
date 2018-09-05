@@ -24,14 +24,18 @@
     "build": "lerna run build",
     "watch": "lerna run watch",
     "pretest": "npm run build",
-    "test": "lerna run test",
+    "test": "jest",
     "clean": "lerna clean"
   },
   "devDependencies": {
+    "@types/jest": "23.1.4",
     "husky": "1.0.0-rc.12",
+    "jest": "23.3.0",
     "lerna": "^2.5.1",
     "prettier": "1.13.7",
-    "pretty-quick": "1.6.0"
+    "pretty-quick": "1.6.0",
+    "ts-jest": "23.0.0",
+    "typescript": "2.9.2"
   },
   "workspaces": [
     "packages/*"
