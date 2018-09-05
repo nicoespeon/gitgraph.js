@@ -1,5 +1,4 @@
-import "jest";
-import { GitgraphCore, Commit, GitgraphOptions } from "../index";
+import { GitgraphCore } from "../index";
 
 describe("Gitgraph.subscribe", () => {
   let gitgraph: GitgraphCore;

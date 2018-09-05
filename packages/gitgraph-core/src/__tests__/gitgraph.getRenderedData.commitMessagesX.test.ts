@@ -1,4 +1,3 @@
-import "jest";
 import { GitgraphCore } from "../gitgraph";
 import { Template } from "../template";
 

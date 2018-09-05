@@ -1,7 +1,6 @@
-import "jest";
-import { GitgraphCore } from "../";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { GitgraphCore } from "../gitgraph";
 import { Template } from "../template";
 
 describe("Gitgraph.import", () => {

@@ -1,4 +1,3 @@
-import "jest";
 import { GitgraphCore, TemplateEnum, metroTemplate } from "../index";
 
 describe("Gitgraph.constructor", () => {

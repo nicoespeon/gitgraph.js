@@ -1,4 +1,3 @@
-import "jest";
 import Commit from "../commit";
 import Refs from "../refs";
 

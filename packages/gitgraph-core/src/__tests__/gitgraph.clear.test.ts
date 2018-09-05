@@ -1,5 +1,4 @@
-import "jest";
-import { GitgraphCore, Commit } from "../index";
+import { GitgraphCore } from "../index";
 
 describe("Gitgraph.clear", () => {
   it("should clear everything", () => {

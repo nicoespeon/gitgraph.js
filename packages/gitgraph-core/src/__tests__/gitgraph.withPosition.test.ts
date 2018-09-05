@@ -1,7 +1,4 @@
-import "jest";
 import { GitgraphCore, OrientationsEnum, ModeEnum } from "../index";
-import { readFileSync } from "fs";
-import { join } from "path";
 
 describe("Gitgraph.withPosition", () => {
   it("should deal with 3 straight commits", () => {

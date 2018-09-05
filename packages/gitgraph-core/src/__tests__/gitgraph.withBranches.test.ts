@@ -1,5 +1,4 @@
-import "jest";
-import { GitgraphCore, Commit } from "../index";
+import { GitgraphCore } from "../index";
 
 describe("Gitgraph.withBranches", () => {
   it("should deal with one branch (no merge)", () => {
