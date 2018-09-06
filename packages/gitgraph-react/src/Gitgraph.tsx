@@ -6,8 +6,10 @@ import {
   Branch,
   Coordinate,
   MergeStyle,
+  Mode,
 } from "gitgraph-core/lib/index";
 import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
+import Tooltip from "./Tooltip";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
@@ -18,6 +20,7 @@ export interface GitgraphState {
   commits: Commit[];
   branchesPaths: Map<Branch, Coordinate[][]>;
   commitMessagesX: number;
+  currentCommitOver: Commit | null;
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -29,7 +32,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   constructor(props: GitgraphProps) {
     super(props);
-    this.state = { commits: [], branchesPaths: new Map(), commitMessagesX: 0 };
+    this.state = {
+      commits: [],
+      branchesPaths: new Map(),
+      commitMessagesX: 0,
+      currentCommitOver: null,
+    };
     this.gitgraph = new GitgraphCore(props.options);
     this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
   }
@@ -104,8 +112,11 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
         <g
           onClick={commit.onClick}
-          onMouseOver={commit.onMouseOver}
-          onMouseOut={commit.onMouseOut}
+          onMouseOver={() => this.onMouseOver(commit)}
+          onMouseOut={() => {
+            this.setState({ currentCommitOver: null });
+            commit.onMouseOut();
+          }}
         >
           <use
             xlinkHref={`#${commit.hash}`}
@@ -126,6 +137,9 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             </text>
           )}
         </g>
+
+        {/* Tooltip */}
+        {this.state.currentCommitOver === commit && <Tooltip commit={commit} />}
 
         {/* Message */}
         {commit.style.message.display && (
@@ -151,6 +165,17 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           })}
       </g>
     ));
+  }
+
+  private onMouseOver(commit: Commit): void {
+    if (
+      this.gitgraph.mode === Mode.Compact &&
+      commit.style.shouldDisplayTooltipsInCompactMode
+    ) {
+      this.setState({ currentCommitOver: commit });
+    }
+
+    commit.onMouseOver();
   }
 
   private drawArrow(parent: Commit, commit: Commit) {
