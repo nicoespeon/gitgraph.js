@@ -137,7 +137,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             style={{ font: commit.style.message.font }}
             onClick={commit.onMessageClick}
           >
-            {this.getMessage(commit)}
+            {getMessage(commit)}
           </text>
         )}
 
@@ -176,30 +176,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private getMessage(commit: Commit): string {
-    let message = "";
-
-    if (commit.style.message.displayBranch) {
-      message += `[${commit.branches![commit.branches!.length - 1]}`;
-      if (commit.tags!.length) {
-        message += `, ${commit.tags!.join(", ")}`;
-      }
-      message += `] `;
-    }
-
-    if (commit.style.message.displayHash) {
-      message += `${commit.hashAbbrev} `;
-    }
-
-    message += commit.subject;
-
-    if (commit.style.message.displayAuthor) {
-      message += ` - ${commit.author.name} <${commit.author.email}>`;
-    }
-
-    return message;
-  }
-
   private onGitgraphCoreRender() {
     const {
       commits,
@@ -208,6 +184,33 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths, commitMessagesX });
   }
+}
+
+// For now, this piece of logic is here.
+// But it might be relevant to move this back to gitgraph-core.
+// Ideally, it would be a method of Commit: `commit.message()`.
+function getMessage(commit: Commit): string {
+  let message = "";
+
+  if (commit.style.message.displayBranch) {
+    message += `[${commit.branches![commit.branches!.length - 1]}`;
+    if (commit.tags!.length) {
+      message += `, ${commit.tags!.join(", ")}`;
+    }
+    message += `] `;
+  }
+
+  if (commit.style.message.displayHash) {
+    message += `${commit.hashAbbrev} `;
+  }
+
+  message += commit.subject;
+
+  if (commit.style.message.displayAuthor) {
+    message += ` - ${commit.author.name} <${commit.author.email}>`;
+  }
+
+  return message;
 }
 
 export default Gitgraph;
