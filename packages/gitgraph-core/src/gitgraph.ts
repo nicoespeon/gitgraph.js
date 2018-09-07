@@ -4,7 +4,7 @@ import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
 import {
   Template,
-  TemplateEnum,
+  TemplateName,
   CommitStyleOptions,
   BranchStyleOptions,
   getTemplate,
@@ -12,13 +12,13 @@ import {
 import Refs from "./refs";
 import { booleanOptionOr, numberOptionOr, pick } from "./utils";
 
-export enum OrientationsEnum {
+export enum Orientation {
   VerticalReverse = "vertical-reverse",
   Horizontal = "horizontal",
   HorizontalReverse = "horizontal-reverse",
 }
 
-export enum ModeEnum {
+export enum Mode {
   Compact = "compact",
 }
 
@@ -32,12 +32,12 @@ interface InternalCoordinate extends Coordinate {
 }
 
 export interface GitgraphOptions {
-  template?: TemplateEnum | Template;
-  orientation?: OrientationsEnum;
+  template?: TemplateName | Template;
+  orientation?: Orientation;
   reverseArrow?: boolean;
   initCommitOffsetX?: number;
   initCommitOffsetY?: number;
-  mode?: ModeEnum;
+  mode?: Mode;
   author?: string;
   commitMessage?: string;
 }
@@ -82,12 +82,12 @@ export interface GitgraphBranchOptions {
 }
 
 export class GitgraphCore {
-  public orientation?: OrientationsEnum;
+  public orientation?: Orientation;
   public isVertical: boolean;
   public reverseArrow: boolean;
   public initCommitOffsetX: number;
   public initCommitOffsetY: number;
-  public mode?: ModeEnum;
+  public mode?: Mode;
   public author: string;
   public commitMessage: string;
   public template: Template;
@@ -113,7 +113,7 @@ export class GitgraphCore {
     this.orientation = options.orientation;
     this.isVertical = [
       undefined, // default value = Vertical
-      OrientationsEnum.VerticalReverse,
+      Orientation.VerticalReverse,
     ].includes(this.orientation);
     this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
     this.initCommitOffsetX = numberOptionOr(
@@ -423,7 +423,7 @@ export class GitgraphCore {
     // Attribute a row index to each commit
     commits.forEach(
       (commit, i): any => {
-        if (this.mode === ModeEnum.Compact) {
+        if (this.mode === Mode.Compact) {
           // Compact mode
           if (i === 0) return this.rows.set(commit.hash, i);
           const parentRow: number = this.rows.get(commit.parents[0]) as number;
@@ -515,21 +515,21 @@ export class GitgraphCore {
             this.template.commit.spacing * (this.maxRow - 1 - row),
         };
 
-      case OrientationsEnum.VerticalReverse:
+      case Orientation.VerticalReverse:
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
           y: this.initCommitOffsetY + this.template.commit.spacing * row,
         };
 
-      case OrientationsEnum.Horizontal:
+      case Orientation.Horizontal:
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.commit.spacing * row,
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         };
 
-      case OrientationsEnum.HorizontalReverse:
+      case Orientation.HorizontalReverse:
         return {
           ...commit,
           x:

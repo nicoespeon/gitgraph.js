@@ -1,4 +1,4 @@
-import { GitgraphCore, TemplateEnum, metroTemplate } from "../index";
+import { GitgraphCore, TemplateName, metroTemplate } from "../index";
 
 describe("Gitgraph.constructor", () => {
   it("should have the correct default options", () => {
@@ -16,7 +16,7 @@ describe("Gitgraph.constructor", () => {
     const gitgraph = new GitgraphCore({
       author: "Fabien BERNARD <fabien0102@gmail.com>",
       reverseArrow: true,
-      template: TemplateEnum.Metro,
+      template: TemplateName.Metro,
     });
 
     expect(gitgraph).toMatchObject({

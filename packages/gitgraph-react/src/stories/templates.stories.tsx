@@ -1,23 +1,23 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, templateExtend, TemplateEnum } from "../Gitgraph";
+import { Gitgraph, templateExtend, TemplateName } from "../Gitgraph";
 
-const templateWithoutHash = templateExtend(TemplateEnum.Metro, {
+const templateWithoutHash = templateExtend(TemplateName.Metro, {
   commit: {
     message: {
       displayHash: false,
     },
   },
 });
-const templateWithoutAuthor = templateExtend(TemplateEnum.Metro, {
+const templateWithoutAuthor = templateExtend(TemplateName.Metro, {
   commit: {
     message: {
       displayAuthor: false,
     },
   },
 });
-const templateWithoutBranch = templateExtend(TemplateEnum.Metro, {
+const templateWithoutBranch = templateExtend(TemplateName.Metro, {
   commit: {
     message: {
       displayBranch: false,
@@ -27,7 +27,7 @@ const templateWithoutBranch = templateExtend(TemplateEnum.Metro, {
 
 storiesOf("Gitgraph templates", module)
   .add("metro", () => (
-    <Gitgraph options={{ template: TemplateEnum.Metro }}>
+    <Gitgraph options={{ template: TemplateName.Metro }}>
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")
@@ -40,7 +40,7 @@ storiesOf("Gitgraph templates", module)
     </Gitgraph>
   ))
   .add("blackArrow", () => (
-    <Gitgraph options={{ template: TemplateEnum.BlackArrow }}>
+    <Gitgraph options={{ template: TemplateName.BlackArrow }}>
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")
@@ -55,7 +55,7 @@ storiesOf("Gitgraph templates", module)
   ))
   .add("blackArrow with reverse arrow", () => (
     <Gitgraph
-      options={{ template: TemplateEnum.BlackArrow, reverseArrow: true }}
+      options={{ template: TemplateName.BlackArrow, reverseArrow: true }}
     >
       {(gitgraph) => {
         const master = gitgraph

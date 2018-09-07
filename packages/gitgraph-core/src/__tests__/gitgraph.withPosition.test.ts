@@ -1,4 +1,4 @@
-import { GitgraphCore, OrientationsEnum, ModeEnum } from "../index";
+import { GitgraphCore, Orientation, Mode } from "../index";
 
 describe("Gitgraph.withPosition", () => {
   it("should deal with 3 straight commits", () => {
@@ -31,7 +31,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with 3 straight commits (reverse)", () => {
     const gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.VerticalReverse,
+      orientation: Orientation.VerticalReverse,
     });
     gitgraph
       .commit("one")
@@ -61,7 +61,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with 3 straight commits (horizontal)", () => {
     const gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.Horizontal,
+      orientation: Orientation.Horizontal,
     });
     gitgraph
       .commit("one")
@@ -91,7 +91,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with 3 straight commits (horizontal-reverse)", () => {
     const gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.HorizontalReverse,
+      orientation: Orientation.HorizontalReverse,
     });
     gitgraph
       .commit("one")
@@ -257,7 +257,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with one branch (with merge) (vertical-reverse)", () => {
     const gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.VerticalReverse,
+      orientation: Orientation.VerticalReverse,
     });
 
     const master = gitgraph.branch("master");
@@ -306,7 +306,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with one branch (with merge) (horizontal)", () => {
     const gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.Horizontal,
+      orientation: Orientation.Horizontal,
     });
 
     const master = gitgraph.branch("master");
@@ -355,7 +355,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with one branch (with merge) (horizontal-reverse)", () => {
     const gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.HorizontalReverse,
+      orientation: Orientation.HorizontalReverse,
     });
 
     const master = gitgraph.branch("master");
@@ -485,9 +485,9 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with the compact mode (simple case)", () => {
     const gitgraph = new GitgraphCore({
-      mode: ModeEnum.Compact,
+      mode: Mode.Compact,
       // Orientate the graph from top to bottom to simplify tests.
-      orientation: OrientationsEnum.VerticalReverse,
+      orientation: Orientation.VerticalReverse,
     });
 
     const master = gitgraph
@@ -572,7 +572,7 @@ describe("Gitgraph.withPosition", () => {
 
   it("should deal with the compact mode (complex case)", () => {
     const gitgraph = new GitgraphCore({
-      mode: ModeEnum.Compact,
+      mode: Mode.Compact,
     });
 
     const master = gitgraph.branch("master");

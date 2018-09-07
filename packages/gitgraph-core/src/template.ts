@@ -361,7 +361,7 @@ export const metroTemplate = new Template({
   },
 });
 
-export enum TemplateEnum {
+export enum TemplateName {
   Metro = "metro",
   BlackArrow = "blackarrow",
 }
@@ -373,7 +373,7 @@ export enum TemplateEnum {
  * @param options Template options
  */
 export function templateExtend(
-  selectedTemplate: TemplateEnum,
+  selectedTemplate: TemplateName,
   options: TemplateOptions,
 ): Template {
   return merge({}, getTemplate(selectedTemplate), options);
@@ -384,13 +384,13 @@ export function templateExtend(
  *
  * @param template Selected template name, or instance.
  */
-export function getTemplate(template?: TemplateEnum | Template): Template {
+export function getTemplate(template?: TemplateName | Template): Template {
   if (!template) return metroTemplate;
 
   if (typeof template === "string") {
     return {
-      [TemplateEnum.BlackArrow]: blackArrowTemplate,
-      [TemplateEnum.Metro]: metroTemplate,
+      [TemplateName.BlackArrow]: blackArrowTemplate,
+      [TemplateName.Metro]: metroTemplate,
     }[template];
   }
 

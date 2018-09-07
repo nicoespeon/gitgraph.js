@@ -1,8 +1,8 @@
 import {
   GitgraphCore,
   metroTemplate,
-  TemplateEnum,
-  OrientationsEnum,
+  TemplateName,
+  Orientation,
 } from "../index";
 
 describe("Gitgraph.render.branchesPaths", () => {
@@ -240,7 +240,7 @@ describe("Gitgraph.render.branchesPaths", () => {
   });
 
   it("should deal with horizontal orientation", () => {
-    gitgraph = new GitgraphCore({ orientation: OrientationsEnum.Horizontal });
+    gitgraph = new GitgraphCore({ orientation: Orientation.Horizontal });
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
@@ -275,7 +275,7 @@ describe("Gitgraph.render.branchesPaths", () => {
 
   it("should deal with horizontal-reverse orientation", () => {
     gitgraph = new GitgraphCore({
-      orientation: OrientationsEnum.HorizontalReverse,
+      orientation: Orientation.HorizontalReverse,
     });
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
@@ -344,7 +344,7 @@ describe("Gitgraph.render.branchesPaths", () => {
 
   it("should have the correct computed color for BlackArrow template", () => {
     const gitgraphBlackArrow = new GitgraphCore({
-      template: TemplateEnum.BlackArrow,
+      template: TemplateName.BlackArrow,
     });
     const master = gitgraphBlackArrow.branch("master").commit("Initial commit");
     const develop = gitgraphBlackArrow.branch("dev");

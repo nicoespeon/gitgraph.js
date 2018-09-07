@@ -5,8 +5,8 @@ import {
   BranchOptions,
   metroTemplate,
 } from "../index";
-import { OrientationsEnum, ModeEnum } from "../gitgraph";
-import { TemplateEnum, blackArrowTemplate } from "../template";
+import { Orientation, Mode } from "../gitgraph";
+import { TemplateName, blackArrowTemplate } from "../template";
 const copy = (obj) => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {
@@ -210,7 +210,7 @@ describe("Branch", () => {
 
       it("should have the color depending of the branch (blackarrow theme)", () => {
         const gitgraphBlackArrow = new GitgraphCore({
-          template: TemplateEnum.BlackArrow,
+          template: TemplateName.BlackArrow,
         });
         gitgraphBlackArrow.branch("master").commit("one");
         gitgraphBlackArrow.branch("dev").commit("two");
@@ -276,7 +276,7 @@ describe("Branch", () => {
 
       it("should hide commit message if orientation is horizontal", () => {
         const gitgraphHorizontal = new GitgraphCore({
-          orientation: OrientationsEnum.Horizontal,
+          orientation: Orientation.Horizontal,
         });
         gitgraphHorizontal.commit();
 
@@ -288,7 +288,7 @@ describe("Branch", () => {
 
       it("should hide commit message if orientation is horizontal-reverse", () => {
         const gitgraphHorizontalReverse = new GitgraphCore({
-          orientation: OrientationsEnum.HorizontalReverse,
+          orientation: Orientation.HorizontalReverse,
         });
         gitgraphHorizontalReverse.commit();
 
@@ -300,7 +300,7 @@ describe("Branch", () => {
 
       it("should hide commit message if mode is compact", () => {
         const gitgraphCompact = new GitgraphCore({
-          mode: ModeEnum.Compact,
+          mode: Mode.Compact,
         });
         gitgraphCompact.commit();
 

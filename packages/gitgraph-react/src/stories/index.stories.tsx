@@ -1,7 +1,7 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, ModeEnum } from "../Gitgraph";
+import { Gitgraph, Mode } from "../Gitgraph";
 
 storiesOf("Gitgraph", module)
   .add("default", () => (
@@ -91,7 +91,7 @@ storiesOf("Gitgraph", module)
     </Gitgraph>
   ))
   .add("compact mode", () => (
-    <Gitgraph options={{ mode: ModeEnum.Compact }}>
+    <Gitgraph options={{ mode: Mode.Compact }}>
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")

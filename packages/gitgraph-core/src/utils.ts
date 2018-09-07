@@ -1,5 +1,5 @@
 import { Commit } from "./commit";
-import { Coordinate, GitgraphCore, OrientationsEnum } from "./gitgraph";
+import { Coordinate, GitgraphCore, Orientation } from "./gitgraph";
 
 /**
  * Omit some keys from an original type.
@@ -189,17 +189,17 @@ function getAlpha(graph: GitgraphCore, parent: Commit, commit: Commit): number {
   // So we need to default to commit spacing.
   // For horizontal orientation => same with commit X position.
   switch (graph.orientation) {
-    case OrientationsEnum.Horizontal:
+    case Orientation.Horizontal:
       alphaY = deltaY;
       alphaX = -commitSpacing;
       break;
 
-    case OrientationsEnum.HorizontalReverse:
+    case Orientation.HorizontalReverse:
       alphaY = deltaY;
       alphaX = commitSpacing;
       break;
 
-    case OrientationsEnum.VerticalReverse:
+    case Orientation.VerticalReverse:
       alphaY = -commitSpacing;
       alphaX = deltaX;
       break;

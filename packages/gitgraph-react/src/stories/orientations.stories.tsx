@@ -1,11 +1,11 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, OrientationsEnum } from "../Gitgraph";
+import { Gitgraph, Orientation } from "../Gitgraph";
 
 storiesOf("Gitgraph orientations", module)
   .add("vertical reverse", () => (
-    <Gitgraph options={{ orientation: OrientationsEnum.VerticalReverse }}>
+    <Gitgraph options={{ orientation: Orientation.VerticalReverse }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -17,7 +17,7 @@ storiesOf("Gitgraph orientations", module)
     </Gitgraph>
   ))
   .add("horizontal", () => (
-    <Gitgraph options={{ orientation: OrientationsEnum.Horizontal }}>
+    <Gitgraph options={{ orientation: Orientation.Horizontal }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -30,7 +30,7 @@ storiesOf("Gitgraph orientations", module)
     </Gitgraph>
   ))
   .add("horizontal reverse", () => (
-    <Gitgraph options={{ orientation: OrientationsEnum.HorizontalReverse }}>
+    <Gitgraph options={{ orientation: Orientation.HorizontalReverse }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");

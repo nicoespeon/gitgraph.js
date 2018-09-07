@@ -1,8 +1,8 @@
-import { templateExtend, TemplateEnum, metroTemplate } from "../template";
+import { templateExtend, TemplateName, metroTemplate } from "../template";
 
 describe("templateExtend", () => {
   it("should return the given template if we pass no new options", () => {
-    const extendedTemplate = templateExtend(TemplateEnum.Metro, {});
+    const extendedTemplate = templateExtend(TemplateName.Metro, {});
 
     expect(extendedTemplate).toEqual(metroTemplate);
   });
@@ -20,7 +20,7 @@ describe("templateExtend", () => {
       },
     };
 
-    const extendedTemplate = templateExtend(TemplateEnum.Metro, options);
+    const extendedTemplate = templateExtend(TemplateName.Metro, options);
 
     const expectedTemplate = expect.objectContaining({
       colors: ["red", "green", "blue"],
