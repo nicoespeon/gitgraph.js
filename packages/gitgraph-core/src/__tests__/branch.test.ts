@@ -4,9 +4,12 @@ import {
   Commit,
   BranchOptions,
   metroTemplate,
+  Orientation,
+  Mode,
+  TemplateName,
+  blackArrowTemplate,
 } from "../index";
-import { Orientation, Mode } from "../gitgraph";
-import { TemplateName, blackArrowTemplate } from "../template";
+
 const copy = (obj) => JSON.parse(JSON.stringify(obj));
 
 describe("Branch", () => {

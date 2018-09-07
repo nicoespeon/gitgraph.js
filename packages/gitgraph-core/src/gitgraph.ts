@@ -11,12 +11,7 @@ import {
 } from "./template";
 import Refs from "./refs";
 import { booleanOptionOr, numberOptionOr, pick } from "./utils";
-
-export enum Orientation {
-  VerticalReverse = "vertical-reverse",
-  Horizontal = "horizontal",
-  HorizontalReverse = "horizontal-reverse",
-}
+import { Orientation } from "./orientation";
 
 export enum Mode {
   Compact = "compact",

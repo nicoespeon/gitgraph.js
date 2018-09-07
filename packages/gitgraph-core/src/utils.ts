@@ -1,5 +1,6 @@
 import { Commit } from "./commit";
-import { Coordinate, GitgraphCore, Orientation } from "./gitgraph";
+import { Coordinate, GitgraphCore } from "./gitgraph";
+import { Orientation } from "./orientation";
 
 /**
  * Omit some keys from an original type.
