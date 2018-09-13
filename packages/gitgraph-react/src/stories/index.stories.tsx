@@ -121,4 +121,14 @@ storiesOf("Gitgraph", module)
         master.merge(feat2);
       }}
     </Gitgraph>
+  ))
+  .add("commit inner text", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        gitgraph
+          .commit({ subject: "Initial commit", innerText: "1" })
+          .commit({ subject: "Another commit", innerText: "2" })
+          .commit({ subject: "Do something crazy", innerText: "🙀" });
+      }}
+    </Gitgraph>
   ));

@@ -115,6 +115,16 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
               commit.style.dot.strokeWidth && commit.style.dot.strokeWidth * 2
             }
           />
+          {commit.innerText && (
+            <text
+              alignmentBaseline="central"
+              textAnchor="middle"
+              x={commit.style.dot.size}
+              y={commit.style.dot.size}
+            >
+              {commit.innerText}
+            </text>
+          )}
         </g>
 
         {/* Message */}
