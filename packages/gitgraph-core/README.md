@@ -1,8 +1,6 @@
 ![gitgraph.js](/assets/logo/gitgraph-logo.png)
 
-[![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-===========
+# [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js)
 
 A JavaScript library to draw pretty git graphs in the browser.
 
@@ -28,13 +26,12 @@ issue](https://github.com/nicoespeon/gitgraph.js/issues).
 Please have a look at the [Issue Guidelines][] from [Nicolas Gallagher][] before
 doing so.
 
-[Issue Guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
-[Nicolas Gallagher]: https://github.com/necolas
+[issue guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
+[nicolas gallagher]: https://github.com/necolas
 
 ## Documentation
 
 The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
-
 
 ### Available commands
 
@@ -46,7 +43,7 @@ file.
 
 Please note that `examples/index.html` is the default file for testing ;)
 
-#### test code - `npm test` | `npm test:watch`
+#### test code - `npm test` | `npm run test:watch`
 
 Run unit tests with [Jest](https://facebook.github.io/jest/)
 
@@ -84,6 +81,6 @@ And constructed with the following guidelines:
 
 Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][]
 
-[MIT license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
+[mit license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
 
 [> What does that mean?](http://choosealicense.com/licenses/mit/)

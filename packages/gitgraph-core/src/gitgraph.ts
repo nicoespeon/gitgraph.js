@@ -1,36 +1,46 @@
+import * as yup from "yup";
+
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit from "./commit";
-import { Template, metroTemplate, blackArrowTemplate, CommitStyleOptions, BranchStyleOptions } from "./template";
+import {
+  Template,
+  TemplateName,
+  CommitStyleOptions,
+  BranchStyleOptions,
+  getTemplate,
+} from "./template";
 import Refs from "./refs";
-import { booleanOptionOr, numberOptionOr } from "./utils";
+import { booleanOptionOr, numberOptionOr, pick } from "./utils";
+import { Orientation } from "./orientation";
 
-export enum OrientationsEnum {
-  VerticalReverse = "vertical-reverse",
-  Horizontal = "horizontal",
-  HorizontalReverse = "horizontal-reverse",
-}
-
-export enum ModeEnum {
+export enum Mode {
   Compact = "compact",
 }
 
-export enum TemplateEnum {
-  Metro = "metro",
-  BlackArrow = "blackarrow",
+export interface Coordinate {
+  x: number;
+  y: number;
 }
 
-export interface Coordinate { x: number; y: number; }
+interface InternalCoordinate extends Coordinate {
+  mergeCommit?: boolean;
+}
 
 export interface GitgraphOptions {
-  template?: TemplateEnum | Template;
-  orientation?: OrientationsEnum;
+  template?: TemplateName | Template;
+  orientation?: Orientation;
   reverseArrow?: boolean;
   initCommitOffsetX?: number;
   initCommitOffsetY?: number;
-  mode?: ModeEnum;
+  mode?: Mode;
   author?: string;
   commitMessage?: string;
-  onRender: (commits: Commit[], branchesPaths: Map<Branch, Coordinate[]>) => any;
+}
+
+export interface RenderedData {
+  commits: Commit[];
+  branchesPaths: Map<Branch, Coordinate[][]>;
+  commitMessagesX: number;
 }
 
 export interface GitgraphCommitOptions {
@@ -45,6 +55,10 @@ export interface GitgraphCommitOptions {
   style?: CommitStyleOptions;
   innerText?: string;
   tag?: string;
+  onClick?: (commit: Commit) => void;
+  onMessageClick?: (commit: Commit) => void;
+  onMouseOver?: (commit: Commit) => void;
+  onMouseOut?: (commit: Commit) => void;
 }
 
 export interface GitgraphBranchOptions {
@@ -63,11 +77,12 @@ export interface GitgraphBranchOptions {
 }
 
 export class GitgraphCore {
-  public orientation?: OrientationsEnum;
+  public orientation?: Orientation;
+  public isVertical: boolean;
   public reverseArrow: boolean;
   public initCommitOffsetX: number;
   public initCommitOffsetY: number;
-  public mode?: ModeEnum;
+  public mode?: Mode;
   public author: string;
   public commitMessage: string;
   public template: Template;
@@ -77,37 +92,37 @@ export class GitgraphCore {
   public commits: Commit[] = [];
   public branches: Map<Branch["name"], Branch> = new Map();
   public currentBranch: Branch;
-  public onRender: GitgraphOptions["onRender"];
 
   private columns: Array<Branch["name"]> = [];
   private rows: Map<Commit["hash"], number> = new Map();
   private maxRow: number = 0;
+  private listeners: Array<() => void> = [];
 
-  constructor(options: GitgraphOptions) {
-    // Resolve template
-    if (typeof options.template === "string") {
-      this.template = {
-        [TemplateEnum.BlackArrow]: blackArrowTemplate,
-        [TemplateEnum.Metro]: metroTemplate,
-      }[options.template];
-    } else if (options.template) {
-      this.template = options.template as Template;
-    } else {
-      this.template = metroTemplate;
-    }
+  constructor(options: GitgraphOptions = {}) {
+    this.template = getTemplate(options.template);
 
     // Set a default `master` branch
     this.currentBranch = this.branch("master");
 
     // Set all options with default values
     this.orientation = options.orientation;
+    this.isVertical = [
+      undefined, // default value = Vertical
+      Orientation.VerticalReverse,
+    ].includes(this.orientation);
     this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
-    this.initCommitOffsetX = numberOptionOr(options.initCommitOffsetX, 0) as number;
-    this.initCommitOffsetY = numberOptionOr(options.initCommitOffsetY, 0) as number;
+    this.initCommitOffsetX = numberOptionOr(
+      options.initCommitOffsetX,
+      0,
+    ) as number;
+    this.initCommitOffsetY = numberOptionOr(
+      options.initCommitOffsetY,
+      0,
+    ) as number;
     this.mode = options.mode;
     this.author = options.author || "Sergio Flores <saxo-guy@epic.com>";
-    this.commitMessage = options.commitMessage || "He doesn't like George Michael! Boooo!";
-    this.onRender = options.onRender;
+    this.commitMessage =
+      options.commitMessage || "He doesn't like George Michael! Boooo!";
 
     // Context binding
     this.withRefsAndTags = this.withRefsAndTags.bind(this);
@@ -116,24 +131,40 @@ export class GitgraphCore {
     this.withBranches = this.withBranches.bind(this);
     this.calculateRows = this.calculateRows.bind(this);
     this.initBranchesPaths = this.initBranchesPaths.bind(this);
-    this.addMergeCommitsIntoBranchesPaths = this.addMergeCommitsIntoBranchesPaths.bind(this);
+    this.addMergeCommitsIntoBranchesPaths = this.addMergeCommitsIntoBranchesPaths.bind(
+      this,
+    );
   }
 
   /**
-   * Render each commits and branches paths and call `this.onUpdate`
+   * Get rendered data of each commits and branches paths.
    */
-  public render(): void {
+  public getRenderedData(): RenderedData {
     let commits = this.commits.map(this.withRefsAndTags);
     commits = this.withBranches(commits, { firstParentOnly: true });
     this.calculateRows(commits);
-    commits = commits
-      .map(this.withPosition)
-      .map(this.withColor);
-    const branchesPaths = commits.reduce(this.initBranchesPaths, new Map<Branch, Coordinate[]>());
+    commits = commits.map(this.withPosition).map(this.withColor);
+    const flatBranchesPaths = commits.reduce(
+      this.initBranchesPaths,
+      new Map<Branch, InternalCoordinate[]>(),
+    );
     commits = this.withBranches(commits);
-    this.addMergeCommitsIntoBranchesPaths(commits, branchesPaths);
-    this.smoothBranchesPaths(branchesPaths);
-    this.onRender(commits, branchesPaths);
+    this.addMergeCommitsIntoBranchesPaths(commits, flatBranchesPaths);
+    const branchesPaths = this.smoothBranchesPaths(flatBranchesPaths);
+
+    // Compute branch color
+    Array.from(branchesPaths).forEach(([branch], i) => {
+      const defaultColor = this.template.colors[
+        i % this.template.colors.length
+      ];
+      branch.computedColor = branch.style.color || defaultColor;
+    });
+
+    // Compute messages position
+    const numberOfColumns = Array.from(branchesPaths).length;
+    const commitMessagesX = numberOfColumns * this.template.branch.spacing;
+
+    return { commits, branchesPaths, commitMessagesX };
   }
 
   /**
@@ -167,7 +198,12 @@ export class GitgraphCore {
   public branch(name: string): Branch;
   public branch(args: any): Branch {
     const parentCommitHash = this.refs.get("HEAD") as Commit["hash"];
-    let options: BranchOptions = { gitgraph: this, name: "", parentCommitHash, style: this.template.branch };
+    let options: BranchOptions = {
+      gitgraph: this,
+      name: "",
+      parentCommitHash,
+      style: this.template.branch,
+    };
     if (typeof args === "string") {
       options.name = args;
     } else {
@@ -189,19 +225,21 @@ export class GitgraphCore {
     this.columns = [];
     this.branches = new Map();
     this.currentBranch = this.branch("master");
-    this.render();
+    this.next();
     return this;
   }
 
   /**
    * Tag a specific commit. (as `git tag`)
    *
-   * @param name Name of the tage
+   * @param name Name of the tag
    * @param ref Commit or branch name or commit hash
    */
   public tag(
     name: string,
-    ref: Commit | Commit["hash"] | Branch["name"] = this.refs.get("HEAD") as Commit["hash"],
+    ref: Commit | Commit["hash"] | Branch["name"] = this.refs.get(
+      "HEAD",
+    ) as Commit["hash"],
   ): GitgraphCore {
     if (typeof ref === "string") {
       const commitHashOrRefs = this.refs.get(ref);
@@ -218,7 +256,94 @@ export class GitgraphCore {
       // `ref` is a `Commit`
       this.tags.set(name, ref.hash);
     }
-    this.render();
+    this.next();
+    return this;
+  }
+
+  /**
+   * Add a change listener.
+   * It will be called any time the graph have changed (commit, merge…).
+   *
+   * @param listener A callback to be invoked on every change.
+   * @returns A function to remove this change listener.
+   */
+  public subscribe(listener: () => void): () => void {
+    this.listeners.push(listener);
+
+    let isSubscribed = true;
+
+    return () => {
+      if (!isSubscribed) return;
+      isSubscribed = false;
+      const index = this.listeners.indexOf(listener);
+      this.listeners.splice(index, 1);
+    };
+  }
+
+  /**
+   * Called on each graph modification.
+   */
+  public next() {
+    this.listeners.forEach((listener) => listener());
+  }
+
+  /**
+   * Import a JSON.
+   *
+   * Data can't be typed since it comes from a JSON.
+   * We validate input format and throw early if something is invalid.
+   *
+   * @param data JSON from `git2json` output
+   */
+  public import(data: any) {
+    // Validate `data` format.
+    const schema = yup.array().of(
+      yup.object({
+        refs: yup.array(),
+        hash: yup.string(),
+        hashAbbrev: yup.string(),
+        parents: yup.array().of(yup.string()),
+        parentsAbbrev: yup.array().of(yup.string()),
+        author: yup.object({
+          name: yup.string(),
+          email: yup.string(),
+        }),
+        subject: yup.string(),
+        body: yup.string(),
+      }),
+    );
+
+    const commits = schema.validateSync(data) as Commit[];
+
+    // Use validated `value`.
+    this.clear();
+
+    this.commits = commits.map((commit) => {
+      const TAG_PREFIX = "tag: ";
+      const tags = commit.refs
+        .map((ref) => ref.split(TAG_PREFIX))
+        .map(([_, tag]) => tag)
+        .filter((tag) => typeof tag === "string");
+      tags.forEach((tag) => this.tags.set(tag, commit.hash));
+
+      commit.refs
+        .filter((ref) => !ref.startsWith(TAG_PREFIX))
+        .forEach((ref) => this.refs.set(ref, commit.hash));
+
+      return { ...commit, style: this.template.commit };
+    });
+
+    // Create branches.
+    this.withBranches(this.commits)
+      .reduce((mem, { branches }) => {
+        if (!branches) return mem;
+        branches.forEach((branch) => mem.add(branch));
+        return mem;
+      }, new Set())
+      .forEach((branch) => this.branch(branch));
+
+    this.next();
+
     return this;
   }
 
@@ -259,8 +384,9 @@ export class GitgraphCore {
 
       while (queue.length > 0) {
         const currentHash = queue.pop() as Commit["hash"];
-        // TODO: convert commits to a Map<Commit["hash"], Commit>
-        const current = commits.find(({ hash }) => hash === currentHash) as Commit;
+        const current = commits.find(
+          ({ hash }) => hash === currentHash,
+        ) as Commit;
         const prevBranches = refs.get(currentHash) || new Set<Branch["name"]>();
         prevBranches.add(branch);
         refs.set(currentHash, prevBranches);
@@ -290,15 +416,25 @@ export class GitgraphCore {
     this.maxRow = 0;
 
     // Attribute a row index to each commit
-    commits
-      .forEach((commit, i): any => {
-        if (this.mode === ModeEnum.Compact) {
+    commits.forEach(
+      (commit, i): any => {
+        if (this.mode === Mode.Compact) {
           // Compact mode
           if (i === 0) return this.rows.set(commit.hash, i);
           const parentRow: number = this.rows.get(commit.parents[0]) as number;
           const historyParent: Commit = commits[i - 1];
-          let newRow = Math.max(parentRow + 1, this.rows.get(historyParent.hash) as number);
-          if (commit.parents.length > 1) newRow++; // Merge case
+          let newRow = Math.max(parentRow + 1, this.rows.get(
+            historyParent.hash,
+          ) as number);
+          const isMergeCommit = commit.parents.length > 1;
+          if (isMergeCommit) {
+            // Push commit to next row to avoid collision when the branch in which
+            // the merge happens has more commits than the merged branch.
+            const mergeTargetParentRow: number = this.rows.get(
+              commit.parents[1],
+            ) as number;
+            if (parentRow < mergeTargetParentRow) newRow++;
+          }
           this.rows.set(commit.hash, newRow);
           this.maxRow = Math.max(this.maxRow, newRow + 1);
         } else {
@@ -306,7 +442,8 @@ export class GitgraphCore {
           this.rows.set(commit.hash, i);
           this.maxRow = Math.max(this.maxRow, i + 1);
         }
-      });
+      },
+    );
   }
 
   /**
@@ -320,7 +457,9 @@ export class GitgraphCore {
     // Retrieve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
     const column = this.columns.findIndex((col) => col === branch);
-    const defaultColor = this.template.colors[column % this.template.colors.length];
+    const defaultColor = this.template.colors[
+      column % this.template.colors.length
+    ];
 
     return {
       ...commit,
@@ -366,27 +505,31 @@ export class GitgraphCore {
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
-          y: this.initCommitOffsetY + this.template.commit.spacing * (this.maxRow - 1 - row),
+          y:
+            this.initCommitOffsetY +
+            this.template.commit.spacing * (this.maxRow - 1 - row),
         };
 
-      case OrientationsEnum.VerticalReverse:
+      case Orientation.VerticalReverse:
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
           y: this.initCommitOffsetY + this.template.commit.spacing * row,
         };
 
-      case OrientationsEnum.Horizontal:
+      case Orientation.Horizontal:
         return {
           ...commit,
           x: this.initCommitOffsetX + this.template.commit.spacing * row,
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         };
 
-      case OrientationsEnum.HorizontalReverse:
+      case Orientation.HorizontalReverse:
         return {
           ...commit,
-          x: this.initCommitOffsetX + this.template.commit.spacing * (this.maxRow - 1 - row),
+          x:
+            this.initCommitOffsetX +
+            this.template.commit.spacing * (this.maxRow - 1 - row),
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         };
     }
@@ -402,23 +545,30 @@ export class GitgraphCore {
    * @param commits All commits (with only the first branch resolve)
    */
   private initBranchesPaths(
-    branchesPaths: Map<Branch, Coordinate[]>,
+    branchesPaths: Map<Branch, InternalCoordinate[]>,
     commit: Commit,
     index: number,
     commits: Commit[],
-  ): Map<Branch, Coordinate[]> {
-    const branch = this.branches.get((commit.branches as Array<Branch["name"]>)[0]) as Branch;
+  ): Map<Branch, InternalCoordinate[]> {
+    const branch = this.branches.get(
+      (commit.branches as Array<Branch["name"]>)[0],
+    ) as Branch;
 
     if (branchesPaths.has(branch)) {
       branchesPaths.set(branch, [
         ...(branchesPaths.get(branch) as Coordinate[]),
-        { x: commit.x, y: commit.y }],
-      );
+        { x: commit.x, y: commit.y },
+      ]);
     } else {
       if (commit.parents[0]) {
         // We are on a branch -> include the parent commit in the path
-        const parentCommit = commits.find(({ hash }) => hash === commit.parents[0]) as Commit;
-        branchesPaths.set(branch, [{ x: parentCommit.x, y: parentCommit.y }, { x: commit.x, y: commit.y }]);
+        const parentCommit = commits.find(
+          ({ hash }) => hash === commit.parents[0],
+        ) as Commit;
+        branchesPaths.set(branch, [
+          { x: parentCommit.x, y: parentCommit.y },
+          { x: commit.x, y: commit.y },
+        ]);
       } else {
         // We are on master
         branchesPaths.set(branch, [{ x: commit.x, y: commit.y }]);
@@ -429,44 +579,126 @@ export class GitgraphCore {
   }
 
   /**
-   * Second step to build `branchesPaths`
+   * Second step to build `branchesPaths`.
    *
-   * @param commits All commits (with all branches resolves)
+   * @param commits All commits (with all branches resolved)
    * @param branchesPaths Map of coordinates of each branch
    */
-  private addMergeCommitsIntoBranchesPaths(commits: Commit[], branchesPaths: Map<Branch, Coordinate[]>) {
+  private addMergeCommitsIntoBranchesPaths(
+    commits: Commit[],
+    branchesPaths: Map<Branch, InternalCoordinate[]>,
+  ) {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
-    mergeCommits.forEach((commit) => {
-      const branch = this.branches.get(
-        ((commits.find(({ hash }) => hash === commit.parents[1]) as Commit).branches as string[])[1],
-      ) as Branch;
-      branchesPaths.set(branch, [
-        ...(branchesPaths.get(branch) as Coordinate[]),
-        { x: commit.x, y: commit.y }],
-      );
 
+    mergeCommits.forEach((mergeCommit) => {
+      const parentOnOriginBranch = commits.find(({ hash }) => {
+        return hash === mergeCommit.parents[1];
+      });
+      if (!parentOnOriginBranch) return;
+
+      // This may not always be true.If you have a better solution, go ahead!
+      const originBranchName = parentOnOriginBranch.branches![1];
+      const branch = this.branches.get(originBranchName);
+      if (!branch) return;
+
+      const lastPoints = [...(branchesPaths.get(branch) || [])];
+      branchesPaths.set(branch, [
+        ...lastPoints,
+        { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
+      ]);
     });
   }
 
   /**
    * Smooth all paths by putting points on each row.
    *
-   * @param branchesPaths Map of coordinates of each branch
+   * @param flatBranchesPaths Map of coordinates of each branch
    */
-  private smoothBranchesPaths(branchesPaths: Map<Branch, Coordinate[]>) {
-    branchesPaths.forEach((points, branch) => {
-      if (points.length <= 1) return;
-      const firstPoint = points[0];
-      const lastPoint = points[points.length - 1];
-      const column = points[1].x;
-      const branchSize = Math.round(
-        Math.abs(firstPoint.y - lastPoint.y) / this.template.commit.spacing,
-      ) - 1;
-      const branchPoints = branchSize > 0 ? new Array(branchSize).fill(0).map(
-        (_, i) => ({ x: column, y: points[0].y - this.template.commit.spacing * (i + 1) }),
-      ) : [];
-      branchesPaths.set(branch, [firstPoint, ...branchPoints, lastPoint]);
+  private smoothBranchesPaths(
+    flatBranchesPaths: Map<Branch, InternalCoordinate[]>,
+  ): Map<Branch, Coordinate[][]> {
+    const branchesPaths = new Map<Branch, Coordinate[][]>();
+
+    flatBranchesPaths.forEach((points, branch) => {
+      if (points.length <= 1) {
+        branchesPaths.set(branch, [points]);
+        return;
+      }
+
+      // Cut path on each merge commits
+      // Coordinate[] -> Coordinate[][]
+      if (this.isVertical) {
+        points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
+      } else {
+        points = points.sort((a, b) => (a.x > b.x ? 1 : -1));
+      }
+
+      const paths = points.reduce<Coordinate[][]>(
+        (mem, point, i) => {
+          if (point.mergeCommit) {
+            mem[mem.length - 1].push(pick(point, ["x", "y"]));
+            if (points[i - 1]) mem.push([points[i - 1]]);
+          } else {
+            mem[mem.length - 1].push(point);
+          }
+          return mem;
+        },
+        [[]],
+      );
+
+      // Add intermediate points on each sub paths
+      if (this.isVertical) {
+        paths.forEach((subPath) => {
+          if (subPath.length <= 1) return;
+          const firstPoint = subPath[0];
+          const lastPoint = subPath[subPath.length - 1];
+          const column = subPath[1].x;
+          const branchSize =
+            Math.round(
+              Math.abs(firstPoint.y - lastPoint.y) /
+                this.template.commit.spacing,
+            ) - 1;
+          const branchPoints =
+            branchSize > 0
+              ? new Array(branchSize).fill(0).map((_, i) => ({
+                  x: column,
+                  y: subPath[0].y - this.template.commit.spacing * (i + 1),
+                }))
+              : [];
+          const lastSubPaths = branchesPaths.get(branch) || [];
+          branchesPaths.set(branch, [
+            ...lastSubPaths,
+            [firstPoint, ...branchPoints, lastPoint],
+          ]);
+        });
+      } else {
+        paths.forEach((subPath) => {
+          if (subPath.length <= 1) return;
+          const firstPoint = subPath[0];
+          const lastPoint = subPath[subPath.length - 1];
+          const column = subPath[1].y;
+          const branchSize =
+            Math.round(
+              Math.abs(firstPoint.x - lastPoint.x) /
+                this.template.commit.spacing,
+            ) - 1;
+          const branchPoints =
+            branchSize > 0
+              ? new Array(branchSize).fill(0).map((_, i) => ({
+                  y: column,
+                  x: subPath[0].x + this.template.commit.spacing * (i + 1),
+                }))
+              : [];
+          const lastSubPaths = branchesPaths.get(branch) || [];
+          branchesPaths.set(branch, [
+            ...lastSubPaths,
+            [firstPoint, ...branchPoints, lastPoint],
+          ]);
+        });
+      }
     });
+
+    return branchesPaths;
   }
 }
 

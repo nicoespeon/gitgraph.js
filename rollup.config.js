@@ -1,16 +1,16 @@
 export const globals = {
   // Gitgraph
-  'gitgraph-core': 'gitgraph.core',
+  "gitgraph-core": "gitgraph.core",
 };
 
-export default name => ({
-  input: 'lib/index.js',
+export default (name) => ({
+  input: "lib/index.js",
   output: {
-    file: 'lib/bundle.umd.js',
-    format: 'umd',
+    file: "lib/bundle.umd.js",
+    format: "umd",
   },
   name,
-  exports: 'named',
+  exports: "named",
   sourcemap: true,
   external: Object.keys(globals),
   onwarn,
@@ -18,9 +18,9 @@ export default name => ({
 });
 
 function onwarn(message) {
-  const suppressed = ['UNRESOLVED_IMPORT', 'THIS_IS_UNDEFINED'];
+  const suppressed = ["UNRESOLVED_IMPORT", "THIS_IS_UNDEFINED"];
 
-  if (!suppressed.find(code => message.code === code)) {
+  if (!suppressed.find((code) => message.code === code)) {
     return console.warn(message.message);
   }
 }

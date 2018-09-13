@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.0.0-alpha",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
-  "description": "A JavaScript library to draw pretty git graphs in the browser",
+  "description": "A JavaScript library to draw pretty git graphs",
   "contributors": [
     {
       "name": "Fabien Bernard",
@@ -14,22 +14,35 @@
     "type": "git",
     "url": "https://github.com/nicoespeon/gitgraph.js"
   },
+  "license": "MIT",
   "keywords": [
     "git",
     "graph",
     "javascript"
   ],
+  "scripts": {
+    "build": "lerna run build",
+    "watch": "lerna run watch",
+    "pretest": "npm run build",
+    "test": "jest",
+    "clean": "lerna clean"
+  },
   "devDependencies": {
-    "lerna": "^2.5.1"
+    "@types/jest": "23.1.4",
+    "husky": "1.0.0-rc.12",
+    "jest": "23.3.0",
+    "lerna": "^2.5.1",
+    "prettier": "1.13.7",
+    "pretty-quick": "1.6.0",
+    "ts-jest": "23.0.0",
+    "typescript": "2.9.2"
   },
   "workspaces": [
     "packages/*"
   ],
-  "scripts": {
-    "build": "lerna run build",
-    "watch": "lerna run watch",
-    "test": "lerna run test",
-    "clean": "lerna clean"
-  },
-  "license": "MIT"
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
 }

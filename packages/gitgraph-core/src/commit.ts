@@ -12,6 +12,10 @@ export interface CommitOptions {
   hash?: string;
   parents?: string[];
   innerText?: string;
+  onClick?: (commit: Commit) => void;
+  onMessageClick?: (commit: Commit) => void;
+  onMouseOver?: (commit: Commit) => void;
+  onMouseOut?: (commit: Commit) => void;
 }
 
 /**
@@ -19,12 +23,21 @@ export interface CommitOptions {
  *
  * @return {string} hex string with 40 chars
  */
-const getRandomHash = () => (
-  (Math.random()).toString(16).substring(3) +
-  (Math.random()).toString(16).substring(3) +
-  (Math.random()).toString(16).substring(3) +
-  (Math.random()).toString(16).substring(3)
-).substring(0, 40);
+const getRandomHash = () =>
+  (
+    Math.random()
+      .toString(16)
+      .substring(3) +
+    Math.random()
+      .toString(16)
+      .substring(3) +
+    Math.random()
+      .toString(16)
+      .substring(3) +
+    Math.random()
+      .toString(16)
+      .substring(3)
+  ).substring(0, 40);
 
 export class Commit {
   /**
@@ -125,6 +138,22 @@ export class Commit {
    * List of tags attached (injected by Gitgraph.withRefsAndTags)
    */
   public tags?: string[];
+  /**
+   * Callback to execute on click.
+   */
+  public onClick: () => void;
+  /**
+   * Callback to execute on click on the commit message.
+   */
+  public onMessageClick: () => void;
+  /**
+   * Callback to execute on mouse over.
+   */
+  public onMouseOver: () => void;
+  /**
+   * Callback to execute on mouse out.
+   */
+  public onMouseOut: () => void;
 
   constructor(options: CommitOptions) {
     // Set author & committer
@@ -159,8 +188,16 @@ export class Commit {
 
     // Set inner text
     this.innerText = options.innerText;
-  }
 
+    // Set callbacks
+    this.onClick = () => (options.onClick ? options.onClick(this) : undefined);
+    this.onMessageClick = () =>
+      options.onMessageClick ? options.onMessageClick(this) : undefined;
+    this.onMouseOver = () =>
+      options.onMouseOver ? options.onMouseOver(this) : undefined;
+    this.onMouseOut = () =>
+      options.onMouseOut ? options.onMouseOut(this) : undefined;
+  }
 }
 
 export default Commit;

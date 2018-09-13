@@ -1,0 +1,47 @@
+{
+  "name": "gitgraph-node",
+  "version": "2.0.0-alpha",
+  "description": "Draw pretty git graphs in the terminal, with node.js",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "contributors": [
+    {
+      "name": "Fabien Bernard",
+      "email": "fabien0102@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+  },
+  "keywords": [
+    "node",
+    "git",
+    "graph",
+    "javascript"
+  ],
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "main": "./src/index.ts",
+  "scripts": {
+    "lint": "tslint src/**/*",
+    "lint:fix": "npm run lint -- --fix",
+    "example:default": "ts-node examples/default.ts",
+    "example:branches": "ts-node examples/branches.ts"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "gitgraph-core": "^2.0.0-alpha",
+    "lodash": "^4.17.10"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.110",
+    "@types/node": "^9.4.6",
+    "ts-node": "^6.1.1",
+    "tslint": "^5.9.1",
+    "tslint-config-prettier": "1.13.0",
+    "typescript": "^2.8.1"
+  }
+}

@@ -1,5 +1,5 @@
 import Commit from "./commit";
-import { GitgraphCore, GitgraphCommitOptions } from "./gitgraph";
+import { GitgraphCore, GitgraphCommitOptions, Mode } from "./gitgraph";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
 
@@ -39,6 +39,7 @@ export class Branch {
   public name: BranchOptions["name"];
   public style: BranchStyle;
   public commitDefaultOptions: BranchCommitDefaultOptions;
+  public computedColor?: BranchStyle["color"];
 
   private gitgraph: GitgraphCore;
   private parentCommitHash: BranchOptions["parentCommitHash"];
@@ -84,14 +85,17 @@ export class Branch {
     const { tag, ...commitOptions } = options;
     const commit = new Commit({
       author: this.commitDefaultOptions.author || this.gitgraph.author,
-      subject: this.commitDefaultOptions.subject || this.gitgraph.commitMessage as string,
+      subject:
+        this.commitDefaultOptions.subject ||
+        (this.gitgraph.commitMessage as string),
       ...commitOptions,
       style: this.getCommitStyle(options.style),
     });
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
-      const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) || []) as string[];
+      const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) ||
+        []) as string[];
       parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref
@@ -109,7 +113,7 @@ export class Branch {
     if (tag) this.tag(tag);
 
     // Update the render
-    this.gitgraph.render();
+    this.gitgraph.next();
 
     return this;
   }
@@ -127,10 +131,16 @@ export class Branch {
    */
   public merge(branchName: string): Branch;
   public merge(branch: string | Branch): Branch {
-    const branchName = (typeof branch === "string") ? branch : branch.name;
-    const parentCommitHash = this.gitgraph.refs.get(branchName) as Commit["hash"];
-    if (!parentCommitHash) throw new Error(`The branch called "${branchName}" is unknown`);
-    this.commit({ subject: `Merge branch ${branchName}`, parents: [parentCommitHash] });
+    const branchName = typeof branch === "string" ? branch : branch.name;
+    const parentCommitHash = this.gitgraph.refs.get(
+      branchName,
+    ) as Commit["hash"];
+    if (!parentCommitHash)
+      throw new Error(`The branch called "${branchName}" is unknown`);
+    this.commit({
+      subject: `Merge branch ${branchName}`,
+      parents: [parentCommitHash],
+    });
     return this;
   }
 
@@ -163,27 +173,29 @@ export class Branch {
    * @param style
    */
   private getCommitStyle(style: CommitStyleOptions = {}): CommitStyle {
+    const message = {
+      ...withoutUndefinedKeys(this.gitgraph.template.commit.message),
+      ...withoutUndefinedKeys(this.commitDefaultOptions.style!.message),
+      ...style.message,
+    };
+
+    if (!this.gitgraph.isVertical || this.gitgraph.mode === Mode.Compact) {
+      message.display = false;
+    }
+
     return {
-      ...withoutUndefinedKeys({ color: this.style.color }),
       ...withoutUndefinedKeys(this.gitgraph.template.commit),
       ...withoutUndefinedKeys(this.commitDefaultOptions.style),
       ...style,
       tag: {
-        ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.tag),
-        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).tag),
+        ...withoutUndefinedKeys(this.commitDefaultOptions.style!.tag),
         ...style.tag,
       },
-      message: {
-        ...withoutUndefinedKeys({ color: this.style.color }),
-        ...withoutUndefinedKeys(this.gitgraph.template.commit.message),
-        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).message),
-        ...style.message,
-      },
+      message,
       dot: {
-        ...withoutUndefinedKeys({ color: this.style.color }),
         ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),
-        ...withoutUndefinedKeys((this.commitDefaultOptions.style as CommitStyle).dot),
+        ...withoutUndefinedKeys(this.commitDefaultOptions.style!.dot),
         ...style.dot,
       },
     } as CommitStyle;

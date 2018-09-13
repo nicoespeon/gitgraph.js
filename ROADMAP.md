@@ -10,7 +10,6 @@
 - [rollup](https://rollupjs.org/) for the bundling with a [TypeScript](https://www.typescriptlang.org/) codebase
 - [tslint](https://palantir.github.io/tslint/) to lint our codebase
 - [husky](https://github.com/typicode/husky) with [lint-staged](https://github.com/okonet/lint-staged) to lint code automatically on commit hooks
-- [commitizen](http://commitizen.github.io/cz-cli/) to ensure consistent commits and generate automatic changelogs
 - [jest](http://facebook.github.io/jest/) for a delightful test environment
 
 ## 🗂 Repositories
@@ -39,7 +38,7 @@ export class Gitgraph extends GitgraphCore {
     // all specific options
     this.$el = options.$el || $("#gitgraph");
   }
-  
+
   render() {
     // my awesome render
     this.log().map(...)
@@ -57,18 +56,18 @@ export default class Gitgraph extends React.Component {
     super(props);
     this.gitgraph = new GitgraphCore(props.options);
     // Not really sure about this pattern
-    this.gitgraph.log$.subscribe(store => this.setState({store}));
-    
+    this.gitgraph.log$.subscribe((store) => this.setState({ store }));
+
     if (props.ref) props.ref(this.gitgraph);
   }
-  
+
   render() {}
 }
 ```
 
 ### packages/gitgraph-js
 
-The idea here is to never use  `gitgraph-core` directly. We'll bundle it into different rendering engines.
+The idea here is to never use `gitgraph-core` directly. We'll bundle it into different rendering engines.
 
 Gitgraph-js will work more or less with the same API than v1: it takes a selector or an `$el` and that's it. We may move from canvas to svg, or use a combination of both if relevant.
 
@@ -115,7 +114,7 @@ Functional component with children:
 import React from "react";
 import Gitgraph, {Commit, Branch} from "gitgraph-react";
 
-export default () => 
+export default () =>
   <Gitgraph options={{template: "blackarrow"}}>
     <Branch name="master">
       <Commit message="hello" />
@@ -136,7 +135,7 @@ With git API − declarative mode:
 import React from "react";
 import Gitgraph, {Commit, Branch, Checkout, Merge} from "gitgraph-react";
 
-export default () => 
+export default () =>
   <Gitgraph options={{template: "blackarrow"}}>
     <Branch name="master" />
     <Commit message="hello" />
@@ -158,7 +157,7 @@ Functional component with render props:
 import React from "react";
 import Gitgraph from "gitgraph-react";
 
-export default () => 
+export default () =>
   <Gitgraph options={{template: "blackarrow"}}>
     { gitgraph => {
       const master = gitgraph.branch("master");

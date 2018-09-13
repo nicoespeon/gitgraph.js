@@ -1,3 +1,5 @@
+import { merge } from "lodash";
+
 import Commit from "./commit";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 
@@ -82,11 +84,11 @@ export interface CommitDotStyle {
   /**
    * Commit dot stroke width
    */
-  strokeWidth: number | null;
+  strokeWidth?: number;
   /**
    * Commit dot stroke color
    */
-  strokeColor: string | null;
+  strokeColor?: string;
   /**
    * Commit dot line dash
    */
@@ -242,7 +244,7 @@ export class Template {
     options.commit.message = options.commit.message || {};
 
     // One color per column
-    this.colors = options.colors || ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"];
+    this.colors = options.colors || ["#000000"];
 
     // Branch style
     this.branch = {
@@ -270,22 +272,37 @@ export class Template {
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
       widthExtension: options.commit.widthExtension || 0,
       tooltipHTMLFormatter: options.commit.tooltipHTMLFormatter || null,
-      shouldDisplayTooltipsInCompactMode: booleanOptionOr(options.commit.shouldDisplayTooltipsInCompactMode, true),
+      shouldDisplayTooltipsInCompactMode: booleanOptionOr(
+        options.commit.shouldDisplayTooltipsInCompactMode,
+        true,
+      ),
       dot: {
         color: options.commit.dot.color || options.commit.color,
         size: options.commit.dot.size || 3,
-        strokeWidth: numberOptionOr(options.commit.dot.strokeWidth, null),
-        strokeColor: options.commit.dot.strokeColor || null,
+        strokeWidth: numberOptionOr(
+          options.commit.dot.strokeWidth,
+          0,
+        ) as number,
+        strokeColor: options.commit.dot.strokeColor,
         lineDash: options.commit.dot.lineDash || this.branch.lineDash,
       },
       tag: {
         color: options.commit.tag.color || options.commit.color,
-        font: options.commit.tag.font || options.commit.message.font || "normal 10pt Calibri",
+        font:
+          options.commit.tag.font ||
+          options.commit.message.font ||
+          "normal 10pt Calibri",
       },
       message: {
         display: booleanOptionOr(options.commit.message.display, true),
-        displayAuthor: booleanOptionOr(options.commit.message.displayAuthor, true),
-        displayBranch: booleanOptionOr(options.commit.message.displayBranch, true),
+        displayAuthor: booleanOptionOr(
+          options.commit.message.displayAuthor,
+          true,
+        ),
+        displayBranch: booleanOptionOr(
+          options.commit.message.displayBranch,
+          true,
+        ),
         displayHash: booleanOptionOr(options.commit.message.displayHash, true),
         color: options.commit.message.color || options.commit.color,
         font: options.commit.message.font || "normal 12pt Calibri",
@@ -298,6 +315,7 @@ export class Template {
  * Black arrow template
  */
 export const blackArrowTemplate = new Template({
+  colors: ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"],
   branch: {
     color: "#000000",
     lineWidth: 4,
@@ -308,9 +326,9 @@ export const blackArrowTemplate = new Template({
   commit: {
     spacing: 60,
     dot: {
-      size: 12,
+      size: 16,
       strokeColor: "#000000",
-      strokeWidth: 7,
+      strokeWidth: 4,
     },
     message: {
       color: "black",
@@ -318,7 +336,7 @@ export const blackArrowTemplate = new Template({
   },
   arrow: {
     size: 16,
-    offset: 2.5,
+    offset: -1.5,
   },
 });
 
@@ -342,3 +360,39 @@ export const metroTemplate = new Template({
     },
   },
 });
+
+export enum TemplateName {
+  Metro = "metro",
+  BlackArrow = "blackarrow",
+}
+
+/**
+ * Extend an existing template with new options.
+ *
+ * @param selectedTemplate Template to extend
+ * @param options Template options
+ */
+export function templateExtend(
+  selectedTemplate: TemplateName,
+  options: TemplateOptions,
+): Template {
+  return merge({}, getTemplate(selectedTemplate), options);
+}
+
+/**
+ * Resolve the template to use regarding given `template` value.
+ *
+ * @param template Selected template name, or instance.
+ */
+export function getTemplate(template?: TemplateName | Template): Template {
+  if (!template) return metroTemplate;
+
+  if (typeof template === "string") {
+    return {
+      [TemplateName.BlackArrow]: blackArrowTemplate,
+      [TemplateName.Metro]: metroTemplate,
+    }[template];
+  }
+
+  return template as Template;
+}
