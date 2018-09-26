@@ -2,7 +2,7 @@ import * as React from "react";
 import { Commit } from "gitgraph-core/lib/index";
 
 export default class Tooltip extends React.Component<
-  { commit: Commit },
+  { commit: Commit; children: () => string },
   { textWidth: number }
 > {
   public readonly state = { textWidth: 0 };
@@ -45,7 +45,7 @@ export default class Tooltip extends React.Component<
           alignmentBaseline="central"
           fill="#333"
         >
-          {`${this.props.commit.hashAbbrev} - ${this.props.commit.subject}`}
+          {this.props.children()}
         </text>
       </g>
     );

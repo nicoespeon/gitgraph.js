@@ -139,7 +139,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         </g>
 
         {/* Tooltip */}
-        {this.state.currentCommitOver === commit && <Tooltip commit={commit} />}
+        {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
 
         {/* Message */}
         {commit.style.message.display && (
@@ -165,6 +165,14 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           })}
       </g>
     ));
+  }
+
+  private renderTooltip(commit: Commit) {
+    return (
+      <Tooltip commit={commit}>
+        {() => this.gitgraph.template.tooltipFormatter(commit)}
+      </Tooltip>
+    );
   }
 
   private onMouseOver(commit: Commit): void {
