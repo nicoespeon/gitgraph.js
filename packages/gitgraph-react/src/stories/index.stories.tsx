@@ -2,7 +2,6 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { Gitgraph, Mode } from "../Gitgraph";
-import importFixture from "./import-fixture";
 
 storiesOf("Gitgraph", module)
   .add("default", () => (
@@ -14,13 +13,6 @@ storiesOf("Gitgraph", module)
         master.commit("two");
         develop.commit("three");
         master.merge(develop);
-      }}
-    </Gitgraph>
-  ))
-  .add("import", () => (
-    <Gitgraph>
-      {(gitgraph) => {
-        gitgraph.import(importFixture);
       }}
     </Gitgraph>
   ))
