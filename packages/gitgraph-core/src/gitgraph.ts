@@ -573,7 +573,14 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Second step to build `branchesPaths`.
+   * Insert merge commits points into `branchesPaths`.
+   *
+   * Example:
+   * // Before
+   * [{ x: 0, y: 640 }, { x: 50, y: 560 }]
+   *
+   * // After
+   * [{ x: 0, y: 640 }, { x: 50, y: 560 }, { x: 50, y: 560, mergeCommit: true }]
    *
    * @param commits All commits (with all branches resolved)
    * @param branchesPaths Map of coordinates of each branch
@@ -590,8 +597,9 @@ export class GitgraphCore<TNode = SVGElement> {
       });
       if (!parentOnOriginBranch) return;
 
-      // This may not always be true.If you have a better solution, go ahead!
-      const originBranchName = parentOnOriginBranch.branches![1];
+      // This may not always be true. If you have a better solution, go ahead!
+      const branchNames = parentOnOriginBranch.branches!;
+      const originBranchName = branchNames[branchNames.length - 1];
       const branch = this.branches.get(originBranchName);
       if (!branch) return;
 

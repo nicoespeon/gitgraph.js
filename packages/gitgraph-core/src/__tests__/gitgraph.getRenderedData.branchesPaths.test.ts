@@ -239,6 +239,67 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     ]);
   });
 
+  it("should deal with 3 branches (with multiple merges)", () => {
+    const master = gitgraph.branch("master");
+    master.commit().commit();
+
+    const develop = gitgraph.branch("develop");
+    develop.commit();
+
+    const feat1 = gitgraph.branch("feat1");
+    feat1.commit().commit();
+
+    develop.commit();
+    develop.merge(feat1);
+
+    master.commit().commit();
+    master.merge(develop);
+
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    // We can't use `toMatchObject` here due to circular ref inside Branch.
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].name).toBe("master");
+    expect(result[0][1]).toEqual([
+      [
+        { x: 0, y: 80 * 9 },
+        { x: 0, y: 80 * 8 },
+        { x: 0, y: 80 * 7 }, // merge develop
+        { x: 0, y: 80 * 6 },
+        { x: 0, y: 80 * 5 },
+        { x: 0, y: 80 * 4 }, // merge feat1
+        { x: 0, y: 80 * 3 },
+        { x: 0, y: 80 * 2 },
+        { x: 0, y: 80 * 1 },
+        { x: 0, y: 80 * 0 }, // merge feat2
+      ],
+    ]);
+    expect(result[1][0].name).toBe("develop");
+    expect(result[1][1]).toEqual([
+      [
+        { x: 0, y: 80 * 8 },
+        { x: 50, y: 80 * 7 },
+        { x: 50, y: 80 * 6 },
+        { x: 50, y: 80 * 5 },
+        { x: 50, y: 80 * 4 },
+        { x: 50, y: 80 * 3 },
+        { x: 50, y: 80 * 2 },
+        { x: 50, y: 80 * 1 },
+        { x: 0, y: 80 * 0 }, // merge develop
+      ],
+    ]);
+    expect(result[2][0].name).toBe("feat1");
+    expect(result[2][1]).toEqual([
+      [
+        { x: 50, y: 80 * 7 },
+        { x: 100, y: 80 * 6 },
+        { x: 100, y: 80 * 5 },
+        { x: 100, y: 80 * 4 },
+        { x: 50, y: 80 * 3 }, // merge feat1
+      ],
+    ]);
+  });
+
   it("should deal with horizontal orientation", () => {
     gitgraph = new GitgraphCore({ orientation: Orientation.Horizontal });
     const master = gitgraph.branch("master").commit();

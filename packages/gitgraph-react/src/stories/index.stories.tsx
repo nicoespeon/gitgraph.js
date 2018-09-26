@@ -57,17 +57,39 @@ storiesOf("Gitgraph", module)
     <Gitgraph>
       {(gitgraph) => {
         const master = gitgraph.branch("master");
+        master.commit().commit();
+
+        const develop = gitgraph.branch("develop");
+        develop.commit();
+
+        const feat1 = gitgraph.branch("feat1");
+        feat1.commit().commit();
+
+        develop.commit();
+        develop.merge(feat1);
+
+        master.commit().commit();
+        master.merge(develop);
+      }}
+    </Gitgraph>
+  ))
+  .add("multiple merges in master", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master");
         master.commit("one").commit("two");
-        const dev = gitgraph.branch("dev");
+
+        const develop = gitgraph.branch("develop");
         const feat = gitgraph.branch("feat");
-        dev.commit("three").commit("four");
+        develop.commit("three").commit("four");
         master.commit("five");
-        dev.merge(master);
+        develop.merge(master);
+
         master.commit("six");
-        dev.commit("seven");
+        develop.commit("seven");
         feat.commit("eight");
         master.merge(feat);
-        master.merge(dev);
+        master.merge(develop);
       }}
     </Gitgraph>
   ))
