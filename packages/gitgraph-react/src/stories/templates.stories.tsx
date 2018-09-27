@@ -115,7 +115,13 @@ storiesOf("Gitgraph templates", module)
         gitgraph
           .commit("First commit")
           .commit("Second commit")
-          .commit("Third commit");
+          .commit("Third commit")
+          .commit({
+            subject: "Fourth commit",
+            style: {
+              tooltipFormatter: (commit) => `Test ${commit.hashAbbrev}`,
+            },
+          });
       }}
     </Gitgraph>
   ));

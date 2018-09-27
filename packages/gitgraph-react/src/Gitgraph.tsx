@@ -170,7 +170,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private renderTooltip(commit: Commit) {
     return (
       <Tooltip commit={commit}>
-        {() => this.gitgraph.template.tooltipFormatter(commit)}
+        {() => commit.style.tooltipFormatter(commit)}
       </Tooltip>
     );
   }

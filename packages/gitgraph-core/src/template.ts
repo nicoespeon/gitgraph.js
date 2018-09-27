@@ -159,7 +159,7 @@ export interface CommitStyleBase {
   /**
    * Formatter for the tooltip content
    */
-  tooltipFormatter: ((commit: Commit) => HTMLBodyElement) | null;
+  tooltipFormatter: ((commit: Commit) => string);
 }
 
 export interface CommitStyle extends CommitStyleBase {
@@ -274,12 +274,18 @@ export class Template {
       offset: options.arrow.offset || 2,
     };
 
+    // Tooltip formatter
+    const defaultFormatter = (commit: Commit) =>
+      `${commit.hashAbbrev} - ${commit.subject}`;
+    this.tooltipFormatter = options.tooltipFormatter || defaultFormatter;
+
     // Commit style
     this.commit = {
       color: options.commit.color,
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
       widthExtension: options.commit.widthExtension || 0,
-      tooltipFormatter: options.commit.tooltipFormatter || null,
+      tooltipFormatter:
+        options.commit.tooltipFormatter || this.tooltipFormatter,
       shouldDisplayTooltipsInCompactMode: booleanOptionOr(
         options.commit.shouldDisplayTooltipsInCompactMode,
         true,
@@ -316,11 +322,6 @@ export class Template {
         font: options.commit.message.font || "normal 12pt Calibri",
       },
     };
-
-    // Tooltip formatter
-    const defaultFormatter = (commit: Commit) =>
-      `${commit.hashAbbrev} - ${commit.subject}`;
-    this.tooltipFormatter = options.tooltipFormatter || defaultFormatter;
   }
 }
 
