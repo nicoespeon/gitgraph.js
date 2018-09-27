@@ -140,6 +140,37 @@ describe("Gitgraph.import", () => {
       },
     ]);
   });
+
+  it("should handle deleted branches", () => {
+    const data = getImportData("git2json-deleted-branch");
+
+    const gitgraph = new GitgraphCore();
+    gitgraph.import(data);
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "Merge branch 'feat/tooltips'",
+        branches: ["master"],
+      },
+      {
+        subject: "Update README",
+        branches: ["master"],
+      },
+      {
+        subject: "Refactor code",
+        branches: ["master"],
+      },
+      {
+        subject: "Add tooltips",
+        branches: ["master"],
+      },
+      {
+        subject: "Initial commit",
+        branches: ["master"],
+      },
+    ]);
+  });
 });
 
 function getImportData(name: string) {
