@@ -25,9 +25,7 @@ describe("Gitgraph.import", () => {
   });
 
   it("should render two commits from git2json", () => {
-    const data = JSON.parse(
-      readFileSync(join(__dirname, "./git2json-two-commits.json"), "utf-8"),
-    );
+    const data = getImportData("git2json-two-commits");
 
     const gitgraph = new GitgraphCore();
     gitgraph.import(data);
@@ -48,9 +46,7 @@ describe("Gitgraph.import", () => {
   });
 
   it("should render two branches from git2json", () => {
-    const data = JSON.parse(
-      readFileSync(join(__dirname, "./git2json-two-branches.json"), "utf-8"),
-    );
+    const data = getImportData("git2json-two-branches");
 
     const gitgraph = new GitgraphCore();
     gitgraph.import(data);
@@ -76,9 +72,7 @@ describe("Gitgraph.import", () => {
   });
 
   it("should compute style for 2 branches", () => {
-    const data = JSON.parse(
-      readFileSync(join(__dirname, "./git2json-two-branches.json"), "utf-8"),
-    );
+    const data = getImportData("git2json-two-branches");
 
     const template = new Template({
       colors: ["red", "green", "blue"],
@@ -110,9 +104,7 @@ describe("Gitgraph.import", () => {
   });
 
   it("should compute tags", () => {
-    const data = JSON.parse(
-      readFileSync(join(__dirname, "./git2json-tags.json"), "utf-8"),
-    );
+    const data = getImportData("git2json-tags");
 
     const gitgraph = new GitgraphCore();
     gitgraph.import(data);
@@ -131,9 +123,7 @@ describe("Gitgraph.import", () => {
   });
 
   it("should not put tags in refs", () => {
-    const data = JSON.parse(
-      readFileSync(join(__dirname, "./git2json-tags.json"), "utf-8"),
-    );
+    const data = getImportData("git2json-tags");
 
     const gitgraph = new GitgraphCore();
     gitgraph.import(data);
@@ -151,3 +141,7 @@ describe("Gitgraph.import", () => {
     ]);
   });
 });
+
+function getImportData(name: string) {
+  return JSON.parse(readFileSync(join(__dirname, `./${name}.json`), "utf-8"));
+}
