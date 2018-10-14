@@ -1,6 +1,5 @@
 import { merge } from "lodash";
 
-import Commit from "./commit";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 
 /**
@@ -156,10 +155,6 @@ export interface CommitStyleBase {
    * Additional width to be added to the calculated width
    */
   widthExtension?: number;
-  /**
-   * Formatter for the tooltip content
-   */
-  tooltipFormatter: ((commit: Commit) => string);
 }
 
 export interface CommitStyle extends CommitStyleBase {
@@ -209,10 +204,6 @@ export interface TemplateOptions {
    * Commit style
    */
   commit?: CommitStyleOptions;
-  /**
-   * Formatter for the tooltip content
-   */
-  tooltipFormatter?: (commit: Commit) => string;
 }
 
 /**
@@ -237,10 +228,6 @@ export class Template {
    * Commit style
    */
   public commit: CommitStyle;
-  /**
-   * Formatter for the tooltip content
-   */
-  public tooltipFormatter: (commit: Commit) => string;
 
   constructor(options: TemplateOptions) {
     // Options
@@ -274,18 +261,11 @@ export class Template {
       offset: options.arrow.offset || 2,
     };
 
-    // Tooltip formatter
-    const defaultFormatter = (commit: Commit) =>
-      `${commit.hashAbbrev} - ${commit.subject}`;
-    this.tooltipFormatter = options.tooltipFormatter || defaultFormatter;
-
     // Commit style
     this.commit = {
       color: options.commit.color,
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
       widthExtension: options.commit.widthExtension || 0,
-      tooltipFormatter:
-        options.commit.tooltipFormatter || this.tooltipFormatter,
       shouldDisplayTooltipsInCompactMode: booleanOptionOr(
         options.commit.shouldDisplayTooltipsInCompactMode,
         true,

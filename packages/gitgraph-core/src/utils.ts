@@ -60,7 +60,10 @@ export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
  * @param commits List of commits
  * @param paths The property paths to pick
  */
-export function debug(commits: Commit[], paths: Array<keyof Commit>): void {
+export function debug<TNode = SVGElement>(
+  commits: Array<Commit<TNode>>,
+  paths: Array<keyof Commit<TNode>>,
+): void {
   // tslint:disable-next-line:no-console
   console.log(
     JSON.stringify(commits.map((commit) => pick(commit, paths)), null, 2),
@@ -136,10 +139,10 @@ export function toSvgPath(
  * @param parent Parent commit of the target commit
  * @param commit Target commit
  */
-export function arrowSvgPath(
-  graph: GitgraphCore,
-  parent: Commit,
-  commit: Commit,
+export function arrowSvgPath<TNode = SVGElement>(
+  graph: GitgraphCore<TNode>,
+  parent: Commit<TNode>,
+  commit: Commit<TNode>,
 ): string {
   const commitRadius = commit.style.dot.size;
   const size = graph.template.arrow.size!;
@@ -170,7 +173,11 @@ export function arrowSvgPath(
   return `M${x1},${y1} L${x2},${y2} Q${x3},${y3} ${x4},${y4} L${x4},${y4}`;
 }
 
-function getAlpha(graph: GitgraphCore, parent: Commit, commit: Commit): number {
+function getAlpha<TNode = SVGElement>(
+  graph: GitgraphCore<TNode>,
+  parent: Commit<TNode>,
+  commit: Commit<TNode>,
+): number {
   const deltaX = parent.x - commit.x;
   const deltaY = parent.y - commit.y;
   const commitSpacing = graph.template.commit.spacing;

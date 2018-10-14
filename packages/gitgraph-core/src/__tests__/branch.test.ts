@@ -105,7 +105,6 @@ describe("Branch", () => {
             color: "#979797",
             font: "normal 14pt Arial",
           },
-          tooltipFormatter: expect.any(Function),
           widthExtension: 0,
         };
       }
