@@ -6,8 +6,10 @@ import {
   Branch,
   Coordinate,
   MergeStyle,
+  Mode,
 } from "gitgraph-core/lib/index";
 import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
+import Tooltip from "./Tooltip";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
@@ -18,6 +20,7 @@ export interface GitgraphState {
   commits: Commit[];
   branchesPaths: Map<Branch, Coordinate[][]>;
   commitMessagesX: number;
+  currentCommitOver: Commit | null;
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -29,7 +32,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   constructor(props: GitgraphProps) {
     super(props);
-    this.state = { commits: [], branchesPaths: new Map(), commitMessagesX: 0 };
+    this.state = {
+      commits: [],
+      branchesPaths: new Map(),
+      commitMessagesX: 0,
+      currentCommitOver: null,
+    };
     this.gitgraph = new GitgraphCore(props.options);
     this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
   }
@@ -104,8 +112,11 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
         <g
           onClick={commit.onClick}
-          onMouseOver={commit.onMouseOver}
-          onMouseOut={commit.onMouseOut}
+          onMouseOver={() => this.onMouseOver(commit)}
+          onMouseOut={() => {
+            this.setState({ currentCommitOver: null });
+            commit.onMouseOut();
+          }}
         >
           <use
             xlinkHref={`#${commit.hash}`}
@@ -115,7 +126,20 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
               commit.style.dot.strokeWidth && commit.style.dot.strokeWidth * 2
             }
           />
+          {commit.innerText && (
+            <text
+              alignmentBaseline="central"
+              textAnchor="middle"
+              x={commit.style.dot.size}
+              y={commit.style.dot.size}
+            >
+              {commit.innerText}
+            </text>
+          )}
         </g>
+
+        {/* Tooltip */}
+        {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
 
         {/* Message */}
         {commit.style.message.display && (
@@ -127,7 +151,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             style={{ font: commit.style.message.font }}
             onClick={commit.onMessageClick}
           >
-            {this.getMessage(commit)}
+            {getMessage(commit)}
           </text>
         )}
 
@@ -141,6 +165,25 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           })}
       </g>
     ));
+  }
+
+  private renderTooltip(commit: Commit) {
+    return (
+      <Tooltip commit={commit}>
+        {() => commit.style.tooltipFormatter(commit)}
+      </Tooltip>
+    );
+  }
+
+  private onMouseOver(commit: Commit): void {
+    if (
+      this.gitgraph.mode === Mode.Compact &&
+      commit.style.shouldDisplayTooltipsInCompactMode
+    ) {
+      this.setState({ currentCommitOver: commit });
+    }
+
+    commit.onMouseOver();
   }
 
   private drawArrow(parent: Commit, commit: Commit) {
@@ -166,30 +209,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private getMessage(commit: Commit): string {
-    let message = "";
-
-    if (commit.style.message.displayBranch) {
-      message += `[${commit.branches![commit.branches!.length - 1]}`;
-      if (commit.tags!.length) {
-        message += `, ${commit.tags!.join(", ")}`;
-      }
-      message += `] `;
-    }
-
-    if (commit.style.message.displayHash) {
-      message += `${commit.hashAbbrev} `;
-    }
-
-    message += commit.subject;
-
-    if (commit.style.message.displayAuthor) {
-      message += ` - ${commit.author.name} <${commit.author.email}>`;
-    }
-
-    return message;
-  }
-
   private onGitgraphCoreRender() {
     const {
       commits,
@@ -198,6 +217,33 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     } = this.gitgraph.getRenderedData();
     this.setState({ commits, branchesPaths, commitMessagesX });
   }
+}
+
+// For now, this piece of logic is here.
+// But it might be relevant to move this back to gitgraph-core.
+// Ideally, it would be a method of Commit: `commit.message()`.
+function getMessage(commit: Commit): string {
+  let message = "";
+
+  if (commit.style.message.displayBranch) {
+    message += `[${commit.branches![commit.branches!.length - 1]}`;
+    if (commit.tags!.length) {
+      message += `, ${commit.tags!.join(", ")}`;
+    }
+    message += `] `;
+  }
+
+  if (commit.style.message.displayHash) {
+    message += `${commit.hashAbbrev} `;
+  }
+
+  message += commit.subject;
+
+  if (commit.style.message.displayAuthor) {
+    message += ` - ${commit.author.name} <${commit.author.email}>`;
+  }
+
+  return message;
 }
 
 export default Gitgraph;

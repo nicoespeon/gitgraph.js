@@ -1,7 +1,7 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, templateExtend, TemplateName } from "../Gitgraph";
+import { Gitgraph, Mode, templateExtend, TemplateName } from "../Gitgraph";
 
 const templateWithoutHash = templateExtend(TemplateName.Metro, {
   commit: {
@@ -22,6 +22,11 @@ const templateWithoutBranch = templateExtend(TemplateName.Metro, {
     message: {
       displayBranch: false,
     },
+  },
+});
+const templateWithCustomTooltip = templateExtend(TemplateName.Metro, {
+  tooltipFormatter(commit) {
+    return `${commit.subject} (by ${commit.author.name})`;
   },
 });
 
@@ -96,6 +101,27 @@ storiesOf("Gitgraph templates", module)
           .commit("one")
           .commit("two")
           .commit("three");
+      }}
+    </Gitgraph>
+  ))
+  .add("with custom tooltip", () => (
+    <Gitgraph
+      options={{
+        template: templateWithCustomTooltip,
+        mode: Mode.Compact,
+      }}
+    >
+      {(gitgraph) => {
+        gitgraph
+          .commit("First commit")
+          .commit("Second commit")
+          .commit("Third commit")
+          .commit({
+            subject: "Fourth commit",
+            style: {
+              tooltipFormatter: (commit) => `Test ${commit.hashAbbrev}`,
+            },
+          });
       }}
     </Gitgraph>
   ));

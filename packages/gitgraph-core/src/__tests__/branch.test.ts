@@ -10,8 +10,6 @@ import {
   blackArrowTemplate,
 } from "../index";
 
-const copy = (obj) => JSON.parse(JSON.stringify(obj));
-
 describe("Branch", () => {
   describe("commit", () => {
     describe("on HEAD", () => {
@@ -84,31 +82,33 @@ describe("Branch", () => {
     describe("style", () => {
       let gitgraph: GitgraphCore;
 
-      const expectedStyle = {
-        color: "#979797",
-        dot: {
+      function createExpectedStyle() {
+        return {
           color: "#979797",
-          lineDash: [],
-          size: 14,
-          strokeWidth: 0,
-        },
-        message: {
-          color: "#979797",
-          display: true,
-          displayAuthor: true,
-          displayBranch: true,
-          displayHash: true,
-          font: "normal 14pt Arial",
-        },
-        shouldDisplayTooltipsInCompactMode: true,
-        spacing: 80,
-        tag: {
-          color: "#979797",
-          font: "normal 14pt Arial",
-        },
-        tooltipHTMLFormatter: null,
-        widthExtension: 0,
-      };
+          dot: {
+            color: "#979797",
+            lineDash: [],
+            size: 14,
+            strokeWidth: 0,
+          },
+          message: {
+            color: "#979797",
+            display: true,
+            displayAuthor: true,
+            displayBranch: true,
+            displayHash: true,
+            font: "normal 14pt Arial",
+          },
+          shouldDisplayTooltipsInCompactMode: true,
+          spacing: 80,
+          tag: {
+            color: "#979797",
+            font: "normal 14pt Arial",
+          },
+          tooltipFormatter: expect.any(Function),
+          widthExtension: 0,
+        };
+      }
 
       beforeEach(() => {
         gitgraph = new GitgraphCore();
@@ -116,9 +116,11 @@ describe("Branch", () => {
 
       it("should have the style of the template by default", () => {
         gitgraph.commit();
+
         const { commits } = gitgraph.getRenderedData();
         const [commit] = commits;
-        expect(commit.style).toEqual(expectedStyle);
+
+        expect(commit.style).toEqual(createExpectedStyle());
       });
 
       it("should have a merge style with the defaultCommitOptions", () => {
@@ -130,9 +132,10 @@ describe("Branch", () => {
 
         const { commits } = gitgraph.getRenderedData();
         const [commit] = commits;
-        const expected = copy(expectedStyle);
-        expected.message.color = "green";
-        expect(commit.style).toEqual(expected);
+
+        const expectedStyle = createExpectedStyle();
+        expectedStyle.message.color = "green";
+        expect(commit.style).toEqual(expectedStyle);
       });
 
       it("should have a merge style with the commit", () => {
@@ -146,10 +149,11 @@ describe("Branch", () => {
 
         const { commits } = gitgraph.getRenderedData();
         const [commit] = commits;
-        const expected = copy(expectedStyle);
-        expected.message.color = "green";
-        expected.message.display = false;
-        expect(commit.style).toEqual(expected);
+
+        const expectedStyle = createExpectedStyle();
+        expectedStyle.message.color = "green";
+        expectedStyle.message.display = false;
+        expect(commit.style).toEqual(expectedStyle);
       });
 
       it("should have the color depending of the branch (metro theme)", () => {

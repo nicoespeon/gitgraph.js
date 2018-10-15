@@ -77,6 +77,15 @@ And constructed with the following guidelines:
 
 **Fabien Bernard** - [@fabien0102](https://twitter.com/fabien0102)
 
+[![0](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/0)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/0)
+[![1](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/1)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/1)
+[![2](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/2)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/2)
+[![3](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/3)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/3)
+[![4](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/4)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/4)
+[![5](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/5)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/5)
+[![6](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/6)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/6)
+[![7](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/7)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/7)
+
 ## Copyright and License
 
 Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][]

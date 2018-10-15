@@ -2,6 +2,7 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { Gitgraph, Mode } from "../Gitgraph";
+import importFixture from "./import-fixture";
 
 storiesOf("Gitgraph", module)
   .add("default", () => (
@@ -13,6 +14,13 @@ storiesOf("Gitgraph", module)
         master.commit("two");
         develop.commit("three");
         master.merge(develop);
+      }}
+    </Gitgraph>
+  ))
+  .add("import", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        gitgraph.import(importFixture);
       }}
     </Gitgraph>
   ))
@@ -111,6 +119,16 @@ storiesOf("Gitgraph", module)
         const feat2 = gitgraph.branch("feat2").commit();
         master.commit().commit();
         master.merge(feat2);
+      }}
+    </Gitgraph>
+  ))
+  .add("commit inner text", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        gitgraph
+          .commit({ subject: "Initial commit", innerText: "1" })
+          .commit({ subject: "Another commit", innerText: "2" })
+          .commit({ subject: "Do something crazy", innerText: "🙀" });
       }}
     </Gitgraph>
   ));
