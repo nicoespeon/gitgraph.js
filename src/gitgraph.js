@@ -1037,7 +1037,7 @@
    * @param {boolean} options.arrowDisplay - Add a arrow under commit dot
    * @param {string} [options.author = this.parent.author] - Author name & email
    * @param {string} [options.date] - Date of commit, default is now
-   * @param {string} [options.detail] - DOM Element of detail part
+   * @param {HTMLElement} [options.detail] - DOM Element of detail part
    * @param {string} [options.sha1] - Sha1, default is a random short sha1
    * @param {Commit} [options.parentCommit] - Parent commit
    * @param {string} [options.type = ("mergeCommit"|null)] - Type of commit
