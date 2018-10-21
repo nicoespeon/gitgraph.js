@@ -11,5 +11,10 @@
     "unified-signatures": false,
     "trailing-comma": true
   },
+  "linterOptions": {
+    "exclude": [
+      "**/*.json"
+    ]
+  },
   "rulesDirectory": []
 }

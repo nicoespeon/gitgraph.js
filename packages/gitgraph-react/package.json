@@ -29,7 +29,6 @@
   "jsnext:main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
-    "lint": "tslint --fix src/**/*",
     "watch": "tsc -w",
     "build": "run-s build:*",
     "build:clear": "rimraf ./lib",
@@ -62,8 +61,6 @@
     "rimraf": "^2.6.2",
     "rollup": "^0.51.8",
     "ts-loader": "3.5.0",
-    "tslint": "^5.9.1",
-    "tslint-config-prettier": "1.13.0",
     "typescript": "^2.8.1",
     "uglify-es": "^3.3.9"
   }

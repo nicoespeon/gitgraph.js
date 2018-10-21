@@ -26,8 +26,6 @@
   "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
   "main": "./src/index.ts",
   "scripts": {
-    "lint": "tslint src/**/*",
-    "lint:fix": "npm run lint -- --fix",
     "example:default": "ts-node examples/default.ts",
     "example:branches": "ts-node examples/branches.ts"
   },
@@ -40,8 +38,6 @@
     "@types/lodash": "^4.14.110",
     "@types/node": "^9.4.6",
     "ts-node": "^6.1.1",
-    "tslint": "^5.9.1",
-    "tslint-config-prettier": "1.13.0",
     "typescript": "^2.8.1"
   }
 }
