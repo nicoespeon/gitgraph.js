@@ -175,6 +175,10 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderTooltip(commit: Commit<React.ReactNode>) {
+    if (commit.renderTooltip) {
+      return commit.renderTooltip(commit);
+    }
+
     return (
       <Tooltip commit={commit}>
         {commit.hashAbbrev} - {commit.subject}

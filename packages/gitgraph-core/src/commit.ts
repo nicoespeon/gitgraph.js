@@ -4,6 +4,7 @@ import Branch from "./branch";
 export interface CommitRenderOptions<TNode> {
   renderDot?: (commit: Commit<TNode>) => TNode;
   renderMessage?: (commit: Commit<TNode>) => TNode;
+  renderTooltip?: (commit: Commit<TNode>) => TNode;
 }
 
 export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
@@ -162,11 +163,15 @@ export class Commit<TNode = SVGElement> {
   /**
    * Custom dot render
    */
-  public renderDot?: (commit: Commit<TNode>) => TNode;
+  public renderDot?: (comit: Commit<TNode>) => TNode;
   /**
    * Custom message render
    */
-  public renderMessage?: (commit: Commit<TNode>) => TNode;
+  public renderMessage?: (comit: Commit<TNode>) => TNode;
+  /**
+   * Custom tooltip render
+   */
+  public renderTooltip?: (comit: Commit<TNode>) => TNode;
 
   constructor(options: CommitOptions<TNode>) {
     // Set author & committer
@@ -214,6 +219,7 @@ export class Commit<TNode = SVGElement> {
     // Set custom renders
     this.renderDot = options.renderDot;
     this.renderMessage = options.renderMessage;
+    this.renderTooltip = options.renderTooltip;
   }
 }
 
