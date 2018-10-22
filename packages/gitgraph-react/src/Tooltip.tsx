@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Commit } from "gitgraph-core/lib/index";
 
-export default class Tooltip extends React.Component<
+export class Tooltip extends React.Component<
   { commit: Commit<React.ReactNode> },
   { textWidth: number }
 > {

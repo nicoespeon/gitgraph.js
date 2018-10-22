@@ -9,7 +9,7 @@ import {
   Mode,
 } from "gitgraph-core/lib/index";
 import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
-import Tooltip from "./Tooltip";
+import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
 export interface GitgraphProps {
