@@ -10,6 +10,7 @@ import {
 } from "gitgraph-core/lib/index";
 import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
 import Tooltip from "./Tooltip";
+import { Dot } from "./Dot";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
@@ -83,66 +84,14 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {commit.renderDot ? (
           commit.renderDot(commit)
         ) : (
-          /*
-          In order to handle strokes, we need to do some complex stuff here… 😅
-
-          Problem: strokes are drawn inside & outside the circle. The outside part get cropped (because the circle is now larger than computed).
-
-          Solution:
-          1. Create the circle in a <defs>
-          2. Define a clip path that references the circle
-          3. Use the clip path, adding the stroke.
-          4. Double stroke width because half of it (outside part) is clipped.
-
-          Ref.: https://stackoverflow.com/a/32162431/3911841
-
-          P.S. there is a proposal for a stroke-alignment property,
-          but it's still a W3C Draft ¯\_(ツ)_/¯
-          https://svgwg.org/specs/strokes/#SpecifyingStrokeAlignment
-        */
-          <>
-            <defs>
-              <circle
-                id={commit.hash}
-                cx={commit.style.dot.size}
-                cy={commit.style.dot.size}
-                r={commit.style.dot.size}
-                fill={commit.style.dot.color as string}
-              />
-              <clipPath id={`clip-${commit.hash}`}>
-                <use xlinkHref={`#${commit.hash}`} />
-              </clipPath>
-            </defs>
-
-            <g
-              onClick={commit.onClick}
-              onMouseOver={() => this.onMouseOver(commit)}
-              onMouseOut={() => {
-                this.setState({ currentCommitOver: null });
-                commit.onMouseOut();
-              }}
-            >
-              <use
-                xlinkHref={`#${commit.hash}`}
-                clipPath={`url(#clip-${commit.hash})`}
-                stroke={commit.style.dot.strokeColor}
-                strokeWidth={
-                  commit.style.dot.strokeWidth &&
-                  commit.style.dot.strokeWidth * 2
-                }
-              />
-              {commit.innerText && (
-                <text
-                  alignmentBaseline="central"
-                  textAnchor="middle"
-                  x={commit.style.dot.size}
-                  y={commit.style.dot.size}
-                >
-                  {commit.innerText}
-                </text>
-              )}
-            </g>
-          </>
+          <Dot
+            commit={commit}
+            onMouseOver={() => this.onMouseOver(commit)}
+            onMouseOut={() => {
+              this.setState({ currentCommitOver: null });
+              commit.onMouseOut();
+            }}
+          />
         )}
 
         {/* Tooltip */}
