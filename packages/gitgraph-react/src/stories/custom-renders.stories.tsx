@@ -5,7 +5,7 @@ import { Mode } from "gitgraph-core";
 
 storiesOf("Custom renders", module)
   .add("with render dot", () => {
-    const renderDot = (commit: Commit<React.ReactNode>) => (
+    const renderDot = (commit: Commit<React.ReactElement<SVGElement>>) => (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 71.84 75.33"
@@ -45,7 +45,7 @@ storiesOf("Custom renders", module)
     );
   })
   .add("with render tooltip", () => {
-    const renderTooltip = (commit: Commit<React.ReactNode>) => {
+    const renderTooltip = (commit: Commit<React.ReactElement<SVGElement>>) => {
       const commitSize = commit.style.dot.size * 2;
       return (
         <g transform={`translate(${commitSize + 10}, ${commitSize / 2})`}>
@@ -94,7 +94,7 @@ storiesOf("Custom renders", module)
   })
   .add("with render message", () => {
     const renderMessage = (
-      commit: Commit<React.ReactNode>,
+      commit: Commit<React.ReactElement<SVGElement>>,
       commitMessageX: number,
     ) => {
       return (

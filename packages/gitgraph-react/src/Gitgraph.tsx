@@ -14,14 +14,14 @@ import { Dot } from "./Dot";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
-  children: (gitgraph: GitgraphCore<React.ReactNode>) => void;
+  children: (gitgraph: GitgraphCore<React.ReactElement<SVGElement>>) => void;
 }
 
 export interface GitgraphState {
-  commits: Array<Commit<React.ReactNode>>;
-  branchesPaths: Map<Branch<React.ReactNode>, Coordinate[][]>;
+  commits: Array<Commit<React.ReactElement<SVGElement>>>;
+  branchesPaths: Map<Branch<React.ReactElement<SVGElement>>, Coordinate[][]>;
   commitMessagesX: number;
-  currentCommitOver: Commit<React.ReactNode> | null;
+  currentCommitOver: Commit<React.ReactElement<SVGElement>> | null;
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -29,7 +29,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     options: {},
   };
 
-  private gitgraph: GitgraphCore<React.ReactNode>;
+  private gitgraph: GitgraphCore<React.ReactElement<SVGElement>>;
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -39,7 +39,9 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       commitMessagesX: 0,
       currentCommitOver: null,
     };
-    this.gitgraph = new GitgraphCore<React.ReactNode>(props.options);
+    this.gitgraph = new GitgraphCore<React.ReactElement<SVGElement>>(
+      props.options,
+    );
     this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
   }
 
@@ -105,14 +107,14 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           commit.parents.map((parentHash) => {
             const parent = this.state.commits.find(
               ({ hash }) => hash === parentHash,
-            ) as Commit<React.ReactNode>;
+            ) as Commit<React.ReactElement<SVGElement>>;
             return this.drawArrow(parent, commit);
           })}
       </g>
     ));
   }
 
-  private renderTooltip(commit: Commit<React.ReactNode>) {
+  private renderTooltip(commit: Commit<React.ReactElement<SVGElement>>) {
     if (commit.renderTooltip) {
       return commit.renderTooltip(commit);
     }
@@ -124,7 +126,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private renderMessage(commit: Commit<React.ReactNode>) {
+  private renderMessage(commit: Commit<React.ReactElement<SVGElement>>) {
     if (commit.renderMessage) {
       return commit.renderMessage(commit, this.state.commitMessagesX);
     }
@@ -143,7 +145,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private onMouseOver(commit: Commit<React.ReactNode>): void {
+  private onMouseOver(commit: Commit<React.ReactElement<SVGElement>>): void {
     if (
       this.gitgraph.mode === Mode.Compact &&
       commit.style.shouldDisplayTooltipsInCompactMode
@@ -155,8 +157,8 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private drawArrow(
-    parent: Commit<React.ReactNode>,
-    commit: Commit<React.ReactNode>,
+    parent: Commit<React.ReactElement<SVGElement>>,
+    commit: Commit<React.ReactElement<SVGElement>>,
   ) {
     const commitRadius = commit.style.dot.size;
 
@@ -193,7 +195,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 // For now, this piece of logic is here.
 // But it might be relevant to move this back to gitgraph-core.
 // Ideally, it would be a method of Commit: `commit.message()`.
-function getMessage(commit: Commit<React.ReactNode>): string {
+function getMessage(commit: Commit<React.ReactElement<SVGElement>>): string {
   let message = "";
 
   if (commit.style.message.displayBranch) {

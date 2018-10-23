@@ -2,7 +2,7 @@ import * as React from "react";
 import { Commit } from "gitgraph-core/lib/index";
 
 export class Tooltip extends React.Component<
-  { commit: Commit<React.ReactNode> },
+  { commit: Commit<React.ReactElement<SVGElement>> },
   { textWidth: number }
 > {
   public readonly state = { textWidth: 0 };

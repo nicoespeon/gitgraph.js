@@ -2,7 +2,7 @@ import * as React from "react";
 import { Commit } from "gitgraph-core";
 
 export interface DotProps {
-  commit: Commit<React.ReactNode>;
+  commit: Commit<React.ReactElement<SVGElement>>;
   onMouseOver: () => void;
   onMouseOut: () => void;
 }
