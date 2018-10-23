@@ -98,18 +98,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
 
         {/* Message */}
-        {commit.style.message.display && (
-          <text
-            x={this.state.commitMessagesX - commit.x}
-            y={commit.style.dot.size}
-            alignmentBaseline="central"
-            fill={commit.style.message.color}
-            style={{ font: commit.style.message.font }}
-            onClick={commit.onMessageClick}
-          >
-            {getMessage(commit)}
-          </text>
-        )}
+        {commit.style.message.display && this.renderMessage(commit)}
 
         {/* Arrow */}
         {this.gitgraph.template.arrow.size &&
@@ -132,6 +121,25 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <Tooltip commit={commit}>
         {commit.hashAbbrev} - {commit.subject}
       </Tooltip>
+    );
+  }
+
+  private renderMessage(commit: Commit<React.ReactNode>) {
+    if (commit.renderMessage) {
+      return commit.renderMessage(commit, this.state.commitMessagesX);
+    }
+
+    return (
+      <text
+        x={this.state.commitMessagesX - commit.x}
+        y={commit.style.dot.size}
+        alignmentBaseline="central"
+        fill={commit.style.message.color}
+        style={{ font: commit.style.message.font }}
+        onClick={commit.onMessageClick}
+      >
+        {getMessage(commit)}
+      </text>
     );
   }
 

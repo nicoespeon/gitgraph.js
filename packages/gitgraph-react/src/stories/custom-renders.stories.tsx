@@ -91,4 +91,45 @@ storiesOf("Custom renders", module)
         }}
       </Gitgraph>
     );
+  })
+  .add("with render message", () => {
+    const renderMessage = (
+      commit: Commit<React.ReactNode>,
+      commitMessageX: number,
+    ) => {
+      return (
+        <text
+          x={commitMessageX - commit.x}
+          y={commit.style.dot.size}
+          fill={commit.style.dot.color}
+        >
+          {commit.hashAbbrev} - {commit.subject}
+        </text>
+      );
+    };
+
+    return (
+      <Gitgraph>
+        {(gitgraph) => {
+          gitgraph
+            .commit({ subject: "Initial commit" })
+            .commit({ subject: "Another commit" })
+            .commit({
+              subject: "Do something crazy",
+              renderMessage,
+            });
+
+          gitgraph
+            .branch("dev")
+            .commit({
+              subject: "Oh my god",
+              renderMessage,
+            })
+            .commit({
+              subject: "This is a saxo!",
+              renderMessage,
+            });
+        }}
+      </Gitgraph>
+    );
   });
