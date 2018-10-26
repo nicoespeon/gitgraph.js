@@ -147,8 +147,8 @@ Thumbs.db
 # VSCode
 .vscode/
 
-# compiled files
-lib
+# Compiled files
+packages/gitgraph-core/lib
 
 # npm
 package-lock.json
