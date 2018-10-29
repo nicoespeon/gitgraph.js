@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
-import { GitgraphAngularComponent } from "./gitgraph-angular.component";
-import { GraphComponent } from "./graph/graph.component";
+import { BrowserModule } from "@angular/platform-browser";
+
+import { GraphModule } from "./graph/graph.module";
 
 @NgModule({
-  imports: [],
-  declarations: [GitgraphAngularComponent, GraphComponent],
-  exports: [GitgraphAngularComponent, GraphComponent],
+  imports: [BrowserModule, GraphModule],
+  exports: [GraphModule],
 })
 export class GitgraphAngularModule {}

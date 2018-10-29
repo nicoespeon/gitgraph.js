@@ -1,4 +1,38 @@
-<p>
-  graph works! yay
-</p>
-{{commits}}
+<svg width=1000 height=1000>
+  <path *ngFor="let item of branchesPaths | keyvalue" [attr.key]="item.key.name" [attr.d]="createD(item.value)"
+    attr.fill="transparent" [attr.stroke]="item.key.computedColor" [attr.strokeWidth]="item.key.style.lineWidth"
+    [attr.transform]="createTransformString(offset, offset)" />
+
+  <g *ngFor="let commit of commits" [attr.key]="commit.hashAbbrev" [attr.transform]="createTransformString(commit.x, commit.y)">
+    <!-- Dot -->
+    <!-- Omitting mouse-over stuff -->
+    <svg:g gg-dot [commit]="commit"></svg:g>
+
+
+    <!-- Tooltip -->
+    <!-- {this.state.currentCommitOver === commit && this.renderTooltip(commit)} -->
+
+    <!-- Message -->
+    <!-- {commit.style.message.display && (
+          <text
+            x={this.state.commitMessagesX - commit.x}
+            y={commit.style.dot.size}
+            alignmentBaseline="central"
+            fill={commit.style.message.color}
+            style={{ font: commit.style.message.font }}
+            onClick={commit.onMessageClick}
+          >
+            {getMessage(commit)}
+          </text>
+        )} -->
+
+    <!-- Arrow -->
+    <!-- {this.gitgraph.template.arrow.size &&
+          commit.parents.map((parentHash) => {
+            const parent = this.state.commits.find(
+              ({ hash }) => hash === parentHash,
+            ) as Commit<React.ReactNode>;
+            return this.drawArrow(parent, commit);
+          })} -->
+  </g>
+</svg>

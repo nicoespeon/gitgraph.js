@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { GitgraphCore, Commit } from "gitgraph-core";
+import { Commit, GitgraphCore } from "gitgraph-core";
 
 @Component({
   selector: "app-root",

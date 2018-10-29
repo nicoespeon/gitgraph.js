@@ -38,8 +38,11 @@
         "order": [
           "static-field",
           "instance-field",
-          "static-method",
-          "instance-method"
+          "private-instance-field",
+          "constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method"
         ]
       }
     ],
@@ -126,6 +129,24 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
-  }
+    "directive-class-suffix": true,
+    "ordered-imports": [true],
+    "trailing-comma": [
+      true,
+      {
+          "multiline": {
+              "objects": "always",
+              "arrays": "always",
+              "functions": "always",
+              "typeLiterals": "always"
+          }
+      }
+    ]
+  },
+  "array-type": [true, "array"],
+  "arrow-parens": true,
+  "typedef": [true, "call-signature", "parameter", "property-declaration"],
+  "no-require-imports": true,
+  "no-consecutive-blank-lines": [true],
+  "one-variable-per-declaration": [true]
 }

@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { GitgraphAngularComponent } from "./gitgraph-angular.component";
+import { DotComponent } from "./dot.component";
 
-describe("GitgraphAngularComponent", () => {
-  let component: GitgraphAngularComponent;
-  let fixture: ComponentFixture<GitgraphAngularComponent>;
+describe("DotComponent", () => {
+  let component: DotComponent;
+  let fixture: ComponentFixture<DotComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GitgraphAngularComponent],
+      declarations: [DotComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GitgraphAngularComponent);
+    fixture = TestBed.createComponent(DotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
