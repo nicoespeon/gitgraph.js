@@ -9,18 +9,19 @@ import {
   Mode,
 } from "gitgraph-core/lib/index";
 import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
-import Tooltip from "./Tooltip";
+import { Tooltip } from "./Tooltip";
+import { Dot } from "./Dot";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
-  children: (gitgraph: GitgraphCore) => void;
+  children: (gitgraph: GitgraphCore<React.ReactNode>) => void;
 }
 
 export interface GitgraphState {
-  commits: Commit[];
-  branchesPaths: Map<Branch, Coordinate[][]>;
+  commits: Array<Commit<React.ReactNode>>;
+  branchesPaths: Map<Branch<React.ReactNode>, Coordinate[][]>;
   commitMessagesX: number;
-  currentCommitOver: Commit | null;
+  currentCommitOver: Commit<React.ReactNode> | null;
 }
 
 export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -28,7 +29,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     options: {},
   };
 
-  private gitgraph: GitgraphCore;
+  private gitgraph: GitgraphCore<React.ReactNode>;
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -38,7 +39,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       commitMessagesX: 0,
       currentCommitOver: null,
     };
-    this.gitgraph = new GitgraphCore(props.options);
+    this.gitgraph = new GitgraphCore<React.ReactNode>(props.options);
     this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
   }
 
@@ -80,63 +81,18 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         transform={`translate(${commit.x}, ${commit.y})`}
       >
         {/* Dot */}
-        {/*
-          In order to handle strokes, we need to do some complex stuff here… 😅
-
-          Problem: strokes are drawn inside & outside the circle. The outside part get cropped (because the circle is now larger than computed).
-
-          Solution:
-          1. Create the circle in a <defs>
-          2. Define a clip path that references the circle
-          3. Use the clip path, adding the stroke.
-          4. Double stroke width because half of it (outside part) is clipped.
-
-          Ref.: https://stackoverflow.com/a/32162431/3911841
-
-          P.S. there is a proposal for a stroke-alignment property,
-          but it's still a W3C Draft ¯\_(ツ)_/¯
-          https://svgwg.org/specs/strokes/#SpecifyingStrokeAlignment
-        */}
-        <defs>
-          <circle
-            id={commit.hash}
-            cx={commit.style.dot.size}
-            cy={commit.style.dot.size}
-            r={commit.style.dot.size}
-            fill={commit.style.dot.color as string}
+        {commit.renderDot ? (
+          commit.renderDot(commit)
+        ) : (
+          <Dot
+            commit={commit}
+            onMouseOver={() => this.onMouseOver(commit)}
+            onMouseOut={() => {
+              this.setState({ currentCommitOver: null });
+              commit.onMouseOut();
+            }}
           />
-          <clipPath id={`clip-${commit.hash}`}>
-            <use xlinkHref={`#${commit.hash}`} />
-          </clipPath>
-        </defs>
-
-        <g
-          onClick={commit.onClick}
-          onMouseOver={() => this.onMouseOver(commit)}
-          onMouseOut={() => {
-            this.setState({ currentCommitOver: null });
-            commit.onMouseOut();
-          }}
-        >
-          <use
-            xlinkHref={`#${commit.hash}`}
-            clipPath={`url(#clip-${commit.hash})`}
-            stroke={commit.style.dot.strokeColor}
-            strokeWidth={
-              commit.style.dot.strokeWidth && commit.style.dot.strokeWidth * 2
-            }
-          />
-          {commit.innerText && (
-            <text
-              alignmentBaseline="central"
-              textAnchor="middle"
-              x={commit.style.dot.size}
-              y={commit.style.dot.size}
-            >
-              {commit.innerText}
-            </text>
-          )}
-        </g>
+        )}
 
         {/* Tooltip */}
         {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
@@ -160,22 +116,26 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           commit.parents.map((parentHash) => {
             const parent = this.state.commits.find(
               ({ hash }) => hash === parentHash,
-            ) as Commit;
+            ) as Commit<React.ReactNode>;
             return this.drawArrow(parent, commit);
           })}
       </g>
     ));
   }
 
-  private renderTooltip(commit: Commit) {
+  private renderTooltip(commit: Commit<React.ReactNode>) {
+    if (commit.renderTooltip) {
+      return commit.renderTooltip(commit);
+    }
+
     return (
       <Tooltip commit={commit}>
-        {() => commit.style.tooltipFormatter(commit)}
+        {commit.hashAbbrev} - {commit.subject}
       </Tooltip>
     );
   }
 
-  private onMouseOver(commit: Commit): void {
+  private onMouseOver(commit: Commit<React.ReactNode>): void {
     if (
       this.gitgraph.mode === Mode.Compact &&
       commit.style.shouldDisplayTooltipsInCompactMode
@@ -186,7 +146,10 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     commit.onMouseOver();
   }
 
-  private drawArrow(parent: Commit, commit: Commit) {
+  private drawArrow(
+    parent: Commit<React.ReactNode>,
+    commit: Commit<React.ReactNode>,
+  ) {
     const commitRadius = commit.style.dot.size;
 
     // Starting point, relative to commit
@@ -222,7 +185,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 // For now, this piece of logic is here.
 // But it might be relevant to move this back to gitgraph-core.
 // Ideally, it would be a method of Commit: `commit.message()`.
-function getMessage(commit: Commit): string {
+function getMessage(commit: Commit<React.ReactNode>): string {
   let message = "";
 
   if (commit.style.message.displayBranch) {

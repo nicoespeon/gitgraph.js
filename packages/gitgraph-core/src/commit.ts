@@ -1,7 +1,13 @@
 import { CommitStyle } from "./template";
 import Branch from "./branch";
 
-export interface CommitOptions {
+export interface CommitRenderOptions<TNode> {
+  renderDot?: (commit: Commit<TNode>) => TNode;
+  renderMessage?: (commit: Commit<TNode>) => TNode;
+  renderTooltip?: (commit: Commit<TNode>) => TNode;
+}
+
+export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
   author: string;
   subject: string;
   style: CommitStyle;
@@ -12,10 +18,10 @@ export interface CommitOptions {
   hash?: string;
   parents?: string[];
   innerText?: string;
-  onClick?: (commit: Commit) => void;
-  onMessageClick?: (commit: Commit) => void;
-  onMouseOver?: (commit: Commit) => void;
-  onMouseOut?: (commit: Commit) => void;
+  onClick?: (commit: Commit<TNode>) => void;
+  onMessageClick?: (commit: Commit<TNode>) => void;
+  onMouseOver?: (commit: Commit<TNode>) => void;
+  onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
 /**
@@ -39,7 +45,7 @@ const getRandomHash = () =>
       .substring(3)
   ).substring(0, 40);
 
-export class Commit {
+export class Commit<TNode = SVGElement> {
   /**
    * Ref names (injected by Gitgraph.withRefsAndTags)
    */
@@ -71,11 +77,11 @@ export class Commit {
   /**
    * Parent hashes
    */
-  public parents: Array<Commit["hash"]>;
+  public parents: Array<Commit<TNode>["hash"]>;
   /**
    * Abbreviated parent hashed
    */
-  public parentsAbbrev: Array<Commit["hashAbbrev"]>;
+  public parentsAbbrev: Array<Commit<TNode>["hashAbbrev"]>;
   /**
    * Author
    */
@@ -154,8 +160,20 @@ export class Commit {
    * Callback to execute on mouse out.
    */
   public onMouseOut: () => void;
+  /**
+   * Custom dot render
+   */
+  public renderDot?: (comit: Commit<TNode>) => TNode;
+  /**
+   * Custom message render
+   */
+  public renderMessage?: (comit: Commit<TNode>) => TNode;
+  /**
+   * Custom tooltip render
+   */
+  public renderTooltip?: (comit: Commit<TNode>) => TNode;
 
-  constructor(options: CommitOptions) {
+  constructor(options: CommitOptions<TNode>) {
     // Set author & committer
     let name, email;
     try {
@@ -197,6 +215,11 @@ export class Commit {
       options.onMouseOver ? options.onMouseOver(this) : undefined;
     this.onMouseOut = () =>
       options.onMouseOut ? options.onMouseOut(this) : undefined;
+
+    // Set custom renders
+    this.renderDot = options.renderDot;
+    this.renderMessage = options.renderMessage;
+    this.renderTooltip = options.renderTooltip;
   }
 }
 

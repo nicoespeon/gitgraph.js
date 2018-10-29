@@ -51,7 +51,12 @@ class GitgraphPlayground extends React.Component<any, any> {
     const branches: Branch[] = this.state.branches;
     return (
       <div>
-        <form onSubmit={(e) => e.preventDefault() || this.addCommit()}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.addCommit();
+          }}
+        >
           <input
             type="text"
             value={this.state.commitMessage}
@@ -59,14 +64,22 @@ class GitgraphPlayground extends React.Component<any, any> {
           />
           <button>Commit on HEAD</button>
         </form>
-        <form onSubmit={(e) => e.preventDefault() || this.addBranch()}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.addBranch();
+          }}
+        >
           <input type="text" onChange={this.handleChange("branchName")} />
           <button>Add a branch</button>
         </form>
         {branches.map((branch) => (
           <form
             key={branch.name}
-            onSubmit={(e) => e.preventDefault() || this.addCommit(branch)}
+            onSubmit={(e) => {
+              e.preventDefault();
+              this.addCommit(branch);
+            }}
           >
             <input
               type="text"

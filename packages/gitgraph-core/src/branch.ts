@@ -1,19 +1,20 @@
-import Commit from "./commit";
+import Commit, { CommitRenderOptions } from "./commit";
 import { GitgraphCore, GitgraphCommitOptions, Mode } from "./gitgraph";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
 
-export interface BranchCommitDefaultOptions {
+export interface BranchCommitDefaultOptions<TNode>
+  extends CommitRenderOptions<TNode> {
   author?: string;
   subject?: string;
   style?: CommitStyleOptions;
 }
 
-export interface BranchOptions {
+export interface BranchOptions<TNode = SVGElement> {
   /**
    * Gitgraph constructor
    */
-  gitgraph: GitgraphCore;
+  gitgraph: GitgraphCore<TNode>;
   /**
    * Branch name
    */
@@ -29,26 +30,26 @@ export interface BranchOptions {
   /**
    * Default options for commits
    */
-  commitDefaultOptions?: BranchCommitDefaultOptions;
+  commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;
 }
 
 /**
  * Branch
  */
-export class Branch {
+export class Branch<TNode = SVGElement> {
   public name: BranchOptions["name"];
   public style: BranchStyle;
-  public commitDefaultOptions: BranchCommitDefaultOptions;
+  public commitDefaultOptions: BranchCommitDefaultOptions<TNode>;
   public computedColor?: BranchStyle["color"];
 
-  private gitgraph: GitgraphCore;
+  private gitgraph: GitgraphCore<TNode>;
   private parentCommitHash: BranchOptions["parentCommitHash"];
 
   /**
    * Branch constructor
    * @param options options
    */
-  constructor(options: BranchOptions) {
+  constructor(options: BranchOptions<TNode>) {
     this.gitgraph = options.gitgraph;
     this.name = options.name;
     this.style = options.style;
@@ -61,14 +62,16 @@ export class Branch {
    *
    * @param subject Commit subject
    */
-  public commit(subject?: string): Branch;
+  public commit(subject?: string): Branch<TNode>;
   /**
    * Add a new commit in the branch (as `git commit`).
    *
    * @param options Options of the commit
    */
-  public commit(options?: GitgraphCommitOptions): Branch;
-  public commit(options?: GitgraphCommitOptions | string): Branch {
+  public commit(options?: GitgraphCommitOptions<TNode>): Branch<TNode>;
+  public commit(
+    options?: GitgraphCommitOptions<TNode> | string,
+  ): Branch<TNode> {
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options as string };
     if (!options) options = {};
@@ -123,14 +126,14 @@ export class Branch {
    *
    * @param branch Branch
    */
-  public merge(branch: Branch): Branch;
+  public merge(branch: Branch<TNode>): Branch<TNode>;
   /**
    * Create a merge commit.
    *
    * @param branchName Branch name
    */
-  public merge(branchName: string): Branch;
-  public merge(branch: string | Branch): Branch {
+  public merge(branchName: string): Branch<TNode>;
+  public merge(branch: string | Branch<TNode>): Branch<TNode> {
     const branchName = typeof branch === "string" ? branch : branch.name;
     const parentCommitHash = this.gitgraph.refs.get(
       branchName,
@@ -147,7 +150,7 @@ export class Branch {
   /**
    * Checkout onto this branch
    */
-  public checkout(): Branch {
+  public checkout(): Branch<TNode> {
     this.gitgraph.currentBranch = this;
     return this;
   }
@@ -157,7 +160,7 @@ export class Branch {
    *
    * @param name Name of the tag
    */
-  public tag(name: string): Branch {
+  public tag(name: string): Branch<TNode> {
     this.gitgraph.tag(name, this.name);
     return this;
   }

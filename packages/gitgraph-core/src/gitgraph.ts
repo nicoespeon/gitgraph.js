@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
-import Commit from "./commit";
+import Commit, { CommitRenderOptions } from "./commit";
 import {
   Template,
   TemplateName,
@@ -37,13 +37,14 @@ export interface GitgraphOptions {
   commitMessage?: string;
 }
 
-export interface RenderedData {
-  commits: Commit[];
-  branchesPaths: Map<Branch, Coordinate[][]>;
+export interface RenderedData<TNode> {
+  commits: Array<Commit<TNode>>;
+  branchesPaths: Map<Branch<TNode>, Coordinate[][]>;
   commitMessagesX: number;
 }
 
-export interface GitgraphCommitOptions {
+export interface GitgraphCommitOptions<TNode = SVGElement>
+  extends CommitRenderOptions<TNode> {
   author?: string;
   subject?: string;
   body?: string;
@@ -55,13 +56,13 @@ export interface GitgraphCommitOptions {
   style?: CommitStyleOptions;
   innerText?: string;
   tag?: string;
-  onClick?: (commit: Commit) => void;
-  onMessageClick?: (commit: Commit) => void;
-  onMouseOver?: (commit: Commit) => void;
-  onMouseOut?: (commit: Commit) => void;
+  onClick?: (commit: Commit<TNode>) => void;
+  onMessageClick?: (commit: Commit<TNode>) => void;
+  onMouseOver?: (commit: Commit<TNode>) => void;
+  onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
-export interface GitgraphBranchOptions {
+export interface GitgraphBranchOptions<TNode> {
   /**
    * Branch name
    */
@@ -69,14 +70,14 @@ export interface GitgraphBranchOptions {
   /**
    * Default options for commits
    */
-  commitDefaultOptions?: BranchCommitDefaultOptions;
+  commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;
   /**
    * Branch style
    */
   style?: BranchStyleOptions;
 }
 
-export class GitgraphCore {
+export class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
   public isVertical: boolean;
   public reverseArrow: boolean;
@@ -89,9 +90,9 @@ export class GitgraphCore {
 
   public refs = new Refs();
   public tags = new Refs();
-  public commits: Commit[] = [];
-  public branches: Map<Branch["name"], Branch> = new Map();
-  public currentBranch: Branch;
+  public commits: Array<Commit<TNode>> = [];
+  public branches: Map<Branch["name"], Branch<TNode>> = new Map();
+  public currentBranch: Branch<TNode>;
 
   private columns: Array<Branch["name"]> = [];
   private rows: Map<Commit["hash"], number> = new Map();
@@ -139,14 +140,14 @@ export class GitgraphCore {
   /**
    * Get rendered data of each commits and branches paths.
    */
-  public getRenderedData(): RenderedData {
+  public getRenderedData(): RenderedData<TNode> {
     let commits = this.commits.map(this.withRefsAndTags);
     commits = this.withBranches(commits, { firstParentOnly: true });
     this.calculateRows(commits);
     commits = commits.map(this.withPosition).map(this.withColor);
     const flatBranchesPaths = commits.reduce(
       this.initBranchesPaths,
-      new Map<Branch, InternalCoordinate[]>(),
+      new Map<Branch<TNode>, InternalCoordinate[]>(),
     );
     commits = this.withBranches(commits);
     this.addMergeCommitsIntoBranchesPaths(commits, flatBranchesPaths);
@@ -172,14 +173,14 @@ export class GitgraphCore {
    *
    * @param subject Commit subject
    */
-  public commit(subject?: string): GitgraphCore;
+  public commit(subject?: string): GitgraphCore<TNode>;
   /**
    * Add a new commit in the history (as `git commit`).
    *
    * @param options Options of the commit
    */
-  public commit(options?: GitgraphCommitOptions): GitgraphCore;
-  public commit(options?: any): GitgraphCore {
+  public commit(options?: GitgraphCommitOptions<TNode>): GitgraphCore<TNode>;
+  public commit(options?: any): GitgraphCore<TNode> {
     this.currentBranch.commit(options);
     return this;
   }
@@ -189,16 +190,16 @@ export class GitgraphCore {
    *
    * @param options options of the branch
    */
-  public branch(options: GitgraphBranchOptions): Branch;
+  public branch(options: GitgraphBranchOptions<TNode>): Branch<TNode>;
   /**
    * Create a new branch. (as `git branch`)
    *
    * @param name name of the created branch
    */
-  public branch(name: string): Branch;
-  public branch(args: any): Branch {
+  public branch(name: string): Branch<TNode>;
+  public branch(args: any): Branch<TNode> {
     const parentCommitHash = this.refs.get("HEAD") as Commit["hash"];
-    let options: BranchOptions = {
+    let options: BranchOptions<TNode> = {
       gitgraph: this,
       name: "",
       parentCommitHash,
@@ -209,7 +210,7 @@ export class GitgraphCore {
     } else {
       options = { ...options, ...args };
     }
-    const branch = new Branch(options);
+    const branch = new Branch<TNode>(options);
     this.branches.set(branch.name, branch);
 
     return branch;
@@ -218,7 +219,7 @@ export class GitgraphCore {
   /**
    * Clear everything. (as `rm -rf .git && git init`)
    */
-  public clear(): GitgraphCore {
+  public clear(): GitgraphCore<TNode> {
     this.refs = new Refs();
     this.tags = new Refs();
     this.commits = [];
@@ -237,10 +238,10 @@ export class GitgraphCore {
    */
   public tag(
     name: string,
-    ref: Commit | Commit["hash"] | Branch["name"] = this.refs.get(
+    ref: Commit<TNode> | Commit["hash"] | Branch["name"] = this.refs.get(
       "HEAD",
     ) as Commit["hash"],
-  ): GitgraphCore {
+  ): GitgraphCore<TNode> {
     if (typeof ref === "string") {
       const commitHashOrRefs = this.refs.get(ref);
       if (!commitHashOrRefs) {
@@ -313,7 +314,7 @@ export class GitgraphCore {
       }),
     );
 
-    const commits = schema.validateSync(data) as Commit[];
+    const commits = schema.validateSync(data) as Array<Commit<TNode>>;
 
     // Use validated `value`.
     this.clear();
@@ -355,7 +356,7 @@ export class GitgraphCore {
    *
    * @param commit One commit
    */
-  private withRefsAndTags(commit: Commit): Commit {
+  private withRefsAndTags(commit: Commit<TNode>): Commit<TNode> {
     return {
       ...commit,
       refs: (this.refs.get(commit.hash) as string[]) || [],
@@ -371,9 +372,9 @@ export class GitgraphCore {
    * @param options.firstParentOnly Resolve the first parent of merge commit only
    */
   private withBranches(
-    commits: Commit[],
+    commits: Array<Commit<TNode>>,
     { firstParentOnly } = { firstParentOnly: false },
-  ): Commit[] {
+  ): Array<Commit<TNode>> {
     const branches = Array.from(this.refs)
       .filter(([key, value]) => typeof value === "string" && key !== "HEAD")
       .map(([key]) => key);
@@ -386,7 +387,7 @@ export class GitgraphCore {
         const currentHash = queue.pop() as Commit["hash"];
         const current = commits.find(
           ({ hash }) => hash === currentHash,
-        ) as Commit;
+        ) as Commit<TNode>;
         const prevBranches = refs.get(currentHash) || new Set<Branch["name"]>();
         prevBranches.add(branch);
         refs.set(currentHash, prevBranches);
@@ -410,7 +411,7 @@ export class GitgraphCore {
    * It's set directly into `this.rows` and `this.maxRow`
    * @param commits
    */
-  private calculateRows(commits: Commit[]): void {
+  private calculateRows(commits: Array<Commit<TNode>>): void {
     // Reset values
     this.rows = new Map<Commit["hash"], number>();
     this.maxRow = 0;
@@ -422,7 +423,7 @@ export class GitgraphCore {
           // Compact mode
           if (i === 0) return this.rows.set(commit.hash, i);
           const parentRow: number = this.rows.get(commit.parents[0]) as number;
-          const historyParent: Commit = commits[i - 1];
+          const historyParent: Commit<TNode> = commits[i - 1];
           let newRow = Math.max(parentRow + 1, this.rows.get(
             historyParent.hash,
           ) as number);
@@ -453,7 +454,7 @@ export class GitgraphCore {
    *
    * @param commit One commit
    */
-  private withColor(commit: Commit): Commit {
+  private withColor(commit: Commit<TNode>): Commit<TNode> {
     // Retrieve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
     const column = this.columns.findIndex((col) => col === branch);
@@ -491,7 +492,7 @@ export class GitgraphCore {
    *
    * @param commit One commit
    */
-  private withPosition(commit: Commit): Commit {
+  private withPosition(commit: Commit<TNode>): Commit<TNode> {
     // Resolve branch's column index
     const branch = (commit.branches as Array<Branch["name"]>)[0];
     if (!this.columns.includes(branch)) this.columns.push(branch);
@@ -545,14 +546,14 @@ export class GitgraphCore {
    * @param commits All commits (with only the first branch resolve)
    */
   private initBranchesPaths(
-    branchesPaths: Map<Branch, InternalCoordinate[]>,
-    commit: Commit,
+    branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
+    commit: Commit<TNode>,
     index: number,
-    commits: Commit[],
-  ): Map<Branch, InternalCoordinate[]> {
+    commits: Array<Commit<TNode>>,
+  ): Map<Branch<TNode>, InternalCoordinate[]> {
     const branch = this.branches.get(
       (commit.branches as Array<Branch["name"]>)[0],
-    ) as Branch;
+    ) as Branch<TNode>;
 
     if (branchesPaths.has(branch)) {
       branchesPaths.set(branch, [
@@ -564,7 +565,7 @@ export class GitgraphCore {
         // We are on a branch -> include the parent commit in the path
         const parentCommit = commits.find(
           ({ hash }) => hash === commit.parents[0],
-        ) as Commit;
+        ) as Commit<TNode>;
         branchesPaths.set(branch, [
           { x: parentCommit.x, y: parentCommit.y },
           { x: commit.x, y: commit.y },
@@ -585,8 +586,8 @@ export class GitgraphCore {
    * @param branchesPaths Map of coordinates of each branch
    */
   private addMergeCommitsIntoBranchesPaths(
-    commits: Commit[],
-    branchesPaths: Map<Branch, InternalCoordinate[]>,
+    commits: Array<Commit<TNode>>,
+    branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
   ) {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
 
@@ -615,9 +616,9 @@ export class GitgraphCore {
    * @param flatBranchesPaths Map of coordinates of each branch
    */
   private smoothBranchesPaths(
-    flatBranchesPaths: Map<Branch, InternalCoordinate[]>,
-  ): Map<Branch, Coordinate[][]> {
-    const branchesPaths = new Map<Branch, Coordinate[][]>();
+    flatBranchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
+  ): Map<Branch<TNode>, Coordinate[][]> {
+    const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
 
     flatBranchesPaths.forEach((points, branch) => {
       if (points.length <= 1) {

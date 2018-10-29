@@ -8,7 +8,7 @@ storiesOf("Gitgraph events", module)
   .add("on commit dot click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onClick(commit: Commit) {
+        function onClick(commit: Commit<React.ReactNode>) {
           alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
         }
 
@@ -29,7 +29,7 @@ storiesOf("Gitgraph events", module)
   .add("on commit message click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onMessageClick(commit: Commit) {
+        function onMessageClick(commit: Commit<React.ReactNode>) {
           alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
         }
 
@@ -50,7 +50,7 @@ storiesOf("Gitgraph events", module)
   .add("on commit mouseover", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onMouseOver(commit: Commit) {
+        function onMouseOver(commit: Commit<React.ReactNode>) {
           alert(
             `Mouse is over commit ${commit.hashAbbrev}: "${commit.subject}"`,
           );
@@ -73,7 +73,7 @@ storiesOf("Gitgraph events", module)
   .add("on commit mouseout", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onMouseOut(commit: Commit) {
+        function onMouseOut(commit: Commit<React.ReactNode>) {
           alert(
             `Mouse is out commit ${commit.hashAbbrev}: "${commit.subject}"`,
           );
