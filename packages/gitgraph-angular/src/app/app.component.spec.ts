@@ -1,10 +1,13 @@
 import { async, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 
+import { GitgraphAngularModule } from "gitgraph-angular";
+
 describe("AppComponent", () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppComponent],
+      imports: [GitgraphAngularModule],
     }).compileComponents();
   }));
 

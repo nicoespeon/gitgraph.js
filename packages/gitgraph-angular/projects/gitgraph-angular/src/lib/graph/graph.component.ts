@@ -51,4 +51,38 @@ export class GraphComponent implements OnInit {
   public createTransformString(x: number, y: number): string {
     return `translate(${x}, ${y})`;
   }
+
+  public findParents(commit: Commit): Commit[] {
+    return commit.parents.map((parentHash) => {
+      return this.commits.find(({ hash }) => hash === parentHash);
+    });
+  }
+
+  // For now, this piece of logic is here.
+  // But it might be relevant to move this back to gitgraph-core.
+  // Ideally, it would be a method of Commit: `commit.message()`.
+  // tslint:disable:no-non-null-assertion
+  public getMessage(commit: Commit): string {
+    let message = "";
+
+    if (commit.style.message.displayBranch) {
+      message += `[${commit.branches![commit.branches!.length - 1]}`;
+      if (commit.tags!.length) {
+        message += `, ${commit.tags!.join(", ")}`;
+      }
+      message += `] `;
+    }
+
+    if (commit.style.message.displayHash) {
+      message += `${commit.hashAbbrev} `;
+    }
+
+    message += commit.subject;
+
+    if (commit.style.message.displayAuthor) {
+      message += ` - ${commit.author.name} <${commit.author.email}>`;
+    }
+
+    return message;
+  }
 }

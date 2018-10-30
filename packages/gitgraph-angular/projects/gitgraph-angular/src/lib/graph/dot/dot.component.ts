@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from "@angular/core";
 
 import { Commit } from "gitgraph-core";
 
@@ -7,6 +12,7 @@ import { Commit } from "gitgraph-core";
   selector: "[gg-dot]",
   templateUrl: "./dot.component.html",
   styleUrls: ["./dot.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DotComponent implements OnInit {
   @Input() public commit: Commit;

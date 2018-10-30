@@ -5,7 +5,7 @@
 
   <g *ngFor="let commit of commits" [attr.key]="commit.hashAbbrev" [attr.transform]="createTransformString(commit.x, commit.y)">
     <!-- Dot -->
-    <!-- Omitting mouse-over stuff -->
+    <!-- Omitting mouse-over stuff for now -->
     <svg:g gg-dot [commit]="commit"></svg:g>
 
 
@@ -25,14 +25,18 @@
             {getMessage(commit)}
           </text>
         )} -->
+    <ng-container *ngIf="commit.style.message.display">
+      <!-- Omitting mouse-over stuff for now -->
+      <g gg-message [x]="commitMessagesX - commit.x" [y]="commit.style.dot.size" [fill]="commit.style.message.color"
+        [font]="commit.style.message.font">
+        {{getMessage(commit)}}
+      </g>
+    </ng-container>
 
     <!-- Arrow -->
-    <!-- {this.gitgraph.template.arrow.size &&
-          commit.parents.map((parentHash) => {
-            const parent = this.state.commits.find(
-              ({ hash }) => hash === parentHash,
-            ) as Commit<React.ReactNode>;
-            return this.drawArrow(parent, commit);
-          })} -->
+    <ng-container *ngIf="core.template.arrow.size">
+      <g *ngFor="let parent of findParents(commit)" gg-arrow [commit]="commit" [parent]="parent" [reverseArrow]="core.reverseArrow"
+        [color]="core.template.arrow.color" [core]="core"></g>
+    </ng-container>
   </g>
 </svg>

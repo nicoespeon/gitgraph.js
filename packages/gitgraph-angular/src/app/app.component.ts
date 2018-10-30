@@ -13,23 +13,34 @@ export class AppComponent {
 
   constructor() {
     this.core = new GitgraphCore();
+    this.core.template.arrow.size = 1;
+    this.core.template.arrow.color = "000";
   }
 
   public commit(): void {
-    function onMessageClick(commit: Commit) {
-      alert(`Commit ${commit.hashAbbrev} clicked: '${commit.subject}'`);
-    }
+    // const master = this.core.branch("master");
+    // master.commit({
+    //   subject: "Hello",
+    //   body: "First commit",
+    //   onMessageClick: this.onClick,
+    // });
+    // master.commit({
+    //   subject: "World",
+    //   body: "Second commit",
+    //   onMessageClick: this.onClick,
+    // });
 
-    const master = this.core.branch("master");
-    master.commit({
-      subject: "Hello",
-      body: "First commit",
-      onMessageClick,
-    });
-    master.commit({
-      subject: "World",
-      body: "Second commit",
-      onMessageClick,
-    });
+    const master = this.core.branch("master").commit("Initial commit");
+    const develop = this.core.branch("develop");
+    develop.commit("one");
+    master.commit("two");
+    develop.commit("three");
+    master.merge(develop);
+    master.commit();
+  }
+
+  private onClick(commit: Commit): void {
+    alert(`Commit ${commit.hashAbbrev} clicked: '${commit.subject}'`);
+
   }
 }
