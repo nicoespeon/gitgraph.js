@@ -1,12 +1,12 @@
 <svg width=1000 height=1000>
   <path *ngFor="let item of branchesPaths | keyvalue" [attr.key]="item.key.name" [attr.d]="createD(item.value)"
-    attr.fill="transparent" [attr.stroke]="item.key.computedColor" [attr.strokeWidth]="item.key.style.lineWidth"
+    fill="transparent" [attr.stroke]="item.key.computedColor" [attr.strokeWidth]="item.key.style.lineWidth"
     [attr.transform]="createTransformString(offset, offset)" />
 
   <g *ngFor="let commit of commits" [attr.key]="commit.hashAbbrev" [attr.transform]="createTransformString(commit.x, commit.y)">
     <!-- Dot -->
     <!-- Omitting mouse-over stuff for now -->
-    <svg:g gg-dot [commit]="commit"></svg:g>
+    <svg:g gg-dot [commit]="commit" [customTemplate]="dot"></svg:g>
 
 
     <!-- Tooltip -->

@@ -16,6 +16,7 @@ import { Commit } from "gitgraph-core";
 })
 export class DotComponent implements OnInit {
   @Input() public commit: Commit;
+  @Input() public customTemplate: any;
 
   constructor() {}
 

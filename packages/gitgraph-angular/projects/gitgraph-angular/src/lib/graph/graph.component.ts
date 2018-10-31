@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, ContentChild, Input, OnInit, TemplateRef } from "@angular/core";
 
 import { toSvgPath } from "gitgraph-core/lib/utils";
 
@@ -17,6 +17,8 @@ import {
 })
 export class GraphComponent implements OnInit {
   @Input() public core: GitgraphCore;
+  @ContentChild(TemplateRef) public dot: TemplateRef<any>;
+
   public mergeStyle: MergeStyle;
   public commits: Commit[];
   public branchesPaths: Map<Branch, Coordinate[][]>;

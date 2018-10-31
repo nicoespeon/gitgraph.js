@@ -1,6 +1,10 @@
-<svg:circle [attr.id]="commit.hash" [attr.cx]="commit.style.dot.size" [attr.cy]="commit.style.dot.size" [attr.r]="commit.style.dot.size"
-  [attr.fill]="commit.style.dot.color" />
+<ng-container *ngIf="customTemplate" [ngTemplateOutlet]="customTemplate"></ng-container>
 
-<svg:clipPath [attr.id]="'clip-' + commit.hash">
-  <svg:use [attr.href]="'#' + commit.hash" />
-</svg:clipPath>
+<ng-container *ngIf="!customTemplate">
+  <svg:circle [attr.id]="commit.hash" [attr.cx]="commit.style.dot.size" [attr.cy]="commit.style.dot.size" [attr.r]="commit.style.dot.size"
+    [attr.fill]="commit.style.dot.color" />
+
+  <svg:clipPath [attr.id]="'clip-' + commit.hash">
+    <svg:use [attr.href]="'#' + commit.hash" />
+  </svg:clipPath>
+</ng-container>
