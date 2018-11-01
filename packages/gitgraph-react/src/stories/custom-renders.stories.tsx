@@ -132,4 +132,57 @@ storiesOf("Custom renders", module)
         }}
       </Gitgraph>
     );
+  })
+  .add("with render message (long)", () => {
+    const renderMessage = (
+      commit: Commit<React.ReactElement<SVGElement>>,
+      commitMessageX: number,
+    ) => {
+      return (
+        <g
+          transform={`translate(${commitMessageX - commit.x}, ${
+            commit.style.dot.size
+          })`}
+        >
+          <text fill={commit.style.dot.color}>
+            {commit.hashAbbrev} - {commit.subject}
+          </text>
+          <foreignObject width="600" x="10">
+            <p>
+              My money's in that office, right? If she start giving me some
+              bullshit about it ain't there, and we got to go someplace else and
+              get it, I'm gonna shoot you in the head then and there. Then I'm
+              gonna shoot that bitch in the kneecaps, find out where my goddamn
+              money is. She gonna tell me too. Hey, look at me when I'm talking
+              to you, motherfucker. You listen: we go in there, and that nigga
+              Winston or anybody else is in there, you the first motherfucker to
+              get shot. You understand?
+            </p>
+          </foreignObject>
+        </g>
+      );
+    };
+
+    return (
+      <Gitgraph>
+        {(gitgraph) => {
+          gitgraph
+            .commit({ subject: "Initial commit" })
+            .commit({ subject: "Another commit" })
+            .commit({
+              subject: "Do something crazy",
+              renderMessage,
+            });
+
+          gitgraph
+            .branch("dev")
+            .commit({
+              subject: "Oh my god",
+            })
+            .commit({
+              subject: "This is a saxo!",
+            });
+        }}
+      </Gitgraph>
+    );
   });
