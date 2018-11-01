@@ -21,6 +21,7 @@ export interface GitgraphState {
   commits: Array<Commit<React.ReactElement<SVGElement>>>;
   branchesPaths: Map<Branch<React.ReactElement<SVGElement>>, Coordinate[][]>;
   commitMessagesX: number;
+  commitMessageOffset: { [key: number]: number }; // {20: 30} y=20 -> y=30
   currentCommitOver: Commit<React.ReactElement<SVGElement>> | null;
 }
 
@@ -30,6 +31,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   };
 
   private gitgraph: GitgraphCore<React.ReactElement<SVGElement>>;
+  private $commits = React.createRef<SVGGElement>();
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -37,6 +39,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       commits: [],
       branchesPaths: new Map(),
       commitMessagesX: 0,
+      commitMessageOffset: {},
       currentCommitOver: null,
     };
     this.gitgraph = new GitgraphCore<React.ReactElement<SVGElement>>(
@@ -58,60 +61,101 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.props.children(this.gitgraph);
   }
 
+  // TODO: refactor following code
+  public componentDidUpdate() {
+    if (JSON.stringify(this.state.commitMessageOffset) !== "{}") return;
+    if (this.$commits.current) {
+      const offset: any = {};
+      let memoOffset = 0;
+      // TODO: test in reverse orientation too
+      Array.from(this.$commits.current.children)
+        .reverse()
+        .forEach((commit) => {
+          const y = parseInt(
+            commit
+              .getAttribute("transform")!
+              .split(",")[1]
+              .slice(0, -1),
+            10,
+          );
+          const foreignObject = commit.getElementsByTagName("foreignObject");
+          let message;
+          if (foreignObject.length > 0) {
+            message = foreignObject[0];
+          }
+          const messageHeight = message
+            ? message.firstElementChild!.getBoundingClientRect().height
+            : 0;
+
+          offset[y] = y + memoOffset;
+          memoOffset += messageHeight;
+        });
+      this.setState({ commitMessageOffset: offset });
+    }
+  }
+
   private renderBranches() {
     const offset = this.gitgraph.template.commit.dot.size;
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
-    return Array.from(this.state.branchesPaths).map(
-      ([branch, coordinates], i) => (
-        <path
-          key={branch.name}
-          d={toSvgPath(coordinates, isBezier, this.gitgraph.isVertical)}
-          fill="transparent"
-          stroke={branch.computedColor}
-          strokeWidth={branch.style.lineWidth}
-          transform={`translate(${offset}, ${offset})`}
-        />
-      ),
-    );
+    return Array.from(this.state.branchesPaths).map(([branch, coordinates]) => (
+      <path
+        key={branch.name}
+        d={toSvgPath(
+          coordinates.map((a) => a.map((b) => this.applyMessageOffset(b))),
+          isBezier,
+          this.gitgraph.isVertical,
+        )}
+        fill="transparent"
+        stroke={branch.computedColor}
+        strokeWidth={branch.style.lineWidth}
+        transform={`translate(${offset}, ${offset})`}
+      />
+    ));
   }
 
   private renderCommits() {
-    return this.state.commits.map((commit) => (
-      <g
-        key={commit.hashAbbrev}
-        transform={`translate(${commit.x}, ${commit.y})`}
-      >
-        {/* Dot */}
-        {commit.renderDot ? (
-          commit.renderDot(commit)
-        ) : (
-          <Dot
-            commit={commit}
-            onMouseOver={() => this.onMouseOver(commit)}
-            onMouseOut={() => {
-              this.setState({ currentCommitOver: null });
-              commit.onMouseOut();
-            }}
-          />
-        )}
+    return (
+      <g ref={this.$commits}>
+        {this.state.commits.map((commit, i) => {
+          const { x, y } = this.applyMessageOffset(commit);
 
-        {/* Tooltip */}
-        {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
+          return (
+            <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+              {/* Dot */}
+              {commit.renderDot ? (
+                commit.renderDot(commit)
+              ) : (
+                <Dot
+                  commit={commit}
+                  onMouseOver={() => this.onMouseOver(commit)}
+                  onMouseOut={() => {
+                    this.setState({ currentCommitOver: null });
+                    commit.onMouseOut();
+                  }}
+                />
+              )}
 
-        {/* Message */}
-        {commit.style.message.display && this.renderMessage(commit)}
+              {/* Tooltip */}
+              {this.state.currentCommitOver === commit &&
+                this.renderTooltip(commit)}
 
-        {/* Arrow */}
-        {this.gitgraph.template.arrow.size &&
-          commit.parents.map((parentHash) => {
-            const parent = this.state.commits.find(
-              ({ hash }) => hash === parentHash,
-            ) as Commit<React.ReactElement<SVGElement>>;
-            return this.drawArrow(parent, commit);
-          })}
+              {/* Message */}
+              {commit.style.message.display && this.renderMessage(commit)}
+
+              {/* Arrow */}
+              {this.gitgraph.template.arrow.size &&
+                commit.parents.map((parentHash) => {
+                  const parent = this.state.commits.find(
+                    ({ hash }) => hash === parentHash,
+                  ) as Commit<React.ReactElement<SVGElement>>;
+                  return this.drawArrow(parent, commit);
+                })}
+            </g>
+          );
+        })}
       </g>
-    ));
+    );
   }
 
   private renderTooltip(commit: Commit<React.ReactElement<SVGElement>>) {
@@ -180,6 +224,10 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         />
       </g>
     );
+  }
+
+  private applyMessageOffset({ x, y }: Coordinate): Coordinate {
+    return { x, y: this.state.commitMessageOffset[y] || y };
   }
 
   private onGitgraphCoreRender() {
