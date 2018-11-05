@@ -102,44 +102,38 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private renderCommits() {
     return (
       <g ref={this.$commits}>
-        {this.state.commits.map((commit, i) => {
-          const { x, y } = this.applyMessageOffset(commit);
-
-          return (
-            <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
-              {/* Dot */}
-              {commit.renderDot ? (
-                commit.renderDot(commit)
-              ) : (
-                <Dot
-                  commit={commit}
-                  onMouseOver={() => this.onMouseOver(commit)}
-                  onMouseOut={() => {
-                    this.setState({ currentCommitOver: null });
-                    commit.onMouseOut();
-                  }}
-                />
-              )}
-
-              {/* Tooltip */}
-              {this.state.currentCommitOver === commit &&
-                this.renderTooltip(commit)}
-
-              {/* Message */}
-              {commit.style.message.display && this.renderMessage(commit)}
-
-              {/* Arrow */}
-              {this.gitgraph.template.arrow.size &&
-                commit.parents.map((parentHash) => {
-                  const parent = this.state.commits.find(
-                    ({ hash }) => hash === parentHash,
-                  ) as Commit<React.ReactElement<SVGElement>>;
-                  return this.drawArrow(parent, commit);
-                })}
-            </g>
-          );
-        })}
+        {this.state.commits.map((commit) => this.renderCommit(commit))}
       </g>
+    );
+  }
+
+  private renderCommit(commit: Commit<React.ReactElement<SVGElement>>) {
+    const { x, y } = this.applyMessageOffset(commit);
+
+    return (
+      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+        {this.renderDot(commit)}
+        {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
+        {commit.style.message.display && this.renderMessage(commit)}
+        {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
+      </g>
+    );
+  }
+
+  private renderDot(commit: Commit<React.ReactElement<SVGElement>>) {
+    if (commit.renderDot) {
+      commit.renderDot(commit);
+    }
+
+    return (
+      <Dot
+        commit={commit}
+        onMouseOver={() => this.onMouseOver(commit)}
+        onMouseOut={() => {
+          this.setState({ currentCommitOver: null });
+          commit.onMouseOut();
+        }}
+      />
     );
   }
 
@@ -172,6 +166,16 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {getMessage(commit)}
       </text>
     );
+  }
+
+  private renderArrows(commit: Commit<React.ReactElement<SVGElement>>) {
+    return commit.parents.map((parentHash) => {
+      const parent = this.state.commits.find(
+        ({ hash }) => hash === parentHash,
+      ) as Commit<React.ReactElement<SVGElement>>;
+
+      return this.drawArrow(parent, commit);
+    });
   }
 
   private onMouseOver(commit: Commit<React.ReactElement<SVGElement>>): void {
