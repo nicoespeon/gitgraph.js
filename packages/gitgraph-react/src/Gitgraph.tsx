@@ -7,6 +7,7 @@ import {
   Coordinate,
   MergeStyle,
   Mode,
+  Orientation,
 } from "gitgraph-core/lib/index";
 import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
 import { Tooltip } from "./Tooltip";
@@ -215,36 +216,40 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   ): GitgraphState["commitYWithOffsets"] {
     let totalOffsetY = 0;
 
-    return (
-      Array.from(commits)
-        // TODO: test in reverse orientation too
-        .reverse()
-        .reduce<GitgraphState["commitYWithOffsets"]>((newOffsets, commit) => {
-          const commitY = parseInt(
-            commit
-              .getAttribute("transform")!
-              .split(",")[1]
-              .slice(0, -1),
-            10,
-          );
+    // In VerticalReverse orientation, commits are in the same order in the DOM.
+    const orientedCommits =
+      this.gitgraph.orientation === Orientation.VerticalReverse
+        ? Array.from(commits)
+        : Array.from(commits).reverse();
 
-          const firstForeignObject = commit.getElementsByTagName(
-            "foreignObject",
-          )[0];
-          const customHtmlMessage =
-            firstForeignObject && firstForeignObject.firstElementChild;
-          const messageHeight = customHtmlMessage
-            ? customHtmlMessage.getBoundingClientRect().height
-            : 0;
+    return orientedCommits.reduce<GitgraphState["commitYWithOffsets"]>(
+      (newOffsets, commit) => {
+        const commitY = parseInt(
+          commit
+            .getAttribute("transform")!
+            .split(",")[1]
+            .slice(0, -1),
+          10,
+        );
 
-          newOffsets[commitY] = commitY + totalOffsetY;
+        const firstForeignObject = commit.getElementsByTagName(
+          "foreignObject",
+        )[0];
+        const customHtmlMessage =
+          firstForeignObject && firstForeignObject.firstElementChild;
+        const messageHeight = customHtmlMessage
+          ? customHtmlMessage.getBoundingClientRect().height
+          : 0;
 
-          // Increment total offset after setting the offset
-          // => offset next commits accordingly.
-          totalOffsetY += messageHeight;
+        newOffsets[commitY] = commitY + totalOffsetY;
 
-          return newOffsets;
-        }, {})
+        // Increment total offset after setting the offset
+        // => offset next commits accordingly.
+        totalOffsetY += messageHeight;
+
+        return newOffsets;
+      },
+      {},
     );
   }
 
