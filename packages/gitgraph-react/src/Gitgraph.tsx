@@ -21,7 +21,12 @@ export interface GitgraphState {
   commits: Array<Commit<React.ReactElement<SVGElement>>>;
   branchesPaths: Map<Branch<React.ReactElement<SVGElement>>, Coordinate[][]>;
   commitMessagesX: number;
-  commitMessageOffset: { [key: number]: number }; // {20: 30} y=20 -> y=30
+  // Store a map to replace commits y with the correct value,
+  // including the message offset. Allows custom, flexible message height.
+  // E.g. {20: 30} means for commit: y=20 -> y=30
+  // Offset should be computed when graph is rendered (componentDidUpdate).
+  commitYWithOffsets: { [key: number]: number };
+  shouldRecomputeOffsets: boolean;
   currentCommitOver: Commit<React.ReactElement<SVGElement>> | null;
 }
 
@@ -39,7 +44,8 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       commits: [],
       branchesPaths: new Map(),
       commitMessagesX: 0,
-      commitMessageOffset: {},
+      commitYWithOffsets: {},
+      shouldRecomputeOffsets: true,
       currentCommitOver: null,
     };
     this.gitgraph = new GitgraphCore<React.ReactElement<SVGElement>>(
@@ -61,37 +67,15 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.props.children(this.gitgraph);
   }
 
-  // TODO: refactor following code
   public componentDidUpdate() {
-    if (JSON.stringify(this.state.commitMessageOffset) !== "{}") return;
-    if (this.$commits.current) {
-      const offset: any = {};
-      let memoOffset = 0;
-      // TODO: test in reverse orientation too
-      Array.from(this.$commits.current.children)
-        .reverse()
-        .forEach((commit) => {
-          const y = parseInt(
-            commit
-              .getAttribute("transform")!
-              .split(",")[1]
-              .slice(0, -1),
-            10,
-          );
-          const foreignObject = commit.getElementsByTagName("foreignObject");
-          let message;
-          if (foreignObject.length > 0) {
-            message = foreignObject[0];
-          }
-          const messageHeight = message
-            ? message.firstElementChild!.getBoundingClientRect().height
-            : 0;
+    if (!this.state.shouldRecomputeOffsets) return;
+    if (!this.$commits.current) return;
 
-          offset[y] = y + memoOffset;
-          memoOffset += messageHeight;
-        });
-      this.setState({ commitMessageOffset: offset });
-    }
+    const commits = this.$commits.current.children;
+    this.setState({
+      commitYWithOffsets: this.computeOffsets(commits),
+      shouldRecomputeOffsets: false,
+    });
   }
 
   private renderBranches() {
@@ -226,8 +210,46 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
+  private computeOffsets(
+    commits: HTMLCollection,
+  ): GitgraphState["commitYWithOffsets"] {
+    let totalOffsetY = 0;
+
+    return (
+      Array.from(commits)
+        // TODO: test in reverse orientation too
+        .reverse()
+        .reduce<GitgraphState["commitYWithOffsets"]>((newOffsets, commit) => {
+          const commitY = parseInt(
+            commit
+              .getAttribute("transform")!
+              .split(",")[1]
+              .slice(0, -1),
+            10,
+          );
+
+          const firstForeignObject = commit.getElementsByTagName(
+            "foreignObject",
+          )[0];
+          const customHtmlMessage =
+            firstForeignObject && firstForeignObject.firstElementChild;
+          const messageHeight = customHtmlMessage
+            ? customHtmlMessage.getBoundingClientRect().height
+            : 0;
+
+          newOffsets[commitY] = commitY + totalOffsetY;
+
+          // Increment total offset after setting the offset
+          // => offset next commits accordingly.
+          totalOffsetY += messageHeight;
+
+          return newOffsets;
+        }, {})
+    );
+  }
+
   private applyMessageOffset({ x, y }: Coordinate): Coordinate {
-    return { x, y: this.state.commitMessageOffset[y] || y };
+    return { x, y: this.state.commitYWithOffsets[y] || y };
   }
 
   private onGitgraphCoreRender() {
