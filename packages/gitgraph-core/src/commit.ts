@@ -141,6 +141,10 @@ export class Commit<TNode = SVGElement> {
    */
   public branches?: Array<Branch["name"]>;
   /**
+   * Branch that should be rendered (injected by Gitgraph.withBranches)
+   */
+  public branchToDisplay?: Branch["name"];
+  /**
    * List of tags attached (injected by Gitgraph.withRefsAndTags)
    */
   public tags?: string[];

@@ -144,7 +144,10 @@ export class GitgraphCore<TNode = SVGElement> {
     let commits = this.commits.map(this.withRefsAndTags);
     commits = this.withBranches(commits, { firstParentOnly: true });
     this.calculateRows(commits);
-    commits = commits.map(this.withPosition).map(this.withColor);
+    commits = commits
+      .map(this.withBranchToDisplay)
+      .map(this.withPosition)
+      .map(this.withColor);
     const flatBranchesPaths = commits.reduce(
       this.initBranchesPaths,
       new Map<Branch<TNode>, InternalCoordinate[]>(),
@@ -480,6 +483,21 @@ export class GitgraphCore<TNode = SVGElement> {
           color: commit.style.message.color || defaultColor,
         },
       },
+    };
+  }
+
+  /**
+   * Add branch to display to one commit.
+   *
+   * Functional requirements:
+   *  - You need to have `commit.branches` set in each commit. (without merge commits resolution)
+   *
+   * @param commit One commit
+   */
+  private withBranchToDisplay(commit: Commit<TNode>): Commit<TNode> {
+    return {
+      ...commit,
+      branchToDisplay: (commit.branches as Array<Branch["name"]>)[0],
     };
   }
 

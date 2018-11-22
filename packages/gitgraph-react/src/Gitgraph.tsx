@@ -278,7 +278,7 @@ function getMessage(commit: Commit<React.ReactElement<SVGElement>>): string {
   let message = "";
 
   if (commit.style.message.displayBranch) {
-    message += `[${commit.branches![commit.branches!.length - 1]}`;
+    message += `[${commit.branchToDisplay}`;
     if (commit.tags!.length) {
       message += `, ${commit.tags!.join(", ")}`;
     }

@@ -77,4 +77,41 @@ describe("Gitgraph.getRenderedData.branches", () => {
       },
     ]);
   });
+
+  it("should calculate branch to display", () => {
+    const gitgraph = new GitgraphCore();
+
+    const master = gitgraph.branch("master");
+    master.commit("one").commit("two");
+
+    const dev = gitgraph.branch("dev");
+    dev.commit("three").commit("four");
+
+    master.merge(dev);
+
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        branchToDisplay: "master",
+      },
+      {
+        subject: "two",
+        branchToDisplay: "master",
+      },
+      {
+        subject: "three",
+        branchToDisplay: "dev",
+      },
+      {
+        subject: "four",
+        branchToDisplay: "dev",
+      },
+      {
+        subject: "Merge branch dev",
+        branchToDisplay: "master",
+      },
+    ]);
+  });
 });
