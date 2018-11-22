@@ -1,6 +1,6 @@
 import { GitgraphCore, Orientation, Mode } from "../index";
 
-describe("Gitgraph.withPosition", () => {
+describe("Gitgraph.getRenderedData.position", () => {
   it("should deal with 3 straight commits", () => {
     const gitgraph = new GitgraphCore();
     gitgraph

@@ -1,6 +1,6 @@
 import { GitgraphCore } from "../index";
 
-describe("Gitgraph.withBranches", () => {
+describe("Gitgraph.getRenderedData.branches", () => {
   it("should deal with one branch (no merge)", () => {
     const gitgraph = new GitgraphCore();
 

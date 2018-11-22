@@ -5,7 +5,7 @@ import {
   Orientation,
 } from "../index";
 
-describe("Gitgraph.render.branchesPaths", () => {
+describe("Gitgraph.getRenderedData.branchesPaths", () => {
   let gitgraph: GitgraphCore;
 
   beforeEach(() => {

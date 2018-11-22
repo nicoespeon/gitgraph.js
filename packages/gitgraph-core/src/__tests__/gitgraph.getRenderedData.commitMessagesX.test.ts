@@ -1,7 +1,7 @@
 import { GitgraphCore } from "../gitgraph";
 import { Template } from "../template";
 
-describe("Gitgraph.render.commitMessagesX", () => {
+describe("Gitgraph.getRenderedData.commitMessagesX", () => {
   let gitgraph: GitgraphCore;
 
   const template = new Template({
