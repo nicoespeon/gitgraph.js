@@ -37,6 +37,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   };
 
   private gitgraph: GitgraphCore<React.ReactElement<SVGElement>>;
+  private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
 
   constructor(props: GitgraphProps) {
@@ -57,7 +58,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   public render() {
     return (
-      <svg width={1000} height={1000}>
+      <svg ref={this.$graph}>
         {this.renderBranches()}
         {this.renderCommits()}
       </svg>
@@ -69,6 +70,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   public componentDidUpdate() {
+    if (this.$graph.current) {
+      const { height, width } = this.$graph.current.getBBox();
+      this.$graph.current.setAttribute("width", width.toString());
+      this.$graph.current.setAttribute("height", height.toString());
+    }
+
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
