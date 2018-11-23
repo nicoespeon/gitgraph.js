@@ -126,7 +126,6 @@ export class GitgraphCore<TNode = SVGElement> {
       options.commitMessage || "He doesn't like George Michael! Boooo!";
 
     // Context binding
-    this.withRefsAndTags = this.withRefsAndTags.bind(this);
     this.withPosition = this.withPosition.bind(this);
     this.withColor = this.withColor.bind(this);
     this.withBranches = this.withBranches.bind(this);
@@ -141,11 +140,20 @@ export class GitgraphCore<TNode = SVGElement> {
    * Get rendered data of each commits and branches paths.
    */
   public getRenderedData(): RenderedData<TNode> {
-    let commits = this.commits.map(this.withRefsAndTags);
+    let commits = this.commits
+      .map((commit) => {
+        const refs = (this.refs.get(commit.hash) as string[]) || [];
+        return commit.setRefs(refs);
+      })
+      .map((commit) => {
+        const tags = (this.tags.get(commit.hash) as string[]) || [];
+        return commit.setTags(tags);
+      });
+
     commits = this.withBranches(commits, { firstParentOnly: true });
     this.calculateRows(commits);
     commits = commits
-      .map(this.withBranchToDisplay)
+      .map((commit) => commit.computeBranchToDisplay())
       .map(this.withPosition)
       .map(this.withColor);
     const flatBranchesPaths = commits.reduce(
@@ -319,7 +327,7 @@ export class GitgraphCore<TNode = SVGElement> {
       .validateSync(data)
       .map((options) => ({
         ...options,
-        style: this.template.commit,
+        style: { ...this.template.commit },
         author: `${options.author.name} <${options.author.email}>`,
       }));
 
@@ -358,22 +366,6 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Add refs and tags info to one commit.
-   *
-   * Note: the `commit` must be the original object from `this.commits`
-   * due to the direct reference into `this.refs` and `this.tags`
-   *
-   * @param commit One commit
-   */
-  private withRefsAndTags(commit: Commit<TNode>): Commit<TNode> {
-    return {
-      ...commit,
-      refs: (this.refs.get(commit.hash) as string[]) || [],
-      tags: (this.tags.get(commit.hash) as string[]) || [],
-    };
-  }
-
-  /**
    * Add `branches` property to commits.
    *
    * @param commits List of commits
@@ -408,10 +400,12 @@ export class GitgraphCore<TNode = SVGElement> {
       }
     });
 
-    return commits.map((commit) => ({
-      ...commit,
-      branches: Array.from((refs.get(commit.hash) || new Set()).values()),
-    }));
+    return commits.map((commit) => {
+      const commitBranches = Array.from(
+        (refs.get(commit.hash) || new Set()).values(),
+      );
+      return commit.setBranches(commitBranches);
+    });
   }
 
   /**
@@ -465,60 +459,27 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   private withColor(commit: Commit<TNode>): Commit<TNode> {
     // Retrieve branch's column index
-    const branch = (commit.branches as Array<Branch["name"]>)[0];
+    const branch = commit.branchToDisplay;
     const column = this.columns.findIndex((col) => col === branch);
     const defaultColor = this.template.colors[
       column % this.template.colors.length
     ];
 
-    return {
-      ...commit,
-      style: {
-        ...commit.style,
-        color: commit.style.color || defaultColor,
-        tag: {
-          ...commit.style.tag,
-          color: commit.style.tag.color || defaultColor,
-        },
-        dot: {
-          ...commit.style.dot,
-          color: commit.style.dot.color || defaultColor,
-        },
-        message: {
-          ...commit.style.message,
-          color: commit.style.message.color || defaultColor,
-        },
-      },
-    };
-  }
-
-  /**
-   * Add branch to display to one commit.
-   *
-   * Functional requirements:
-   *  - You need to have `commit.branches` set in each commit. (without merge commits resolution)
-   *
-   * @param commit One commit
-   */
-  private withBranchToDisplay(commit: Commit<TNode>): Commit<TNode> {
-    return {
-      ...commit,
-      branchToDisplay: (commit.branches as Array<Branch["name"]>)[0],
-    };
+    return commit.setDefaultColor(defaultColor);
   }
 
   /**
    * Add position to one commit.
    *
    * Functional requirements:
-   *  - You need to have `commit.branches` set in each commit. (without merge commits resolution)
+   *  - You need to have `commit.branchToDisplay` set in each commit. (without merge commits resolution)
    *  - You need to have `this.rows` and `this.maxRow` set.
    *
    * @param commit One commit
    */
   private withPosition(commit: Commit<TNode>): Commit<TNode> {
     // Resolve branch's column index
-    const branch = (commit.branches as Array<Branch["name"]>)[0];
+    const branch = commit.branchToDisplay!;
     if (!this.columns.includes(branch)) this.columns.push(branch);
     const column = this.columns.findIndex((col) => col === branch);
 
@@ -527,36 +488,32 @@ export class GitgraphCore<TNode = SVGElement> {
 
     switch (this.orientation) {
       default:
-        return {
-          ...commit,
+        return commit.setPosition({
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
           y:
             this.initCommitOffsetY +
             this.template.commit.spacing * (this.maxRow - 1 - row),
-        };
+        });
 
       case Orientation.VerticalReverse:
-        return {
-          ...commit,
+        return commit.setPosition({
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
           y: this.initCommitOffsetY + this.template.commit.spacing * row,
-        };
+        });
 
       case Orientation.Horizontal:
-        return {
-          ...commit,
+        return commit.setPosition({
           x: this.initCommitOffsetX + this.template.commit.spacing * row,
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
-        };
+        });
 
       case Orientation.HorizontalReverse:
-        return {
-          ...commit,
+        return commit.setPosition({
           x:
             this.initCommitOffsetX +
             this.template.commit.spacing * (this.maxRow - 1 - row),
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
-        };
+        });
     }
   }
 

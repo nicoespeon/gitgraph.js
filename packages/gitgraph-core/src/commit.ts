@@ -47,15 +47,15 @@ const getRandomHash = () =>
 
 export class Commit<TNode = SVGElement> {
   /**
-   * Ref names (injected by Gitgraph.withRefsAndTags)
+   * Ref names
    */
   public refs: Array<Branch["name"] | "HEAD"> = [];
   /**
-   * Commit x position (injected by Gitgraph.withPosition)
+   * Commit x position
    */
   public x: number = 0;
   /**
-   * Commit y position (injected by Gitgraph.withPosition)
+   * Commit y position
    */
   public y: number = 0;
   /**
@@ -137,15 +137,15 @@ export class Commit<TNode = SVGElement> {
    */
   public innerText?: string;
   /**
-   * List of branches attached (injected by Gitgraph.withBranches)
+   * List of branches attached
    */
   public branches?: Array<Branch["name"]>;
   /**
-   * Branch that should be rendered (injected by Gitgraph.withBranches)
+   * Branch that should be rendered
    */
   public branchToDisplay?: Branch["name"];
   /**
-   * List of tags attached (injected by Gitgraph.withRefsAndTags)
+   * List of tags attached
    */
   public tags?: string[];
   /**
@@ -230,6 +230,41 @@ export class Commit<TNode = SVGElement> {
     this.renderDot = options.renderDot;
     this.renderMessage = options.renderMessage;
     this.renderTooltip = options.renderTooltip;
+  }
+
+  public setRefs(refs: Array<Branch["name"] | "HEAD">): this {
+    this.refs = refs;
+    return this;
+  }
+
+  public setTags(tags: string[]): this {
+    this.tags = tags;
+    return this;
+  }
+
+  public setBranches(branches: Array<Branch["name"]>): this {
+    this.branches = branches;
+    return this;
+  }
+
+  public computeBranchToDisplay(): this {
+    this.branchToDisplay = this.branches ? this.branches[0] : "";
+    return this;
+  }
+
+  public setPosition({ x, y }: { x: number; y: number }): this {
+    this.x = x;
+    this.y = y;
+    return this;
+  }
+
+  public setDefaultColor(color: string): this {
+    if (!this.style.color) this.style.color = color;
+    if (!this.style.tag.color) this.style.tag.color = color;
+    if (!this.style.dot.color) this.style.dot.color = color;
+    if (!this.style.message.color) this.style.message.color = color;
+
+    return this;
   }
 }
 
