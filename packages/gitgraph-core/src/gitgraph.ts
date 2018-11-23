@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
-import Commit, { CommitRenderOptions } from "./commit";
+import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
 import {
   Template,
   TemplateName,
@@ -303,11 +303,9 @@ export class GitgraphCore<TNode = SVGElement> {
     // Validate `data` format.
     const schema = yup.array().of(
       yup.object({
-        refs: yup.array(),
+        refs: yup.array().of(yup.string()),
         hash: yup.string(),
-        hashAbbrev: yup.string(),
         parents: yup.array().of(yup.string()),
-        parentsAbbrev: yup.array().of(yup.string()),
         author: yup.object({
           name: yup.string(),
           email: yup.string(),
@@ -317,24 +315,32 @@ export class GitgraphCore<TNode = SVGElement> {
       }),
     );
 
-    const commits = schema.validateSync(data) as Array<Commit<TNode>>;
+    const commitOptionsList: Array<CommitOptions<TNode>> = schema
+      .validateSync(data)
+      .map((options) => ({
+        ...options,
+        style: this.template.commit,
+        author: `${options.author.name} <${options.author.email}>`,
+      }));
 
     // Use validated `value`.
     this.clear();
 
-    this.commits = commits.map((commit) => {
+    this.commits = commitOptionsList.map((options) => new Commit(options));
+
+    // Create tags & refs.
+    this.commits.forEach(({ refs, hash }) => {
       const TAG_PREFIX = "tag: ";
-      const tags = commit.refs
+
+      const tags = refs
         .map((ref) => ref.split(TAG_PREFIX))
         .map(([_, tag]) => tag)
         .filter((tag) => typeof tag === "string");
-      tags.forEach((tag) => this.tags.set(tag, commit.hash));
+      tags.forEach((tag) => this.tags.set(tag, hash));
 
-      commit.refs
+      refs
         .filter((ref) => !ref.startsWith(TAG_PREFIX))
-        .forEach((ref) => this.refs.set(ref, commit.hash));
-
-      return { ...commit, style: this.template.commit };
+        .forEach((ref) => this.refs.set(ref, hash));
     });
 
     // Create branches.

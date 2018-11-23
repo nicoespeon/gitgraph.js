@@ -200,6 +200,9 @@ export class Commit<TNode = SVGElement> {
     this.hash = options.hash || getRandomHash();
     this.hashAbbrev = this.hash.substring(0, 7);
 
+    // Set refs
+    this.refs = options.refs || [];
+
     // Set tree hash
     this.tree = options.tree || getRandomHash();
     this.treeAbbrev = this.tree.substring(0, 7);
