@@ -29,7 +29,7 @@ export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
  *
  * @return {string} hex string with 40 chars
  */
-const getRandomHash = () =>
+const getRandomHash = (): string =>
   (
     Math.random()
       .toString(16)
