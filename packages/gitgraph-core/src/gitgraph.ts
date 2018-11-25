@@ -127,7 +127,7 @@ export class GitgraphCore<TNode = SVGElement> {
 
     // Context binding
     this.withPosition = this.withPosition.bind(this);
-    this.withColor = this.withColor.bind(this);
+    this.setDefaultColor = this.setDefaultColor.bind(this);
     this.withBranches = this.withBranches.bind(this);
     this.calculateRows = this.calculateRows.bind(this);
     this.initBranchesPaths = this.initBranchesPaths.bind(this);
@@ -155,7 +155,7 @@ export class GitgraphCore<TNode = SVGElement> {
     commits = commits
       .map((commit) => commit.computeBranchToDisplay())
       .map(this.withPosition)
-      .map(this.withColor);
+      .map(this.setDefaultColor);
     const flatBranchesPaths = commits.reduce(
       this.initBranchesPaths,
       new Map<Branch<TNode>, InternalCoordinate[]>(),
@@ -465,16 +465,14 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Add final color to one commit.
-   *
-   * It merge this.template.colors and commit colors override.
+   * Set default color to one commit.
    *
    * @param commit One commit
    */
-  private withColor(commit: Commit<TNode>): Commit<TNode> {
-    // Retrieve branch's column index
-    const branch = commit.branchToDisplay;
-    const column = this.columns.findIndex((col) => col === branch);
+  private setDefaultColor(commit: Commit<TNode>): Commit<TNode> {
+    const column = this.columns.findIndex(
+      (col) => col === commit.branchToDisplay,
+    );
     const defaultColor = this.template.colors[
       column % this.template.colors.length
     ];
