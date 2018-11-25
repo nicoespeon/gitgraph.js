@@ -13,7 +13,7 @@ describe("Gitgraph.tag", () => {
     master.commit("four");
     gitgraph.tag("this-one", "one-tagged-hash");
 
-    expect(gitgraph.tags.get("this-one")).toEqual("one-tagged-hash");
+    expect(gitgraph.tags.getCommit("this-one")).toEqual("one-tagged-hash");
   });
 
   it("should add a tag to a branch", () => {
@@ -26,7 +26,7 @@ describe("Gitgraph.tag", () => {
     master.commit("four");
     gitgraph.tag("this-one", "dev");
 
-    expect(gitgraph.tags.get("this-one")).toEqual("three-tagged-hash");
+    expect(gitgraph.tags.getCommit("this-one")).toEqual("three-tagged-hash");
   });
 
   it("should add a tag to HEAD", () => {
@@ -39,7 +39,7 @@ describe("Gitgraph.tag", () => {
     master.commit({ subject: "four-tagged", hash: "four-tagged-hash" });
     gitgraph.tag("this-one");
 
-    expect(gitgraph.tags.get("this-one")).toEqual("four-tagged-hash");
+    expect(gitgraph.tags.getCommit("this-one")).toEqual("four-tagged-hash");
   });
 
   it("should add tags into render output", () => {

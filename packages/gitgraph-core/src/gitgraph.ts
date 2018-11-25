@@ -142,11 +142,11 @@ export class GitgraphCore<TNode = SVGElement> {
   public getRenderedData(): RenderedData<TNode> {
     let commits = this.commits
       .map((commit) => {
-        const refs = (this.refs.get(commit.hash) as string[]) || [];
+        const refs = this.refs.getNames(commit.hash) || [];
         return commit.setRefs(refs);
       })
       .map((commit) => {
-        const tags = (this.tags.get(commit.hash) as string[]) || [];
+        const tags = this.tags.getNames(commit.hash) || [];
         return commit.setTags(tags);
       });
 
@@ -209,7 +209,7 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   public branch(name: string): Branch<TNode>;
   public branch(args: any): Branch<TNode> {
-    const parentCommitHash = this.refs.get("HEAD") as Commit["hash"];
+    const parentCommitHash = this.refs.getCommit("HEAD");
     let options: BranchOptions<TNode> = {
       gitgraph: this,
       name: "",
@@ -249,25 +249,38 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   public tag(
     name: string,
-    ref: Commit<TNode> | Commit["hash"] | Branch["name"] = this.refs.get(
-      "HEAD",
-    ) as Commit["hash"],
+    ref?: Commit<TNode> | Commit["hash"] | Branch["name"],
   ): GitgraphCore<TNode> {
-    if (typeof ref === "string") {
-      const commitHashOrRefs = this.refs.get(ref);
-      if (!commitHashOrRefs) {
-        throw new Error("this ref not exists");
-      } else if (typeof commitHashOrRefs === "object") {
-        // `ref` is a `Commit["hash"]`
-        this.tags.set(name, ref);
-      } else {
-        // `ref` is a `Branch["name"]`
-        this.tags.set(name, commitHashOrRefs);
-      }
-    } else {
+    if (!ref) {
+      const head = this.refs.getCommit("HEAD");
+      if (!head) return this;
+
+      ref = head;
+    }
+
+    if (typeof ref !== "string") {
       // `ref` is a `Commit`
       this.tags.set(name, ref.hash);
+      this.next();
+      return this;
     }
+
+    let commitHash;
+    if (this.refs.hasCommit(ref)) {
+      // `ref` is a `Commit["hash"]`
+      commitHash = ref;
+    }
+
+    if (this.refs.hasName(ref)) {
+      // `ref` is a `Branch["name"]`
+      commitHash = this.refs.getCommit(ref);
+    }
+
+    if (!commitHash) {
+      throw new Error(`The ref "${ref}" does not exist`);
+    }
+
+    this.tags.set(name, commitHash);
     this.next();
     return this;
   }
@@ -376,13 +389,14 @@ export class GitgraphCore<TNode = SVGElement> {
     commits: Array<Commit<TNode>>,
     { firstParentOnly } = { firstParentOnly: false },
   ): Array<Commit<TNode>> {
-    const branches = Array.from(this.refs)
-      .filter(([key, value]) => typeof value === "string" && key !== "HEAD")
-      .map(([key]) => key);
+    const branches = this.refs.getAllNames().filter((name) => name !== "HEAD");
     const refs = new Map<Commit["hash"], Set<Branch["name"]>>();
     const queue: Array<Commit["hash"]> = [];
     branches.forEach((branch: string) => {
-      queue.push(this.refs.get(branch) as Commit["hash"]);
+      const commitHash = this.refs.getCommit(branch);
+      if (commitHash) {
+        queue.push(commitHash);
+      }
 
       while (queue.length > 0) {
         const currentHash = queue.pop() as Commit["hash"];

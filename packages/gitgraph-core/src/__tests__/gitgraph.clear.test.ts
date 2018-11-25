@@ -16,8 +16,8 @@ describe("Gitgraph.clear", () => {
     const { commits } = gitgraph.getRenderedData();
 
     expect(commits).toEqual([]);
-    expect(Array.from(gitgraph.refs.values())).toEqual([]);
-    expect(Array.from(gitgraph.tags.values())).toEqual([]);
+    expect(gitgraph.refs.getAllNames()).toEqual([]);
+    expect(gitgraph.tags.getAllNames()).toEqual([]);
   });
 
   it("should reset the currentBranch", () => {

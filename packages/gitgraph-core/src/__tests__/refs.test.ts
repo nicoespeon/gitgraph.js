@@ -1,8 +1,7 @@
 import Commit from "../commit";
 import Refs from "../refs";
 
-const initialCommitHash: Commit["hash"] = "initialCommitHash";
-
+const firstCommitHash: Commit["hash"] = "initialCommitHash";
 const secondCommitHash: Commit["hash"] = "secondCommitHash";
 
 describe("Refs", () => {
@@ -10,20 +9,41 @@ describe("Refs", () => {
 
   beforeEach(() => {
     refs = new Refs();
-    refs.set("master", initialCommitHash);
+    refs.set("master", firstCommitHash);
   });
 
-  it("should return the initial commit behind master ref", () => {
-    expect(refs.get("master")).toBe(initialCommitHash);
+  it("should return the commit referenced by a name", () => {
+    expect(refs.getCommit("master")).toBe(firstCommitHash);
   });
 
-  it("should return all the refs connected to one commit", () => {
-    refs.set("HEAD", initialCommitHash);
-    expect(refs.get(initialCommitHash)).toEqual(["master", "HEAD"]);
+  it("should return all the names referencing one commit", () => {
+    refs.set("HEAD", firstCommitHash);
+
+    expect(refs.getNames(firstCommitHash)).toEqual(["master", "HEAD"]);
   });
 
-  it("should return undefined if the ref not exists", () => {
-    expect(refs.get("not-exists")).toBeUndefined();
+  it("should return undefined if given reference name does not exist", () => {
+    expect(refs.getNames("unknown")).toBeUndefined();
+  });
+
+  it("should return undefined if given commit hash has no reference", () => {
+    expect(refs.getCommit("unknown")).toBeUndefined();
+  });
+
+  it("should return true if given commit hash is referenced", () => {
+    expect(refs.hasCommit(firstCommitHash)).toBe(true);
+  });
+
+  it("should return false if given commit hash is not referenced", () => {
+    expect(refs.hasCommit(secondCommitHash)).toBe(false);
+  });
+
+  it("should return true if given name exists", () => {
+    expect(refs.hasName("master")).toBe(true);
+  });
+
+  it("should return false if given name does not exist", () => {
+    expect(refs.hasName("unknown")).toBe(false);
   });
 
   describe("update a ref", () => {
@@ -31,12 +51,12 @@ describe("Refs", () => {
       refs.set("master", secondCommitHash);
     });
 
-    it("should return the second commit behind master ref", () => {
-      expect(refs.get("master")).toBe(secondCommitHash);
+    it("should return the new commit referenced by a name", () => {
+      expect(refs.getCommit("master")).toBe(secondCommitHash);
     });
 
-    it("should remove the initial commit link", () => {
-      expect(refs.get(initialCommitHash)).toEqual([]);
+    it("should not be referenced by previous name anymore", () => {
+      expect(refs.getNames(firstCommitHash)).toEqual([]);
     });
   });
 });

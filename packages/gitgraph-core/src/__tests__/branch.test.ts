@@ -437,7 +437,7 @@ describe("Branch", () => {
       master.commit("three");
       dev.commit("four");
 
-      expect(gitgraph.tags.get("this-one")).toEqual("two-tagged-hash");
+      expect(gitgraph.tags.getCommit("this-one")).toEqual("two-tagged-hash");
     });
   });
 });

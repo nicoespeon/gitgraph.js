@@ -75,11 +75,10 @@ export class Branch<TNode = SVGElement> {
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options as string };
     if (!options) options = {};
-
-    let parentOnSameBranch;
     if (!options.parents) options.parents = [];
-    if (this.gitgraph.refs.has(this.name)) {
-      parentOnSameBranch = this.gitgraph.refs.get(this.name) as Commit["hash"];
+
+    const parentOnSameBranch = this.gitgraph.refs.getCommit(this.name);
+    if (parentOnSameBranch) {
       options.parents.unshift(parentOnSameBranch);
     } else if (this.parentCommitHash) {
       options.parents.unshift(this.parentCommitHash);
@@ -97,8 +96,7 @@ export class Branch<TNode = SVGElement> {
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
-      const parentRefs = (this.gitgraph.refs.get(parentOnSameBranch) ||
-        []) as string[];
+      const parentRefs = this.gitgraph.refs.getNames(parentOnSameBranch) || [];
       parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref
@@ -135,9 +133,7 @@ export class Branch<TNode = SVGElement> {
   public merge(branchName: string): Branch<TNode>;
   public merge(branch: string | Branch<TNode>): Branch<TNode> {
     const branchName = typeof branch === "string" ? branch : branch.name;
-    const parentCommitHash = this.gitgraph.refs.get(
-      branchName,
-    ) as Commit["hash"];
+    const parentCommitHash = this.gitgraph.refs.getCommit(branchName);
     if (!parentCommitHash)
       throw new Error(`The branch called "${branchName}" is unknown`);
     this.commit({
