@@ -616,7 +616,7 @@
    * @property {string} [color] - Master color (dot & message)
    * @property {string} [author = this.parent.author] - Author name & email
    * @property {string} [date] - Date of commit, default is now
-   * @property {string} [detail] - DOM Element of detail part
+   * @property {HTMLElement} [detail] - DOM Element of detail part
    * @property {string} [sha1] - Sha1, default is a random short sha1
    * @property {Commit} [parentCommit] - Parent commit
    * @property {string} [type = ("mergeCommit"|null)] - Type of commit
@@ -717,10 +717,10 @@
 
     // Detail
     var isCompact = (this.parent.mode === "compact");
-    if (typeof options.detailId === "string" && !isCompact) {
-      options.detail = document.getElementById(options.detailId);
-    } else {
+    if (isCompact) {
       options.detail = null;
+    } else if (typeof options.detailId === "string") {
+      options.detail = document.getElementById(options.detailId) || options.detail;
     }
 
     // Check collision (Cause of special compact mode)
@@ -1037,7 +1037,7 @@
    * @param {boolean} options.arrowDisplay - Add a arrow under commit dot
    * @param {string} [options.author = this.parent.author] - Author name & email
    * @param {string} [options.date] - Date of commit, default is now
-   * @param {string} [options.detail] - DOM Element of detail part
+   * @param {HTMLElement} [options.detail] - DOM Element of detail part
    * @param {string} [options.sha1] - Sha1, default is a random short sha1
    * @param {Commit} [options.parentCommit] - Parent commit
    * @param {string} [options.type = ("mergeCommit"|null)] - Type of commit
