@@ -213,7 +213,7 @@ date?: string;
 /**
  * DOM Element of detail part
  */
-detail?: string;
+detail?: HTMLElement;
 
 /**
  * Sha1, default is a random short sha1
@@ -614,7 +614,7 @@ date?: string;
 /**
  * DOM Element of detail part
  */
-detail?: string;
+detail?: HTMLElement;
 
 /**
  * Sha1, default is a random short sha1
