@@ -544,9 +544,19 @@ export class GitgraphCore<TNode = SVGElement> {
     index: number,
     commits: Array<Commit<TNode>>,
   ): Map<Branch<TNode>, InternalCoordinate[]> {
-    const branch = this.branches.get(
+    let branch = this.branches.get(
       (commit.branches as Array<Branch["name"]>)[0],
-    ) as Branch<TNode>;
+    );
+
+    if (!branch) {
+      // Branch was deleted.
+      // Create a new branch that is not in the list of gitgraph's `branches`.
+      branch = new Branch({
+        name: "",
+        gitgraph: this,
+        style: this.template.branch,
+      });
+    }
 
     if (branchesPaths.has(branch)) {
       branchesPaths.set(branch, [

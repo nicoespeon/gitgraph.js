@@ -284,7 +284,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 function getMessage(commit: Commit<React.ReactElement<SVGElement>>): string {
   let message = "";
 
-  if (commit.style.message.displayBranch) {
+  if (commit.style.message.displayBranch && commit.branchToDisplay) {
     message += `[${commit.branchToDisplay}`;
     if (commit.tags!.length) {
       message += `, ${commit.tags!.join(", ")}`;
