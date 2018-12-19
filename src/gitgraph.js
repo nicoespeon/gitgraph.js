@@ -390,7 +390,8 @@
         author: commit.author,
         message: commit.message,
         date: commit.date,
-        sha1: commit.sha1
+        sha1: commit.sha1,
+        commit: commit
       };
 
       _emitEvent(self.canvas, "commit:" + event, mouseEventOptions);
