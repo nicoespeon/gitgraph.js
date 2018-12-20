@@ -131,7 +131,7 @@ export class GitgraphCore<TNode = SVGElement> {
     this.withBranches = this.withBranches.bind(this);
     this.calculateRows = this.calculateRows.bind(this);
     this.initBranchesPaths = this.initBranchesPaths.bind(this);
-    this.addMergeCommitsIntoBranchesPaths = this.addMergeCommitsIntoBranchesPaths.bind(
+    this.branchesPathsWithMergeCommits = this.branchesPathsWithMergeCommits.bind(
       this,
     );
   }
@@ -150,19 +150,26 @@ export class GitgraphCore<TNode = SVGElement> {
         return commit.setTags(tags);
       });
 
-    commits = this.withBranches(commits, { firstParentOnly: true });
     this.calculateRows(commits);
-    commits = commits
+
+    commits = this.withBranches(commits, { firstParentOnly: true })
       .map((commit) => commit.computeBranchToDisplay())
+      // Requires rows to be calculated
       .map(this.withPosition)
       .map(this.setDefaultColor);
+
+    // Requires commits with only first parent branches
     const flatBranchesPaths = commits.reduce(
       this.initBranchesPaths,
       new Map<Branch<TNode>, InternalCoordinate[]>(),
     );
+
     commits = this.withBranches(commits);
-    this.addMergeCommitsIntoBranchesPaths(commits, flatBranchesPaths);
-    const branchesPaths = this.smoothBranchesPaths(flatBranchesPaths);
+
+    // Compute final branches paths.
+    const branchesPaths = this.smoothBranchesPaths(
+      this.branchesPathsWithMergeCommits(commits, flatBranchesPaths),
+    );
 
     // Compute branch color
     Array.from(branchesPaths).forEach(([branch], i) => {
@@ -424,8 +431,8 @@ export class GitgraphCore<TNode = SVGElement> {
 
   /**
    * Calculate row index for each commit
+   * It sets `this.rows` and `this.maxRow`.
    *
-   * It's set directly into `this.rows` and `this.maxRow`
    * @param commits
    */
   private calculateRows(commits: Array<Commit<TNode>>): void {
@@ -585,20 +592,27 @@ export class GitgraphCore<TNode = SVGElement> {
   /**
    * Insert merge commits points into `branchesPaths`.
    *
-   * Example:
-   * // Before
-   * [{ x: 0, y: 640 }, { x: 50, y: 560 }]
+   * @example
+   *     // Before
+   *     [
+   *       { x: 0, y: 640 },
+   *       { x: 50, y: 560 }
+   *     ]
    *
-   * // After
-   * [{ x: 0, y: 640 }, { x: 50, y: 560 }, { x: 50, y: 560, mergeCommit: true }]
+   *     // After
+   *     [
+   *       { x: 0, y: 640 },
+   *       { x: 50, y: 560 },
+   *       { x: 50, y: 560, mergeCommit: true }
+   *     ]
    *
    * @param commits All commits (with all branches resolved)
    * @param branchesPaths Map of coordinates of each branch
    */
-  private addMergeCommitsIntoBranchesPaths(
+  private branchesPathsWithMergeCommits(
     commits: Array<Commit<TNode>>,
     branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
-  ) {
+  ): Map<Branch<TNode>, InternalCoordinate[]> {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
 
     mergeCommits.forEach((mergeCommit) => {
@@ -617,6 +631,8 @@ export class GitgraphCore<TNode = SVGElement> {
         { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
       ]);
     });
+
+    return branchesPaths;
   }
 
   /**
