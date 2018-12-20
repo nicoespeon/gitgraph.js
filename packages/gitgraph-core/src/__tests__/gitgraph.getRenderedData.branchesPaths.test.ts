@@ -165,7 +165,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     ]);
   });
 
-  it("should deal with 3 branches (with merge)", () => {
+  it("should deal with 3 branches (with multiple merges in master)", () => {
     const master = gitgraph.branch("master");
     master.commit().commit();
 
@@ -372,7 +372,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
 
     const { branchesPaths } = gitgraph.getRenderedData();
 
-    const branches = [...branchesPaths.keys()];
+    const branches = Array.from(branchesPaths.keys());
     expect(branches[0].computedColor).toBe(metroTemplate.colors[0]);
     expect(branches[1].computedColor).toBe(metroTemplate.colors[1]);
     expect(branches[2].computedColor).toBe(metroTemplate.colors[2]);
