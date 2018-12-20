@@ -438,33 +438,27 @@ export class GitgraphCore<TNode = SVGElement> {
   ): Map<Commit["hash"], number> {
     const rows = new Map<Commit["hash"], number>();
 
-    // Attribute a row index to each commit
-    commits.forEach(
-      (commit, i): any => {
-        if (this.mode === Mode.Compact) {
-          // Compact mode
-          if (i === 0) return rows.set(commit.hash, i);
-          const parentRow: number = rows.get(commit.parents[0]) as number;
-          const historyParent: Commit<TNode> = commits[i - 1];
-          let newRow = Math.max(parentRow + 1, rows.get(
-            historyParent.hash,
-          ) as number);
-          const isMergeCommit = commit.parents.length > 1;
-          if (isMergeCommit) {
-            // Push commit to next row to avoid collision when the branch in which
-            // the merge happens has more commits than the merged branch.
-            const mergeTargetParentRow: number = rows.get(
-              commit.parents[1],
-            ) as number;
-            if (parentRow < mergeTargetParentRow) newRow++;
-          }
-          rows.set(commit.hash, newRow);
-        } else {
-          // Normal mode
-          rows.set(commit.hash, i);
+    commits.forEach((commit, i) => {
+      let newRow = i;
+
+      // In compact mode, row calculation is more complex (compact effect).
+      const isFirstCommit = i === 0;
+      if (!isFirstCommit && this.mode === Mode.Compact) {
+        const parentRow = rows.get(commit.parents[0]) as number;
+        const historyParent = commits[i - 1];
+        newRow = Math.max(parentRow + 1, rows.get(historyParent.hash) || 0);
+
+        const isMergeCommit = commit.parents.length > 1;
+        if (isMergeCommit) {
+          // Push commit to next row to avoid collision when the branch in which
+          // the merge happens has more commits than the merged branch.
+          const mergeTargetParentRow = rows.get(commit.parents[1]) || 0;
+          if (parentRow < mergeTargetParentRow) newRow++;
         }
-      },
-    );
+      }
+
+      rows.set(commit.hash, newRow);
+    });
 
     return rows;
   }
