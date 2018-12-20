@@ -212,7 +212,12 @@ export class Commit<TNode = SVGElement> {
     this.parentsAbbrev = this.parents.map((commit) => commit.substring(0, 7));
 
     // Set style
-    this.style = options.style;
+    this.style = {
+      ...options.style,
+      tag: { ...options.style.tag },
+      message: { ...options.style.message },
+      dot: { ...options.style.dot },
+    };
 
     // Set inner text
     this.innerText = options.innerText;
