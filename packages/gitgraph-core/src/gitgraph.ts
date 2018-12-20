@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { uniq } from "lodash";
 
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
@@ -95,8 +96,6 @@ export class GitgraphCore<TNode = SVGElement> {
   public currentBranch: Branch<TNode>;
 
   private columns: Array<Branch["name"]> = [];
-  private rows: Map<Commit["hash"], number> = new Map();
-  private maxRow: number = 0;
   private listeners: Array<() => void> = [];
 
   constructor(options: GitgraphOptions = {}) {
@@ -150,12 +149,11 @@ export class GitgraphCore<TNode = SVGElement> {
         return commit.setTags(tags);
       });
 
-    this.calculateRows(commits);
+    const rows = this.calculateRows(commits);
 
     commits = this.withBranches(commits, { firstParentOnly: true })
       .map((commit) => commit.computeBranchToDisplay())
-      // Requires rows to be calculated
-      .map(this.withPosition)
+      .map((commit) => this.withPosition(commit, rows))
       .map(this.setDefaultColor);
 
     // Requires commits with only first parent branches
@@ -435,40 +433,40 @@ export class GitgraphCore<TNode = SVGElement> {
    *
    * @param commits
    */
-  private calculateRows(commits: Array<Commit<TNode>>): void {
-    // Reset values
-    this.rows = new Map<Commit["hash"], number>();
-    this.maxRow = 0;
+  private calculateRows(
+    commits: Array<Commit<TNode>>,
+  ): Map<Commit["hash"], number> {
+    const rows = new Map<Commit["hash"], number>();
 
     // Attribute a row index to each commit
     commits.forEach(
       (commit, i): any => {
         if (this.mode === Mode.Compact) {
           // Compact mode
-          if (i === 0) return this.rows.set(commit.hash, i);
-          const parentRow: number = this.rows.get(commit.parents[0]) as number;
+          if (i === 0) return rows.set(commit.hash, i);
+          const parentRow: number = rows.get(commit.parents[0]) as number;
           const historyParent: Commit<TNode> = commits[i - 1];
-          let newRow = Math.max(parentRow + 1, this.rows.get(
+          let newRow = Math.max(parentRow + 1, rows.get(
             historyParent.hash,
           ) as number);
           const isMergeCommit = commit.parents.length > 1;
           if (isMergeCommit) {
             // Push commit to next row to avoid collision when the branch in which
             // the merge happens has more commits than the merged branch.
-            const mergeTargetParentRow: number = this.rows.get(
+            const mergeTargetParentRow: number = rows.get(
               commit.parents[1],
             ) as number;
             if (parentRow < mergeTargetParentRow) newRow++;
           }
-          this.rows.set(commit.hash, newRow);
-          this.maxRow = Math.max(this.maxRow, newRow + 1);
+          rows.set(commit.hash, newRow);
         } else {
           // Normal mode
-          this.rows.set(commit.hash, i);
-          this.maxRow = Math.max(this.maxRow, i + 1);
+          rows.set(commit.hash, i);
         }
       },
     );
+
+    return rows;
   }
 
   /**
@@ -492,18 +490,21 @@ export class GitgraphCore<TNode = SVGElement> {
    *
    * Functional requirements:
    *  - You need to have `commit.branchToDisplay` set in each commit. (without merge commits resolution)
-   *  - You need to have `this.rows` and `this.maxRow` set.
    *
    * @param commit One commit
+   * @param rows Map of each commit row in the graph
    */
-  private withPosition(commit: Commit<TNode>): Commit<TNode> {
+  private withPosition(
+    commit: Commit<TNode>,
+    rows: Map<Commit["hash"], number>,
+  ): Commit<TNode> {
+    const row = rows.get(commit.hash) || 0;
+    const maxRow = uniq(Array.from(rows.values())).length - 1;
+
     // Resolve branch's column index
     const branch = commit.branchToDisplay!;
     if (!this.columns.includes(branch)) this.columns.push(branch);
     const column = this.columns.findIndex((col) => col === branch);
-
-    // Resolve row index
-    const row = this.rows.get(commit.hash) as number;
 
     switch (this.orientation) {
       default:
@@ -511,7 +512,7 @@ export class GitgraphCore<TNode = SVGElement> {
           x: this.initCommitOffsetX + this.template.branch.spacing * column,
           y:
             this.initCommitOffsetY +
-            this.template.commit.spacing * (this.maxRow - 1 - row),
+            this.template.commit.spacing * (maxRow - row),
         });
 
       case Orientation.VerticalReverse:
@@ -530,7 +531,7 @@ export class GitgraphCore<TNode = SVGElement> {
         return commit.setPosition({
           x:
             this.initCommitOffsetX +
-            this.template.commit.spacing * (this.maxRow - 1 - row),
+            this.template.commit.spacing * (maxRow - row),
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         });
     }
