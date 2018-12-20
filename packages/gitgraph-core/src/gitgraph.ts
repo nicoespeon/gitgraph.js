@@ -1,8 +1,8 @@
 import * as yup from "yup";
-import { uniq } from "lodash";
 
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
+import { createGraphRows, GraphRows } from "./graph-rows";
 import {
   Template,
   TemplateName,
@@ -128,7 +128,6 @@ export class GitgraphCore<TNode = SVGElement> {
     this.withPosition = this.withPosition.bind(this);
     this.setDefaultColor = this.setDefaultColor.bind(this);
     this.withBranches = this.withBranches.bind(this);
-    this.calculateRows = this.calculateRows.bind(this);
     this.initBranchesPaths = this.initBranchesPaths.bind(this);
     this.branchesPathsWithMergeCommits = this.branchesPathsWithMergeCommits.bind(
       this,
@@ -149,11 +148,11 @@ export class GitgraphCore<TNode = SVGElement> {
         return commit.setTags(tags);
       });
 
-    const rows = this.calculateRows(commits);
+    const rows = createGraphRows(this.mode, commits);
 
     commits = this.withBranches(commits, { firstParentOnly: true })
       .map((commit) => commit.computeBranchToDisplay())
-      .map((commit) => this.withPosition(commit, rows))
+      .map((commit) => this.withPosition(rows, commit))
       .map(this.setDefaultColor);
 
     // Requires commits with only first parent branches
@@ -428,42 +427,6 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Calculate row index for each commit
-   * It sets `this.rows` and `this.maxRow`.
-   *
-   * @param commits
-   */
-  private calculateRows(
-    commits: Array<Commit<TNode>>,
-  ): Map<Commit["hash"], number> {
-    const rows = new Map<Commit["hash"], number>();
-
-    commits.forEach((commit, i) => {
-      let newRow = i;
-
-      // In compact mode, row calculation is more complex (compact effect).
-      const isFirstCommit = i === 0;
-      if (!isFirstCommit && this.mode === Mode.Compact) {
-        const parentRow = rows.get(commit.parents[0]) as number;
-        const historyParent = commits[i - 1];
-        newRow = Math.max(parentRow + 1, rows.get(historyParent.hash) || 0);
-
-        const isMergeCommit = commit.parents.length > 1;
-        if (isMergeCommit) {
-          // Push commit to next row to avoid collision when the branch in which
-          // the merge happens has more commits than the merged branch.
-          const mergeTargetParentRow = rows.get(commit.parents[1]) || 0;
-          if (parentRow < mergeTargetParentRow) newRow++;
-        }
-      }
-
-      rows.set(commit.hash, newRow);
-    });
-
-    return rows;
-  }
-
-  /**
    * Set default color to one commit.
    *
    * @param commit One commit
@@ -485,15 +448,15 @@ export class GitgraphCore<TNode = SVGElement> {
    * Functional requirements:
    *  - You need to have `commit.branchToDisplay` set in each commit. (without merge commits resolution)
    *
+   * @param rows Graph rows
    * @param commit One commit
-   * @param rows Map of each commit row in the graph
    */
   private withPosition(
+    rows: GraphRows<TNode>,
     commit: Commit<TNode>,
-    rows: Map<Commit["hash"], number>,
   ): Commit<TNode> {
-    const row = rows.get(commit.hash) || 0;
-    const maxRow = uniq(Array.from(rows.values())).length - 1;
+    const row = rows.getRowOf(commit.hash);
+    const maxRow = rows.getMaxRow();
 
     // Resolve branch's column index
     const branch = commit.branchToDisplay!;
