@@ -162,13 +162,6 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
         { x: 50, y: 80 * 2 },
         { x: 50, y: 80 * 1 }, // merge commit
       ],
-      // 👇 Not sure this path should exist at all.
-      // But no problem appeared in rendering yet.
-      [
-        { x: 50, y: 80 * 3 },
-        { x: 50, y: 80 * 2 },
-        { x: 50, y: 80 * 1 }, // merge commit
-      ],
     ]);
   });
 

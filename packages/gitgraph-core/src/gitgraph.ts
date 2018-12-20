@@ -597,9 +597,7 @@ export class GitgraphCore<TNode = SVGElement> {
       });
       if (!parentOnOriginBranch) return;
 
-      // This may not always be true. If you have a better solution, go ahead!
-      const branchNames = parentOnOriginBranch.branches!;
-      const originBranchName = branchNames[branchNames.length - 1];
+      const originBranchName = parentOnOriginBranch.refs[0];
       const branch = this.branches.get(originBranchName);
       if (!branch) return;
 
