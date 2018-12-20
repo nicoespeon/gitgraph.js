@@ -96,7 +96,7 @@ export class Branch<TNode = SVGElement> {
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
-      const parentRefs = this.gitgraph.refs.getNames(parentOnSameBranch) || [];
+      const parentRefs = this.gitgraph.refs.getNames(parentOnSameBranch);
       parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref

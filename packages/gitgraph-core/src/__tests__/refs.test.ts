@@ -22,8 +22,8 @@ describe("Refs", () => {
     expect(refs.getNames(firstCommitHash)).toEqual(["master", "HEAD"]);
   });
 
-  it("should return undefined if given reference name does not exist", () => {
-    expect(refs.getNames("unknown")).toBeUndefined();
+  it("should return an empty list if given reference name does not exist", () => {
+    expect(refs.getNames("unknown")).toEqual([]);
   });
 
   it("should return undefined if given commit hash has no reference", () => {

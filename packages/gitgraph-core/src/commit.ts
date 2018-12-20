@@ -1,5 +1,6 @@
 import { CommitStyle } from "./template";
 import Branch from "./branch";
+import Refs from "./refs";
 
 export interface CommitRenderOptions<TNode> {
   renderDot?: (commit: Commit<TNode>) => TNode;
@@ -237,13 +238,13 @@ export class Commit<TNode = SVGElement> {
     this.renderTooltip = options.renderTooltip;
   }
 
-  public setRefs(refs: Array<Branch["name"] | "HEAD">): this {
-    this.refs = refs;
+  public setRefs(refs: Refs): this {
+    this.refs = refs.getNames(this.hash);
     return this;
   }
 
-  public setTags(tags: string[]): this {
-    this.tags = tags;
+  public setTags(tags: Refs): this {
+    this.tags = tags.getNames(this.hash);
     return this;
   }
 

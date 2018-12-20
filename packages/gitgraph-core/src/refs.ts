@@ -38,8 +38,8 @@ export class Refs {
    *
    * @param commitHash Commit hash
    */
-  public getNames(commitHash: Commit["hash"]): Name[] | undefined {
-    return this.namesPerCommit.get(commitHash);
+  public getNames(commitHash: Commit["hash"]): Name[] {
+    return this.namesPerCommit.get(commitHash) || [];
   }
 
   /**

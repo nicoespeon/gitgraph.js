@@ -139,14 +139,8 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   public getRenderedData(): RenderedData<TNode> {
     let commits = this.commits
-      .map((commit) => {
-        const refs = this.refs.getNames(commit.hash) || [];
-        return commit.setRefs(refs);
-      })
-      .map((commit) => {
-        const tags = this.tags.getNames(commit.hash) || [];
-        return commit.setTags(tags);
-      });
+      .map((commit) => commit.setRefs(this.refs))
+      .map((commit) => commit.setTags(this.tags));
 
     const rows = createGraphRows(this.mode, commits);
 
