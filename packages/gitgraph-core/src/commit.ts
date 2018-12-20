@@ -28,9 +28,9 @@ export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
 /**
  * Generate a random hash.
  *
- * @return {string} hex string with 40 chars
+ * @return hex string with 40 chars
  */
-const getRandomHash = (): string =>
+const getRandomHash = () =>
   (
     Math.random()
       .toString(16)
