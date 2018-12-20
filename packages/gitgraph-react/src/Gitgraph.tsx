@@ -129,7 +129,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private renderDot(commit: Commit<React.ReactElement<SVGElement>>) {
     if (commit.renderDot) {
-      commit.renderDot(commit);
+      return commit.renderDot(commit);
     }
 
     return (
