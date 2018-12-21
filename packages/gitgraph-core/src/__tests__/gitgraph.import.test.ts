@@ -171,6 +171,17 @@ describe("Gitgraph.import", () => {
       },
     ]);
   });
+
+  it.skip("should compute correct branches paths for deleted branches", () => {
+    const data = getImportData("git2json-deleted-branch");
+
+    const gitgraph = new GitgraphCore();
+    gitgraph.import(data);
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    const paths = Array.from(branchesPaths);
+    expect(paths.length).toBe(2);
+  });
 });
 
 function getImportData(name: string) {

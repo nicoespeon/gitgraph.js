@@ -508,6 +508,7 @@ export class GitgraphCore<TNode = SVGElement> {
     );
 
     if (!branch) {
+      // TODO: don't create a new branch for each commit!
       // Branch was deleted.
       // Create a new branch that is not in the list of gitgraph's `branches`.
       branch = new Branch({
