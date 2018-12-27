@@ -13,7 +13,6 @@ export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
   subject: string;
   style: CommitStyle;
   body?: string;
-  notes?: string;
   refs?: string[];
   tree?: string;
   hash?: string;
@@ -126,10 +125,6 @@ export class Commit<TNode = SVGElement> {
    */
   public body: string;
   /**
-   * Notes
-   */
-  public notes: string;
-  /**
    * Style
    */
   public style: CommitStyle;
@@ -195,7 +190,6 @@ export class Commit<TNode = SVGElement> {
     // Set commit message
     this.subject = options.subject;
     this.body = options.body || "";
-    this.notes = options.notes || "";
 
     // Set commit hash
     this.hash = options.hash || getRandomHash();
