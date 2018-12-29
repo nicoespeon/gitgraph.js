@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.14.0
+ *                  GitGraph v1.15.0
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2018 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
@@ -400,7 +400,8 @@
         author: commit.author,
         message: commit.message,
         date: commit.date,
-        sha1: commit.sha1
+        sha1: commit.sha1,
+        commit: commit
       };
 
       _emitEvent(self.canvas, "commit:" + event, mouseEventOptions);
