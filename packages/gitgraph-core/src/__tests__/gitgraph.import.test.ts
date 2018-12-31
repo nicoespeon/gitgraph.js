@@ -182,6 +182,30 @@ describe("Gitgraph.import", () => {
     const paths = Array.from(branchesPaths);
     expect(paths.length).toBe(2);
   });
+
+  it("should compute merges in branches paths for deleted branches", () => {
+    const data = getImportData("git2json-deleted-branch");
+
+    const gitgraph = new GitgraphCore();
+    gitgraph.import(data);
+    const { branchesPaths } = gitgraph.getRenderedData();
+
+    const paths = Array.from(branchesPaths);
+    expect(paths[0][1][0]).toEqual([
+      { x: 0, y: 320 },
+      { x: 0, y: 240 },
+      { x: 0, y: 160 },
+      { x: 0, y: 80 },
+      { x: 0, y: 0 },
+    ]);
+    expect(paths[1][1][0]).toEqual([
+      { x: 0, y: 320 },
+      { x: 50, y: 240 },
+      { x: 50, y: 160 },
+      { x: 50, y: 80 },
+      { x: 0, y: 0 },
+    ]);
+  });
 });
 
 function getImportData(name: string) {

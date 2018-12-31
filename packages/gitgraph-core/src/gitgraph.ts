@@ -602,8 +602,20 @@ export class GitgraphCore<TNode = SVGElement> {
       if (!parentOnOriginBranch) return;
 
       const originBranchName = parentOnOriginBranch.refs[0];
-      const branch = this.branches.get(originBranchName);
-      if (!branch) return;
+      let branch = this.branches.get(originBranchName);
+
+      if (!branch) {
+        // Branch may have been deleted.
+        const deletedBranchInPath = getDeletedBranchInPath<TNode>(
+          branchesPaths,
+        );
+
+        if (!deletedBranchInPath) {
+          return;
+        }
+
+        branch = deletedBranchInPath;
+      }
 
       const lastPoints = [...(branchesPaths.get(branch) || [])];
       branchesPaths.set(branch, [
