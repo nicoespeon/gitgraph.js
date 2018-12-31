@@ -77,6 +77,16 @@ export interface GitgraphBranchOptions<TNode> {
   style?: BranchStyleOptions;
 }
 
+const DELETED_BRANCH_NAME = "";
+
+function getDeletedBranchInPath<TNode>(
+  branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
+): Branch<TNode> | undefined {
+  return Array.from(branchesPaths.keys()).find(
+    ({ name }) => name === DELETED_BRANCH_NAME,
+  );
+}
+
 export class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
   public isVertical: boolean;
@@ -512,31 +522,26 @@ export class GitgraphCore<TNode = SVGElement> {
     if (!branch) {
       // Branch was deleted.
       // Create a new branch that is not in the list of gitgraph's `branches`.
-      const deletedBranchName = "";
-
       branch = new Branch({
-        name: deletedBranchName,
+        name: DELETED_BRANCH_NAME,
         gitgraph: this,
         style: this.template.branch,
       });
 
-      if (commit.parents[0]) {
-        const parentCommit = commits.find(
-          ({ hash }) => hash === commit.parents[0],
-        ) as Commit<TNode>;
-        const deletedBranchInPath = Array.from(branchesPaths.keys()).find(
-          ({ name }) => name === deletedBranchName,
-        );
+      const deletedBranchInPath = getDeletedBranchInPath<TNode>(branchesPaths);
 
-        // If deleted branch was already added in path, just use it.
-        // NB: this may not work enough for multiple deleted branches in time.
-        if (
-          deletedBranchInPath &&
-          parentCommit.branches &&
-          parentCommit.branches.length === 0
-        ) {
-          branch = deletedBranchInPath;
-        }
+      const parentCommit = commits.find(
+        ({ hash }) => hash === commit.parents[0],
+      ) as Commit<TNode>;
+
+      // If deleted branch was already added in path, just use it.
+      // NB: this may not work enough for multiple deleted branches in time.
+      if (
+        deletedBranchInPath &&
+        parentCommit.branches &&
+        parentCommit.branches.length === 0
+      ) {
+        branch = deletedBranchInPath;
       }
     }
 
