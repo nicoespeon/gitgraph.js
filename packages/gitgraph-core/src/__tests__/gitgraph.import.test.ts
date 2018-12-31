@@ -33,12 +33,12 @@ describe("Gitgraph.import", () => {
 
     expect(commits).toMatchObject([
       {
-        subject: "second",
+        subject: "first",
         x: 0,
         y: 80,
       },
       {
-        subject: "first",
+        subject: "second",
         x: 0,
         y: 0,
       },
@@ -54,24 +54,24 @@ describe("Gitgraph.import", () => {
 
     expect(commits).toMatchObject([
       {
-        subject: "third",
+        subject: "first",
         x: 0,
         y: 160,
       },
       {
         subject: "second",
-        x: 50,
+        x: 0,
         y: 80,
       },
       {
-        subject: "first",
-        x: 0,
+        subject: "third",
+        x: 50,
         y: 0,
       },
     ]);
   });
 
-  it("should compute style for 2 branches", () => {
+  it("should compute style for two branches", () => {
     const data = getImportData("git2json-two-branches");
 
     const template = new Template({
@@ -83,7 +83,7 @@ describe("Gitgraph.import", () => {
 
     expect(commits).toMatchObject([
       {
-        subject: "third",
+        subject: "first",
         style: {
           color: "red",
         },
@@ -91,13 +91,13 @@ describe("Gitgraph.import", () => {
       {
         subject: "second",
         style: {
-          color: "green",
+          color: "red",
         },
       },
       {
-        subject: "first",
+        subject: "third",
         style: {
-          color: "red",
+          color: "green",
         },
       },
     ]);
@@ -112,12 +112,12 @@ describe("Gitgraph.import", () => {
 
     expect(commits).toMatchObject([
       {
-        subject: "second",
-        tags: ["v1.0"],
-      },
-      {
         subject: "first",
         tags: ["stable"],
+      },
+      {
+        subject: "second",
+        tags: ["v1.0"],
       },
     ]);
   });
@@ -131,12 +131,12 @@ describe("Gitgraph.import", () => {
 
     expect(commits).toMatchObject([
       {
-        subject: "second",
-        refs: ["HEAD", "master"],
-      },
-      {
         subject: "first",
         refs: [],
+      },
+      {
+        subject: "second",
+        refs: ["HEAD", "master"],
       },
     ]);
   });
@@ -150,15 +150,7 @@ describe("Gitgraph.import", () => {
 
     expect(commits).toMatchObject([
       {
-        subject: "Merge branch 'feat/tooltips'",
-        branches: ["master"],
-      },
-      {
-        subject: "Update README",
-        branches: ["master"],
-      },
-      {
-        subject: "Refactor code",
+        subject: "Initial commit",
         branches: ["master"],
       },
       {
@@ -166,7 +158,15 @@ describe("Gitgraph.import", () => {
         branches: ["master"],
       },
       {
-        subject: "Initial commit",
+        subject: "Refactor code",
+        branches: ["master"],
+      },
+      {
+        subject: "Update README",
+        branches: ["master"],
+      },
+      {
+        subject: "Merge branch 'feat/tooltips'",
         branches: ["master"],
       },
     ]);

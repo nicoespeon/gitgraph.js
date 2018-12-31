@@ -339,7 +339,10 @@ export class GitgraphCore<TNode = SVGElement> {
         ...options,
         style: { ...this.template.commit },
         author: `${options.author.name} <${options.author.email}>`,
-      }));
+      }))
+      // Git2json outputs is reverse-chronological.
+      // We need to commit it chronological order.
+      .reverse();
 
     // Use validated `value`.
     this.clear();
