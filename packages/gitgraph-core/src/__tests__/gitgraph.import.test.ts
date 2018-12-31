@@ -172,7 +172,7 @@ describe("Gitgraph.import", () => {
     ]);
   });
 
-  it.skip("should compute correct branches paths for deleted branches", () => {
+  it("should compute correct branches paths for deleted branches", () => {
     const data = getImportData("git2json-deleted-branch");
 
     const gitgraph = new GitgraphCore();

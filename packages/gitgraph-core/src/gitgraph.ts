@@ -510,14 +510,34 @@ export class GitgraphCore<TNode = SVGElement> {
     );
 
     if (!branch) {
-      // TODO: don't create a new branch for each commit!
       // Branch was deleted.
       // Create a new branch that is not in the list of gitgraph's `branches`.
+      const deletedBranchName = "";
+
       branch = new Branch({
-        name: "",
+        name: deletedBranchName,
         gitgraph: this,
         style: this.template.branch,
       });
+
+      if (commit.parents[0]) {
+        const parentCommit = commits.find(
+          ({ hash }) => hash === commit.parents[0],
+        ) as Commit<TNode>;
+        const deletedBranchInPath = Array.from(branchesPaths.keys()).find(
+          ({ name }) => name === deletedBranchName,
+        );
+
+        // If deleted branch was already added in path, just use it.
+        // NB: this may not work enough for multiple deleted branches in time.
+        if (
+          deletedBranchInPath &&
+          parentCommit.branches &&
+          parentCommit.branches.length === 0
+        ) {
+          branch = deletedBranchInPath;
+        }
+      }
     }
 
     if (branchesPaths.has(branch)) {
