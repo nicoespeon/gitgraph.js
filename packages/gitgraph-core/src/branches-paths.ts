@@ -87,6 +87,64 @@ class BranchesPaths2<TNode> {
     branchesPaths.set(branch, path);
     return branchesPaths;
   }
+
+  /**
+   * Insert merge commits points into `branchesPaths`.
+   *
+   * @example
+   *     // Before
+   *     [
+   *       { x: 0, y: 640 },
+   *       { x: 50, y: 560 }
+   *     ]
+   *
+   *     // After
+   *     [
+   *       { x: 0, y: 640 },
+   *       { x: 50, y: 560 },
+   *       { x: 50, y: 560, mergeCommit: true }
+   *     ]
+   *
+   * @param commits All commits (with all branches resolved)
+   * @param branchesPaths Map of coordinates of each branch
+   */
+  public branchesPathsWithMergeCommits(
+    commits: Array<Commit<TNode>>,
+    branchesPaths: BranchesPaths3<TNode>,
+  ): BranchesPaths3<TNode> {
+    const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
+
+    mergeCommits.forEach((mergeCommit) => {
+      const parentOnOriginBranch = commits.find(({ hash }) => {
+        return hash === mergeCommit.parents[1];
+      });
+      if (!parentOnOriginBranch) return;
+
+      const originBranchName = parentOnOriginBranch.refs[0];
+      let branch = this.branches.get(originBranchName);
+
+      if (!branch) {
+        // Branch may have been deleted.
+        const deletedBranchInPath = getDeletedBranchInPath<TNode>(
+          branchesPaths,
+        );
+
+        if (!deletedBranchInPath) {
+          return;
+        }
+
+        branch = deletedBranchInPath;
+      }
+
+      const lastPoints = [...(branchesPaths.get(branch) || [])];
+      branchesPaths.set(branch, [
+        ...lastPoints,
+        { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
+      ]);
+    });
+
+    return branchesPaths;
+  }
 }
 
 export default BranchesPaths2;
