@@ -136,8 +136,8 @@ export class GitgraphCore<TNode = SVGElement> {
     const branchesPaths = new BranchesPathsCalculator<TNode>(
       commits,
       this.branches,
-      this,
       this.template,
+      this.isVertical,
       () =>
         new Branch({
           name: DELETED_BRANCH_NAME,

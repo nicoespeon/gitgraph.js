@@ -1,6 +1,5 @@
 import Commit from "./commit";
 import Branch, { DELETED_BRANCH_NAME } from "./branch";
-import GitgraphCore from "./gitgraph";
 import { Template } from "./template";
 import { pick } from "./utils";
 
@@ -28,21 +27,21 @@ function getDeletedBranchInPath<TNode>(
 class BranchesPathsCalculator<TNode> {
   private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
-  private gitgraph: GitgraphCore<TNode>;
   private template: Template;
+  private isGraphVertical: boolean;
   private createDeletedBranch: () => Branch<TNode>;
 
   constructor(
     commits: Array<Commit<TNode>>,
     branches: Map<Branch["name"], Branch<TNode>>,
-    gitgraph: GitgraphCore<TNode>,
     template: Template,
+    isGraphVertical: boolean,
     createDeletedBranch: () => Branch<TNode>,
   ) {
     this.commits = commits;
     this.branches = branches;
-    this.gitgraph = gitgraph;
     this.template = template;
+    this.isGraphVertical = isGraphVertical;
     this.createDeletedBranch = createDeletedBranch;
   }
 
@@ -191,7 +190,7 @@ class BranchesPathsCalculator<TNode> {
 
       // Cut path on each merge commits
       // Coordinate[] -> Coordinate[][]
-      if (this.gitgraph.isVertical) {
+      if (this.isGraphVertical) {
         points = points.sort((a, b) => (a.y > b.y ? -1 : 1));
       } else {
         points = points.sort((a, b) => (a.x > b.x ? 1 : -1));
@@ -211,7 +210,7 @@ class BranchesPathsCalculator<TNode> {
       );
 
       // Add intermediate points on each sub paths
-      if (this.gitgraph.isVertical) {
+      if (this.isGraphVertical) {
         paths.forEach((subPath) => {
           if (subPath.length <= 1) return;
           const firstPoint = subPath[0];
