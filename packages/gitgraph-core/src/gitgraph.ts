@@ -78,17 +78,7 @@ export interface GitgraphBranchOptions<TNode> {
   style?: BranchStyleOptions;
 }
 
-type BranchesPaths<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
-
 const DELETED_BRANCH_NAME = "";
-
-function getDeletedBranchInPath<TNode>(
-  branchesPaths: BranchesPaths<TNode>,
-): Branch<TNode> | undefined {
-  return Array.from(branchesPaths.keys()).find(
-    ({ name }) => name === DELETED_BRANCH_NAME,
-  );
-}
 
 export class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
