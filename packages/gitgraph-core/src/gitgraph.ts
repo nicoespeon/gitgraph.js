@@ -125,14 +125,13 @@ export class GitgraphCore<TNode = SVGElement> {
    * Get rendered data of each commits and branches paths.
    */
   public getRenderedData(): RenderedData<TNode> {
-    let commits = this.commits
-      .map((commit) => commit.setRefs(this.refs))
-      .map((commit) => commit.setTags(this.tags));
+    const branches = this.getBranches(this.commits);
 
-    const branches = this.getBranches(commits);
-    commits = commits
+    const commits: Array<Commit<TNode>> = this.commits
+      .map((commit) => commit.setRefs(this.refs))
+      .map((commit) => commit.setTags(this.tags))
       .map((commit) => this.withBranches(commit, branches))
-      .map((commit) => this.withPosition(commits, commit))
+      .map((commit) => this.withPosition(this.commits, commit))
       .map(this.setDefaultColor.bind(this));
 
     const branchesPaths = new BranchesPathsCalculator<TNode>(
