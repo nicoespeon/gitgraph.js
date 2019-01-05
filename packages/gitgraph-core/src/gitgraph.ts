@@ -125,7 +125,7 @@ export class GitgraphCore<TNode = SVGElement> {
    * Get rendered data of each commits and branches paths.
    */
   public getRenderedData(): RenderedData<TNode> {
-    const branches = this.getBranches(this.commits);
+    const branches = this.getBranches();
 
     const commits: Array<Commit<TNode>> = this.commits
       .map((commit) => commit.setRefs(this.refs))
@@ -346,7 +346,7 @@ export class GitgraphCore<TNode = SVGElement> {
     });
 
     // Create branches.
-    const branches = this.getBranches(this.commits);
+    const branches = this.getBranches();
     this.commits
       .map((commit) => this.withBranches(commit, branches))
       .reduce((mem, commit) => {
@@ -362,13 +362,9 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Get all branches from list of commits.
-   *
-   * @param commits List of commits
+   * Get all branches from current commits.
    */
-  private getBranches(
-    commits: Array<Commit<TNode>>,
-  ): Map<Commit["hash"], Set<Branch["name"]>> {
+  private getBranches(): Map<Commit["hash"], Set<Branch["name"]>> {
     const result = new Map<Commit["hash"], Set<Branch["name"]>>();
 
     const queue: Array<Commit["hash"]> = [];
@@ -381,7 +377,7 @@ export class GitgraphCore<TNode = SVGElement> {
 
       while (queue.length > 0) {
         const currentHash = queue.pop() as Commit["hash"];
-        const current = commits.find(
+        const current = this.commits.find(
           ({ hash }) => hash === currentHash,
         ) as Commit<TNode>;
         const prevBranches =
