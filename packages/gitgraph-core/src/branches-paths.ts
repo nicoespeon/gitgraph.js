@@ -41,19 +41,25 @@ export class BranchesPathsCalculator<TNode> {
    * Compute branches paths for graph.
    */
   public compute(): BranchesPaths<TNode> {
+    // Don't use lodash's `flow` because we loose type safety.
+    const fromCommits = this.fromCommits();
+    const withMergeCommits = this.withMergeCommits(fromCommits);
+    return this.smoothBranchesPaths(withMergeCommits);
+  }
+
+  /**
+   * Initialize branches paths from calculator's commits.
+   */
+  private fromCommits(): InternalBranchesPaths<TNode> {
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
-    const branchesPathsFromCommits = this.commits.reduce((result, commit) => {
+    return this.commits.reduce((result, commit) => {
       const firstParentCommit = this.commits.find(
         ({ hash }) => hash === commit.parents[0],
       );
 
       return this.setBranchPathForCommit(result, commit, firstParentCommit);
     }, emptyBranchesPaths);
-
-    return this.smoothBranchesPaths(
-      this.branchesPathsWithMergeCommits(branchesPathsFromCommits),
-    );
   }
 
   /**
@@ -125,7 +131,7 @@ export class BranchesPathsCalculator<TNode> {
    *
    * @param branchesPaths Map of coordinates of each branch
    */
-  private branchesPathsWithMergeCommits(
+  private withMergeCommits(
     branchesPaths: InternalBranchesPaths<TNode>,
   ): InternalBranchesPaths<TNode> {
     const mergeCommits = this.commits.filter(
