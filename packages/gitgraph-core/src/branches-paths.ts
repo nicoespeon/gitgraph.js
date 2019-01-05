@@ -1,17 +1,24 @@
 import Commit from "./commit";
 import Branch, { DELETED_BRANCH_NAME } from "./branch";
-import GitgraphCore, { Coordinate } from "./gitgraph";
+import GitgraphCore from "./gitgraph";
 import { Template } from "./template";
 import { pick } from "./utils";
+
+export interface Coordinate {
+  x: number;
+  y: number;
+}
 
 interface InternalCoordinate extends Coordinate {
   mergeCommit?: boolean;
 }
 
-type BranchesPaths2<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
+export type ComputedBranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
+
+type InternalBranchesPaths<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
 
 function getDeletedBranchInPath<TNode>(
-  branchesPaths: BranchesPaths2<TNode>,
+  branchesPaths: InternalBranchesPaths<TNode>,
 ): Branch<TNode> | undefined {
   return Array.from(branchesPaths.keys()).find(
     ({ name }) => name === DELETED_BRANCH_NAME,
@@ -38,9 +45,7 @@ class BranchesPaths<TNode> {
    *
    * @param commits List of commits
    */
-  public compute(
-    commits: Array<Commit<TNode>>,
-  ): Map<Branch<TNode>, Coordinate[][]> {
+  public compute(commits: Array<Commit<TNode>>): ComputedBranchesPaths<TNode> {
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
     const branchesPathsFromCommits = commits.reduce((result, commit) => {
@@ -64,10 +69,10 @@ class BranchesPaths<TNode> {
    * @param firstParentCommit First parent of the commit
    */
   private setBranchPathForCommit(
-    branchesPaths: BranchesPaths2<TNode>,
+    branchesPaths: InternalBranchesPaths<TNode>,
     commit: Commit<TNode>,
     firstParentCommit: Commit<TNode> | undefined,
-  ): BranchesPaths2<TNode> {
+  ): InternalBranchesPaths<TNode> {
     if (!commit.branches) {
       return branchesPaths;
     }
@@ -132,8 +137,8 @@ class BranchesPaths<TNode> {
    */
   private branchesPathsWithMergeCommits(
     commits: Array<Commit<TNode>>,
-    branchesPaths: BranchesPaths2<TNode>,
-  ): BranchesPaths2<TNode> {
+    branchesPaths: InternalBranchesPaths<TNode>,
+  ): InternalBranchesPaths<TNode> {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
 
     mergeCommits.forEach((mergeCommit) => {
@@ -174,8 +179,8 @@ class BranchesPaths<TNode> {
    * @param flatBranchesPaths Map of coordinates of each branch
    */
   private smoothBranchesPaths(
-    flatBranchesPaths: BranchesPaths2<TNode>,
-  ): Map<Branch<TNode>, Coordinate[][]> {
+    flatBranchesPaths: InternalBranchesPaths<TNode>,
+  ): ComputedBranchesPaths<TNode> {
     const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
 
     flatBranchesPaths.forEach((points, branch) => {

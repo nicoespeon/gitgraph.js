@@ -1,5 +1,6 @@
 import { Commit } from "./commit";
-import { Coordinate, GitgraphCore } from "./gitgraph";
+import { Coordinate } from "./branches-paths";
+import { GitgraphCore } from "./gitgraph";
 import { Orientation } from "./orientation";
 
 /**

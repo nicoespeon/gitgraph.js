@@ -15,17 +15,12 @@ import {
   getTemplate,
 } from "./template";
 import Refs from "./refs";
-import BranchesPaths from "./branches-paths";
+import BranchesPaths, { ComputedBranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
 
 export enum Mode {
   Compact = "compact",
-}
-
-export interface Coordinate {
-  x: number;
-  y: number;
 }
 
 export interface GitgraphOptions {
@@ -41,7 +36,7 @@ export interface GitgraphOptions {
 
 export interface RenderedData<TNode> {
   commits: Array<Commit<TNode>>;
-  branchesPaths: Map<Branch<TNode>, Coordinate[][]>;
+  branchesPaths: ComputedBranchesPaths<TNode>;
   commitMessagesX: number;
 }
 
