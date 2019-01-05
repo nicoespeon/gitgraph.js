@@ -1,5 +1,4 @@
 import { Commit } from "./commit";
-import { Coordinate } from "./branches-paths";
 import { GitgraphCore } from "./gitgraph";
 import { Orientation } from "./orientation";
 
@@ -93,44 +92,6 @@ export function withoutUndefinedKeys<T extends object>(
       isUndefined(obj[key]) ? mem : { ...mem, [key]: obj[key] },
     {} as T,
   );
-}
-
-/**
- * Return a string ready to use in `svg.path.d` from coordinates
- *
- * @param coordinates Collection of coordinates
- */
-export function toSvgPath(
-  coordinates: Coordinate[][],
-  isBezier: boolean,
-  isVertical: boolean,
-): string {
-  return coordinates
-    .map(
-      (path) =>
-        "M" +
-        path
-          .map(({ x, y }, i, points) => {
-            if (
-              isBezier &&
-              points.length > 1 &&
-              (i === 1 || i === points.length - 1)
-            ) {
-              const previous = points[i - 1];
-              if (isVertical) {
-                const middleY = (previous.y + y) / 2;
-                return `C ${previous.x} ${middleY} ${x} ${middleY} ${x} ${y}`;
-              } else {
-                const middleX = (previous.x + x) / 2;
-                return `C ${middleX} ${previous.y} ${middleX} ${y} ${x} ${y}`;
-              }
-            }
-            return `L ${x} ${y}`;
-          })
-          .join(" ")
-          .slice(1),
-    )
-    .join(" ");
 }
 
 /**

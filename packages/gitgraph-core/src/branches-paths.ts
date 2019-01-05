@@ -3,28 +3,20 @@ import Branch, { DELETED_BRANCH_NAME } from "./branch";
 import { CommitStyleBase } from "./template";
 import { pick } from "./utils";
 
+export type BranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
+
 export interface Coordinate {
   x: number;
   y: number;
 }
 
+type InternalBranchesPaths<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
+
 interface InternalCoordinate extends Coordinate {
   mergeCommit?: boolean;
 }
 
-export type BranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
-
-type InternalBranchesPaths<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
-
-function getDeletedBranchInPath<TNode>(
-  branchesPaths: InternalBranchesPaths<TNode>,
-): Branch<TNode> | undefined {
-  return Array.from(branchesPaths.keys()).find(
-    ({ name }) => name === DELETED_BRANCH_NAME,
-  );
-}
-
-class BranchesPathsCalculator<TNode> {
+export default class BranchesPathsCalculator<TNode> {
   private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
   private commitSpacing: CommitStyleBase["spacing"];
@@ -263,4 +255,48 @@ class BranchesPathsCalculator<TNode> {
   }
 }
 
-export default BranchesPathsCalculator;
+/**
+ * Return a string ready to use in `svg.path.d` from coordinates
+ *
+ * @param coordinates Collection of coordinates
+ */
+export function toSvgPath(
+  coordinates: Coordinate[][],
+  isBezier: boolean,
+  isVertical: boolean,
+): string {
+  return coordinates
+    .map(
+      (path) =>
+        "M" +
+        path
+          .map(({ x, y }, i, points) => {
+            if (
+              isBezier &&
+              points.length > 1 &&
+              (i === 1 || i === points.length - 1)
+            ) {
+              const previous = points[i - 1];
+              if (isVertical) {
+                const middleY = (previous.y + y) / 2;
+                return `C ${previous.x} ${middleY} ${x} ${middleY} ${x} ${y}`;
+              } else {
+                const middleX = (previous.x + x) / 2;
+                return `C ${middleX} ${previous.y} ${middleX} ${y} ${x} ${y}`;
+              }
+            }
+            return `L ${x} ${y}`;
+          })
+          .join(" ")
+          .slice(1),
+    )
+    .join(" ");
+}
+
+function getDeletedBranchInPath<TNode>(
+  branchesPaths: InternalBranchesPaths<TNode>,
+): Branch<TNode> | undefined {
+  return Array.from(branchesPaths.keys()).find(
+    ({ name }) => name === DELETED_BRANCH_NAME,
+  );
+}

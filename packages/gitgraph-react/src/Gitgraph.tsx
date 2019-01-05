@@ -3,13 +3,14 @@ import {
   GitgraphCore,
   GitgraphOptions,
   Commit,
-  Branch,
+  BranchesPaths,
   Coordinate,
   MergeStyle,
   Mode,
   Orientation,
+  toSvgPath,
 } from "gitgraph-core/lib/index";
-import { toSvgPath, arrowSvgPath } from "gitgraph-core/lib/utils";
+import { arrowSvgPath } from "gitgraph-core/lib/utils";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
@@ -20,7 +21,7 @@ export interface GitgraphProps {
 
 export interface GitgraphState {
   commits: Array<Commit<React.ReactElement<SVGElement>>>;
-  branchesPaths: Map<Branch<React.ReactElement<SVGElement>>, Coordinate[][]>;
+  branchesPaths: BranchesPaths<React.ReactElement<SVGElement>>;
   commitMessagesX: number;
   // Store a map to replace commits y with the correct value,
   // including the message offset. Allows custom, flexible message height.
