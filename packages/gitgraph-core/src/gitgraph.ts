@@ -134,15 +134,6 @@ export class GitgraphCore<TNode = SVGElement> {
     this.author = options.author || "Sergio Flores <saxo-guy@epic.com>";
     this.commitMessage =
       options.commitMessage || "He doesn't like George Michael! Boooo!";
-
-    // Context binding
-    this.withPosition = this.withPosition.bind(this);
-    this.setDefaultColor = this.setDefaultColor.bind(this);
-    this.withBranches = this.withBranches.bind(this);
-    this.setBranchPathForCommit = this.setBranchPathForCommit.bind(this);
-    this.branchesPathsWithMergeCommits = this.branchesPathsWithMergeCommits.bind(
-      this,
-    );
   }
 
   /**
@@ -156,7 +147,7 @@ export class GitgraphCore<TNode = SVGElement> {
     commits = this.withBranches(commits)
       .map((commit) => commit.computeBranchToDisplay())
       .map((commit) => this.withPosition(commits, commit))
-      .map(this.setDefaultColor);
+      .map(this.setDefaultColor.bind(this));
 
     // Compute branches paths.
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
