@@ -4,6 +4,7 @@ import { storiesOf } from "@storybook/react";
 import { Gitgraph } from "../Gitgraph";
 import simpleGraph from "./import-fixtures/simple-graph";
 import deletedBranch from "./import-fixtures/deleted-branch";
+import gitflow from "./import-fixtures/gitflow";
 
 storiesOf("Gitgraph imports", module)
   .add("simple graph", () => (
@@ -17,6 +18,13 @@ storiesOf("Gitgraph imports", module)
     <Gitgraph>
       {(gitgraph) => {
         gitgraph.import(deletedBranch);
+      }}
+    </Gitgraph>
+  ))
+  .add("gitflow", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        gitgraph.import(gitflow);
       }}
     </Gitgraph>
   ));
