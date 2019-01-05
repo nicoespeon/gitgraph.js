@@ -129,7 +129,7 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags))
       .map(this.withBranches.bind(this))
-      .map((commit) => this.withPosition(this.commits, commit))
+      .map(this.withPosition.bind(this))
       .map(this.setDefaultColor.bind(this));
 
     const branchesPaths = new BranchesPathsCalculator<TNode>(
@@ -427,16 +427,12 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Add position to one commit.
+   * Add position to given commit.
    *
-   * @param commits All commits
-   * @param commit One commit
+   * @param commit A commit
    */
-  private withPosition(
-    commits: Array<Commit<TNode>>,
-    commit: Commit<TNode>,
-  ): Commit<TNode> {
-    const rows = createGraphRows(this.mode, commits);
+  private withPosition(commit: Commit<TNode>): Commit<TNode> {
+    const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
 
