@@ -158,13 +158,6 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor);
 
-    commits.forEach((commit) => {
-      if (commit.branches && commit.branches.length === 0) {
-        // Branch has been deleted. Make commit knows about it.
-        commit.branches.push(DELETED_BRANCH_NAME);
-      }
-    });
-
     // Compute branches paths.
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
     const branchesPathsFromCommits = commits.reduce((result, commit) => {
@@ -424,9 +417,15 @@ export class GitgraphCore<TNode = SVGElement> {
     });
 
     return commits.map((commit) => {
-      const commitBranches = Array.from(
+      let commitBranches = Array.from(
         (refs.get(commit.hash) || new Set()).values(),
       );
+
+      if (commitBranches.length === 0) {
+        // No branch => branch has been deleted.
+        commitBranches = [DELETED_BRANCH_NAME];
+      }
+
       return commit.setBranches(commitBranches);
     });
   }
