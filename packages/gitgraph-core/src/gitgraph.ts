@@ -161,9 +161,9 @@ export class GitgraphCore<TNode = SVGElement> {
       .map(this.setDefaultColor);
 
     // Requires commits with only first parent branches
+    // => Should run before `this.withBranches()`
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
-    const flatBranchesPaths = commits.reduce((result, commit) => {
-      const parentCommit = commits.find(
+    const branchesPathsFromCommits = commits.reduce((result, commit) => {
       const firstParentCommit = commits.find(
         ({ hash }) => hash === commit.parents[0],
       );
@@ -174,7 +174,7 @@ export class GitgraphCore<TNode = SVGElement> {
 
     // Compute final branches paths.
     const branchesPaths = this.smoothBranchesPaths(
-      this.branchesPathsWithMergeCommits(commits, flatBranchesPaths),
+      this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
     );
 
     // Compute branch color
