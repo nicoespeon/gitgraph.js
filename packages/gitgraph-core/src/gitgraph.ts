@@ -130,7 +130,8 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => commit.setTags(this.tags));
 
     const branches = this.getBranches(commits);
-    commits = this.withBranches(commits, branches)
+    commits = commits
+      .map((commit) => this.withBranches(commit, branches))
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor.bind(this));
 
@@ -347,7 +348,8 @@ export class GitgraphCore<TNode = SVGElement> {
 
     // Create branches.
     const branches = this.getBranches(this.commits);
-    this.withBranches(this.commits, branches)
+    this.commits
+      .map((commit) => this.withBranches(commit, branches))
       .reduce((mem, commit) => {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
@@ -397,26 +399,25 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Add `branches` property to commits.
+   * Add `branches` property to commit.
    *
-   * @param commits List of commits
+   * @param commit Commit
+   * @param branches All branches
    */
   private withBranches(
-    commits: Array<Commit<TNode>>,
-    refs: Map<Commit["hash"], Set<Branch["name"]>>,
-  ): Array<Commit<TNode>> {
-    return commits.map((commit) => {
-      let commitBranches = Array.from(
-        (refs.get(commit.hash) || new Set()).values(),
-      );
+    commit: Commit<TNode>,
+    branches: Map<Commit["hash"], Set<Branch["name"]>>,
+  ): Commit<TNode> {
+    let commitBranches = Array.from(
+      (branches.get(commit.hash) || new Set()).values(),
+    );
 
-      if (commitBranches.length === 0) {
-        // No branch => branch has been deleted.
-        commitBranches = [DELETED_BRANCH_NAME];
-      }
+    if (commitBranches.length === 0) {
+      // No branch => branch has been deleted.
+      commitBranches = [DELETED_BRANCH_NAME];
+    }
 
-      return commit.setBranches(commitBranches);
-    });
+    return commit.setBranches(commitBranches);
   }
 
   /**
