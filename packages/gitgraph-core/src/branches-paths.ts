@@ -8,19 +8,19 @@ interface InternalCoordinate extends Coordinate {
   mergeCommit?: boolean;
 }
 
-type BranchesPaths3<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
+type BranchesPaths2<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
 
 const DELETED_BRANCH_NAME = "";
 
 function getDeletedBranchInPath<TNode>(
-  branchesPaths: BranchesPaths3<TNode>,
+  branchesPaths: BranchesPaths2<TNode>,
 ): Branch<TNode> | undefined {
   return Array.from(branchesPaths.keys()).find(
     ({ name }) => name === DELETED_BRANCH_NAME,
   );
 }
 
-class BranchesPaths2<TNode> {
+class BranchesPaths<TNode> {
   private branches: Map<Branch["name"], Branch<TNode>>;
   private gitgraph: GitgraphCore<TNode>;
   private template: Template;
@@ -43,10 +43,10 @@ class BranchesPaths2<TNode> {
    * @param firstParentCommit First parent of the commit
    */
   public setBranchPathForCommit(
-    branchesPaths: BranchesPaths3<TNode>,
+    branchesPaths: BranchesPaths2<TNode>,
     commit: Commit<TNode>,
     firstParentCommit: Commit<TNode> | undefined,
-  ): BranchesPaths3<TNode> {
+  ): BranchesPaths2<TNode> {
     if (!commit.branches) {
       return branchesPaths;
     }
@@ -111,8 +111,8 @@ class BranchesPaths2<TNode> {
    */
   public branchesPathsWithMergeCommits(
     commits: Array<Commit<TNode>>,
-    branchesPaths: BranchesPaths3<TNode>,
-  ): BranchesPaths3<TNode> {
+    branchesPaths: BranchesPaths2<TNode>,
+  ): BranchesPaths2<TNode> {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
 
     mergeCommits.forEach((mergeCommit) => {
@@ -153,7 +153,7 @@ class BranchesPaths2<TNode> {
    * @param flatBranchesPaths Map of coordinates of each branch
    */
   public smoothBranchesPaths(
-    flatBranchesPaths: BranchesPaths3<TNode>,
+    flatBranchesPaths: BranchesPaths2<TNode>,
   ): Map<Branch<TNode>, Coordinate[][]> {
     const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
 
@@ -240,4 +240,4 @@ class BranchesPaths2<TNode> {
   }
 }
 
-export default BranchesPaths2;
+export default BranchesPaths;

@@ -11,7 +11,7 @@ import {
   getTemplate,
 } from "./template";
 import Refs from "./refs";
-import BranchesPaths2 from "./branches-paths";
+import BranchesPaths from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
 
@@ -481,7 +481,7 @@ export class GitgraphCore<TNode = SVGElement> {
   ): Map<Branch<TNode>, Coordinate[][]> {
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
-    const branchesPaths2 = new BranchesPaths2<TNode>(
+    const branchesPaths = new BranchesPaths<TNode>(
       this.branches,
       this,
       this.template,
@@ -492,15 +492,15 @@ export class GitgraphCore<TNode = SVGElement> {
         ({ hash }) => hash === commit.parents[0],
       );
 
-      return branchesPaths2.setBranchPathForCommit(
+      return branchesPaths.setBranchPathForCommit(
         result,
         commit,
         firstParentCommit,
       );
     }, emptyBranchesPaths);
 
-    return branchesPaths2.smoothBranchesPaths(
-      branchesPaths2.branchesPathsWithMergeCommits(
+    return branchesPaths.smoothBranchesPaths(
+      branchesPaths.branchesPathsWithMergeCommits(
         commits,
         branchesPathsFromCommits,
       ),
