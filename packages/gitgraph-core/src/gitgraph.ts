@@ -522,7 +522,12 @@ export class GitgraphCore<TNode = SVGElement> {
       return branchesPaths;
     }
 
-    let branch = this.branches.get(commit.branches[0]);
+    // Sometimes `branchToDisplay` is not computed => fallback on first branch.
+    // Some "import" scenarios show that.
+    // There might be something to fix here.
+    let branch = this.branches.get(
+      commit.branchToDisplay || commit.branches[0],
+    );
 
     if (!branch) {
       // Branch was deleted.
