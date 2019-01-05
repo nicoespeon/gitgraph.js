@@ -43,12 +43,6 @@ class BranchesPaths<TNode> {
   public compute(
     commits: Array<Commit<TNode>>,
   ): Map<Branch<TNode>, Coordinate[][]> {
-    const branchesPaths = new BranchesPaths<TNode>(
-      this.branches,
-      this.gitgraph,
-      this.template,
-    );
-
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
     const branchesPathsFromCommits = commits.reduce((result, commit) => {
@@ -56,18 +50,11 @@ class BranchesPaths<TNode> {
         ({ hash }) => hash === commit.parents[0],
       );
 
-      return branchesPaths.setBranchPathForCommit(
-        result,
-        commit,
-        firstParentCommit,
-      );
+      return this.setBranchPathForCommit(result, commit, firstParentCommit);
     }, emptyBranchesPaths);
 
-    return branchesPaths.smoothBranchesPaths(
-      branchesPaths.branchesPathsWithMergeCommits(
-        commits,
-        branchesPathsFromCommits,
-      ),
+    return this.smoothBranchesPaths(
+      this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
     );
   }
 
@@ -78,7 +65,7 @@ class BranchesPaths<TNode> {
    * @param commit Current commit
    * @param firstParentCommit First parent of the commit
    */
-  public setBranchPathForCommit(
+  private setBranchPathForCommit(
     branchesPaths: BranchesPaths2<TNode>,
     commit: Commit<TNode>,
     firstParentCommit: Commit<TNode> | undefined,
@@ -145,7 +132,7 @@ class BranchesPaths<TNode> {
    * @param commits All commits (with all branches resolved)
    * @param branchesPaths Map of coordinates of each branch
    */
-  public branchesPathsWithMergeCommits(
+  private branchesPathsWithMergeCommits(
     commits: Array<Commit<TNode>>,
     branchesPaths: BranchesPaths2<TNode>,
   ): BranchesPaths2<TNode> {
@@ -188,7 +175,7 @@ class BranchesPaths<TNode> {
    *
    * @param flatBranchesPaths Map of coordinates of each branch
    */
-  public smoothBranchesPaths(
+  private smoothBranchesPaths(
     flatBranchesPaths: BranchesPaths2<TNode>,
   ): Map<Branch<TNode>, Coordinate[][]> {
     const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
