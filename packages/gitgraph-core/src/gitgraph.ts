@@ -149,17 +149,7 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor.bind(this));
 
-    // Compute branches paths.
-    const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
-    const branchesPathsFromCommits = commits.reduce((result, commit) => {
-      const firstParentCommit = commits.find(
-        ({ hash }) => hash === commit.parents[0],
-      );
-      return this.setBranchPathForCommit(result, commit, firstParentCommit);
-    }, emptyBranchesPaths);
-    const branchesPaths = this.smoothBranchesPaths(
-      this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
-    );
+    const branchesPaths = this.computeBranchesPaths(commits);
 
     // Compute branch color
     Array.from(branchesPaths).forEach(([branch], i) => {
@@ -488,6 +478,29 @@ export class GitgraphCore<TNode = SVGElement> {
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         });
     }
+  }
+
+  /**
+   * Compute branches paths for graph.
+   *
+   * @param commits List of commits
+   */
+  private computeBranchesPaths(
+    commits: Array<Commit<TNode>>,
+  ): Map<Branch<TNode>, Coordinate[][]> {
+    const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
+
+    const branchesPathsFromCommits = commits.reduce((result, commit) => {
+      const firstParentCommit = commits.find(
+        ({ hash }) => hash === commit.parents[0],
+      );
+
+      return this.setBranchPathForCommit(result, commit, firstParentCommit);
+    }, emptyBranchesPaths);
+
+    return this.smoothBranchesPaths(
+      this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
+    );
   }
 
   /**
