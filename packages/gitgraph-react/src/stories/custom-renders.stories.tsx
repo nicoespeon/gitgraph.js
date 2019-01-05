@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { Gitgraph, Commit } from "../Gitgraph";
 import { Mode, Orientation } from "gitgraph-core";
 
-storiesOf("Custom renders", module)
+storiesOf("6. Custom renders", module)
   .add("with render dot", () => {
     const renderDot = (commit: Commit<React.ReactElement<SVGElement>>) => (
       <svg

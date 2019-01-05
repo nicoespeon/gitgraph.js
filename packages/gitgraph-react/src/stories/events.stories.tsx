@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import { Gitgraph } from "gitgraph-react/src/Gitgraph";
 import { Commit } from "gitgraph-core";
 
-storiesOf("Gitgraph events", module)
+storiesOf("3. Events", module)
   .add("on commit dot click", () => (
     <Gitgraph>
       {(gitgraph) => {

@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 
 import { Gitgraph, Orientation } from "../Gitgraph";
 
-storiesOf("Gitgraph orientations", module)
+storiesOf("2. Orientations", module)
   .add("vertical reverse", () => (
     <Gitgraph options={{ orientation: Orientation.VerticalReverse }}>
       {(gitgraph) => {

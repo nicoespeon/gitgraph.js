@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 
 import { Gitgraph, Mode } from "../Gitgraph";
 
-storiesOf("Gitgraph", module)
+storiesOf("1. Basic usage", module)
   .add("default", () => (
     <Gitgraph>
       {(gitgraph) => {

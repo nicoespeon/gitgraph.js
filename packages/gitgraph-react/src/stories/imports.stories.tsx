@@ -6,7 +6,7 @@ import simpleGraph from "./import-fixtures/simple-graph";
 import deletedBranch from "./import-fixtures/deleted-branch";
 import gitflow from "./import-fixtures/gitflow";
 
-storiesOf("Gitgraph imports", module)
+storiesOf("4. Imports", module)
   .add("simple graph", () => (
     <Gitgraph>
       {(gitgraph) => {

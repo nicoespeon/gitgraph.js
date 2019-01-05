@@ -25,7 +25,7 @@ const templateWithoutBranch = templateExtend(TemplateName.Metro, {
   },
 });
 
-storiesOf("Gitgraph templates", module)
+storiesOf("5. Templates", module)
   .add("metro", () => (
     <Gitgraph options={{ template: TemplateName.Metro }}>
       {(gitgraph) => {

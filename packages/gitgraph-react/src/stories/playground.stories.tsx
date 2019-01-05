@@ -112,6 +112,4 @@ class GitgraphPlayground extends React.Component<any, any> {
   }
 }
 
-storiesOf("Gitgraph playground", module).add("default", () => (
-  <GitgraphPlayground />
-));
+storiesOf("Playground", module).add("default", () => <GitgraphPlayground />);
