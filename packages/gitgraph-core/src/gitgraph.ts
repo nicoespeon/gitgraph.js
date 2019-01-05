@@ -138,6 +138,12 @@ export class GitgraphCore<TNode = SVGElement> {
       this.branches,
       this,
       this.template,
+      () =>
+        new Branch({
+          name: DELETED_BRANCH_NAME,
+          gitgraph: this,
+          style: this.template.branch,
+        }),
     ).compute();
 
     // Compute branch color

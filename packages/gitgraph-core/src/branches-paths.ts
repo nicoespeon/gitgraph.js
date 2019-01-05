@@ -30,17 +30,20 @@ class BranchesPathsCalculator<TNode> {
   private branches: Map<Branch["name"], Branch<TNode>>;
   private gitgraph: GitgraphCore<TNode>;
   private template: Template;
+  private createDeletedBranch: () => Branch<TNode>;
 
   constructor(
     commits: Array<Commit<TNode>>,
     branches: Map<Branch["name"], Branch<TNode>>,
     gitgraph: GitgraphCore<TNode>,
     template: Template,
+    createDeletedBranch: () => Branch<TNode>,
   ) {
     this.commits = commits;
     this.branches = branches;
     this.gitgraph = gitgraph;
     this.template = template;
+    this.createDeletedBranch = createDeletedBranch;
   }
 
   /**
@@ -93,11 +96,7 @@ class BranchesPathsCalculator<TNode> {
       if (deletedBranchInPath) {
         branch = deletedBranchInPath;
       } else {
-        branch = new Branch({
-          name: DELETED_BRANCH_NAME,
-          gitgraph: this.gitgraph,
-          style: this.template.branch,
-        });
+        branch = this.createDeletedBranch();
       }
     }
 
