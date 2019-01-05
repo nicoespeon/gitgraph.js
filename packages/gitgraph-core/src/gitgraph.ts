@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
-import { createGraphRows, GraphRows } from "./graph-rows";
+import { createGraphRows } from "./graph-rows";
 import {
   Template,
   TemplateName,
@@ -153,11 +153,9 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags));
 
-    const rows = createGraphRows(this.mode, commits);
-
     commits = this.withBranches(commits, { firstParentOnly: true })
       .map((commit) => commit.computeBranchToDisplay())
-      .map((commit) => this.withPosition(rows, commit))
+      .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor);
 
     commits.forEach((commit) => {
@@ -467,13 +465,14 @@ export class GitgraphCore<TNode = SVGElement> {
    * Functional requirements:
    *  - You need to have `commit.branchToDisplay` set in each commit. (without merge commits resolution)
    *
-   * @param rows Graph rows
+   * @param commits All commits
    * @param commit One commit
    */
   private withPosition(
-    rows: GraphRows<TNode>,
+    commits: Array<Commit<TNode>>,
     commit: Commit<TNode>,
   ): Commit<TNode> {
+    const rows = createGraphRows(this.mode, commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
 
