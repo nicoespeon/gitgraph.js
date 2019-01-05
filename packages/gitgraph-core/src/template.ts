@@ -40,10 +40,6 @@ export interface BranchStyle {
    */
   lineWidth: number;
   /**
-   * Branch line dash segments
-   */
-  lineDash: number[];
-  /**
    * Branch merge style
    */
   mergeStyle: MergeStyle;
@@ -88,10 +84,6 @@ export interface CommitDotStyle {
    * Commit dot stroke color
    */
   strokeColor?: string;
-  /**
-   * Commit dot line dash
-   */
-  lineDash?: number[];
 }
 
 export type CommitDotStyleOptions = Partial<CommitDotStyle>;
@@ -245,7 +237,6 @@ export class Template {
     this.branch = {
       color: options.branch.color,
       lineWidth: options.branch.lineWidth || 2,
-      lineDash: options.branch.lineDash || [],
       showLabel: options.branch.showLabel || false,
       labelColor: options.branch.labelColor || null,
       labelFont: options.branch.labelFont || "normal 8pt Calibri",
@@ -278,7 +269,6 @@ export class Template {
           0,
         ) as number,
         strokeColor: options.commit.dot.strokeColor,
-        lineDash: options.commit.dot.lineDash || this.branch.lineDash,
       },
       tag: {
         color: options.commit.tag.color || options.commit.color,
