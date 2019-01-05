@@ -160,6 +160,13 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => this.withPosition(rows, commit))
       .map(this.setDefaultColor);
 
+    commits.forEach((commit) => {
+      if (commit.branches && commit.branches.length === 0) {
+        // Branch has been deleted. Make commit knows about it.
+        commit.branches.push(DELETED_BRANCH_NAME);
+      }
+    });
+
     // Requires commits with only first parent branches
     // => Should run before `this.withBranches()`
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
@@ -408,7 +415,7 @@ export class GitgraphCore<TNode = SVGElement> {
     const branches = this.refs.getAllNames().filter((name) => name !== "HEAD");
     const refs = new Map<Commit["hash"], Set<Branch["name"]>>();
     const queue: Array<Commit["hash"]> = [];
-    branches.forEach((branch: string) => {
+    branches.forEach((branch) => {
       const commitHash = this.refs.getCommit(branch);
       if (commitHash) {
         queue.push(commitHash);
@@ -529,26 +536,19 @@ export class GitgraphCore<TNode = SVGElement> {
       commit.branchToDisplay || commit.branches[0],
     );
 
+    // Branch was deleted.
     if (!branch) {
-      // Branch was deleted.
-      // Create a new branch that is not in the list of gitgraph's `branches`.
-      branch = new Branch({
-        name: DELETED_BRANCH_NAME,
-        gitgraph: this,
-        style: this.template.branch,
-      });
-
       const deletedBranchInPath = getDeletedBranchInPath<TNode>(branchesPaths);
 
-      // If deleted branch was already added in path, just use it.
       // NB: may not work properly if there are many deleted branches.
-      if (
-        deletedBranchInPath &&
-        firstParentCommit &&
-        firstParentCommit.branches &&
-        firstParentCommit.branches.length === 0
-      ) {
+      if (deletedBranchInPath) {
         branch = deletedBranchInPath;
+      } else {
+        branch = new Branch({
+          name: DELETED_BRANCH_NAME,
+          gitgraph: this,
+          style: this.template.branch,
+        });
       }
     }
 
