@@ -13,7 +13,7 @@ interface InternalCoordinate extends Coordinate {
   mergeCommit?: boolean;
 }
 
-export type ComputedBranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
+export type BranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
 
 type InternalBranchesPaths<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
 
@@ -25,7 +25,7 @@ function getDeletedBranchInPath<TNode>(
   );
 }
 
-class BranchesPaths<TNode> {
+class BranchesPathsCalculator<TNode> {
   private branches: Map<Branch["name"], Branch<TNode>>;
   private gitgraph: GitgraphCore<TNode>;
   private template: Template;
@@ -45,7 +45,7 @@ class BranchesPaths<TNode> {
    *
    * @param commits List of commits
    */
-  public compute(commits: Array<Commit<TNode>>): ComputedBranchesPaths<TNode> {
+  public compute(commits: Array<Commit<TNode>>): BranchesPaths<TNode> {
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
     const branchesPathsFromCommits = commits.reduce((result, commit) => {
@@ -180,7 +180,7 @@ class BranchesPaths<TNode> {
    */
   private smoothBranchesPaths(
     flatBranchesPaths: InternalBranchesPaths<TNode>,
-  ): ComputedBranchesPaths<TNode> {
+  ): BranchesPaths<TNode> {
     const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
 
     flatBranchesPaths.forEach((points, branch) => {
@@ -266,4 +266,4 @@ class BranchesPaths<TNode> {
   }
 }
 
-export default BranchesPaths;
+export default BranchesPathsCalculator;

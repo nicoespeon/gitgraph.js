@@ -15,7 +15,7 @@ import {
   getTemplate,
 } from "./template";
 import Refs from "./refs";
-import BranchesPaths, { ComputedBranchesPaths } from "./branches-paths";
+import BranchesPathsCalculator, { BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
 
@@ -36,7 +36,7 @@ export interface GitgraphOptions {
 
 export interface RenderedData<TNode> {
   commits: Array<Commit<TNode>>;
-  branchesPaths: ComputedBranchesPaths<TNode>;
+  branchesPaths: BranchesPaths<TNode>;
   commitMessagesX: number;
 }
 
@@ -133,7 +133,7 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor.bind(this));
 
-    const branchesPaths = new BranchesPaths<TNode>(
+    const branchesPaths = new BranchesPathsCalculator<TNode>(
       this.branches,
       this,
       this.template,
