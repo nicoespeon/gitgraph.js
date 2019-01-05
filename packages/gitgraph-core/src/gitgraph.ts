@@ -24,10 +24,6 @@ export interface Coordinate {
   y: number;
 }
 
-interface InternalCoordinate extends Coordinate {
-  mergeCommit?: boolean;
-}
-
 export interface GitgraphOptions {
   template?: TemplateName | Template;
   orientation?: Orientation;
@@ -140,7 +136,11 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor.bind(this));
 
-    const branchesPaths = this.computeBranchesPaths(commits);
+    const branchesPaths = new BranchesPaths<TNode>(
+      this.branches,
+      this,
+      this.template,
+    ).compute(commits);
 
     // Compute branch color
     Array.from(branchesPaths).forEach(([branch], i) => {
@@ -469,42 +469,6 @@ export class GitgraphCore<TNode = SVGElement> {
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         });
     }
-  }
-
-  /**
-   * Compute branches paths for graph.
-   *
-   * @param commits List of commits
-   */
-  private computeBranchesPaths(
-    commits: Array<Commit<TNode>>,
-  ): Map<Branch<TNode>, Coordinate[][]> {
-    const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
-
-    const branchesPaths = new BranchesPaths<TNode>(
-      this.branches,
-      this,
-      this.template,
-    );
-
-    const branchesPathsFromCommits = commits.reduce((result, commit) => {
-      const firstParentCommit = commits.find(
-        ({ hash }) => hash === commit.parents[0],
-      );
-
-      return branchesPaths.setBranchPathForCommit(
-        result,
-        commit,
-        firstParentCommit,
-      );
-    }, emptyBranchesPaths);
-
-    return branchesPaths.smoothBranchesPaths(
-      branchesPaths.branchesPathsWithMergeCommits(
-        commits,
-        branchesPathsFromCommits,
-      ),
-    );
   }
 }
 

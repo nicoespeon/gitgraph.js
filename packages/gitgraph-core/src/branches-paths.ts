@@ -36,6 +36,42 @@ class BranchesPaths<TNode> {
   }
 
   /**
+   * Compute branches paths for graph.
+   *
+   * @param commits List of commits
+   */
+  public compute(
+    commits: Array<Commit<TNode>>,
+  ): Map<Branch<TNode>, Coordinate[][]> {
+    const branchesPaths = new BranchesPaths<TNode>(
+      this.branches,
+      this.gitgraph,
+      this.template,
+    );
+
+    const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
+
+    const branchesPathsFromCommits = commits.reduce((result, commit) => {
+      const firstParentCommit = commits.find(
+        ({ hash }) => hash === commit.parents[0],
+      );
+
+      return branchesPaths.setBranchPathForCommit(
+        result,
+        commit,
+        firstParentCommit,
+      );
+    }, emptyBranchesPaths);
+
+    return branchesPaths.smoothBranchesPaths(
+      branchesPaths.branchesPathsWithMergeCommits(
+        commits,
+        branchesPathsFromCommits,
+      ),
+    );
+  }
+
+  /**
    * Create or update the path of the branch corresponding to given commit.
    *
    * @param branchesPaths Map of all branches paths
