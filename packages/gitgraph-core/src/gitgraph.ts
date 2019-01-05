@@ -77,10 +77,12 @@ export interface GitgraphBranchOptions<TNode> {
   style?: BranchStyleOptions;
 }
 
+type BranchesPaths<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
+
 const DELETED_BRANCH_NAME = "";
 
 function getDeletedBranchInPath<TNode>(
-  branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
+  branchesPaths: BranchesPaths<TNode>,
 ): Branch<TNode> | undefined {
   return Array.from(branchesPaths.keys()).find(
     ({ name }) => name === DELETED_BRANCH_NAME,
@@ -137,7 +139,7 @@ export class GitgraphCore<TNode = SVGElement> {
     this.withPosition = this.withPosition.bind(this);
     this.setDefaultColor = this.setDefaultColor.bind(this);
     this.withBranches = this.withBranches.bind(this);
-    this.initBranchesPaths = this.initBranchesPaths.bind(this);
+    this.setBranchPathForCommit = this.setBranchPathForCommit.bind(this);
     this.branchesPathsWithMergeCommits = this.branchesPathsWithMergeCommits.bind(
       this,
     );
@@ -159,10 +161,14 @@ export class GitgraphCore<TNode = SVGElement> {
       .map(this.setDefaultColor);
 
     // Requires commits with only first parent branches
-    const flatBranchesPaths = commits.reduce(
-      this.initBranchesPaths,
-      new Map<Branch<TNode>, InternalCoordinate[]>(),
-    );
+    const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
+    const flatBranchesPaths = commits.reduce((result, commit) => {
+      const parentCommit = commits.find(
+      const firstParentCommit = commits.find(
+        ({ hash }) => hash === commit.parents[0],
+      );
+      return this.setBranchPathForCommit(result, commit, firstParentCommit);
+    }, emptyBranchesPaths);
 
     commits = this.withBranches(commits);
 
@@ -501,23 +507,22 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * First step to build `branchesPaths`
-   * This add every "key points" in the branches (start point, commits positions)
+   * Create or update the path of the branch corresponding to given commit.
    *
-   * @param branchesPaths Map of coordinates of each branch
+   * @param branchesPaths Map of all branches paths
    * @param commit Current commit
-   * @param index
-   * @param commits All commits (with only the first branch resolve)
+   * @param firstParentCommit First parent of the commit
    */
-  private initBranchesPaths(
-    branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
+  private setBranchPathForCommit(
+    branchesPaths: BranchesPaths<TNode>,
     commit: Commit<TNode>,
-    index: number,
-    commits: Array<Commit<TNode>>,
-  ): Map<Branch<TNode>, InternalCoordinate[]> {
-    let branch = this.branches.get(
-      (commit.branches as Array<Branch["name"]>)[0],
-    );
+    firstParentCommit: Commit<TNode> | undefined,
+  ): BranchesPaths<TNode> {
+    if (!commit.branches) {
+      return branchesPaths;
+    }
+
+    let branch = this.branches.get(commit.branches[0]);
 
     if (!branch) {
       // Branch was deleted.
@@ -530,42 +535,30 @@ export class GitgraphCore<TNode = SVGElement> {
 
       const deletedBranchInPath = getDeletedBranchInPath<TNode>(branchesPaths);
 
-      const parentCommit = commits.find(
-        ({ hash }) => hash === commit.parents[0],
-      ) as Commit<TNode>;
-
       // If deleted branch was already added in path, just use it.
-      // NB: this may not work enough for multiple deleted branches in time.
+      // NB: may not work properly if there are many deleted branches.
       if (
         deletedBranchInPath &&
-        parentCommit.branches &&
-        parentCommit.branches.length === 0
+        firstParentCommit &&
+        firstParentCommit.branches &&
+        firstParentCommit.branches.length === 0
       ) {
         branch = deletedBranchInPath;
       }
     }
 
-    if (branchesPaths.has(branch)) {
-      branchesPaths.set(branch, [
-        ...(branchesPaths.get(branch) as Coordinate[]),
-        { x: commit.x, y: commit.y },
-      ]);
-    } else {
-      if (commit.parents[0]) {
-        // We are on a branch -> include the parent commit in the path
-        const parentCommit = commits.find(
-          ({ hash }) => hash === commit.parents[0],
-        ) as Commit<TNode>;
-        branchesPaths.set(branch, [
-          { x: parentCommit.x, y: parentCommit.y },
-          { x: commit.x, y: commit.y },
-        ]);
-      } else {
-        // We are on master
-        branchesPaths.set(branch, [{ x: commit.x, y: commit.y }]);
-      }
+    const path: Coordinate[] = [];
+    const existingBranchPath = branchesPaths.get(branch);
+    if (existingBranchPath) {
+      path.push(...existingBranchPath);
+    } else if (firstParentCommit) {
+      // Make branch path starts from parent branch (parent commit).
+      path.push({ x: firstParentCommit.x, y: firstParentCommit.y });
     }
 
+    path.push({ x: commit.x, y: commit.y });
+
+    branchesPaths.set(branch, path);
     return branchesPaths;
   }
 
@@ -591,8 +584,8 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   private branchesPathsWithMergeCommits(
     commits: Array<Commit<TNode>>,
-    branchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
-  ): Map<Branch<TNode>, InternalCoordinate[]> {
+    branchesPaths: BranchesPaths<TNode>,
+  ): BranchesPaths<TNode> {
     const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
 
     mergeCommits.forEach((mergeCommit) => {
@@ -633,7 +626,7 @@ export class GitgraphCore<TNode = SVGElement> {
    * @param flatBranchesPaths Map of coordinates of each branch
    */
   private smoothBranchesPaths(
-    flatBranchesPaths: Map<Branch<TNode>, InternalCoordinate[]>,
+    flatBranchesPaths: BranchesPaths<TNode>,
   ): Map<Branch<TNode>, Coordinate[][]> {
     const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
 
