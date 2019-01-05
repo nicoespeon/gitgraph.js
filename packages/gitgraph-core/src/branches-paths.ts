@@ -26,15 +26,18 @@ function getDeletedBranchInPath<TNode>(
 }
 
 class BranchesPathsCalculator<TNode> {
+  private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
   private gitgraph: GitgraphCore<TNode>;
   private template: Template;
 
   constructor(
+    commits: Array<Commit<TNode>>,
     branches: Map<Branch["name"], Branch<TNode>>,
     gitgraph: GitgraphCore<TNode>,
     template: Template,
   ) {
+    this.commits = commits;
     this.branches = branches;
     this.gitgraph = gitgraph;
     this.template = template;
@@ -42,14 +45,12 @@ class BranchesPathsCalculator<TNode> {
 
   /**
    * Compute branches paths for graph.
-   *
-   * @param commits List of commits
    */
-  public compute(commits: Array<Commit<TNode>>): BranchesPaths<TNode> {
+  public compute(): BranchesPaths<TNode> {
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
-    const branchesPathsFromCommits = commits.reduce((result, commit) => {
-      const firstParentCommit = commits.find(
+    const branchesPathsFromCommits = this.commits.reduce((result, commit) => {
+      const firstParentCommit = this.commits.find(
         ({ hash }) => hash === commit.parents[0],
       );
 
@@ -57,7 +58,7 @@ class BranchesPathsCalculator<TNode> {
     }, emptyBranchesPaths);
 
     return this.smoothBranchesPaths(
-      this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
+      this.branchesPathsWithMergeCommits(branchesPathsFromCommits),
     );
   }
 
@@ -132,17 +133,17 @@ class BranchesPathsCalculator<TNode> {
    *       { x: 50, y: 560, mergeCommit: true }
    *     ]
    *
-   * @param commits All commits (with all branches resolved)
    * @param branchesPaths Map of coordinates of each branch
    */
   private branchesPathsWithMergeCommits(
-    commits: Array<Commit<TNode>>,
     branchesPaths: InternalBranchesPaths<TNode>,
   ): InternalBranchesPaths<TNode> {
-    const mergeCommits = commits.filter(({ parents }) => parents.length > 1);
+    const mergeCommits = this.commits.filter(
+      ({ parents }) => parents.length > 1,
+    );
 
     mergeCommits.forEach((mergeCommit) => {
-      const parentOnOriginBranch = commits.find(({ hash }) => {
+      const parentOnOriginBranch = this.commits.find(({ hash }) => {
         return hash === mergeCommit.parents[1];
       });
       if (!parentOnOriginBranch) return;

@@ -134,10 +134,11 @@ export class GitgraphCore<TNode = SVGElement> {
       .map(this.setDefaultColor.bind(this));
 
     const branchesPaths = new BranchesPathsCalculator<TNode>(
+      commits,
       this.branches,
       this,
       this.template,
-    ).compute(commits);
+    ).compute();
 
     // Compute branch color
     Array.from(branchesPaths).forEach(([branch], i) => {
