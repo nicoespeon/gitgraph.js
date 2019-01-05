@@ -125,12 +125,10 @@ export class GitgraphCore<TNode = SVGElement> {
    * Get rendered data of each commits and branches paths.
    */
   public getRenderedData(): RenderedData<TNode> {
-    const branches = this.getBranches();
-
     const commits: Array<Commit<TNode>> = this.commits
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags))
-      .map((commit) => this.withBranches(commit, branches))
+      .map(this.withBranches.bind(this))
       .map((commit) => this.withPosition(this.commits, commit))
       .map(this.setDefaultColor.bind(this));
 
@@ -346,9 +344,8 @@ export class GitgraphCore<TNode = SVGElement> {
     });
 
     // Create branches.
-    const branches = this.getBranches();
     this.commits
-      .map((commit) => this.withBranches(commit, branches))
+      .map(this.withBranches.bind(this))
       .reduce((mem, commit) => {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
@@ -397,12 +394,10 @@ export class GitgraphCore<TNode = SVGElement> {
    * Add `branches` property to commit.
    *
    * @param commit Commit
-   * @param branches All branches
    */
-  private withBranches(
-    commit: Commit<TNode>,
-    branches: Map<Commit["hash"], Set<Branch["name"]>>,
-  ): Commit<TNode> {
+  private withBranches(commit: Commit<TNode>): Commit<TNode> {
+    const branches = this.getBranches();
+
     let commitBranches = Array.from(
       (branches.get(commit.hash) || new Set()).values(),
     );
