@@ -16,7 +16,7 @@ interface InternalCoordinate extends Coordinate {
   mergeCommit?: boolean;
 }
 
-export default class BranchesPathsCalculator<TNode> {
+export class BranchesPathsCalculator<TNode> {
   private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
   private commitSpacing: CommitStyleBase["spacing"];
@@ -254,6 +254,8 @@ export default class BranchesPathsCalculator<TNode> {
     return branchesPaths;
   }
 }
+
+export default BranchesPathsCalculator;
 
 /**
  * Return a string ready to use in `svg.path.d` from coordinates
