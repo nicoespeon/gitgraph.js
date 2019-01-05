@@ -139,7 +139,9 @@ export class Commit<TNode = SVGElement> {
   /**
    * Branch that should be rendered
    */
-  public branchToDisplay?: Branch["name"];
+  public get branchToDisplay(): Branch["name"] {
+    return this.branches ? this.branches[0] : "";
+  }
   /**
    * List of tags attached
    */
@@ -244,11 +246,6 @@ export class Commit<TNode = SVGElement> {
 
   public setBranches(branches: Array<Branch["name"]>): this {
     this.branches = branches;
-    return this;
-  }
-
-  public computeBranchToDisplay(): this {
-    this.branchToDisplay = this.branches ? this.branches[0] : "";
     return this;
   }
 

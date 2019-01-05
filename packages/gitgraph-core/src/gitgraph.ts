@@ -130,7 +130,6 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => commit.setTags(this.tags));
 
     commits = this.withBranches(commits)
-      .map((commit) => commit.computeBranchToDisplay())
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor.bind(this));
 
@@ -421,9 +420,6 @@ export class GitgraphCore<TNode = SVGElement> {
   /**
    * Add position to one commit.
    *
-   * Functional requirements:
-   *  - You need to have `commit.branchToDisplay` set in each commit. (without merge commits resolution)
-   *
    * @param commits All commits
    * @param commit One commit
    */
@@ -436,7 +432,7 @@ export class GitgraphCore<TNode = SVGElement> {
     const maxRow = rows.getMaxRow();
 
     // Resolve branch's column index
-    const branch = commit.branchToDisplay!;
+    const branch = commit.branchToDisplay;
     if (!this.columns.includes(branch)) this.columns.push(branch);
     const column = this.columns.findIndex((col) => col === branch);
 

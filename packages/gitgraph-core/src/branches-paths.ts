@@ -74,16 +74,7 @@ export class BranchesPathsCalculator<TNode> {
     commit: Commit<TNode>,
     firstParentCommit: Commit<TNode> | undefined,
   ): InternalBranchesPaths<TNode> {
-    if (!commit.branches) {
-      return branchesPaths;
-    }
-
-    // Sometimes `branchToDisplay` is not computed => fallback on first branch.
-    // Some "import" scenarios show that.
-    // There might be something to fix here.
-    let branch = this.branches.get(
-      commit.branchToDisplay || commit.branches[0],
-    );
+    let branch = this.branches.get(commit.branchToDisplay);
 
     // Branch was deleted.
     if (!branch) {
