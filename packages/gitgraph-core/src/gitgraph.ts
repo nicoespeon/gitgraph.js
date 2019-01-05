@@ -129,7 +129,8 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags));
 
-    commits = this.withBranches(commits)
+    const branches = this.getBranches(commits);
+    commits = this.withBranches(commits, branches)
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor.bind(this));
 
@@ -345,10 +346,11 @@ export class GitgraphCore<TNode = SVGElement> {
     });
 
     // Create branches.
-    this.withBranches(this.commits)
-      .reduce((mem, { branches }) => {
-        if (!branches) return mem;
-        branches.forEach((branch) => mem.add(branch));
+    const branches = this.getBranches(this.commits);
+    this.withBranches(this.commits, branches)
+      .reduce((mem, commit) => {
+        if (!commit.branches) return mem;
+        commit.branches.forEach((branch) => mem.add(branch));
         return mem;
       }, new Set())
       .forEach((branch) => this.branch(branch));
@@ -359,14 +361,17 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Add `branches` property to commits.
+   * Get all branches from list of commits.
    *
    * @param commits List of commits
    */
-  private withBranches(commits: Array<Commit<TNode>>): Array<Commit<TNode>> {
-    const branches = this.refs.getAllNames().filter((name) => name !== "HEAD");
-    const refs = new Map<Commit["hash"], Set<Branch["name"]>>();
+  private getBranches(
+    commits: Array<Commit<TNode>>,
+  ): Map<Commit["hash"], Set<Branch["name"]>> {
+    const result = new Map<Commit["hash"], Set<Branch["name"]>>();
+
     const queue: Array<Commit["hash"]> = [];
+    const branches = this.refs.getAllNames().filter((name) => name !== "HEAD");
     branches.forEach((branch) => {
       const commitHash = this.refs.getCommit(branch);
       if (commitHash) {
@@ -378,15 +383,28 @@ export class GitgraphCore<TNode = SVGElement> {
         const current = commits.find(
           ({ hash }) => hash === currentHash,
         ) as Commit<TNode>;
-        const prevBranches = refs.get(currentHash) || new Set<Branch["name"]>();
+        const prevBranches =
+          result.get(currentHash) || new Set<Branch["name"]>();
         prevBranches.add(branch);
-        refs.set(currentHash, prevBranches);
+        result.set(currentHash, prevBranches);
         if (current.parents.length > 0) {
           queue.push(current.parents[0]);
         }
       }
     });
 
+    return result;
+  }
+
+  /**
+   * Add `branches` property to commits.
+   *
+   * @param commits List of commits
+   */
+  private withBranches(
+    commits: Array<Commit<TNode>>,
+    refs: Map<Commit["hash"], Set<Branch["name"]>>,
+  ): Array<Commit<TNode>> {
     return commits.map((commit) => {
       let commitBranches = Array.from(
         (refs.get(commit.hash) || new Set()).values(),
