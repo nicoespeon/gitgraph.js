@@ -1,5 +1,5 @@
 import Commit from "./commit";
-import Branch, { DELETED_BRANCH_NAME } from "./branch";
+import Branch from "./branch";
 import { CommitStyleBase } from "./template";
 import { pick } from "./utils";
 
@@ -298,7 +298,5 @@ export function toSvgPath(
 function getDeletedBranchInPath<TNode>(
   branchesPaths: InternalBranchesPaths<TNode>,
 ): Branch<TNode> | undefined {
-  return Array.from(branchesPaths.keys()).find(
-    ({ name }) => name === DELETED_BRANCH_NAME,
-  );
+  return Array.from(branchesPaths.keys()).find((branch) => branch.isDeleted());
 }

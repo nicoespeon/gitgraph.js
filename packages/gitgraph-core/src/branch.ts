@@ -164,6 +164,13 @@ export class Branch<TNode = SVGElement> {
   }
 
   /**
+   * Return true if branch was deleted.
+   */
+  public isDeleted(): boolean {
+    return this.name === DELETED_BRANCH_NAME;
+  }
+
+  /**
    * Get the consolidate style for one commit
    *
    * This consolidate the styling rules in this order:
@@ -204,3 +211,14 @@ export class Branch<TNode = SVGElement> {
 }
 
 export default Branch;
+
+export function createDeletedBranch<TNode>(
+  gitgraph: GitgraphCore<TNode>,
+  style: BranchStyle,
+): Branch<TNode> {
+  return new Branch({
+    name: DELETED_BRANCH_NAME,
+    gitgraph,
+    style,
+  });
+}

@@ -4,6 +4,7 @@ import Branch, {
   BranchOptions,
   BranchCommitDefaultOptions,
   DELETED_BRANCH_NAME,
+  createDeletedBranch,
 } from "./branch";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
 import { createGraphRows } from "./graph-rows";
@@ -138,7 +139,7 @@ export class GitgraphCore<TNode = SVGElement> {
       this.branches,
       this.template.commit.spacing,
       this.isVertical,
-      this.createDeletedBranch.bind(this),
+      () => createDeletedBranch(this, this.template.branch),
     ).compute();
 
     // Compute branch color
@@ -468,17 +469,6 @@ export class GitgraphCore<TNode = SVGElement> {
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         });
     }
-  }
-
-  /**
-   * Create a new deleted branch.
-   */
-  private createDeletedBranch(): Branch<TNode> {
-    return new Branch({
-      name: DELETED_BRANCH_NAME,
-      gitgraph: this,
-      style: this.template.branch,
-    });
   }
 }
 
