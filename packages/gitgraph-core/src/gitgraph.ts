@@ -364,6 +364,26 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
+   * Add `branches` property to commit.
+   *
+   * @param commit Commit
+   */
+  private withBranches(commit: Commit<TNode>): Commit<TNode> {
+    const branches = this.getBranches();
+
+    let commitBranches = Array.from(
+      (branches.get(commit.hash) || new Set()).values(),
+    );
+
+    if (commitBranches.length === 0) {
+      // No branch => branch has been deleted.
+      commitBranches = [DELETED_BRANCH_NAME];
+    }
+
+    return commit.setBranches(commitBranches);
+  }
+
+  /**
    * Get all branches from current commits.
    */
   private getBranches(): Map<Commit["hash"], Set<Branch["name"]>> {
@@ -393,42 +413,6 @@ export class GitgraphCore<TNode = SVGElement> {
     });
 
     return result;
-  }
-
-  /**
-   * Add `branches` property to commit.
-   *
-   * @param commit Commit
-   */
-  private withBranches(commit: Commit<TNode>): Commit<TNode> {
-    const branches = this.getBranches();
-
-    let commitBranches = Array.from(
-      (branches.get(commit.hash) || new Set()).values(),
-    );
-
-    if (commitBranches.length === 0) {
-      // No branch => branch has been deleted.
-      commitBranches = [DELETED_BRANCH_NAME];
-    }
-
-    return commit.setBranches(commitBranches);
-  }
-
-  /**
-   * Set default color to one commit.
-   *
-   * @param commit One commit
-   */
-  private setDefaultColor(commit: Commit<TNode>): Commit<TNode> {
-    const column = this.columns.findIndex(
-      (col) => col === commit.branchToDisplay,
-    );
-    const defaultColor = this.template.colors[
-      column % this.template.colors.length
-    ];
-
-    return commit.setDefaultColor(defaultColor);
   }
 
   /**
@@ -475,6 +459,22 @@ export class GitgraphCore<TNode = SVGElement> {
           y: this.initCommitOffsetY + this.template.branch.spacing * column,
         });
     }
+  }
+
+  /**
+   * Set default color to one commit.
+   *
+   * @param commit One commit
+   */
+  private setDefaultColor(commit: Commit<TNode>): Commit<TNode> {
+    const column = this.columns.findIndex(
+      (col) => col === commit.branchToDisplay,
+    );
+    const defaultColor = this.template.colors[
+      column % this.template.colors.length
+    ];
+
+    return commit.setDefaultColor(defaultColor);
   }
 }
 
