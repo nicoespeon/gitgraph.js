@@ -136,7 +136,7 @@ export class GitgraphCore<TNode = SVGElement> {
     const branchesPaths = new BranchesPathsCalculator<TNode>(
       commits,
       this.branches,
-      this.template,
+      this.template.commit.spacing,
       this.isVertical,
       () =>
         new Branch({

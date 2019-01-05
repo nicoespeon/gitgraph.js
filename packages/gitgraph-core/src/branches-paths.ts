@@ -1,6 +1,6 @@
 import Commit from "./commit";
 import Branch, { DELETED_BRANCH_NAME } from "./branch";
-import { Template } from "./template";
+import { CommitStyleBase } from "./template";
 import { pick } from "./utils";
 
 export interface Coordinate {
@@ -27,20 +27,20 @@ function getDeletedBranchInPath<TNode>(
 class BranchesPathsCalculator<TNode> {
   private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
-  private template: Template;
+  private commitSpacing: CommitStyleBase["spacing"];
   private isGraphVertical: boolean;
   private createDeletedBranch: () => Branch<TNode>;
 
   constructor(
     commits: Array<Commit<TNode>>,
     branches: Map<Branch["name"], Branch<TNode>>,
-    template: Template,
+    commitSpacing: CommitStyleBase["spacing"],
     isGraphVertical: boolean,
     createDeletedBranch: () => Branch<TNode>,
   ) {
     this.commits = commits;
     this.branches = branches;
-    this.template = template;
+    this.commitSpacing = commitSpacing;
     this.isGraphVertical = isGraphVertical;
     this.createDeletedBranch = createDeletedBranch;
   }
@@ -218,14 +218,13 @@ class BranchesPathsCalculator<TNode> {
           const column = subPath[1].x;
           const branchSize =
             Math.round(
-              Math.abs(firstPoint.y - lastPoint.y) /
-                this.template.commit.spacing,
+              Math.abs(firstPoint.y - lastPoint.y) / this.commitSpacing,
             ) - 1;
           const branchPoints =
             branchSize > 0
               ? new Array(branchSize).fill(0).map((_, i) => ({
                   x: column,
-                  y: subPath[0].y - this.template.commit.spacing * (i + 1),
+                  y: subPath[0].y - this.commitSpacing * (i + 1),
                 }))
               : [];
           const lastSubPaths = branchesPaths.get(branch) || [];
@@ -242,14 +241,13 @@ class BranchesPathsCalculator<TNode> {
           const column = subPath[1].y;
           const branchSize =
             Math.round(
-              Math.abs(firstPoint.x - lastPoint.x) /
-                this.template.commit.spacing,
+              Math.abs(firstPoint.x - lastPoint.x) / this.commitSpacing,
             ) - 1;
           const branchPoints =
             branchSize > 0
               ? new Array(branchSize).fill(0).map((_, i) => ({
                   y: column,
-                  x: subPath[0].x + this.template.commit.spacing * (i + 1),
+                  x: subPath[0].x + this.commitSpacing * (i + 1),
                 }))
               : [];
           const lastSubPaths = branchesPaths.get(branch) || [];
