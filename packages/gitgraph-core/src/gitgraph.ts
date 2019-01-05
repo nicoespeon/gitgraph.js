@@ -11,6 +11,7 @@ import {
   getTemplate,
 } from "./template";
 import Refs from "./refs";
+import BranchesPaths2 from "./branches-paths";
 import { booleanOptionOr, numberOptionOr, pick } from "./utils";
 import { Orientation } from "./orientation";
 
@@ -490,71 +491,27 @@ export class GitgraphCore<TNode = SVGElement> {
   ): Map<Branch<TNode>, Coordinate[][]> {
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
 
+    const branchesPaths2 = new BranchesPaths2<TNode>(
+      this.branches,
+      this,
+      this.template,
+    );
+
     const branchesPathsFromCommits = commits.reduce((result, commit) => {
       const firstParentCommit = commits.find(
         ({ hash }) => hash === commit.parents[0],
       );
 
-      return this.setBranchPathForCommit(result, commit, firstParentCommit);
+      return branchesPaths2.setBranchPathForCommit(
+        result,
+        commit,
+        firstParentCommit,
+      );
     }, emptyBranchesPaths);
 
     return this.smoothBranchesPaths(
       this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
     );
-  }
-
-  /**
-   * Create or update the path of the branch corresponding to given commit.
-   *
-   * @param branchesPaths Map of all branches paths
-   * @param commit Current commit
-   * @param firstParentCommit First parent of the commit
-   */
-  private setBranchPathForCommit(
-    branchesPaths: BranchesPaths<TNode>,
-    commit: Commit<TNode>,
-    firstParentCommit: Commit<TNode> | undefined,
-  ): BranchesPaths<TNode> {
-    if (!commit.branches) {
-      return branchesPaths;
-    }
-
-    // Sometimes `branchToDisplay` is not computed => fallback on first branch.
-    // Some "import" scenarios show that.
-    // There might be something to fix here.
-    let branch = this.branches.get(
-      commit.branchToDisplay || commit.branches[0],
-    );
-
-    // Branch was deleted.
-    if (!branch) {
-      const deletedBranchInPath = getDeletedBranchInPath<TNode>(branchesPaths);
-
-      // NB: may not work properly if there are many deleted branches.
-      if (deletedBranchInPath) {
-        branch = deletedBranchInPath;
-      } else {
-        branch = new Branch({
-          name: DELETED_BRANCH_NAME,
-          gitgraph: this,
-          style: this.template.branch,
-        });
-      }
-    }
-
-    const path: Coordinate[] = [];
-    const existingBranchPath = branchesPaths.get(branch);
-    if (existingBranchPath) {
-      path.push(...existingBranchPath);
-    } else if (firstParentCommit) {
-      // Make branch path starts from parent branch (parent commit).
-      path.push({ x: firstParentCommit.x, y: firstParentCommit.y });
-    }
-
-    path.push({ x: commit.x, y: commit.y });
-
-    branchesPaths.set(branch, path);
-    return branchesPaths;
   }
 
   /**
