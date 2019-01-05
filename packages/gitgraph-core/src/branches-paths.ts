@@ -1,5 +1,5 @@
 import Commit from "./commit";
-import Branch from "./branch";
+import Branch, { DELETED_BRANCH_NAME } from "./branch";
 import GitgraphCore, { Coordinate } from "./gitgraph";
 import { Template } from "./template";
 import { pick } from "./utils";
@@ -9,8 +9,6 @@ interface InternalCoordinate extends Coordinate {
 }
 
 type BranchesPaths2<TNode> = Map<Branch<TNode>, InternalCoordinate[]>;
-
-const DELETED_BRANCH_NAME = "";
 
 function getDeletedBranchInPath<TNode>(
   branchesPaths: BranchesPaths2<TNode>,

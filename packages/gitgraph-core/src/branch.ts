@@ -33,6 +33,8 @@ export interface BranchOptions<TNode = SVGElement> {
   commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;
 }
 
+export const DELETED_BRANCH_NAME = "";
+
 /**
  * Branch
  */

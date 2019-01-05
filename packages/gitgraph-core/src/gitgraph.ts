@@ -1,6 +1,10 @@
 import * as yup from "yup";
 
-import Branch, { BranchOptions, BranchCommitDefaultOptions } from "./branch";
+import Branch, {
+  BranchOptions,
+  BranchCommitDefaultOptions,
+  DELETED_BRANCH_NAME,
+} from "./branch";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
 import { createGraphRows } from "./graph-rows";
 import {
@@ -73,8 +77,6 @@ export interface GitgraphBranchOptions<TNode> {
    */
   style?: BranchStyleOptions;
 }
-
-const DELETED_BRANCH_NAME = "";
 
 export class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
