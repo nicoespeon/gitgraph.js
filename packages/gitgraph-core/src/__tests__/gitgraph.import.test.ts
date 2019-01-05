@@ -155,11 +155,11 @@ describe("Gitgraph.import", () => {
       },
       {
         subject: "Add tooltips",
-        branches: ["master"],
+        branches: [""],
       },
       {
         subject: "Refactor code",
-        branches: ["master"],
+        branches: [""],
       },
       {
         subject: "Update README",

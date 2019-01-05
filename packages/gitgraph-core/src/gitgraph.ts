@@ -153,7 +153,7 @@ export class GitgraphCore<TNode = SVGElement> {
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags));
 
-    commits = this.withBranches(commits, { firstParentOnly: true })
+    commits = this.withBranches(commits)
       .map((commit) => commit.computeBranchToDisplay())
       .map((commit) => this.withPosition(commits, commit))
       .map(this.setDefaultColor);
@@ -165,8 +165,7 @@ export class GitgraphCore<TNode = SVGElement> {
       }
     });
 
-    // Requires commits with only first parent branches
-    // => Should run before `this.withBranches()`
+    // Compute branches paths.
     const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
     const branchesPathsFromCommits = commits.reduce((result, commit) => {
       const firstParentCommit = commits.find(
@@ -174,10 +173,6 @@ export class GitgraphCore<TNode = SVGElement> {
       );
       return this.setBranchPathForCommit(result, commit, firstParentCommit);
     }, emptyBranchesPaths);
-
-    commits = this.withBranches(commits);
-
-    // Compute final branches paths.
     const branchesPaths = this.smoothBranchesPaths(
       this.branchesPathsWithMergeCommits(commits, branchesPathsFromCommits),
     );
@@ -403,13 +398,8 @@ export class GitgraphCore<TNode = SVGElement> {
    * Add `branches` property to commits.
    *
    * @param commits List of commits
-   * @param options
-   * @param options.firstParentOnly Resolve the first parent of merge commit only
    */
-  private withBranches(
-    commits: Array<Commit<TNode>>,
-    { firstParentOnly } = { firstParentOnly: false },
-  ): Array<Commit<TNode>> {
+  private withBranches(commits: Array<Commit<TNode>>): Array<Commit<TNode>> {
     const branches = this.refs.getAllNames().filter((name) => name !== "HEAD");
     const refs = new Map<Commit["hash"], Set<Branch["name"]>>();
     const queue: Array<Commit["hash"]> = [];
@@ -428,9 +418,7 @@ export class GitgraphCore<TNode = SVGElement> {
         prevBranches.add(branch);
         refs.set(currentHash, prevBranches);
         if (current.parents.length > 0) {
-          firstParentOnly
-            ? queue.push(current.parents[0])
-            : queue.push(...current.parents);
+          queue.push(current.parents[0]);
         }
       }
     });

@@ -61,7 +61,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
       },
       {
         subject: "three",
-        branches: ["master", "dev"],
+        branches: ["dev"],
       },
       {
         subject: "four",
@@ -69,7 +69,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
       },
       {
         subject: "five",
-        branches: ["master", "dev"],
+        branches: ["dev"],
       },
       {
         subject: "Merge branch dev",
