@@ -127,35 +127,16 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Get rendered data of each commits and branches paths.
+   * Return all data required for rendering.
+   *
+   * Rendering libraries will use this to implement their rendering strategy.
    */
   public getRenderedData(): RenderedData<TNode> {
-    const commits: Array<Commit<TNode>> = this.commits
-      .map((commit) => commit.setRefs(this.refs))
-      .map((commit) => commit.setTags(this.tags))
-      .map(this.withBranches)
-      .map(this.withPosition)
-      .map(this.setDefaultColor);
+    const commits = this.computeRenderedCommits();
+    const branchesPaths = this.computeRenderedBranchesPaths(commits);
+    const commitMessagesX = this.computeCommitMessagesX(branchesPaths);
 
-    const branchesPaths = new BranchesPathsCalculator<TNode>(
-      commits,
-      this.branches,
-      this.template.commit.spacing,
-      this.isVertical,
-      () => createDeletedBranch(this, this.template.branch),
-    ).execute();
-
-    // Compute branch color
-    Array.from(branchesPaths).forEach(([branch], i) => {
-      const defaultColor = this.template.colors[
-        i % this.template.colors.length
-      ];
-      branch.computedColor = branch.style.color || defaultColor;
-    });
-
-    // Compute messages position
-    const numberOfColumns = Array.from(branchesPaths).length;
-    const commitMessagesX = numberOfColumns * this.template.branch.spacing;
+    this.computeBranchesColor(branchesPaths);
 
     return { commits, branchesPaths, commitMessagesX };
   }
@@ -361,6 +342,59 @@ export class GitgraphCore<TNode = SVGElement> {
     this.next();
 
     return this;
+  }
+
+  /**
+   * Return commits with data for rendering.
+   */
+  private computeRenderedCommits(): Array<Commit<TNode>> {
+    return this.commits
+      .map((commit) => commit.setRefs(this.refs))
+      .map((commit) => commit.setTags(this.tags))
+      .map(this.withBranches)
+      .map(this.withPosition)
+      .map(this.setDefaultColor);
+  }
+
+  /**
+   * Return branches paths with all data required for rendering.
+   *
+   * @param commits List of commits with rendering data computed
+   */
+  private computeRenderedBranchesPaths(
+    commits: Array<Commit<TNode>>,
+  ): BranchesPaths<TNode> {
+    return new BranchesPathsCalculator<TNode>(
+      commits,
+      this.branches,
+      this.template.commit.spacing,
+      this.isVertical,
+      () => createDeletedBranch(this, this.template.branch),
+    ).execute();
+  }
+
+  /**
+   * Set branches colors based on branches paths.
+   *
+   * @param branchesPaths Branches paths to be rendered
+   */
+  private computeBranchesColor(branchesPaths: BranchesPaths<TNode>): void {
+    Array.from(branchesPaths).forEach(([branch], i) => {
+      const defaultColor = this.template.colors[
+        i % this.template.colors.length
+      ];
+      branch.computedColor = branch.style.color || defaultColor;
+    });
+  }
+
+  /**
+   * Return commit messages X position for rendering.
+   *
+   * @param branchesPaths Branches paths to be rendered
+   */
+  private computeCommitMessagesX(branchesPaths: BranchesPaths<TNode>): number {
+    const numberOfColumns = Array.from(branchesPaths).length;
+    return numberOfColumns * this.template.branch.spacing;
   }
 
   /**
