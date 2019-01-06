@@ -142,6 +142,38 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
+   * Add a change listener.
+   * It will be called any time the graph have changed (commit, merge…).
+   *
+   * @param listener A callback to be invoked on every change.
+   * @returns A function to remove this change listener.
+   */
+  public subscribe(listener: () => void): () => void {
+    this.listeners.push(listener);
+
+    let isSubscribed = true;
+
+    return () => {
+      if (!isSubscribed) return;
+      isSubscribed = false;
+      const index = this.listeners.indexOf(listener);
+      this.listeners.splice(index, 1);
+    };
+  }
+
+  /**
+   * Called on each graph modification.
+   */
+  public next() {
+    this.listeners.forEach((listener) => listener());
+  }
+
+  // ===
+  // 👆 Public methods above are for rendering libs.
+  // 👇 Public methods below are for the end-user.
+  // ===
+
+  /**
    * Add a new commit in the history (as `git commit`).
    *
    * @param subject Commit subject
@@ -245,33 +277,6 @@ export class GitgraphCore<TNode = SVGElement> {
     this.tags.set(name, commitHash);
     this.next();
     return this;
-  }
-
-  /**
-   * Add a change listener.
-   * It will be called any time the graph have changed (commit, merge…).
-   *
-   * @param listener A callback to be invoked on every change.
-   * @returns A function to remove this change listener.
-   */
-  public subscribe(listener: () => void): () => void {
-    this.listeners.push(listener);
-
-    let isSubscribed = true;
-
-    return () => {
-      if (!isSubscribed) return;
-      isSubscribed = false;
-      const index = this.listeners.indexOf(listener);
-      this.listeners.splice(index, 1);
-    };
-  }
-
-  /**
-   * Called on each graph modification.
-   */
-  public next() {
-    this.listeners.forEach((listener) => listener());
   }
 
   /**
