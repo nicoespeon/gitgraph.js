@@ -22,6 +22,10 @@ export class BranchesPathsCalculator<TNode> {
   private commitSpacing: CommitStyleBase["spacing"];
   private isGraphVertical: boolean;
   private createDeletedBranch: () => Branch<TNode>;
+  private branchesPaths: InternalBranchesPaths<TNode> = new Map<
+    Branch<TNode>,
+    InternalCoordinate[]
+  >();
 
   constructor(
     commits: Array<Commit<TNode>>,
@@ -41,66 +45,39 @@ export class BranchesPathsCalculator<TNode> {
    * Compute branches paths for graph.
    */
   public compute(): BranchesPaths<TNode> {
-    // Don't use lodash's `flow` because we loose type safety.
-    const fromCommits = this.fromCommits();
-    const withMergeCommits = this.withMergeCommits(fromCommits);
-    return this.smoothBranchesPaths(withMergeCommits);
+    this.fromCommits();
+    this.withMergeCommits();
+    return this.smoothBranchesPaths();
   }
 
   /**
    * Initialize branches paths from calculator's commits.
    */
-  private fromCommits(): InternalBranchesPaths<TNode> {
-    const emptyBranchesPaths = new Map<Branch<TNode>, InternalCoordinate[]>();
+  private fromCommits() {
+    this.commits.forEach((commit) => {
+      let branch = this.branches.get(commit.branchToDisplay);
 
-    return this.commits.reduce((result, commit) => {
+      if (!branch) {
+        // NB: may not work properly if there are many deleted branches.
+        branch = this.getDeletedBranchInPath() || this.createDeletedBranch();
+      }
+
+      const path: Coordinate[] = [];
+      const existingBranchPath = this.branchesPaths.get(branch);
       const firstParentCommit = this.commits.find(
         ({ hash }) => hash === commit.parents[0],
       );
-
-      return this.setBranchPathForCommit(result, commit, firstParentCommit);
-    }, emptyBranchesPaths);
-  }
-
-  /**
-   * Create or update the path of the branch corresponding to given commit.
-   *
-   * @param branchesPaths Map of all branches paths
-   * @param commit Current commit
-   * @param firstParentCommit First parent of the commit
-   */
-  private setBranchPathForCommit(
-    branchesPaths: InternalBranchesPaths<TNode>,
-    commit: Commit<TNode>,
-    firstParentCommit: Commit<TNode> | undefined,
-  ): InternalBranchesPaths<TNode> {
-    let branch = this.branches.get(commit.branchToDisplay);
-
-    // Branch was deleted.
-    if (!branch) {
-      const deletedBranchInPath = getDeletedBranchInPath<TNode>(branchesPaths);
-
-      // NB: may not work properly if there are many deleted branches.
-      if (deletedBranchInPath) {
-        branch = deletedBranchInPath;
-      } else {
-        branch = this.createDeletedBranch();
+      if (existingBranchPath) {
+        path.push(...existingBranchPath);
+      } else if (firstParentCommit) {
+        // Make branch path starts from parent branch (parent commit).
+        path.push({ x: firstParentCommit.x, y: firstParentCommit.y });
       }
-    }
 
-    const path: Coordinate[] = [];
-    const existingBranchPath = branchesPaths.get(branch);
-    if (existingBranchPath) {
-      path.push(...existingBranchPath);
-    } else if (firstParentCommit) {
-      // Make branch path starts from parent branch (parent commit).
-      path.push({ x: firstParentCommit.x, y: firstParentCommit.y });
-    }
+      path.push({ x: commit.x, y: commit.y });
 
-    path.push({ x: commit.x, y: commit.y });
-
-    branchesPaths.set(branch, path);
-    return branchesPaths;
+      this.branchesPaths.set(branch, path);
+    });
   }
 
   /**
@@ -119,12 +96,8 @@ export class BranchesPathsCalculator<TNode> {
    *       { x: 50, y: 560 },
    *       { x: 50, y: 560, mergeCommit: true }
    *     ]
-   *
-   * @param branchesPaths Map of coordinates of each branch
    */
-  private withMergeCommits(
-    branchesPaths: InternalBranchesPaths<TNode>,
-  ): InternalBranchesPaths<TNode> {
+  private withMergeCommits() {
     const mergeCommits = this.commits.filter(
       ({ parents }) => parents.length > 1,
     );
@@ -139,39 +112,38 @@ export class BranchesPathsCalculator<TNode> {
       let branch = this.branches.get(originBranchName);
 
       if (!branch) {
-        // Branch may have been deleted.
-        const deletedBranchInPath = getDeletedBranchInPath<TNode>(
-          branchesPaths,
-        );
+        branch = this.getDeletedBranchInPath();
 
-        if (!deletedBranchInPath) {
+        if (!branch) {
+          // Still no branch? That's strange, we shouldn't set anything.
           return;
         }
-
-        branch = deletedBranchInPath;
       }
 
-      const lastPoints = [...(branchesPaths.get(branch) || [])];
-      branchesPaths.set(branch, [
+      const lastPoints = [...(this.branchesPaths.get(branch) || [])];
+      this.branchesPaths.set(branch, [
         ...lastPoints,
         { x: mergeCommit.x, y: mergeCommit.y, mergeCommit: true },
       ]);
     });
+  }
 
-    return branchesPaths;
+  /**
+   * Retrieve deleted branch from calculator's branches paths.
+   */
+  private getDeletedBranchInPath(): Branch<TNode> | undefined {
+    return Array.from(this.branchesPaths.keys()).find((branch) =>
+      branch.isDeleted(),
+    );
   }
 
   /**
    * Smooth all paths by putting points on each row.
-   *
-   * @param flatBranchesPaths Map of coordinates of each branch
    */
-  private smoothBranchesPaths(
-    flatBranchesPaths: InternalBranchesPaths<TNode>,
-  ): BranchesPaths<TNode> {
+  private smoothBranchesPaths(): BranchesPaths<TNode> {
     const branchesPaths = new Map<Branch<TNode>, Coordinate[][]>();
 
-    flatBranchesPaths.forEach((points, branch) => {
+    this.branchesPaths.forEach((points, branch) => {
       if (points.length <= 1) {
         branchesPaths.set(branch, [points]);
         return;
@@ -290,10 +262,4 @@ export function toSvgPath(
           .slice(1),
     )
     .join(" ");
-}
-
-function getDeletedBranchInPath<TNode>(
-  branchesPaths: InternalBranchesPaths<TNode>,
-): Branch<TNode> | undefined {
-  return Array.from(branchesPaths.keys()).find((branch) => branch.isDeleted());
 }
