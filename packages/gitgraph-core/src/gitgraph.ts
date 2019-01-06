@@ -336,7 +336,7 @@ export class GitgraphCore<TNode = SVGElement> {
 
     // Create branches.
     this.commits
-      .map(this.withBranches.bind(this))
+      .map(this.withBranches)
       .reduce((mem, commit) => {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
