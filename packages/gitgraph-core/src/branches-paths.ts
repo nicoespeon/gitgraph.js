@@ -16,6 +16,15 @@ interface InternalCoordinate extends Coordinate {
   mergeCommit?: boolean;
 }
 
+/**
+ * Calculate branches paths of the graph.
+ *
+ * It follows the Command pattern:
+ * => a class with a single `execute()` public method.
+ *
+ * Main benefit is we can split computation in smaller steps without
+ * passing around parameters (we can rely on private data).
+ */
 export class BranchesPathsCalculator<TNode> {
   private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
@@ -44,7 +53,7 @@ export class BranchesPathsCalculator<TNode> {
   /**
    * Compute branches paths for graph.
    */
-  public compute(): BranchesPaths<TNode> {
+  public execute(): BranchesPaths<TNode> {
     this.fromCommits();
     this.withMergeCommits();
     return this.smoothBranchesPaths();

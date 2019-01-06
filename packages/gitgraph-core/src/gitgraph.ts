@@ -143,7 +143,7 @@ export class GitgraphCore<TNode = SVGElement> {
       this.template.commit.spacing,
       this.isVertical,
       () => createDeletedBranch(this, this.template.branch),
-    ).compute();
+    ).execute();
 
     // Compute branch color
     Array.from(branchesPaths).forEach(([branch], i) => {
