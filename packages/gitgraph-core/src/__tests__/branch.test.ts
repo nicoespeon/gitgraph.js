@@ -104,7 +104,6 @@ describe("Branch", () => {
             color: "#979797",
             font: "normal 14pt Arial",
           },
-          widthExtension: 0,
         };
       }
 

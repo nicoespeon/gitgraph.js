@@ -143,10 +143,6 @@ export interface CommitStyleBase {
    * Tooltips policy
    */
   shouldDisplayTooltipsInCompactMode: boolean;
-  /**
-   * Additional width to be added to the calculated width
-   */
-  widthExtension?: number;
 }
 
 export interface CommitStyle extends CommitStyleBase {
@@ -256,7 +252,6 @@ export class Template {
     this.commit = {
       color: options.commit.color,
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
-      widthExtension: options.commit.widthExtension || 0,
       shouldDisplayTooltipsInCompactMode: booleanOptionOr(
         options.commit.shouldDisplayTooltipsInCompactMode,
         true,
