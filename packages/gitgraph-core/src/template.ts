@@ -84,6 +84,10 @@ export interface CommitDotStyle {
    * Commit dot stroke color
    */
   strokeColor?: string;
+  /**
+   * Commit dot font
+   */
+  font: string;
 }
 
 export type CommitDotStyleOptions = Partial<CommitDotStyle>;
@@ -264,6 +268,10 @@ export class Template {
           0,
         ) as number,
         strokeColor: options.commit.dot.strokeColor,
+        font:
+          options.commit.dot.font ||
+          options.commit.message.font ||
+          "normal 10pt Calibri",
       },
       tag: {
         color: options.commit.tag.color || options.commit.color,

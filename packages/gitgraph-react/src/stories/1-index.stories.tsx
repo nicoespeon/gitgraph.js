@@ -136,12 +136,16 @@ storiesOf("1. Basic usage", module)
       }}
     </Gitgraph>
   ))
-  .add("commit inner text", () => (
+  .add("commit inner text (dot text)", () => (
     <Gitgraph>
       {(gitgraph) => {
         gitgraph
           .commit({ subject: "Initial commit", innerText: "1" })
-          .commit({ subject: "Another commit", innerText: "2" })
+          .commit({
+            subject: "Another commit",
+            innerText: "2",
+            style: { dot: { font: "italic 12pt Calibri" } },
+          })
           .commit({ subject: "Do something crazy", innerText: "🙀" });
       }}
     </Gitgraph>

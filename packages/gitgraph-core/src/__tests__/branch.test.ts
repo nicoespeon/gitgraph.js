@@ -89,6 +89,7 @@ describe("Branch", () => {
             color: "#979797",
             size: 14,
             strokeWidth: 0,
+            font: "normal 14pt Arial",
           },
           message: {
             color: "#979797",

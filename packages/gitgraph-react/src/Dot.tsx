@@ -62,6 +62,7 @@ export const Dot: React.SFC<DotProps> = ({
           textAnchor="middle"
           x={commit.style.dot.size}
           y={commit.style.dot.size}
+          style={{ font: commit.style.dot.font }}
         >
           {commit.innerText}
         </text>
