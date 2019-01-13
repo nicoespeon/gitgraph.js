@@ -14,7 +14,6 @@ export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
   style: CommitStyle;
   body?: string;
   refs?: string[];
-  tree?: string;
   hash?: string;
   parents?: string[];
   innerText?: string;
@@ -66,14 +65,6 @@ export class Commit<TNode = SVGElement> {
    * Abbreviated commit hash
    */
   public hashAbbrev: string;
-  /**
-   * Tree hash
-   */
-  public tree: string;
-  /**
-   * Abbreviated tree hash
-   */
-  public treeAbbrev: string;
   /**
    * Parent hashes
    */
@@ -199,10 +190,6 @@ export class Commit<TNode = SVGElement> {
 
     // Set refs
     this.refs = options.refs || [];
-
-    // Set tree hash
-    this.tree = options.tree || getRandomHash();
-    this.treeAbbrev = this.tree.substring(0, 7);
 
     // Set parent hash
     this.parents = options.parents ? options.parents : [];
