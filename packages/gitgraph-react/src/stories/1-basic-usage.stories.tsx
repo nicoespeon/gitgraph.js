@@ -61,7 +61,7 @@ storiesOf("1. Basic usage", module)
         develop.merge(feat1);
 
         master.commit().commit();
-        master.merge(develop);
+        master.merge(develop, "Release new version");
       }}
     </Gitgraph>
   ))

@@ -125,23 +125,31 @@ export class Branch<TNode = SVGElement> {
    * Create a merge commit.
    *
    * @param branch Branch
+   * @param message Merge commit message
    */
-  public merge(branch: Branch<TNode>): Branch<TNode>;
+  public merge(branch: Branch<TNode>, message?: string): Branch<TNode>;
   /**
    * Create a merge commit.
    *
    * @param branchName Branch name
+   * @param message Merge commit message
    */
-  public merge(branchName: string): Branch<TNode>;
-  public merge(branch: string | Branch<TNode>): Branch<TNode> {
+  public merge(branchName: string, message?: string): Branch<TNode>;
+  public merge(
+    branch: string | Branch<TNode>,
+    message?: string,
+  ): Branch<TNode> {
     const branchName = typeof branch === "string" ? branch : branch.name;
     const parentCommitHash = this.gitgraph.refs.getCommit(branchName);
-    if (!parentCommitHash)
+    if (!parentCommitHash) {
       throw new Error(`The branch called "${branchName}" is unknown`);
+    }
+
     this.commit({
-      subject: `Merge branch ${branchName}`,
+      subject: message || `Merge branch ${branchName}`,
       parents: [parentCommitHash],
     });
+
     return this;
   }
 
