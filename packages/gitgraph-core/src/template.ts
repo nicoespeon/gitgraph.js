@@ -47,22 +47,6 @@ export interface BranchStyle {
    * Space between branches
    */
   spacing: number;
-  /**
-   * Show branch label policy
-   */
-  showLabel: boolean;
-  /**
-   * Branch label color
-   */
-  labelColor: string | null;
-  /**
-   * Branch label font
-   */
-  labelFont: string;
-  /**
-   * Rotation angle of brach label
-   */
-  labelRotation?: number | null;
 }
 
 export type BranchStyleOptions = Partial<BranchStyle>;
@@ -237,10 +221,6 @@ export class Template {
     this.branch = {
       color: options.branch.color,
       lineWidth: options.branch.lineWidth || 2,
-      showLabel: options.branch.showLabel || false,
-      labelColor: options.branch.labelColor || null,
-      labelFont: options.branch.labelFont || "normal 8pt Calibri",
-      labelRotation: numberOptionOr(options.branch.labelRotation, null),
       mergeStyle: options.branch.mergeStyle || MergeStyle.Bezier,
       spacing: numberOptionOr(options.branch.spacing, 20) as number,
     };
@@ -308,7 +288,6 @@ export const blackArrowTemplate = new Template({
     lineWidth: 4,
     spacing: 50,
     mergeStyle: MergeStyle.Straight,
-    labelRotation: 0,
   },
   commit: {
     spacing: 60,
@@ -335,7 +314,6 @@ export const metroTemplate = new Template({
   branch: {
     lineWidth: 10,
     spacing: 50,
-    labelRotation: 0,
   },
   commit: {
     spacing: 80,
