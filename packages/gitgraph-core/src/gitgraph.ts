@@ -50,7 +50,7 @@ export interface GitgraphCommitOptions<TNode = SVGElement>
   hash?: string;
   parents?: string[];
   style?: CommitStyleOptions;
-  innerText?: string;
+  dotText?: string;
   tag?: string;
   onClick?: (commit: Commit<TNode>) => void;
   onMessageClick?: (commit: Commit<TNode>) => void;

@@ -16,7 +16,7 @@ export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
   refs?: string[];
   hash?: string;
   parents?: string[];
-  innerText?: string;
+  dotText?: string;
   onClick?: (commit: Commit<TNode>) => void;
   onMessageClick?: (commit: Commit<TNode>) => void;
   onMouseOver?: (commit: Commit<TNode>) => void;
@@ -120,9 +120,9 @@ export class Commit<TNode = SVGElement> {
    */
   public style: CommitStyle;
   /**
-   * Inner text
+   * Text inside commit dot
    */
-  public innerText?: string;
+  public dotText?: string;
   /**
    * List of branches attached
    */
@@ -203,8 +203,7 @@ export class Commit<TNode = SVGElement> {
       dot: { ...options.style.dot },
     };
 
-    // Set inner text
-    this.innerText = options.innerText;
+    this.dotText = options.dotText;
 
     // Set callbacks
     this.onClick = () => (options.onClick ? options.onClick(this) : undefined);

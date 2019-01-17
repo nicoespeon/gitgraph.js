@@ -56,7 +56,7 @@ export const Dot: React.SFC<DotProps> = ({
           commit.style.dot.strokeWidth && commit.style.dot.strokeWidth * 2
         }
       />
-      {commit.innerText && (
+      {commit.dotText && (
         <text
           alignmentBaseline="central"
           textAnchor="middle"
@@ -64,7 +64,7 @@ export const Dot: React.SFC<DotProps> = ({
           y={commit.style.dot.size}
           style={{ font: commit.style.dot.font }}
         >
-          {commit.innerText}
+          {commit.dotText}
         </text>
       )}
     </g>
