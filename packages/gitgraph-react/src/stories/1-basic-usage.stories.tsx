@@ -89,12 +89,18 @@ storiesOf("1. Basic usage", module)
     <Gitgraph>
       {(gitgraph) => {
         const master = gitgraph.branch("master");
-        master.commit("one");
-        master.tag("v1.0");
-        master.commit({
-          subject: "two",
-          tag: "v2.0",
-        });
+
+        // Tag on branch
+        master.commit().tag("v1.0");
+
+        master.commit();
+        master.tag("v1.1");
+
+        master.commit({ tag: "v1.2" });
+
+        // Tag on gitgraph
+        master.commit();
+        gitgraph.tag("v2.0");
       }}
     </Gitgraph>
   ))
