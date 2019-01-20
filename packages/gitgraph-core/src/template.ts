@@ -105,19 +105,6 @@ export interface CommitMessageStyle {
 
 export type CommitMessageStyleOptions = Partial<CommitMessageStyle>;
 
-export interface CommitTagStyle {
-  /**
-   * Commit tag color
-   */
-  color?: string;
-  /**
-   * Commit tag font
-   */
-  font?: string;
-}
-
-export type CommitTagStyleOptions = Partial<CommitTagStyle>;
-
 export interface CommitStyleBase {
   /**
    * Spacing between commits
@@ -142,10 +129,6 @@ export interface CommitStyle extends CommitStyleBase {
    * Commit dot style
    */
   dot: CommitDotStyle;
-  /**
-   * Commit tag style
-   */
-  tag: CommitTagStyle;
 }
 
 export interface CommitStyleOptions extends Partial<CommitStyleBase> {
@@ -157,10 +140,6 @@ export interface CommitStyleOptions extends Partial<CommitStyleBase> {
    * Commit dot style
    */
   dot?: CommitDotStyleOptions;
-  /**
-   * Commit tag style
-   */
-  tag?: CommitTagStyleOptions;
 }
 
 export interface TemplateOptions {
@@ -211,7 +190,6 @@ export class Template {
     options.arrow = options.arrow || {};
     options.commit = options.commit || {};
     options.commit.dot = options.commit.dot || {};
-    options.commit.tag = options.commit.tag || {};
     options.commit.message = options.commit.message || {};
 
     // One color per column
@@ -250,13 +228,6 @@ export class Template {
         strokeColor: options.commit.dot.strokeColor,
         font:
           options.commit.dot.font ||
-          options.commit.message.font ||
-          "normal 10pt Calibri",
-      },
-      tag: {
-        color: options.commit.tag.color || options.commit.color,
-        font:
-          options.commit.tag.font ||
           options.commit.message.font ||
           "normal 10pt Calibri",
       },

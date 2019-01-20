@@ -198,7 +198,6 @@ export class Commit<TNode = SVGElement> {
     // Set style
     this.style = {
       ...options.style,
-      tag: { ...options.style.tag },
       message: { ...options.style.message },
       dot: { ...options.style.dot },
     };
@@ -243,7 +242,6 @@ export class Commit<TNode = SVGElement> {
 
   public setDefaultColor(color: string): this {
     if (!this.style.color) this.style.color = color;
-    if (!this.style.tag.color) this.style.tag.color = color;
     if (!this.style.dot.color) this.style.dot.color = color;
     if (!this.style.message.color) this.style.message.color = color;
 

@@ -203,11 +203,6 @@ export class Branch<TNode = SVGElement> {
       ...withoutUndefinedKeys(this.gitgraph.template.commit),
       ...withoutUndefinedKeys(this.commitDefaultOptions.style),
       ...style,
-      tag: {
-        ...withoutUndefinedKeys(this.gitgraph.template.commit.tag),
-        ...withoutUndefinedKeys(this.commitDefaultOptions.style!.tag),
-        ...style.tag,
-      },
       message,
       dot: {
         ...withoutUndefinedKeys(this.gitgraph.template.commit.dot),

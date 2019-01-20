@@ -101,10 +101,6 @@ describe("Branch", () => {
           },
           shouldDisplayTooltipsInCompactMode: true,
           spacing: 80,
-          tag: {
-            color: "#979797",
-            font: "normal 14pt Arial",
-          },
         };
       }
 
@@ -170,7 +166,6 @@ describe("Branch", () => {
             style: {
               color: colors[0],
               message: { color: colors[0] },
-              tag: { color: colors[0] },
               dot: { color: colors[0] },
             },
           },
@@ -179,7 +174,6 @@ describe("Branch", () => {
             style: {
               color: colors[1],
               message: { color: colors[1] },
-              tag: { color: colors[1] },
               dot: { color: colors[1] },
             },
           },
@@ -188,7 +182,6 @@ describe("Branch", () => {
             style: {
               color: colors[2],
               message: { color: colors[2] },
-              tag: { color: colors[2] },
               dot: { color: colors[2] },
             },
           },
@@ -197,7 +190,6 @@ describe("Branch", () => {
             style: {
               color: colors[0],
               message: { color: colors[0] },
-              tag: { color: colors[0] },
               dot: { color: colors[0] },
             },
           },
@@ -206,7 +198,6 @@ describe("Branch", () => {
             style: {
               color: colors[1],
               message: { color: colors[1] },
-              tag: { color: colors[1] },
               dot: { color: colors[1] },
             },
           },
@@ -232,7 +223,6 @@ describe("Branch", () => {
             subject: "one",
             style: {
               color: colors[0],
-              tag: { color: colors[0] },
               dot: { color: colors[0] },
             },
           },
@@ -240,7 +230,6 @@ describe("Branch", () => {
             subject: "two",
             style: {
               color: colors[1],
-              tag: { color: colors[1] },
               dot: { color: colors[1] },
             },
           },
@@ -248,7 +237,6 @@ describe("Branch", () => {
             subject: "three",
             style: {
               color: colors[2],
-              tag: { color: colors[2] },
               dot: { color: colors[2] },
             },
           },
@@ -256,7 +244,6 @@ describe("Branch", () => {
             subject: "four",
             style: {
               color: colors[3],
-              tag: { color: colors[3] },
               dot: { color: colors[3] },
             },
           },
@@ -264,7 +251,6 @@ describe("Branch", () => {
             subject: "five",
             style: {
               color: colors[4],
-              tag: { color: colors[4] },
               dot: { color: colors[4] },
             },
           },
@@ -272,7 +258,6 @@ describe("Branch", () => {
             subject: "six",
             style: {
               color: colors[0],
-              tag: { color: colors[0] },
               dot: { color: colors[0] },
             },
           },
