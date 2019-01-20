@@ -319,7 +319,10 @@ export class GitgraphCore<TNode = SVGElement> {
     this.commits = commitOptionsList.map((options) => new Commit(options));
 
     // Create tags & refs.
-    this.commits.forEach(({ refs, hash }) => {
+    commitOptionsList.forEach(({ refs, hash }) => {
+      if (!refs) return;
+      if (!hash) return;
+
       const TAG_PREFIX = "tag: ";
 
       const tags = refs
