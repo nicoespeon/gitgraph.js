@@ -117,7 +117,9 @@ export class BranchesPathsCalculator<TNode> {
       });
       if (!parentOnOriginBranch) return;
 
-      const originBranchName = parentOnOriginBranch.refs[0];
+      const originBranchName = parentOnOriginBranch.branches
+        ? parentOnOriginBranch.branches[0]
+        : "";
       let branch = this.branches.get(originBranchName);
 
       if (!branch) {

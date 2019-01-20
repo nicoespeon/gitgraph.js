@@ -137,7 +137,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
-    dev.merge(master);
+    master.merge(dev);
     master.commit();
 
     const { branchesPaths } = gitgraph.getRenderedData();
@@ -160,7 +160,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
         { x: 0, y: 80 * 4 },
         { x: 50, y: 80 * 3 },
         { x: 50, y: 80 * 2 },
-        { x: 50, y: 80 * 1 }, // merge commit
+        { x: 0, y: 80 * 1 }, // merge commit
       ],
     ]);
   });
