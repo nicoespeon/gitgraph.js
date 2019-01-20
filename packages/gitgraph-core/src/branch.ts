@@ -75,7 +75,7 @@ export class Branch<TNode = SVGElement> {
     options?: GitgraphCommitOptions<TNode> | string,
   ): Branch<TNode> {
     // Deal with shorter syntax
-    if (typeof options === "string") options = { subject: options as string };
+    if (typeof options === "string") options = { subject: options };
     if (!options) options = {};
     if (!options.parents) options.parents = [];
 
