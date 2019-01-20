@@ -77,46 +77,8 @@ export class Branch<TNode = SVGElement> {
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options };
     if (!options) options = {};
-    if (!options.parents) options.parents = [];
 
-    const parentOnSameBranch = this.gitgraph.refs.getCommit(this.name);
-    if (parentOnSameBranch) {
-      options.parents.unshift(parentOnSameBranch);
-    } else if (this.parentCommitHash) {
-      options.parents.unshift(this.parentCommitHash);
-    }
-
-    const { tag, ...commitOptions } = options;
-    const commit = new Commit({
-      author: this.commitDefaultOptions.author || this.gitgraph.author,
-      subject:
-        this.commitDefaultOptions.subject ||
-        (this.gitgraph.commitMessage as string),
-      ...commitOptions,
-      style: this.getCommitStyle(options.style),
-    });
-
-    if (parentOnSameBranch) {
-      // Take all the refs from the parent
-      const parentRefs = this.gitgraph.refs.getNames(parentOnSameBranch);
-      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
-    } else {
-      // Set the branch ref
-      this.gitgraph.refs.set(this.name, commit.hash);
-    }
-
-    // Add the new commit
-    this.gitgraph.commits.push(commit);
-
-    // Move HEAD on the last commit
-    this.checkout();
-    this.gitgraph.refs.set("HEAD", commit.hash);
-
-    // Add a tag to the commit if `option.tag` is provide
-    if (tag) this.tag(tag);
-
-    // Update the render
-    this.gitgraph.next();
+    this.commitWithParents(options, []);
 
     return this;
   }
@@ -145,10 +107,12 @@ export class Branch<TNode = SVGElement> {
       throw new Error(`The branch called "${branchName}" is unknown`);
     }
 
-    this.commit({
-      subject: message || `Merge branch ${branchName}`,
-      parents: [parentCommitHash],
-    });
+    this.commitWithParents(
+      {
+        subject: message || `Merge branch ${branchName}`,
+      },
+      [parentCommitHash],
+    );
 
     return this;
   }
@@ -176,6 +140,51 @@ export class Branch<TNode = SVGElement> {
    */
   public isDeleted(): boolean {
     return this.name === DELETED_BRANCH_NAME;
+  }
+
+  private commitWithParents(
+    options: GitgraphCommitOptions<TNode>,
+    parents: string[],
+  ): void {
+    const parentOnSameBranch = this.gitgraph.refs.getCommit(this.name);
+    if (parentOnSameBranch) {
+      parents.unshift(parentOnSameBranch);
+    } else if (this.parentCommitHash) {
+      parents.unshift(this.parentCommitHash);
+    }
+
+    const { tag, ...commitOptions } = options;
+    const commit = new Commit({
+      author: this.commitDefaultOptions.author || this.gitgraph.author,
+      subject:
+        this.commitDefaultOptions.subject ||
+        (this.gitgraph.commitMessage as string),
+      ...commitOptions,
+      parents,
+      style: this.getCommitStyle(options.style),
+    });
+
+    if (parentOnSameBranch) {
+      // Take all the refs from the parent
+      const parentRefs = this.gitgraph.refs.getNames(parentOnSameBranch);
+      parentRefs.forEach((ref) => this.gitgraph.refs.set(ref, commit.hash));
+    } else {
+      // Set the branch ref
+      this.gitgraph.refs.set(this.name, commit.hash);
+    }
+
+    // Add the new commit
+    this.gitgraph.commits.push(commit);
+
+    // Move HEAD on the last commit
+    this.checkout();
+    this.gitgraph.refs.set("HEAD", commit.hash);
+
+    // Add a tag to the commit if `option.tag` is provide
+    if (tag) this.tag(tag);
+
+    // Update the render
+    this.gitgraph.next();
   }
 
   /**

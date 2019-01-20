@@ -47,7 +47,6 @@ export interface GitgraphCommitOptions<TNode = SVGElement>
   subject?: string;
   body?: string;
   hash?: string;
-  parents?: string[];
   style?: CommitStyleOptions;
   dotText?: string;
   tag?: string;
