@@ -46,7 +46,6 @@ export interface GitgraphCommitOptions<TNode = SVGElement>
   author?: string;
   subject?: string;
   body?: string;
-  refs?: string[];
   hash?: string;
   parents?: string[];
   style?: CommitStyleOptions;
@@ -302,7 +301,9 @@ export class GitgraphCore<TNode = SVGElement> {
       }),
     );
 
-    const commitOptionsList: Array<CommitOptions<TNode>> = schema
+    const commitOptionsList: Array<
+      CommitOptions<TNode> & { refs: string[] }
+    > = schema
       .validateSync(data)
       .map((options) => ({
         ...options,
