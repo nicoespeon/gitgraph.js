@@ -162,17 +162,30 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       return commit.renderMessage(commit, this.state.commitMessagesX);
     }
 
+    let body = null;
+    if (commit.body) {
+      body = (
+        <foreignObject width="600" x="10">
+          <p>{commit.body}</p>
+        </foreignObject>
+      );
+    }
+
+    const x = this.state.commitMessagesX - commit.x;
+    const y = commit.style.dot.size;
+
     return (
-      <text
-        x={this.state.commitMessagesX - commit.x}
-        y={commit.style.dot.size}
-        alignmentBaseline="central"
-        fill={commit.style.message.color}
-        style={{ font: commit.style.message.font }}
-        onClick={commit.onMessageClick}
-      >
-        {getMessage(commit)}
-      </text>
+      <g transform={`translate(${x}, ${y})`}>
+        <text
+          alignmentBaseline="central"
+          fill={commit.style.message.color}
+          style={{ font: commit.style.message.font }}
+          onClick={commit.onMessageClick}
+        >
+          {getMessage(commit)}
+        </text>
+        {body}
+      </g>
     );
   }
 
