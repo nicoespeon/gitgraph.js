@@ -33,6 +33,17 @@ export interface BranchOptions<TNode = SVGElement> {
   commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;
 }
 
+interface BranchMergeOptions<TNode> {
+  /**
+   * Branch or branch name.
+   */
+  branch: string | Branch<TNode>;
+  /**
+   * Merge commit message.
+   */
+  message?: string;
+}
+
 export const DELETED_BRANCH_NAME = "";
 
 /**
@@ -97,10 +108,24 @@ export class Branch<TNode = SVGElement> {
    * @param message Merge commit message
    */
   public merge(branchName: string, message?: string): Branch<TNode>;
-  public merge(
-    branch: string | Branch<TNode>,
-    message?: string,
-  ): Branch<TNode> {
+  /**
+   * Create a merge commit.
+   *
+   * @param options Options of the merge
+   */
+  public merge(options: BranchMergeOptions<TNode>): Branch<TNode>;
+  public merge(...args: any[]): Branch<TNode> {
+    let branch: string | Branch<TNode>;
+    let message: string | undefined;
+    const options = args[0];
+    if (isBranchMergeOptions<TNode>(options)) {
+      branch = options.branch;
+      message = options.message;
+    } else {
+      branch = args[0];
+      message = args[1];
+    }
+
     const branchName = typeof branch === "string" ? branch : branch.name;
     const parentCommitHash = this.gitgraph.refs.getCommit(branchName);
     if (!parentCommitHash) {
@@ -233,4 +258,10 @@ export function createDeletedBranch<TNode>(
     gitgraph,
     style,
   });
+}
+
+function isBranchMergeOptions<TNode>(
+  options: BranchMergeOptions<TNode> | any,
+): options is BranchMergeOptions<TNode> {
+  return typeof options === "object" && !(options instanceof Branch);
 }
