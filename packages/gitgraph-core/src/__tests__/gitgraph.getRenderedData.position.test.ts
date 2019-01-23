@@ -255,6 +255,37 @@ describe("Gitgraph.getRenderedData.position", () => {
     ]);
   });
 
+  it("should deal with one branch (with fast-forward merge)", () => {
+    const gitgraph = new GitgraphCore();
+
+    const master = gitgraph.branch("master");
+    master.commit("one").commit("two");
+
+    const dev = gitgraph.branch("dev");
+    dev.commit("three");
+    master.merge({ branch: dev, fastForward: true });
+
+    const { commits } = gitgraph.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        x: 0,
+        y: 80 * 2,
+      },
+      {
+        subject: "two",
+        x: 0,
+        y: 80 * 1,
+      },
+      {
+        subject: "three",
+        x: 0, // dev, fast-forwarded
+        y: 0,
+      },
+    ]);
+  });
+
   it("should deal with one branch (with merge) (vertical-reverse)", () => {
     const gitgraph = new GitgraphCore({
       orientation: Orientation.VerticalReverse,

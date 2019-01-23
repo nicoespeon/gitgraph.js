@@ -42,6 +42,10 @@ interface BranchMergeOptions<TNode> {
    * Merge commit message.
    */
   message?: string;
+  /**
+   * If `true`, perform a fast-forward merge (if possible).
+   */
+  fastForward?: boolean;
 }
 
 export const DELETED_BRANCH_NAME = "";
@@ -117,27 +121,30 @@ export class Branch<TNode = SVGElement> {
   public merge(...args: any[]): Branch<TNode> {
     let branch: string | Branch<TNode>;
     let message: string | undefined;
+    let fastForward: boolean;
     const options = args[0];
     if (isBranchMergeOptions<TNode>(options)) {
       branch = options.branch;
       message = options.message;
+      fastForward = options.fastForward || false;
     } else {
       branch = args[0];
       message = args[1];
+      fastForward = false;
     }
 
     const branchName = typeof branch === "string" ? branch : branch.name;
-    const parentCommitHash = this.gitgraph.refs.getCommit(branchName);
-    if (!parentCommitHash) {
+    const mergedBranchLastCommitHash = this.gitgraph.refs.getCommit(branchName);
+    if (!mergedBranchLastCommitHash) {
       throw new Error(`The branch called "${branchName}" is unknown`);
     }
 
-    this.commitWithParents(
-      {
-        subject: message || `Merge branch ${branchName}`,
-      },
-      [parentCommitHash],
-    );
+    if (fastForward) {
+      this.fastForwardTo(mergedBranchLastCommitHash);
+    } else {
+      const subject = message || `Merge branch ${branchName}`;
+      this.commitWithParents({ subject }, [mergedBranchLastCommitHash]);
+    }
 
     return this;
   }
@@ -165,6 +172,10 @@ export class Branch<TNode = SVGElement> {
    */
   public isDeleted(): boolean {
     return this.name === DELETED_BRANCH_NAME;
+  }
+
+  private fastForwardTo(commitHash: Commit["hash"]): void {
+    this.gitgraph.refs.set(this.name, commitHash);
   }
 
   private commitWithParents(

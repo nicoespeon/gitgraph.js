@@ -85,6 +85,21 @@ storiesOf("1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("merge with fast-forward", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master");
+        master.commit();
+
+        // Branch that can be fast-forward on merge.
+        const feat1 = gitgraph.branch("feat1");
+        feat1.commit().commit();
+        master.merge({ branch: feat1, fastForward: true });
+
+        master.commit();
+      }}
+    </Gitgraph>
+  ))
   .add("tags", () => (
     <Gitgraph>
       {(gitgraph) => {
