@@ -126,8 +126,8 @@ export class Branch<TNode = SVGElement> {
     const { branch, message, fastForward } = options;
 
     const branchName = typeof branch === "string" ? branch : branch.name;
-    const mergedBranchLastCommitHash = this.gitgraph.refs.getCommit(branchName);
-    if (!mergedBranchLastCommitHash) {
+    const branchLastCommitHash = this.gitgraph.refs.getCommit(branchName);
+    if (!branchLastCommitHash) {
       throw new Error(`The branch called "${branchName}" is unknown`);
     }
 
@@ -136,17 +136,17 @@ export class Branch<TNode = SVGElement> {
     if (lastCommitHash) {
       canFastForward = this.areCommitsConnected(
         lastCommitHash,
-        mergedBranchLastCommitHash,
+        branchLastCommitHash,
       );
     } else {
       canFastForward = false;
     }
 
     if (fastForward && canFastForward) {
-      this.fastForwardTo(mergedBranchLastCommitHash);
+      this.fastForwardTo(branchLastCommitHash);
     } else {
       const subject = message || `Merge branch ${branchName}`;
-      this.commitWithParents({ subject }, [mergedBranchLastCommitHash]);
+      this.commitWithParents({ subject }, [branchLastCommitHash]);
     }
 
     return this;
