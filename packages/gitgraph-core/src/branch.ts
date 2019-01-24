@@ -119,19 +119,11 @@ export class Branch<TNode = SVGElement> {
    */
   public merge(options: BranchMergeOptions<TNode>): Branch<TNode>;
   public merge(...args: any[]): Branch<TNode> {
-    let branch: string | Branch<TNode>;
-    let message: string | undefined;
-    let fastForward: boolean;
-    const options = args[0];
-    if (isBranchMergeOptions<TNode>(options)) {
-      branch = options.branch;
-      message = options.message;
-      fastForward = options.fastForward || false;
-    } else {
-      branch = args[0];
-      message = args[1];
-      fastForward = false;
+    let options = args[0];
+    if (!isBranchMergeOptions<TNode>(options)) {
+      options = { branch: args[0], message: args[1], fastForward: false };
     }
+    const { branch, message, fastForward } = options;
 
     const branchName = typeof branch === "string" ? branch : branch.name;
     const mergedBranchLastCommitHash = this.gitgraph.refs.getCommit(branchName);
