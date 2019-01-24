@@ -40,6 +40,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private gitgraph: GitgraphCore<React.ReactElement<SVGElement>>;
   private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
+  private $tooltip: React.ReactElement<SVGGElement> | null = null;
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -62,6 +63,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <svg ref={this.$graph}>
         {this.renderBranches()}
         {this.renderCommits()}
+        {this.$tooltip}
       </svg>
     );
   }
@@ -99,7 +101,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <path
         key={branch.name}
         d={toSvgPath(
-          coordinates.map((a) => a.map((b) => this.applyMessageOffset(b))),
+          coordinates.map((a) => a.map((b) => this.getMessageOffset(b))),
           isBezier,
           this.gitgraph.isVertical,
         )}
@@ -120,12 +122,25 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderCommit(commit: Commit<React.ReactElement<SVGElement>>) {
-    const { x, y } = this.applyMessageOffset(commit);
+    const { x, y } = this.getMessageOffset(commit);
+
+    const shouldRenderTooltip =
+      this.state.currentCommitOver === commit &&
+      (!this.gitgraph.isVertical ||
+        (this.gitgraph.mode === Mode.Compact &&
+          commit.style.shouldDisplayTooltipsInCompactMode));
+
+    if (shouldRenderTooltip) {
+      this.$tooltip = (
+        <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+          {this.renderTooltip(commit)}
+        </g>
+      );
+    }
 
     return (
       <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
         {this.renderDot(commit)}
-        {this.state.currentCommitOver === commit && this.renderTooltip(commit)}
         {commit.style.message.display && this.renderMessage(commit)}
         {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
       </g>
@@ -143,6 +158,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         onMouseOver={() => this.onMouseOver(commit)}
         onMouseOut={() => {
           this.setState({ currentCommitOver: null });
+          this.$tooltip = null;
           commit.onMouseOut();
         }}
       />
@@ -204,13 +220,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private onMouseOver(commit: Commit<React.ReactElement<SVGElement>>): void {
-    if (
-      this.gitgraph.mode === Mode.Compact &&
-      commit.style.shouldDisplayTooltipsInCompactMode
-    ) {
-      this.setState({ currentCommitOver: commit });
-    }
-
+    this.setState({ currentCommitOver: commit });
     commit.onMouseOver();
   }
 
@@ -282,7 +292,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private applyMessageOffset({ x, y }: Coordinate): Coordinate {
+  private getMessageOffset({ x, y }: Coordinate): Coordinate {
     return { x, y: this.state.commitYWithOffsets[y] || y };
   }
 
