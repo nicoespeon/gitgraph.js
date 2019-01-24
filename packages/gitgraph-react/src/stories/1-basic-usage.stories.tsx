@@ -97,6 +97,12 @@ storiesOf("1. Basic usage", module)
         master.merge({ branch: feat1, fastForward: true });
 
         master.commit();
+
+        // Another branch which merge can't be fast-forward.
+        const feat2 = gitgraph.branch("feat2");
+        feat2.commit().commit();
+        master.commit("This commit prevent fast-forward merge");
+        master.merge({ branch: feat2, fastForward: true });
       }}
     </Gitgraph>
   ))
