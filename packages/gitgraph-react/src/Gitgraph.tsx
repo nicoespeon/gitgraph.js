@@ -73,7 +73,11 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public componentDidUpdate() {
     if (this.$graph.current) {
       const { height, width } = this.$graph.current.getBBox();
-      this.$graph.current.setAttribute("width", width.toString());
+      this.$graph.current.setAttribute(
+        "width",
+        // `width` crop the tooltip text without considering the `padding`.
+        (width + Tooltip.padding).toString(),
+      );
       this.$graph.current.setAttribute("height", height.toString());
     }
 

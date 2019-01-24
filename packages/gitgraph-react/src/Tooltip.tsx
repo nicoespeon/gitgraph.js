@@ -5,6 +5,7 @@ export class Tooltip extends React.Component<
   { commit: Commit<React.ReactElement<SVGElement>> },
   { textWidth: number }
 > {
+  public static readonly padding = 10;
   public readonly state = { textWidth: 0 };
   private $text = React.createRef<SVGTextElement>();
 
@@ -15,7 +16,7 @@ export class Tooltip extends React.Component<
   public render() {
     const commitSize = this.props.commit.style.dot.size * 2;
     const offset = 10;
-    const padding = 10;
+    const padding = Tooltip.padding;
     const radius = 5;
     const boxHeight = 50;
     const boxWidth = offset + this.state.textWidth + 2 * padding;
