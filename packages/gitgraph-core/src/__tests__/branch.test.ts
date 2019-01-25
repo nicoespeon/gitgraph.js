@@ -13,7 +13,7 @@ import {
 describe("Branch", () => {
   describe("commit", () => {
     describe("on HEAD", () => {
-      let one, two, three;
+      let two, three;
 
       beforeEach(() => {
         const gitgraph = new GitgraphCore();
@@ -25,7 +25,7 @@ describe("Branch", () => {
           .commit();
 
         const { commits } = gitgraph.getRenderedData();
-        [one, two, three] = commits;
+        [, two, three] = commits;
       });
 
       it("should keep master tag on the second commit", () => {
