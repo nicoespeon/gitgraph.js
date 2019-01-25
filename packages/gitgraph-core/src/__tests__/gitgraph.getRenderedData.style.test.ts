@@ -205,6 +205,46 @@ describe("Gitgraph.getRenderedData.style", () => {
 
     expect(commit.style.message.display).toBe(false);
   });
+
+  describe("merge with fast-forward", () => {
+    it("should have the same color for all commits after fast-forward", () => {
+      const { colors } = metroTemplate;
+      const gitgraph = new GitgraphCore({
+        template: TemplateName.Metro,
+      });
+
+      const master = gitgraph.branch("master");
+      master.commit("one");
+
+      const develop = gitgraph.branch("develop");
+      develop.commit("two").commit("three");
+
+      gitgraph.getRenderedData();
+      master.merge({ branch: develop, fastForward: true });
+
+      const { commits } = gitgraph.getRenderedData();
+
+      const expectedStyle = {
+        color: colors[0],
+        dot: { color: colors[0] },
+        message: { color: colors[0] },
+      };
+      expect(commits).toMatchObject([
+        {
+          subject: "one",
+          style: expectedStyle,
+        },
+        {
+          subject: "two",
+          style: expectedStyle,
+        },
+        {
+          subject: "three",
+          style: expectedStyle,
+        },
+      ]);
+    });
+  });
 });
 
 function createExpectedStyle() {
