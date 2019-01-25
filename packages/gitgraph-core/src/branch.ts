@@ -39,9 +39,9 @@ interface BranchMergeOptions<TNode> {
    */
   branch: string | Branch<TNode>;
   /**
-   * Merge commit message.
+   * Merge commit message subject.
    */
-  message?: string;
+  subject?: string;
   /**
    * If `true`, perform a fast-forward merge (if possible).
    */
@@ -102,16 +102,16 @@ export class Branch<TNode = SVGElement> {
    * Create a merge commit.
    *
    * @param branch Branch
-   * @param message Merge commit message
+   * @param subject Merge commit message
    */
-  public merge(branch: Branch<TNode>, message?: string): Branch<TNode>;
+  public merge(branch: Branch<TNode>, subject?: string): Branch<TNode>;
   /**
    * Create a merge commit.
    *
    * @param branchName Branch name
-   * @param message Merge commit message
+   * @param subject Merge commit message
    */
-  public merge(branchName: string, message?: string): Branch<TNode>;
+  public merge(branchName: string, subject?: string): Branch<TNode>;
   /**
    * Create a merge commit.
    *
@@ -121,9 +121,9 @@ export class Branch<TNode = SVGElement> {
   public merge(...args: any[]): Branch<TNode> {
     let options = args[0];
     if (!isBranchMergeOptions<TNode>(options)) {
-      options = { branch: args[0], message: args[1], fastForward: false };
+      options = { branch: args[0], subject: args[1], fastForward: false };
     }
-    const { branch, message, fastForward } = options;
+    const { branch, subject, fastForward } = options;
 
     const branchName = typeof branch === "string" ? branch : branch.name;
     const branchLastCommitHash = this.gitgraph.refs.getCommit(branchName);
@@ -145,8 +145,10 @@ export class Branch<TNode = SVGElement> {
     if (fastForward && canFastForward) {
       this.fastForwardTo(branchLastCommitHash);
     } else {
-      const subject = message || `Merge branch ${branchName}`;
-      this.commitWithParents({ subject }, [branchLastCommitHash]);
+      this.commitWithParents(
+        { subject: subject || `Merge branch ${branchName}` },
+        [branchLastCommitHash],
+      );
     }
 
     return this;
