@@ -61,9 +61,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public render() {
     return (
       <svg ref={this.$graph}>
-        {this.renderBranches()}
-        {this.renderCommits()}
-        {this.$tooltip}
+        {/* Translate graph down => top-most commit tooltip is not cropped */}
+        <g transform={`translate(0, ${Tooltip.padding})`}>
+          {this.renderBranches()}
+          {this.renderCommits()}
+          {this.$tooltip}
+        </g>
       </svg>
     );
   }
@@ -80,7 +83,12 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         // `width` crop the tooltip text without considering the `padding`.
         (width + Tooltip.padding).toString(),
       );
-      this.$graph.current.setAttribute("height", height.toString());
+      this.$graph.current.setAttribute(
+        "height",
+        // As we translate the graph by `Tooltip.padding`,
+        // we need to take it into account in height calculation too.
+        (height + Tooltip.padding).toString(),
+      );
     }
 
     if (!this.state.shouldRecomputeOffsets) return;
