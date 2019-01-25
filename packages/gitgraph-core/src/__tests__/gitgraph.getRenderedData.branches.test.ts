@@ -114,4 +114,71 @@ describe("Gitgraph.getRenderedData.branches", () => {
       },
     ]);
   });
+
+  describe("commits on HEAD", () => {
+    let two, three;
+
+    beforeEach(() => {
+      const gitgraph = new GitgraphCore();
+
+      gitgraph
+        .commit()
+        .commit()
+        .branch("develop")
+        .commit();
+
+      const { commits } = gitgraph.getRenderedData();
+      [, two, three] = commits;
+    });
+
+    it("should keep master tag on the second commit", () => {
+      expect(two.refs).toEqual(["master"]);
+    });
+
+    it("should have develop and head tags on the last commit", () => {
+      expect(three.refs).toEqual(["develop", "HEAD"]);
+    });
+
+    it("should have the correct parents set", () => {
+      expect(three.parents).toEqual([two.hash]);
+    });
+  });
+
+  describe("commits on branches", () => {
+    it("should have master on commit two", () => {
+      const gitgraph = new GitgraphCore();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("develop");
+      dev.commit("three");
+
+      const { commits } = gitgraph.getRenderedData();
+
+      expect(commits).toMatchObject([
+        { subject: "one", refs: [] },
+        { subject: "two", refs: ["master"] },
+        { subject: "three", refs: ["develop", "HEAD"] },
+      ]);
+    });
+
+    it("should have master and HEAD on commit four", () => {
+      const gitgraph = new GitgraphCore();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+      const dev = gitgraph.branch("develop");
+      dev.commit("three");
+      master.commit("four");
+
+      const { commits } = gitgraph.getRenderedData();
+
+      expect(commits).toMatchObject([
+        { subject: "one", refs: [] },
+        { subject: "two", refs: [] },
+        { subject: "three", refs: ["develop"] },
+        { subject: "four", refs: ["master", "HEAD"] },
+      ]);
+    });
+  });
 });
