@@ -136,7 +136,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       this.state.currentCommitOver === commit &&
       (!this.gitgraph.isVertical ||
         (this.gitgraph.mode === Mode.Compact &&
-          commit.style.shouldDisplayTooltipsInCompactMode));
+          commit.style.hasTooltipInCompactMode));
 
     if (shouldRenderTooltip) {
       this.$tooltip = (

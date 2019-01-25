@@ -264,7 +264,7 @@ function createExpectedStyle() {
       displayHash: true,
       font: "normal 14pt Arial",
     },
-    shouldDisplayTooltipsInCompactMode: true,
+    hasTooltipInCompactMode: true,
     spacing: 80,
   };
 }

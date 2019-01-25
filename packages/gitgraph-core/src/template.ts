@@ -117,7 +117,7 @@ export interface CommitStyleBase {
   /**
    * Tooltips policy
    */
-  shouldDisplayTooltipsInCompactMode: boolean;
+  hasTooltipInCompactMode: boolean;
 }
 
 export interface CommitStyle extends CommitStyleBase {
@@ -214,8 +214,8 @@ export class Template {
     this.commit = {
       color: options.commit.color,
       spacing: numberOptionOr(options.commit.spacing, 25) as number,
-      shouldDisplayTooltipsInCompactMode: booleanOptionOr(
-        options.commit.shouldDisplayTooltipsInCompactMode,
+      hasTooltipInCompactMode: booleanOptionOr(
+        options.commit.hasTooltipInCompactMode,
         true,
       ),
       dot: {
