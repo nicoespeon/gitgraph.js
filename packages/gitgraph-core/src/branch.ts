@@ -202,6 +202,7 @@ export class Branch<TNode = SVGElement> {
 
   private fastForwardTo(commitHash: Commit["hash"]): void {
     this.gitgraph.refs.set(this.name, commitHash);
+    this.gitgraph.next();
   }
 
   private commitWithParents(
