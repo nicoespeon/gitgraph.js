@@ -10,9 +10,10 @@ describe("Commit", () => {
       style,
     });
 
-    commit.setDefaultColor("green");
+    const newCommit = commit.withDefaultColor("green");
 
-    expect(commit.style.dot.color).toBe("green");
+    expect(newCommit.style.dot.color).toBe("green");
+    expect(commit.style.dot.color).not.toBe("green");
     expect(style.dot.color).not.toBe("green");
   });
 });

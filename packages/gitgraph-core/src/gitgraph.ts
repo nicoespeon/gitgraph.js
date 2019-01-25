@@ -515,7 +515,7 @@ export class GitgraphCore<TNode = SVGElement> {
       column % this.template.colors.length
     ];
 
-    return commit.setDefaultColor(defaultColor);
+    return commit.withDefaultColor(defaultColor);
   }
 }
 

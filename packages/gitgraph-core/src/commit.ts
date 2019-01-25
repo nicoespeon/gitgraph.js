@@ -236,12 +236,52 @@ export class Commit<TNode = SVGElement> {
     return this;
   }
 
-  public setDefaultColor(color: string): this {
-    if (!this.style.color) this.style.color = color;
-    if (!this.style.dot.color) this.style.dot.color = color;
-    if (!this.style.message.color) this.style.message.color = color;
+  public withDefaultColor(color: string): Commit<TNode> {
+    const newStyle = {
+      ...this.style,
+      dot: { ...this.style.dot },
+      message: { ...this.style.message },
+    };
 
-    return this;
+    if (!newStyle.color) newStyle.color = color;
+    if (!newStyle.dot.color) newStyle.dot.color = color;
+    if (!newStyle.message.color) newStyle.message.color = color;
+
+    const commit = this.cloneCommit();
+    commit.style = newStyle;
+
+    return commit;
+  }
+
+  /**
+   * Ideally, we want Commit to be a [Value Object](https://martinfowler.com/bliki/ValueObject.html).
+   * We started with a mutable class. So we'll refactor that little by little.
+   * This private function is a helper to create a new Commit from existing one.
+   */
+  private cloneCommit() {
+    const commit = new Commit({
+      author: `${this.author.name} <${this.author.email}>`,
+      subject: this.subject,
+      style: this.style,
+      body: this.body,
+      hash: this.hash,
+      parents: this.parents,
+      dotText: this.dotText,
+      onClick: this.onClick,
+      onMouseOver: this.onMouseOver,
+      onMouseOut: this.onMouseOut,
+      renderDot: this.renderDot,
+      renderMessage: this.renderMessage,
+      renderTooltip: this.renderTooltip,
+    });
+
+    commit.refs = this.refs;
+    commit.branches = this.branches;
+    commit.tags = this.tags;
+    commit.x = this.x;
+    commit.y = this.y;
+
+    return commit;
   }
 }
 
