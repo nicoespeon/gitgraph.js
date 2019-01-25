@@ -10,35 +10,8 @@ import {
 } from "../index";
 
 describe("Gitgraph.getRenderedData.style", () => {
-  let gitgraph: GitgraphCore;
-
-  function createExpectedStyle() {
-    return {
-      color: "#979797",
-      dot: {
-        color: "#979797",
-        size: 14,
-        strokeWidth: 0,
-        font: "normal 14pt Arial",
-      },
-      message: {
-        color: "#979797",
-        display: true,
-        displayAuthor: true,
-        displayBranch: true,
-        displayHash: true,
-        font: "normal 14pt Arial",
-      },
-      shouldDisplayTooltipsInCompactMode: true,
-      spacing: 80,
-    };
-  }
-
-  beforeEach(() => {
-    gitgraph = new GitgraphCore();
-  });
-
   it("should have the style of the template by default", () => {
+    const gitgraph = new GitgraphCore();
     gitgraph.commit();
 
     const { commits } = gitgraph.getRenderedData();
@@ -48,6 +21,7 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should have a merge style with the defaultCommitOptions", () => {
+    const gitgraph = new GitgraphCore();
     gitgraph
       .branch({
         commitDefaultOptions: { style: { message: { color: "green" } } },
@@ -63,6 +37,7 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should have a merge style with the commit", () => {
+    const gitgraph = new GitgraphCore();
     gitgraph
       .branch({
         commitDefaultOptions: { style: { message: { color: "green" } } },
@@ -81,6 +56,7 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should have the color depending of the branch (metro theme)", () => {
+    const gitgraph = new GitgraphCore();
     gitgraph.branch("master").commit("one");
     gitgraph.branch("dev").commit("two");
     gitgraph.branch("feat1").commit("three");
@@ -135,18 +111,18 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should have the color depending of the branch (blackarrow theme)", () => {
-    const gitgraphBlackArrow = new GitgraphCore({
+    const gitgraph = new GitgraphCore({
       template: TemplateName.BlackArrow,
     });
-    gitgraphBlackArrow.branch("master").commit("one");
-    gitgraphBlackArrow.branch("dev").commit("two");
-    gitgraphBlackArrow.branch("feat1").commit("three");
-    gitgraphBlackArrow.branch("feat2").commit("four");
-    gitgraphBlackArrow.branch("feat3").commit("five");
-    gitgraphBlackArrow.branch("feat4").commit("six");
+    gitgraph.branch("master").commit("one");
+    gitgraph.branch("dev").commit("two");
+    gitgraph.branch("feat1").commit("three");
+    gitgraph.branch("feat2").commit("four");
+    gitgraph.branch("feat3").commit("five");
+    gitgraph.branch("feat4").commit("six");
 
     const { colors } = blackArrowTemplate;
-    const { commits } = gitgraphBlackArrow.getRenderedData();
+    const { commits } = gitgraph.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -195,38 +171,60 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should hide commit message if orientation is horizontal", () => {
-    const gitgraphHorizontal = new GitgraphCore({
+    const gitgraph = new GitgraphCore({
       orientation: Orientation.Horizontal,
     });
-    gitgraphHorizontal.commit();
+    gitgraph.commit();
 
-    const { commits } = gitgraphHorizontal.getRenderedData();
+    const { commits } = gitgraph.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style.message.display).toBe(false);
   });
 
   it("should hide commit message if orientation is horizontal-reverse", () => {
-    const gitgraphHorizontalReverse = new GitgraphCore({
+    const gitgraph = new GitgraphCore({
       orientation: Orientation.HorizontalReverse,
     });
-    gitgraphHorizontalReverse.commit();
+    gitgraph.commit();
 
-    const { commits } = gitgraphHorizontalReverse.getRenderedData();
+    const { commits } = gitgraph.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style.message.display).toBe(false);
   });
 
   it("should hide commit message if mode is compact", () => {
-    const gitgraphCompact = new GitgraphCore({
+    const gitgraph = new GitgraphCore({
       mode: Mode.Compact,
     });
-    gitgraphCompact.commit();
+    gitgraph.commit();
 
-    const { commits } = gitgraphCompact.getRenderedData();
+    const { commits } = gitgraph.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style.message.display).toBe(false);
   });
 });
+
+function createExpectedStyle() {
+  return {
+    color: "#979797",
+    dot: {
+      color: "#979797",
+      size: 14,
+      strokeWidth: 0,
+      font: "normal 14pt Arial",
+    },
+    message: {
+      color: "#979797",
+      display: true,
+      displayAuthor: true,
+      displayBranch: true,
+      displayHash: true,
+      font: "normal 14pt Arial",
+    },
+    shouldDisplayTooltipsInCompactMode: true,
+    spacing: 80,
+  };
+}
