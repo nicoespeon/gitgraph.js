@@ -1288,9 +1288,10 @@
       }
 
       alpha = rotate(alphaY, alphaX);
-      if (this.type != null ){
-        color = this.parentCommit.branch.color;
-      }
+    }
+
+    if (this.type === "mergeCommit"){
+      color = this.parentCommit.branch.color;
     }
 
     var delta = Math.PI / 7; // Delta between left & right (radian)
