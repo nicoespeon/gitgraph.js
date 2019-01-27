@@ -1288,6 +1288,9 @@
       }
 
       alpha = rotate(alphaY, alphaX);
+    }
+
+    if (this.type === "mergeCommit"){
       color = this.parentCommit.branch.color;
     }
 
@@ -1396,9 +1399,9 @@
    * @param {number} [options.branch.spacingY] - Space between branches
    * @param {number} [options.commit.spacingX] - Space between commits
    * @param {number} [options.commit.spacingY] - Space between commits
-   * @param {number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
+   * @param {number} [options.commit.widthExtension = 0] - Additional width to be added to the calculated width
    * @param {string} [options.commit.color] - Master commit color (dot & message)
-   * @param {string} [options.commit.dot.font] - Commit dot color
+   * @param {string} [options.commit.dot.font] - Commit dot font
    * @param {string} [options.commit.dot.color] - Commit dot color
    * @param {number} [options.commit.dot.size] - Commit dot size
    * @param {number} [options.commit.dot.strokeWidth] - Commit dot stroke width

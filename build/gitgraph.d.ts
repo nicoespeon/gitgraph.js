@@ -481,7 +481,7 @@ commit?: {
 dot?: {
           
 /**
- * Commit dot color
+ * Commit dot font
  */
  font?: string;
 

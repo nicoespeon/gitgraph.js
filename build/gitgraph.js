@@ -1,9 +1,9 @@
 /* ==========================================================
- *                  GitGraph v1.15.0
+ *                  GitGraph v1.15.1
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
- * Copyright (c) 2018 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
- * Copyright (c) 2018 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
+ * Copyright (c) 2019 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
+ * Copyright (c) 2019 Fabien BERNARD (@fabien0102) ✌(✰‿✰)✌
  *
  * GitGraph.js may be freely distributed under the MIT Licence
  * ========================================================== */
@@ -1298,6 +1298,9 @@
       }
 
       alpha = rotate(alphaY, alphaX);
+    }
+
+    if (this.type === "mergeCommit"){
       color = this.parentCommit.branch.color;
     }
 
@@ -1406,9 +1409,9 @@
    * @param {number} [options.branch.spacingY] - Space between branches
    * @param {number} [options.commit.spacingX] - Space between commits
    * @param {number} [options.commit.spacingY] - Space between commits
-   * @param {number} [options.commit.widthExtension = 0]  - Additional width to be added to the calculated width
+   * @param {number} [options.commit.widthExtension = 0] - Additional width to be added to the calculated width
    * @param {string} [options.commit.color] - Master commit color (dot & message)
-   * @param {string} [options.commit.dot.font] - Commit dot color
+   * @param {string} [options.commit.dot.font] - Commit dot font
    * @param {string} [options.commit.dot.color] - Commit dot color
    * @param {number} [options.commit.dot.size] - Commit dot size
    * @param {number} [options.commit.dot.strokeWidth] - Commit dot stroke width
