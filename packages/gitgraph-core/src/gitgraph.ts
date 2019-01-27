@@ -225,7 +225,6 @@ export class GitgraphCore<TNode = SVGElement> {
     this.refs = new Refs();
     this.tags = new Refs();
     this.commits = [];
-    this.columns = [];
     this.branches = new Map();
     this.currentBranch = this.branch("master");
     this.next();
@@ -355,12 +354,7 @@ export class GitgraphCore<TNode = SVGElement> {
    * Return commits with data for rendering.
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
-    // Compute columns
-    this.columns = [];
-    this.commits.map(this.withBranches).forEach((commit) => {
-      const branch = commit.branchToDisplay;
-      if (!this.columns.includes(branch)) this.columns.push(branch);
-    });
+    this.computeColumns(this.commits.map(this.withBranches));
 
     return this.commits
       .map((commit) => commit.setRefs(this.refs))
@@ -368,6 +362,28 @@ export class GitgraphCore<TNode = SVGElement> {
       .map(this.withBranches)
       .map(this.withPosition)
       .map(this.setDefaultColor);
+  }
+
+  /**
+   * Compute the graph columns from commits.
+   *
+   * @param commits List of graph commits
+   */
+  private computeColumns(commits: Array<Commit<TNode>>): void {
+    this.columns = [];
+    commits.forEach((commit) => {
+      const branch = commit.branchToDisplay;
+      if (!this.columns.includes(branch)) this.columns.push(branch);
+    });
+  }
+
+  /**
+   * Return the column index corresponding to given branch name.
+   *
+   * @param branchName Name of the branch
+   */
+  private getColumn(branchName: Branch["name"]): number {
+    return this.columns.findIndex((col) => col === branchName);
   }
 
   /**
@@ -472,9 +488,7 @@ export class GitgraphCore<TNode = SVGElement> {
     const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
-    const column = this.columns.findIndex(
-      (col) => col === commit.branchToDisplay,
-    );
+    const column = this.getColumn(commit.branchToDisplay);
 
     switch (this.orientation) {
       default:
@@ -513,9 +527,7 @@ export class GitgraphCore<TNode = SVGElement> {
    * @param commit One commit
    */
   private setDefaultColor(commit: Commit<TNode>): Commit<TNode> {
-    const column = this.columns.findIndex(
-      (col) => col === commit.branchToDisplay,
-    );
+    const column = this.getColumn(commit.branchToDisplay);
     const defaultColor = this.template.colors[
       column % this.template.colors.length
     ];
