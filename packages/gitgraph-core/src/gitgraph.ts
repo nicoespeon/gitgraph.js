@@ -116,9 +116,6 @@ export class GitgraphCore<TNode = SVGElement> {
     this.author = options.author || "Sergio Flores <saxo-guy@epic.com>";
     this.commitMessage =
       options.commitMessage || "He doesn't like George Michael! Boooo!";
-
-    // Context binding
-    this.withBranches = this.withBranches.bind(this);
   }
 
   /**
@@ -335,7 +332,7 @@ export class GitgraphCore<TNode = SVGElement> {
 
     // Create branches.
     this.commits
-      .map(this.withBranches)
+      .map((commit) => this.withBranches(commit))
       .reduce((mem, commit) => {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
@@ -353,13 +350,13 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
     const columns = new GraphColumns<TNode>(
-      this.commits.map(this.withBranches),
+      this.commits.map((commit) => this.withBranches(commit)),
     );
 
     return this.commits
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags))
-      .map(this.withBranches)
+      .map((commit) => this.withBranches(commit))
       .map((commit) => this.withPosition(commit, columns))
       .map((commit) => this.setDefaultColor(commit, columns));
   }
