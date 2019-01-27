@@ -349,14 +349,15 @@ export class GitgraphCore<TNode = SVGElement> {
    * Return commits with data for rendering.
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
-    const columns = new GraphColumns<TNode>(
-      this.commits.map((commit) => this.withBranches(commit)),
+    const commitsWithBranches = this.commits.map((commit) =>
+      this.withBranches(commit),
     );
 
-    return this.commits
+    const columns = new GraphColumns<TNode>(commitsWithBranches);
+
+    return commitsWithBranches
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags))
-      .map((commit) => this.withBranches(commit))
       .map((commit) => this.withPosition(commit, columns))
       .map((commit) => this.setDefaultColor(commit, columns));
   }
