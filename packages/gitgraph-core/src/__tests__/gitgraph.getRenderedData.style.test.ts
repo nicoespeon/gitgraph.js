@@ -219,6 +219,7 @@ describe("Gitgraph.getRenderedData.style", () => {
       const develop = gitgraph.branch("develop");
       develop.commit("two").commit("three");
 
+      // Trigger `getRenderedData()` before merge to test for side-effects.
       gitgraph.getRenderedData();
       master.merge({ branch: develop, fastForward: true });
 
@@ -243,6 +244,34 @@ describe("Gitgraph.getRenderedData.style", () => {
           style: expectedStyle,
         },
       ]);
+    });
+
+    it("should have the correct color for branches after fast-forward", () => {
+      const { colors } = metroTemplate;
+      const gitgraph = new GitgraphCore({
+        template: TemplateName.Metro,
+      });
+
+      const master = gitgraph.branch("master");
+      master.commit();
+
+      const feat1 = gitgraph.branch("feat1");
+      feat1.commit();
+
+      // Trigger `getRenderedData()` before merge to test for side-effects.
+      gitgraph.getRenderedData();
+      master.merge({ branch: feat1, fastForward: true });
+
+      const feat2 = gitgraph.branch("feat2");
+      feat2.commit("New branch");
+
+      const { commits } = gitgraph.getRenderedData();
+
+      const feat2Commit = commits[commits.length - 1];
+      expect(feat2Commit.subject).toBe("New branch");
+      expect(feat2Commit.style.color).toBe(colors[1]);
+      expect(feat2Commit.style.dot.color).toBe(colors[1]);
+      expect(feat2Commit.style.message.color).toBe(colors[1]);
     });
   });
 });

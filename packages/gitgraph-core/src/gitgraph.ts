@@ -355,6 +355,13 @@ export class GitgraphCore<TNode = SVGElement> {
    * Return commits with data for rendering.
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
+    // Compute columns
+    this.columns = [];
+    this.commits.map(this.withBranches).forEach((commit) => {
+      const branch = commit.branchToDisplay;
+      if (!this.columns.includes(branch)) this.columns.push(branch);
+    });
+
     return this.commits
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags))
@@ -465,11 +472,9 @@ export class GitgraphCore<TNode = SVGElement> {
     const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
-
-    // Resolve branch's column index
-    const branch = commit.branchToDisplay;
-    if (!this.columns.includes(branch)) this.columns.push(branch);
-    const column = this.columns.findIndex((col) => col === branch);
+    const column = this.columns.findIndex(
+      (col) => col === commit.branchToDisplay,
+    );
 
     switch (this.orientation) {
       default:
