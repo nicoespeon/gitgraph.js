@@ -8,6 +8,7 @@ import Branch, {
 } from "./branch";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
 import { createGraphRows } from "./graph-rows";
+import { GraphColumns } from "./graph-columns";
 import {
   Template,
   TemplateName,
@@ -88,7 +89,6 @@ export class GitgraphCore<TNode = SVGElement> {
   public branches: Map<Branch["name"], Branch<TNode>> = new Map();
   public currentBranch: Branch<TNode>;
 
-  private columns: Array<Branch["name"]> = [];
   private listeners: Array<() => void> = [];
 
   constructor(options: GitgraphOptions = {}) {
@@ -119,8 +119,6 @@ export class GitgraphCore<TNode = SVGElement> {
 
     // Context binding
     this.withBranches = this.withBranches.bind(this);
-    this.withPosition = this.withPosition.bind(this);
-    this.setDefaultColor = this.setDefaultColor.bind(this);
   }
 
   /**
@@ -354,36 +352,16 @@ export class GitgraphCore<TNode = SVGElement> {
    * Return commits with data for rendering.
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
-    this.computeColumns(this.commits.map(this.withBranches));
+    const columns = new GraphColumns<TNode>(
+      this.commits.map(this.withBranches),
+    );
 
     return this.commits
       .map((commit) => commit.setRefs(this.refs))
       .map((commit) => commit.setTags(this.tags))
       .map(this.withBranches)
-      .map(this.withPosition)
-      .map(this.setDefaultColor);
-  }
-
-  /**
-   * Compute the graph columns from commits.
-   *
-   * @param commits List of graph commits
-   */
-  private computeColumns(commits: Array<Commit<TNode>>): void {
-    this.columns = [];
-    commits.forEach((commit) => {
-      const branch = commit.branchToDisplay;
-      if (!this.columns.includes(branch)) this.columns.push(branch);
-    });
-  }
-
-  /**
-   * Return the column index corresponding to given branch name.
-   *
-   * @param branchName Name of the branch
-   */
-  private getColumn(branchName: Branch["name"]): number {
-    return this.columns.findIndex((col) => col === branchName);
+      .map((commit) => this.withPosition(commit, columns))
+      .map((commit) => this.setDefaultColor(commit, columns));
   }
 
   /**
@@ -484,11 +462,14 @@ export class GitgraphCore<TNode = SVGElement> {
    *
    * @param commit A commit
    */
-  private withPosition(commit: Commit<TNode>): Commit<TNode> {
+  private withPosition(
+    commit: Commit<TNode>,
+    columns: GraphColumns<TNode>,
+  ): Commit<TNode> {
     const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
-    const column = this.getColumn(commit.branchToDisplay);
+    const column = columns.get(commit.branchToDisplay);
 
     switch (this.orientation) {
       default:
@@ -526,8 +507,11 @@ export class GitgraphCore<TNode = SVGElement> {
    *
    * @param commit One commit
    */
-  private setDefaultColor(commit: Commit<TNode>): Commit<TNode> {
-    const column = this.getColumn(commit.branchToDisplay);
+  private setDefaultColor(
+    commit: Commit<TNode>,
+    columns: GraphColumns<TNode>,
+  ): Commit<TNode> {
+    const column = columns.get(commit.branchToDisplay);
     const defaultColor = this.template.colors[
       column % this.template.colors.length
     ];
