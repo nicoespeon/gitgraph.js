@@ -29,6 +29,7 @@
   "typings": "./lib/index.d.ts",
   "scripts": {
     "watch": "tsc -w",
+    "test": "jest",
     "build": "run-s build:*",
     "build:clear": "rimraf ./lib",
     "build:tsc": "tsc",
@@ -54,5 +55,12 @@
   },
   "browser": {
     "joi": "joi-browser"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$"
   }
 }
