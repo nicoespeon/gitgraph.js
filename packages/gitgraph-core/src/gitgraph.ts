@@ -1,5 +1,4 @@
 import Branch, {
-  BranchOptions,
   BranchCommitDefaultOptions,
   DELETED_BRANCH_NAME,
   createDeletedBranch,
@@ -94,7 +93,7 @@ export class GitgraphCore<TNode = SVGElement> {
     this.template = getTemplate(options.template);
 
     // Set a default `master` branch
-    this.currentBranch = this.branch("master");
+    this.currentBranch = this.getUserApi().branch("master");
 
     // Set all options with default values
     this.orientation = options.orientation;
@@ -157,43 +156,6 @@ export class GitgraphCore<TNode = SVGElement> {
    */
   public getUserApi(): GitgraphUserApi<TNode> {
     return new GitgraphUserApi(this, () => this.next());
-  }
-
-  // ===
-  // 👆 Public methods above are for rendering libs.
-  // 👇 Public methods below are for the end-user.
-  // ===
-
-  /**
-   * Create a new branch. (as `git branch`)
-   *
-   * @param options options of the branch
-   */
-  public branch(options: GitgraphBranchOptions<TNode>): Branch<TNode>;
-  /**
-   * Create a new branch. (as `git branch`)
-   *
-   * @param name name of the created branch
-   */
-  public branch(name: string): Branch<TNode>;
-  public branch(args: any): Branch<TNode> {
-    const parentCommitHash = this.refs.getCommit("HEAD");
-    let options: BranchOptions<TNode> = {
-      gitgraph: this,
-      name: "",
-      parentCommitHash,
-      style: this.template.branch,
-      onGraphUpdate: () => this.next(),
-    };
-    if (typeof args === "string") {
-      options.name = args;
-    } else {
-      options = { ...options, ...args };
-    }
-    const branch = new Branch<TNode>(options);
-    this.branches.set(branch.name, branch);
-
-    return branch;
   }
 
   /**

@@ -20,7 +20,8 @@ describe("Gitgraph.getRenderedData.tags", () => {
   });
 
   it("should tag the last commit of the branch", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     const dev = gitgraph
@@ -32,6 +33,6 @@ describe("Gitgraph.getRenderedData.tags", () => {
     master.commit("three");
     dev.commit("four");
 
-    expect(gitgraph.tags.getCommit("this-one")).toEqual("two-tagged-hash");
+    expect(core.tags.getCommit("this-one")).toEqual("two-tagged-hash");
   });
 });

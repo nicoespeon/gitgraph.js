@@ -2,7 +2,8 @@ import { GitgraphCore } from "../index";
 
 describe("Gitgraph.getRenderedData.branches", () => {
   it("should deal with one branch (no merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -11,7 +12,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
     master.commit("four");
     dev.commit("five");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -38,7 +39,8 @@ describe("Gitgraph.getRenderedData.branches", () => {
   });
 
   it("should deal with one branch (with merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -48,7 +50,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -79,7 +81,8 @@ describe("Gitgraph.getRenderedData.branches", () => {
   });
 
   it("should calculate branch to display", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -89,7 +92,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
 
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -147,14 +150,15 @@ describe("Gitgraph.getRenderedData.branches", () => {
 
   describe("commits on branches", () => {
     it("should have master on commit two", () => {
-      const gitgraph = new GitgraphCore();
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
       const dev = gitgraph.branch("develop");
       dev.commit("three");
 
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
 
       expect(commits).toMatchObject([
         { subject: "one", refs: [] },
@@ -164,7 +168,8 @@ describe("Gitgraph.getRenderedData.branches", () => {
     });
 
     it("should have master and HEAD on commit four", () => {
-      const gitgraph = new GitgraphCore();
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit("one").commit("two");
@@ -172,7 +177,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
       dev.commit("three");
       master.commit("four");
 
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
 
       expect(commits).toMatchObject([
         { subject: "one", refs: [] },

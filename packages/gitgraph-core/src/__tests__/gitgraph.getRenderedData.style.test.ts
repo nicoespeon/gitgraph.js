@@ -23,23 +23,25 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should have a merge style with the defaultCommitOptions", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .branch({
         commitDefaultOptions: { style: { message: { color: "green" } } },
       } as BranchOptions)
       .commit();
 
-    const { commits } = gitgraph.getRenderedData();
-    const [commit] = commits;
-
+    const { commits } = core.getRenderedData();
     const expectedStyle = createExpectedStyle();
     expectedStyle.message.color = "green";
-    expect(commit.style).toEqual(expectedStyle);
+    expect(commits[0].style).toEqual(expectedStyle);
   });
 
   it("should have a merge style with the commit", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .branch({
         commitDefaultOptions: { style: { message: { color: "green" } } },
@@ -48,17 +50,17 @@ describe("Gitgraph.getRenderedData.style", () => {
         style: { message: { display: false } },
       } as GitgraphCommitOptions);
 
-    const { commits } = gitgraph.getRenderedData();
-    const [commit] = commits;
-
+    const { commits } = core.getRenderedData();
     const expectedStyle = createExpectedStyle();
     expectedStyle.message.color = "green";
     expectedStyle.message.display = false;
-    expect(commit.style).toEqual(expectedStyle);
+    expect(commits[0].style).toEqual(expectedStyle);
   });
 
   it("should have the color depending of the branch (metro theme)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph.branch("master").commit("one");
     gitgraph.branch("dev").commit("two");
     gitgraph.branch("feat1").commit("three");
@@ -66,8 +68,7 @@ describe("Gitgraph.getRenderedData.style", () => {
     gitgraph.branch("feat3").commit("five");
 
     const { colors } = metroTemplate;
-    const { commits } = gitgraph.getRenderedData();
-
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "one",
@@ -113,9 +114,11 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should have the color depending of the branch (blackarrow theme)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       template: TemplateName.BlackArrow,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph.branch("master").commit("one");
     gitgraph.branch("dev").commit("two");
     gitgraph.branch("feat1").commit("three");
@@ -124,8 +127,7 @@ describe("Gitgraph.getRenderedData.style", () => {
     gitgraph.branch("feat4").commit("six");
 
     const { colors } = blackArrowTemplate;
-    const { commits } = gitgraph.getRenderedData();
-
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "one",
@@ -217,9 +219,10 @@ describe("Gitgraph.getRenderedData.style", () => {
   describe("merge with fast-forward", () => {
     it("should have the same color for all commits after fast-forward", () => {
       const { colors } = metroTemplate;
-      const gitgraph = new GitgraphCore({
+      const core = new GitgraphCore({
         template: TemplateName.Metro,
       });
+      const gitgraph = core.getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit("one");
@@ -228,10 +231,10 @@ describe("Gitgraph.getRenderedData.style", () => {
       develop.commit("two").commit("three");
 
       // Trigger `getRenderedData()` before merge to test for side-effects.
-      gitgraph.getRenderedData();
+      core.getRenderedData();
       master.merge({ branch: develop, fastForward: true });
 
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
 
       const expectedStyle = {
         color: colors[0],
@@ -256,9 +259,10 @@ describe("Gitgraph.getRenderedData.style", () => {
 
     it("should have the correct color for branches after fast-forward", () => {
       const { colors } = metroTemplate;
-      const gitgraph = new GitgraphCore({
+      const core = new GitgraphCore({
         template: TemplateName.Metro,
       });
+      const gitgraph = core.getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit();
@@ -267,13 +271,13 @@ describe("Gitgraph.getRenderedData.style", () => {
       feat1.commit();
 
       // Trigger `getRenderedData()` before merge to test for side-effects.
-      gitgraph.getRenderedData();
+      core.getRenderedData();
       master.merge({ branch: feat1, fastForward: true });
 
       const feat2 = gitgraph.branch("feat2");
       feat2.commit("New branch");
 
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
 
       const feat2Commit = commits[commits.length - 1];
       expect(feat2Commit.subject).toBe("New branch");

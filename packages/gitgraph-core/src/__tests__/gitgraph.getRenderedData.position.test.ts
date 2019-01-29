@@ -128,7 +128,8 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal one branch (no merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -137,7 +138,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     master.commit("four");
     dev.commit("five");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -169,7 +170,8 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with two branches (no merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -180,7 +182,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     const feat = gitgraph.branch("feat");
     feat.commit("six");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -217,7 +219,8 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with one branch (with merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -227,7 +230,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -264,7 +267,8 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with one branch (with fast-forward merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -273,7 +277,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.commit("three");
     master.merge({ branch: dev, fastForward: true });
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -295,7 +299,8 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with one branch (with impossible fast-forward merge)", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -305,7 +310,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     master.commit("four"); // Prevent fast-forward
     master.merge({ branch: dev, fastForward: true });
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -337,9 +342,10 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with one branch (with merge) (vertical-reverse)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.VerticalReverse,
     });
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -349,7 +355,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -386,9 +392,10 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with one branch (with merge) (horizontal)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.Horizontal,
     });
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -398,7 +405,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -435,9 +442,10 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with one branch (with merge) (horizontal-reverse)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.HorizontalReverse,
     });
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -447,7 +455,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -484,7 +492,8 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with complex case", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -503,7 +512,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.merge(feat);
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -565,11 +574,12 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with the compact mode (simple case)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       mode: Mode.Compact,
       // Orientate the graph from top to bottom to simplify tests.
       orientation: Orientation.VerticalReverse,
     });
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph
       .branch("master")
@@ -590,7 +600,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     master.commit("seven").commit("eight");
     master.merge(feat2);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -652,9 +662,10 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with the compact mode (complex case)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       mode: Mode.Compact,
     });
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -673,7 +684,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     dev.merge(feat);
     master.merge(dev);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {

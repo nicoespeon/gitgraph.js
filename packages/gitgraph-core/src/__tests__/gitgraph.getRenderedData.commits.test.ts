@@ -2,7 +2,8 @@ import { GitgraphCore } from "../index";
 
 describe("Gitgraph.getRenderedData.commits", () => {
   it("should use a default message on merge", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one");
@@ -11,7 +12,7 @@ describe("Gitgraph.getRenderedData.commits", () => {
     develop.commit("two");
     master.merge(develop);
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       { subject: "one" },
@@ -21,7 +22,8 @@ describe("Gitgraph.getRenderedData.commits", () => {
   });
 
   it("should accept a custom message on merge", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one");
@@ -30,7 +32,7 @@ describe("Gitgraph.getRenderedData.commits", () => {
     develop.commit("two");
     master.merge(develop, "Release a new feature");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       { subject: "one" },

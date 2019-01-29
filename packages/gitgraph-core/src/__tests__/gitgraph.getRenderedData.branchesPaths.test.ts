@@ -6,13 +6,10 @@ import {
 } from "../index";
 
 describe("Gitgraph.getRenderedData.branchesPaths", () => {
-  let gitgraph: GitgraphCore;
-
-  beforeEach(() => {
-    gitgraph = new GitgraphCore();
-  });
-
   it("should generate branches paths for a simple case", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
     const dev = gitgraph.branch("dev");
@@ -21,7 +18,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -45,6 +42,9 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should generate branches paths if I'm waiting to commit on dev", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
     const dev = gitgraph.branch("dev");
@@ -53,7 +53,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     dev.commit("five");
     master.merge(dev);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -77,13 +77,16 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should deal with the second commit", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph.branch("master").commit("Initial commit");
     gitgraph
       .branch("dev")
       .commit()
       .commit();
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -98,6 +101,9 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should stop on last commit", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
     const feat = gitgraph.branch("feat");
@@ -106,7 +112,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     develop.commit("six");
     master.merge(develop);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -134,13 +140,16 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should deal with a commit after a merge", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
     master.merge(dev);
     master.commit();
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -166,6 +175,9 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should deal with 3 branches (with multiple merges in master)", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master");
     master.commit().commit();
 
@@ -183,7 +195,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     master.commit().commit();
     master.merge(feat2);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -233,6 +245,9 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should deal with 3 branches (with multiple merges)", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master");
     master.commit().commit();
 
@@ -248,7 +263,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     master.commit().commit();
     master.merge(develop);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -294,14 +309,16 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should deal with horizontal orientation", () => {
-    gitgraph = new GitgraphCore({ orientation: Orientation.Horizontal });
+    const core = new GitgraphCore({ orientation: Orientation.Horizontal });
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
     dev.commit();
     master.merge(dev);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -328,16 +345,18 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should deal with horizontal-reverse orientation", () => {
-    gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.HorizontalReverse,
     });
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master").commit();
     const dev = gitgraph.branch("dev").commit();
     master.commit();
     dev.commit();
     master.merge(dev);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     // We can't use `toMatchObject` here due to circular ref inside Branch.
     const result = Array.from(branchesPaths);
@@ -364,13 +383,16 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should have the correct computed color for each branch", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph.branch("master").commit();
     gitgraph.branch("dev").commit();
     gitgraph.branch("feat1").commit();
     gitgraph.branch("feat2").commit();
     gitgraph.branch("feat3").commit();
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     const branches = Array.from(branchesPaths.keys());
     expect(branches[0].computedColor).toBe(metroTemplate.colors[0]);
@@ -381,6 +403,9 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should have the correct computed color for branch with a specific color set", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const master = gitgraph.branch("master").commit("Initial commit");
     const develop = gitgraph.branch("dev");
     const feat = gitgraph.branch({ name: "feat", style: { color: "red" } });
@@ -389,7 +414,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     develop.commit("six");
     master.merge(develop);
 
-    const { branchesPaths } = gitgraph.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     const result = Array.from(branchesPaths);
     expect(result[1][0].name).toBe("feat");
@@ -397,18 +422,20 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   });
 
   it("should have the correct computed color for BlackArrow template", () => {
-    const gitgraphBlackArrow = new GitgraphCore({
+    const core = new GitgraphCore({
       template: TemplateName.BlackArrow,
     });
-    const master = gitgraphBlackArrow.branch("master").commit("Initial commit");
-    const develop = gitgraphBlackArrow.branch("dev");
-    const feat = gitgraphBlackArrow.branch("feat");
+    const gitgraph = core.getUserApi();
+
+    const master = gitgraph.branch("master").commit("Initial commit");
+    const develop = gitgraph.branch("dev");
+    const feat = gitgraph.branch("feat");
     feat.commit();
     master.commit("five");
     develop.commit("six");
     master.merge(develop);
 
-    const { branchesPaths } = gitgraphBlackArrow.getRenderedData();
+    const { branchesPaths } = core.getRenderedData();
 
     const result = Array.from(branchesPaths);
     expect(result[1][0].name).toBe("feat");
