@@ -20,6 +20,7 @@ import Refs from "./refs";
 import BranchesPathsCalculator, { BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
+import { GitgraphUserApi } from "./gitgraph-user-api";
 
 export enum Mode {
   Compact = "compact",
@@ -120,7 +121,6 @@ export class GitgraphCore<TNode = SVGElement> {
 
   /**
    * Return all data required for rendering.
-   *
    * Rendering libraries will use this to implement their rendering strategy.
    */
   public getRenderedData(): RenderedData<TNode> {
@@ -151,6 +151,14 @@ export class GitgraphCore<TNode = SVGElement> {
       const index = this.listeners.indexOf(listener);
       this.listeners.splice(index, 1);
     };
+  }
+
+  /**
+   * Return the API to manipulate Gitgraph as a user.
+   * Rendering library should give that API to their consumer.
+   */
+  public getUserApi(): GitgraphUserApi<TNode> {
+    return new GitgraphUserApi(this, () => this.next());
   }
 
   // ===

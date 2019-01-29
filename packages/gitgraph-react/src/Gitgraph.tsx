@@ -9,6 +9,7 @@ import {
   Mode,
   Orientation,
   toSvgPath,
+  GitgraphUserApi,
 } from "gitgraph-core/lib/index";
 import { arrowSvgPath } from "gitgraph-core/lib/utils";
 import { Tooltip } from "./Tooltip";
@@ -16,7 +17,7 @@ import { Dot } from "./Dot";
 
 export interface GitgraphProps {
   options?: GitgraphOptions;
-  children: (gitgraph: GitgraphCore<React.ReactElement<SVGElement>>) => void;
+  children: (gitgraph: GitgraphUserApi<React.ReactElement<SVGElement>>) => void;
 }
 
 export interface GitgraphState {
@@ -72,7 +73,7 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   public componentDidMount() {
-    this.props.children(this.gitgraph);
+    this.props.children(this.gitgraph.getUserApi());
   }
 
   public componentDidUpdate() {

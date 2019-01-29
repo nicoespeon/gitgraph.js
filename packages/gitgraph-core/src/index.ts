@@ -1,4 +1,5 @@
 export * from "./gitgraph";
+export * from "./gitgraph-user-api";
 export * from "./branch";
 export * from "./commit";
 export * from "./refs";
