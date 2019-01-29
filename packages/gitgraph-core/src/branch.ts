@@ -54,9 +54,6 @@ interface BranchMergeOptions<TNode> {
 
 export const DELETED_BRANCH_NAME = "";
 
-/**
- * Branch
- */
 export class Branch<TNode = SVGElement> {
   public name: BranchOptions["name"];
   public style: BranchStyle;
@@ -67,10 +64,6 @@ export class Branch<TNode = SVGElement> {
   private parentCommitHash: BranchOptions["parentCommitHash"];
   private onGraphUpdate: () => void;
 
-  /**
-   * Branch constructor
-   * @param options options
-   */
   constructor(options: BranchOptions<TNode>) {
     this.gitgraph = options.gitgraph;
     this.name = options.name;
