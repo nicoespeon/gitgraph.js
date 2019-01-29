@@ -176,7 +176,7 @@ export class Branch<TNode = SVGElement> {
    * @param name Name of the tag
    */
   public tag(name: string): Branch<TNode> {
-    this.gitgraph.tag(name, this.name);
+    this.gitgraph.getUserApi().tag(name, this.name);
     return this;
   }
 

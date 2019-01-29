@@ -197,50 +197,6 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Tag a specific commit. (as `git tag`)
-   *
-   * @param name Name of the tag
-   * @param ref Commit or branch name or commit hash
-   */
-  public tag(
-    name: string,
-    ref?: Commit<TNode> | Commit["hash"] | Branch["name"],
-  ): GitgraphCore<TNode> {
-    if (!ref) {
-      const head = this.refs.getCommit("HEAD");
-      if (!head) return this;
-
-      ref = head;
-    }
-
-    if (typeof ref !== "string") {
-      // `ref` is a `Commit`
-      this.tags.set(name, ref.hash);
-      this.next();
-      return this;
-    }
-
-    let commitHash;
-    if (this.refs.hasCommit(ref)) {
-      // `ref` is a `Commit["hash"]`
-      commitHash = ref;
-    }
-
-    if (this.refs.hasName(ref)) {
-      // `ref` is a `Branch["name"]`
-      commitHash = this.refs.getCommit(ref);
-    }
-
-    if (!commitHash) {
-      throw new Error(`The ref "${ref}" does not exist`);
-    }
-
-    this.tags.set(name, commitHash);
-    this.next();
-    return this;
-  }
-
-  /**
    * Tell each listener something new happened.
    * E.g. a rendering library will know it needs to re-render the graph.
    */
