@@ -197,19 +197,6 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Clear everything. (as `rm -rf .git && git init`)
-   */
-  public clear(): GitgraphCore<TNode> {
-    this.refs = new Refs();
-    this.tags = new Refs();
-    this.commits = [];
-    this.branches = new Map();
-    this.currentBranch = this.branch("master");
-    this.next();
-    return this;
-  }
-
-  /**
    * Tag a specific commit. (as `git tag`)
    *
    * @param name Name of the tag

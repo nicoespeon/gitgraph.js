@@ -2,7 +2,8 @@ import { GitgraphCore } from "../index";
 
 describe("Gitgraph.clear", () => {
   it("should clear everything", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");
     master.commit("one").commit("two");
@@ -13,24 +14,29 @@ describe("Gitgraph.clear", () => {
 
     gitgraph.clear();
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toEqual([]);
-    expect(gitgraph.refs.getAllNames()).toEqual([]);
-    expect(gitgraph.tags.getAllNames()).toEqual([]);
+    expect(core.refs.getAllNames()).toEqual([]);
+    expect(core.tags.getAllNames()).toEqual([]);
   });
 
   it("should reset the currentBranch", () => {
-    const gitgraph = new GitgraphCore();
-    const dev = gitgraph.branch("dev").checkout();
-    expect(gitgraph.currentBranch.name).toBe("dev");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph.branch("dev").checkout();
+    expect(core.currentBranch.name).toBe("dev");
 
     gitgraph.clear();
-    expect(gitgraph.currentBranch.name).toBe("master");
+
+    expect(core.currentBranch.name).toBe("master");
   });
 
   it("should be able to add normally a commit after a clear", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .branch("dev")
       .commit("one")
@@ -41,7 +47,7 @@ describe("Gitgraph.clear", () => {
       .commit("three")
       .commit("four");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       { subject: "three", branches: ["feat"] },
