@@ -60,9 +60,9 @@ export const DELETED_BRANCH_NAME = "";
 export class Branch<TNode = SVGElement> {
   public name: BranchOptions["name"];
   public style: BranchStyle;
-  public commitDefaultOptions: BranchCommitDefaultOptions<TNode>;
   public computedColor?: BranchStyle["color"];
 
+  private commitDefaultOptions: BranchCommitDefaultOptions<TNode>;
   private gitgraph: GitgraphCore<TNode>;
   private parentCommitHash: BranchOptions["parentCommitHash"];
   private onGraphUpdate: () => void;
