@@ -1,15 +1,12 @@
 import { GitgraphCore } from "../index";
 
 describe("Gitgraph.subscribe", () => {
-  let gitgraph: GitgraphCore;
-
-  beforeEach(() => {
-    gitgraph = new GitgraphCore();
-  });
-
   it("should call onUpdate on each commit", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const onUpdate = jest.fn();
-    gitgraph.subscribe(onUpdate);
+    core.subscribe(onUpdate);
 
     gitgraph
       .commit()
@@ -20,8 +17,11 @@ describe("Gitgraph.subscribe", () => {
   });
 
   it("should call render on merge", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const onUpdate = jest.fn();
-    gitgraph.subscribe(onUpdate);
+    core.subscribe(onUpdate);
 
     const master = gitgraph
       .branch("master")
@@ -38,8 +38,11 @@ describe("Gitgraph.subscribe", () => {
   });
 
   it("should be able to unsubscribe", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     const onUpdate = jest.fn();
-    const unsubscribe = gitgraph.subscribe(onUpdate);
+    const unsubscribe = core.subscribe(onUpdate);
 
     const master = gitgraph
       .branch("master")

@@ -11,10 +11,12 @@ import {
 
 describe("Gitgraph.getRenderedData.style", () => {
   it("should have the style of the template by default", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph.commit();
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style).toEqual(createExpectedStyle());
@@ -171,36 +173,42 @@ describe("Gitgraph.getRenderedData.style", () => {
   });
 
   it("should hide commit message if orientation is horizontal", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.Horizontal,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph.commit();
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style.message.display).toBe(false);
   });
 
   it("should hide commit message if orientation is horizontal-reverse", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.HorizontalReverse,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph.commit();
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style.message.display).toBe(false);
   });
 
   it("should hide commit message if mode is compact", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       mode: Mode.Compact,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph.commit();
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
     const [commit] = commits;
 
     expect(commit.style.message.display).toBe(false);

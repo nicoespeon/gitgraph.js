@@ -2,13 +2,15 @@ import { GitgraphCore, Orientation, Mode } from "../index";
 
 describe("Gitgraph.getRenderedData.position", () => {
   it("should deal with 3 straight commits", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .commit("one")
       .commit("two")
       .commit("three");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -30,15 +32,17 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with 3 straight commits (reverse)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.VerticalReverse,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .commit("one")
       .commit("two")
       .commit("three");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -60,15 +64,17 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with 3 straight commits (horizontal)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.Horizontal,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .commit("one")
       .commit("two")
       .commit("three");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {
@@ -90,15 +96,17 @@ describe("Gitgraph.getRenderedData.position", () => {
   });
 
   it("should deal with 3 straight commits (horizontal-reverse)", () => {
-    const gitgraph = new GitgraphCore({
+    const core = new GitgraphCore({
       orientation: Orientation.HorizontalReverse,
     });
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .commit("one")
       .commit("two")
       .commit("three");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       {

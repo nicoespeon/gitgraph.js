@@ -2,13 +2,15 @@ import { GitgraphCore } from "../index";
 
 describe("Gitgraph.getRenderedData.tags", () => {
   it("should tag a commit", () => {
-    const gitgraph = new GitgraphCore();
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
     gitgraph
       .commit("one")
       .commit({ subject: "with tag", tag: "1.0.0" })
       .commit("three");
 
-    const { commits } = gitgraph.getRenderedData();
+    const { commits } = core.getRenderedData();
 
     expect(commits).toMatchObject([
       { subject: "one" },

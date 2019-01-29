@@ -119,7 +119,8 @@ describe("Gitgraph.getRenderedData.branches", () => {
     let two, three;
 
     beforeEach(() => {
-      const gitgraph = new GitgraphCore();
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
 
       gitgraph
         .commit()
@@ -127,7 +128,7 @@ describe("Gitgraph.getRenderedData.branches", () => {
         .branch("develop")
         .commit();
 
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
       [, two, three] = commits;
     });
 

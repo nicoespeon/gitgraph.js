@@ -5,7 +5,8 @@ describe("Branch", () => {
 
   describe("merge with string parameter", () => {
     beforeEach(() => {
-      const gitgraph = new GitgraphCore();
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit("master 1"); // 0
@@ -19,7 +20,7 @@ describe("Branch", () => {
 
       master.merge("develop"); // 6 (merge with string)
       master.commit("master 4"); // 7
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
       log = commits;
     });
 
@@ -34,7 +35,7 @@ describe("Branch", () => {
     });
 
     it("should throw if the branch doesn't exist", () => {
-      const gitgraph = new GitgraphCore();
+      const gitgraph = new GitgraphCore().getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit("master 1");
@@ -52,7 +53,8 @@ describe("Branch", () => {
 
   describe("merge with branch parameter", () => {
     beforeEach(() => {
-      const gitgraph = new GitgraphCore();
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
 
       const master = gitgraph.branch("master");
       master.commit("master 1");
@@ -66,7 +68,7 @@ describe("Branch", () => {
 
       master.merge(develop); // <- branch
       master.commit("master 4");
-      const { commits } = gitgraph.getRenderedData();
+      const { commits } = core.getRenderedData();
       log = commits;
     });
 

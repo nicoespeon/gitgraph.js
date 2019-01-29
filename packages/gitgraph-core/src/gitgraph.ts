@@ -167,23 +167,6 @@ export class GitgraphCore<TNode = SVGElement> {
   // ===
 
   /**
-   * Add a new commit in the history (as `git commit`).
-   *
-   * @param subject Commit subject
-   */
-  public commit(subject?: string): GitgraphCore<TNode>;
-  /**
-   * Add a new commit in the history (as `git commit`).
-   *
-   * @param options Options of the commit
-   */
-  public commit(options?: GitgraphCommitOptions<TNode>): GitgraphCore<TNode>;
-  public commit(options?: any): GitgraphCore<TNode> {
-    this.currentBranch.commit(options);
-    return this;
-  }
-
-  /**
    * Create a new branch. (as `git branch`)
    *
    * @param options options of the branch
