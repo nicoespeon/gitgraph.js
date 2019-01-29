@@ -117,17 +117,11 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Return all data required for rendering.
-   * Rendering libraries will use this to implement their rendering strategy.
+   * Return the API to manipulate Gitgraph as a user.
+   * Rendering library should give that API to their consumer.
    */
-  public getRenderedData(): RenderedData<TNode> {
-    const commits = this.computeRenderedCommits();
-    const branchesPaths = this.computeRenderedBranchesPaths(commits);
-    const commitMessagesX = this.computeCommitMessagesX(branchesPaths);
-
-    this.computeBranchesColor(branchesPaths);
-
-    return { commits, branchesPaths, commitMessagesX };
+  public getUserApi(): GitgraphUserApi<TNode> {
+    return new GitgraphUserApi(this, () => this.next());
   }
 
   /**
@@ -151,19 +145,17 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Return the API to manipulate Gitgraph as a user.
-   * Rendering library should give that API to their consumer.
+   * Return all data required for rendering.
+   * Rendering libraries will use this to implement their rendering strategy.
    */
-  public getUserApi(): GitgraphUserApi<TNode> {
-    return new GitgraphUserApi(this, () => this.next());
-  }
+  public getRenderedData(): RenderedData<TNode> {
+    const commits = this.computeRenderedCommits();
+    const branchesPaths = this.computeRenderedBranchesPaths(commits);
+    const commitMessagesX = this.computeCommitMessagesX(branchesPaths);
 
-  /**
-   * Tell each listener something new happened.
-   * E.g. a rendering library will know it needs to re-render the graph.
-   */
-  private next() {
-    this.listeners.forEach((listener) => listener());
+    this.computeBranchesColor(branchesPaths);
+
+    return { commits, branchesPaths, commitMessagesX };
   }
 
   /**
@@ -336,6 +328,14 @@ export class GitgraphCore<TNode = SVGElement> {
     ];
 
     return commit.withDefaultColor(defaultColor);
+  }
+
+  /**
+   * Tell each listener something new happened.
+   * E.g. a rendering library will know it needs to re-render the graph.
+   */
+  private next() {
+    this.listeners.forEach((listener) => listener());
   }
 }
 
