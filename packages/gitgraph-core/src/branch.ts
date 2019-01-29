@@ -101,6 +101,7 @@ export class Branch<TNode = SVGElement> {
 
     this.commitWithParents(options, []);
 
+    this.onGraphUpdate();
     return this;
   }
 
@@ -157,6 +158,7 @@ export class Branch<TNode = SVGElement> {
       );
     }
 
+    this.onGraphUpdate();
     return this;
   }
 
@@ -210,7 +212,6 @@ export class Branch<TNode = SVGElement> {
 
   private fastForwardTo(commitHash: Commit["hash"]): void {
     this.gitgraph.refs.set(this.name, commitHash);
-    this.onGraphUpdate();
   }
 
   private commitWithParents(
@@ -253,8 +254,6 @@ export class Branch<TNode = SVGElement> {
 
     // Add a tag to the commit if `option.tag` is provide
     if (tag) this.tag(tag);
-
-    this.onGraphUpdate();
   }
 
   /**
