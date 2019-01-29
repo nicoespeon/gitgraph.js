@@ -6,19 +6,19 @@ import { Template } from "../template";
 describe("Gitgraph.import", () => {
   describe("on invalid input", () => {
     it("should throw if input is not an array", () => {
-      const gitgraph = new GitgraphCore();
+      const gitgraph = new GitgraphCore().getUserApi();
 
       expect(() => gitgraph.import({})).toThrow();
     });
 
     it("should throw if commits are not objects", () => {
-      const gitgraph = new GitgraphCore();
+      const gitgraph = new GitgraphCore().getUserApi();
 
       expect(() => gitgraph.import(["invalid-commit"])).toThrow();
     });
 
     it("should throw if commits refs are not array", () => {
-      const gitgraph = new GitgraphCore();
+      const gitgraph = new GitgraphCore().getUserApi();
 
       expect(() => gitgraph.import([{ refs: "invalid-refs" }])).toThrow();
     });
@@ -26,11 +26,12 @@ describe("Gitgraph.import", () => {
 
   it("should render two commits from git2json", () => {
     const data = getImportData("git2json-two-commits");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { commits } = gitgraph.getRenderedData();
 
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "first",
@@ -47,11 +48,12 @@ describe("Gitgraph.import", () => {
 
   it("should render two branches from git2json", () => {
     const data = getImportData("git2json-two-branches");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { commits } = gitgraph.getRenderedData();
 
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "first",
@@ -73,14 +75,15 @@ describe("Gitgraph.import", () => {
 
   it("should compute style for two branches", () => {
     const data = getImportData("git2json-two-branches");
-
     const template = new Template({
       colors: ["red", "green", "blue"],
     });
-    const gitgraph = new GitgraphCore({ template });
-    gitgraph.import(data);
-    const { commits } = gitgraph.getRenderedData();
+    const core = new GitgraphCore({ template });
+    const gitgraph = core.getUserApi();
 
+    gitgraph.import(data);
+
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "first",
@@ -105,11 +108,12 @@ describe("Gitgraph.import", () => {
 
   it("should compute tags", () => {
     const data = getImportData("git2json-tags");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { commits } = gitgraph.getRenderedData();
 
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "first",
@@ -124,11 +128,12 @@ describe("Gitgraph.import", () => {
 
   it("should not put tags in refs", () => {
     const data = getImportData("git2json-tags");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { commits } = gitgraph.getRenderedData();
 
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "first",
@@ -143,11 +148,12 @@ describe("Gitgraph.import", () => {
 
   it("should handle deleted branches", () => {
     const data = getImportData("git2json-deleted-branch");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { commits } = gitgraph.getRenderedData();
 
+    const { commits } = core.getRenderedData();
     expect(commits).toMatchObject([
       {
         subject: "Initial commit",
@@ -174,22 +180,24 @@ describe("Gitgraph.import", () => {
 
   it("should compute correct branches paths for deleted branches", () => {
     const data = getImportData("git2json-deleted-branch");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { branchesPaths } = gitgraph.getRenderedData();
 
+    const { branchesPaths } = core.getRenderedData();
     const paths = Array.from(branchesPaths);
     expect(paths.length).toBe(2);
   });
 
   it("should compute merges in branches paths for deleted branches", () => {
     const data = getImportData("git2json-deleted-branch");
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
 
-    const gitgraph = new GitgraphCore();
     gitgraph.import(data);
-    const { branchesPaths } = gitgraph.getRenderedData();
 
+    const { branchesPaths } = core.getRenderedData();
     const paths = Array.from(branchesPaths);
     expect(paths[0][1][0]).toEqual([
       { x: 0, y: 320 },

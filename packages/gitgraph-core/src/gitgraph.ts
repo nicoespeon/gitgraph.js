@@ -1,12 +1,10 @@
-import * as yup from "yup";
-
 import Branch, {
   BranchOptions,
   BranchCommitDefaultOptions,
   DELETED_BRANCH_NAME,
   createDeletedBranch,
 } from "./branch";
-import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
+import Commit, { CommitRenderOptions } from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
 import {
@@ -252,81 +250,6 @@ export class GitgraphCore<TNode = SVGElement> {
 
     this.tags.set(name, commitHash);
     this.next();
-    return this;
-  }
-
-  /**
-   * Import a JSON.
-   *
-   * Data can't be typed since it comes from a JSON.
-   * We validate input format and throw early if something is invalid.
-   *
-   * @param data JSON from `git2json` output
-   */
-  public import(data: any) {
-    // Validate `data` format.
-    const schema = yup.array().of(
-      yup.object({
-        refs: yup.array().of(yup.string()),
-        hash: yup.string(),
-        parents: yup.array().of(yup.string()),
-        author: yup.object({
-          name: yup.string(),
-          email: yup.string(),
-        }),
-        subject: yup.string(),
-        body: yup.string(),
-      }),
-    );
-
-    const commitOptionsList: Array<
-      CommitOptions<TNode> & { refs: string[] }
-    > = schema
-      .validateSync(data)
-      .map((options) => ({
-        ...options,
-        style: { ...this.template.commit },
-        author: `${options.author.name} <${options.author.email}>`,
-      }))
-      // Git2json outputs is reverse-chronological.
-      // We need to commit it chronological order.
-      .reverse();
-
-    // Use validated `value`.
-    this.clear();
-
-    this.commits = commitOptionsList.map((options) => new Commit(options));
-
-    // Create tags & refs.
-    commitOptionsList.forEach(({ refs, hash }) => {
-      if (!refs) return;
-      if (!hash) return;
-
-      const TAG_PREFIX = "tag: ";
-
-      const tags = refs
-        .map((ref) => ref.split(TAG_PREFIX))
-        .map(([_, tag]) => tag)
-        .filter((tag) => typeof tag === "string");
-      tags.forEach((tag) => this.tags.set(tag, hash));
-
-      refs
-        .filter((ref) => !ref.startsWith(TAG_PREFIX))
-        .forEach((ref) => this.refs.set(ref, hash));
-    });
-
-    // Create branches.
-    this.commits
-      .map((commit) => this.withBranches(commit))
-      .reduce((mem, commit) => {
-        if (!commit.branches) return mem;
-        commit.branches.forEach((branch) => mem.add(branch));
-        return mem;
-      }, new Set())
-      .forEach((branch) => this.branch(branch));
-
-    this.next();
-
     return this;
   }
 
