@@ -31,6 +31,10 @@ export interface BranchOptions<TNode = SVGElement> {
    * Default options for commits
    */
   commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;
+  /**
+   * On graph update.
+   */
+  onGraphUpdate: () => void;
 }
 
 interface BranchMergeOptions<TNode> {
@@ -61,6 +65,7 @@ export class Branch<TNode = SVGElement> {
 
   private gitgraph: GitgraphCore<TNode>;
   private parentCommitHash: BranchOptions["parentCommitHash"];
+  private onGraphUpdate: () => void;
 
   /**
    * Branch constructor
@@ -72,6 +77,7 @@ export class Branch<TNode = SVGElement> {
     this.style = options.style;
     this.parentCommitHash = options.parentCommitHash;
     this.commitDefaultOptions = options.commitDefaultOptions || { style: {} };
+    this.onGraphUpdate = options.onGraphUpdate;
   }
 
   /**
@@ -204,7 +210,7 @@ export class Branch<TNode = SVGElement> {
 
   private fastForwardTo(commitHash: Commit["hash"]): void {
     this.gitgraph.refs.set(this.name, commitHash);
-    this.gitgraph.next();
+    this.onGraphUpdate();
   }
 
   private commitWithParents(
@@ -248,8 +254,7 @@ export class Branch<TNode = SVGElement> {
     // Add a tag to the commit if `option.tag` is provide
     if (tag) this.tag(tag);
 
-    // Update the render
-    this.gitgraph.next();
+    this.onGraphUpdate();
   }
 
   /**
@@ -292,11 +297,13 @@ export default Branch;
 export function createDeletedBranch<TNode>(
   gitgraph: GitgraphCore<TNode>,
   style: BranchStyle,
+  onGraphUpdate: () => void,
 ): Branch<TNode> {
   return new Branch({
     name: DELETED_BRANCH_NAME,
     gitgraph,
     style,
+    onGraphUpdate,
   });
 }
 

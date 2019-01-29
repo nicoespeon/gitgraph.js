@@ -7,13 +7,6 @@ describe("Gitgraph.subscribe", () => {
     gitgraph = new GitgraphCore();
   });
 
-  it("should call onUpdate method on next", () => {
-    const onUpdate = jest.fn();
-    gitgraph.subscribe(onUpdate);
-    gitgraph.next();
-    expect(onUpdate.mock.calls.length).toBe(1);
-  });
-
   it("should call onUpdate on each commit", () => {
     const onUpdate = jest.fn();
     gitgraph.subscribe(onUpdate);

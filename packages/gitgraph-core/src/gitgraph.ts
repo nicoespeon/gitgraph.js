@@ -153,13 +153,6 @@ export class GitgraphCore<TNode = SVGElement> {
     };
   }
 
-  /**
-   * Called on each graph modification.
-   */
-  public next() {
-    this.listeners.forEach((listener) => listener());
-  }
-
   // ===
   // 👆 Public methods above are for rendering libs.
   // 👇 Public methods below are for the end-user.
@@ -201,6 +194,7 @@ export class GitgraphCore<TNode = SVGElement> {
       name: "",
       parentCommitHash,
       style: this.template.branch,
+      onGraphUpdate: () => this.next(),
     };
     if (typeof args === "string") {
       options.name = args;
@@ -346,6 +340,14 @@ export class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
+   * Tell each listener something new happened.
+   * E.g. a rendering library will know it needs to re-render the graph.
+   */
+  private next() {
+    this.listeners.forEach((listener) => listener());
+  }
+
+  /**
    * Return commits with data for rendering.
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
@@ -375,7 +377,7 @@ export class GitgraphCore<TNode = SVGElement> {
       this.branches,
       this.template.commit.spacing,
       this.isVertical,
-      () => createDeletedBranch(this, this.template.branch),
+      () => createDeletedBranch(this, this.template.branch, () => this.next()),
     ).execute();
   }
 
