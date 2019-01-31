@@ -1,4 +1,4 @@
-import Commit from "../commit";
+import { Commit } from "../commit";
 import { blackArrowTemplate } from "../template";
 
 describe("Commit", () => {

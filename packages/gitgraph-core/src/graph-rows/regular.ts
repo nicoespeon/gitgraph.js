@@ -1,6 +1,6 @@
 import { uniq } from "lodash";
 
-import Commit from "../commit";
+import { Commit } from "../commit";
 
 export default class RegularGraphRows<TNode> {
   protected rows = new Map<Commit["hash"], number>();

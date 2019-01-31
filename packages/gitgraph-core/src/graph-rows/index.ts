@@ -1,5 +1,5 @@
 import { Mode } from "../gitgraph";
-import Commit from "../commit";
+import { Commit } from "../commit";
 
 import CompactGraphRows from "./compact";
 import RegularGraphRows from "./regular";

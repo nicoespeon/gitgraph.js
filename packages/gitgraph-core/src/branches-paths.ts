@@ -1,4 +1,4 @@
-import Commit from "./commit";
+import { Commit } from "./commit";
 import Branch from "./branch";
 import { CommitStyleBase } from "./template";
 import { pick } from "./utils";

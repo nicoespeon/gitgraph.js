@@ -3,7 +3,7 @@ import Branch, {
   createDeletedBranch,
   BranchOptions,
 } from "./branch";
-import Commit from "./commit";
+import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
 import { Template, TemplateName, getTemplate } from "./template";

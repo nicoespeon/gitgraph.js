@@ -1,4 +1,4 @@
-import Commit from "../commit";
+import { Commit } from "../commit";
 import Refs from "../refs";
 
 const firstCommitHash: Commit["hash"] = "initialCommitHash";

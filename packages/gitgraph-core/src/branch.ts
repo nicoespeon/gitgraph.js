@@ -1,4 +1,4 @@
-import Commit, { CommitRenderOptions } from "./commit";
+import { Commit, CommitRenderOptions } from "./commit";
 import { GitgraphCore } from "./gitgraph";
 import { BranchUserApi } from "./user-api/branch-user-api";
 import { CommitStyleOptions, BranchStyle } from "./template";

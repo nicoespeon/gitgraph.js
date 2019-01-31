@@ -1,5 +1,5 @@
 import Branch from "./branch";
-import Commit from "./commit";
+import { Commit } from "./commit";
 
 export class GraphColumns<TNode> {
   private branches: Set<Branch["name"]> = new Set();

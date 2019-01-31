@@ -2,13 +2,15 @@ import { CommitStyle } from "./template";
 import Branch from "./branch";
 import Refs from "./refs";
 
-export interface CommitRenderOptions<TNode> {
+export { CommitRenderOptions, CommitOptions, Commit };
+
+interface CommitRenderOptions<TNode> {
   renderDot?: (commit: Commit<TNode>) => TNode;
   renderMessage?: (commit: Commit<TNode>, commitMessagesX: number) => TNode;
   renderTooltip?: (commit: Commit<TNode>) => TNode;
 }
 
-export interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
+interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
   author: string;
   subject: string;
   style: CommitStyle;
@@ -43,7 +45,7 @@ const getRandomHash = () =>
       .substring(3)
   ).substring(0, 40);
 
-export class Commit<TNode = SVGElement> {
+class Commit<TNode = SVGElement> {
   /**
    * Ref names
    */
@@ -284,5 +286,3 @@ export class Commit<TNode = SVGElement> {
     return commit;
   }
 }
-
-export default Commit;

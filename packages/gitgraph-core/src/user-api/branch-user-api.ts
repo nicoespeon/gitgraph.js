@@ -1,7 +1,7 @@
 import GitgraphCore, { Mode } from "../gitgraph";
 import { GitgraphCommitOptions } from "./gitgraph-user-api";
 import { CommitStyleOptions, CommitStyle } from "../template";
-import Commit from "../commit";
+import { Commit } from "../commit";
 import Branch from "../branch";
 import { withoutUndefinedKeys } from "../utils";
 
