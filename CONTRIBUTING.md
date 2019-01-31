@@ -1,79 +1,136 @@
-Contributing to gitgraph.js
-===========================
+# Contributing to Gitgraph.js
 
-Glad to hear you'd like to help us improving the library. Here's the how-to!
+🤠 Please take a moment to review this document in order to make the contribution
+process easy and effective for everyone involved.
 
-## Wanna report an issue / ask for a feature?
+Following these guidelines helps to communicate that you respect the time of
+the developers managing and developing this open source project. In return,
+they should reciprocate that respect in addressing your issue or assessing
+patches and features.
 
-Sounds nice! Please proceed as following:
+## 🕵️‍ Using the issue tracker
 
-1. **Search for existing issues.** Sometimes, other folks may have reported the
-   same issue and it'd be nice not to duplicate them.
-2. If possible, please **create an isolated and reproducible test case.** Make
-   use of [jsFiddle](jsfiddle.net) - for instance - to share your isolated test
-   cases. We won't hold it against you for feature requests, but a live [POC][]
-   is sometimes easier to catch.
-   [POC]: http://en.wikipedia.org/wiki/Proof_of_concept
-3. **Share as much information as possible.** Include browser and version,
-   version of gitgraph.js, etc. where appropriate. That can help us to reproduce
-   the bug, if so.
+The issue tracker is the preferred channel for [bug reports](#bugs), [features requests](#features) and [submitting pull requests](#pull-requests), but please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
 
-## Or wanna contribute to the code?
+<a name="bugs"></a>
 
-Github's Pull Request is a fantastic tool to contribute to the code.
+## 🐛 Bug reports
 
-Just keep in mind the following rules:
+A bug is a _demonstrable problem_ that is caused by the code in the repository.
+Good bug reports are extremely helpful - thank you!
 
-- Change must be done in `src/` files, eventually `test/` or `examples/`, that's
-  all.
-- You'd be nice not to pollute your pull request with unintended changes.
-- Pull requests should always be against the `develop` branch, never against
-  `master` nor `gh-pages`.
+Guidelines for bug reports:
 
-Once you send a Pull Request, your code will be checked with [Travis CI][] to
-tell whether you break the build or not. The Travis test should pass before we
-accept any Pull Request.
-[Travis CI]: https://travis-ci.org/nicoespeon/gitgraph.js
+1.  **Use the GitHub issue search** &mdash; check if the issue has already been
+    reported.
 
-## Check about our coding standards
+2.  **Check if the issue has been fixed** &mdash; try to reproduce it using the
+    latest `master` branch in the repository.
 
-Please follow our coding standards as best as you can to keep consistency over
-code.
+3.  **Isolate the problem** &mdash; create a [reduced test
+    case](http://css-tricks.com/reduced-test-cases/) and a live example.
 
-The [.editorconfig][] file should help you configure your IDE to do so.
-[.editorconfig]: https://github.com/nicoespeon/gitgraph.js/blob/develop/.editorconfig
+A good bug report shouldn't leave others needing to chase you up for more
+information. Please try to be as detailed as possible in your report. What is
+your environment? What steps will reproduce the issue? What browser(s) and OS
+experience the problem? What would you expect to be the outcome? All these
+details will help people to fix any potential bugs.
 
-### JS
+Example:
 
-- 2 spaces indent (no tabs)
-- Use semicolons
-- Use strict mode
-- Strings must use double-quote
+> Short and descriptive example bug report title
+>
+> A summary of the issue and the browser/OS environment in which it occurs. If
+> suitable, include the steps required to reproduce the bug.
+>
+> 1.  This is the first step
+> 2.  This is the second step
+> 3.  Further steps, etc.
+>
+> `<url>` - a link to the reduced test case
+>
+> Any other information you want to share that is relevant to the issue being
+> reported. This might include the lines of code that you have identified as
+> causing the bug, and potential solutions (and your opinions on their
+> merits).
 
-### CSS
+<a name="features"></a>
 
-- Adhere to the (default) [CSScomb](http://csscomb.com/) property order
-- Multiple-line approach (one property and value per line)
-- Always a space after a property's colon (.e.g, `display: block;` and not
-  `display:block;`)
-- End all lines with a semi-colon
-- For multiple, comma-separated selectors, place each selector on its own line
-- Attribute selectors, like `input[type="text"]`, should always wrap the
-  attribute's value in double quotes, for consistency and safety (see [this blog
-  post on unquoted attribute values][blog] that can lead to XSS attacks).
-  [blog]: http://mathiasbynens.be/notes/unquoted-attribute-values
+## 🙋‍ Feature requests
 
-### HTML
+Feature requests are welcome. But take a moment to find out whether your idea
+fits with the scope and aims of the project. It's up to _you_ to make a strong
+case to convince the project's developers of the merits of this feature. Please
+provide as much detail and context as possible.
 
-- Two spaces for indentation, never tabs
-- Double quotes only, never single quotes
-- Always use proper indentation
-- Use tags and elements valid for an HTML5 doctype
+<a name="pull-requests"></a>
 
-## License
+## 👩‍💻 Pull requests
 
-By contributing your code, you agree to license your contribution under the
-terms of the [MIT license][]
-[MIT license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
+Good pull requests - patches, improvements, new features - are a fantastic
+help. They should remain focused in scope and avoid containing unrelated
+commits.
 
-[> What does that mean?](http://choosealicense.com/licenses/mit/)
+**Please ask first** before embarking on any significant pull request (e.g.
+implementing features, refactoring code, porting to a different language),
+otherwise you risk spending a lot of time working on something that the
+project's developers might not want to merge into the project.
+
+Please adhere to the coding conventions used throughout a project (indentation,
+accurate comments, etc.) and any other requirements (such as test coverage).
+
+Follow this process if you'd like your work considered for inclusion in the
+project:
+
+1.  [Fork](http://help.github.com/fork-a-repo/) the project, clone your fork,
+    and configure the remotes:
+
+    ```bash
+    # Clone your fork of the repo into the current directory
+    git clone https://github.com/<your-username>/<repo-name>
+    # Navigate to the newly cloned directory
+    cd <repo-name>
+    # Assign the original repo to a remote called "upstream"
+    git remote add upstream https://github.com/<upstream-owner>/<repo-name>
+    ```
+
+2.  If you cloned a while ago, get the latest changes from upstream:
+
+    ```bash
+    git checkout <dev-branch>
+    git pull upstream <dev-branch>
+    ```
+
+3.  Create a new topic branch (off the main project development branch) to
+    contain your feature, change, or fix:
+
+    ```bash
+    git checkout -b <topic-branch-name>
+    ```
+
+4.  Commit your changes in logical chunks. Please adhere to these [git commit
+    message guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+    or your code is unlikely be merged into the main project. Use Git's
+    [interactive rebase](https://help.github.com/articles/interactive-rebase)
+    feature to tidy up your commits before making them public.
+
+5.  Locally merge (or rebase) the upstream development branch into your topic branch:
+
+    ```bash
+    git pull [--rebase] upstream <dev-branch>
+    ```
+
+6.  Push your topic branch up to your fork:
+
+    ```bash
+    git push origin <topic-branch-name>
+    ```
+
+7.  [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
+    with a clear title and description.
+
+**IMPORTANT**: By submitting a patch, you agree to allow the project owner to license your work under the same license as that used by the project.
+
+---
+
+_This was inspired from [@necolas issue guidelines](https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md)_
