@@ -2,10 +2,32 @@ import { merge } from "lodash";
 
 import { booleanOptionOr, numberOptionOr } from "./utils";
 
+export {
+  MergeStyle,
+  ArrowStyle,
+  ArrowStyleOptions,
+  BranchStyle,
+  BranchStyleOptions,
+  CommitDotStyle,
+  CommitDotStyleOptions,
+  CommitMessageStyle,
+  CommitMessageStyleOptions,
+  CommitStyleBase,
+  CommitStyle,
+  CommitStyleOptions,
+  TemplateOptions,
+  Template,
+  blackArrowTemplate,
+  metroTemplate,
+  TemplateName,
+  templateExtend,
+  getTemplate,
+};
+
 /**
  * Branch merge style enum
  */
-export enum MergeStyle {
+enum MergeStyle {
   Bezier = "bezier",
   Straight = "straight",
 }
@@ -13,7 +35,7 @@ export enum MergeStyle {
 /**
  * Arrow style
  */
-export interface ArrowStyle {
+interface ArrowStyle {
   /**
    * Arrow color
    */
@@ -28,9 +50,9 @@ export interface ArrowStyle {
   offset: number;
 }
 
-export type ArrowStyleOptions = Partial<ArrowStyle>;
+type ArrowStyleOptions = Partial<ArrowStyle>;
 
-export interface BranchStyle {
+interface BranchStyle {
   /**
    * Branch color
    */
@@ -49,9 +71,9 @@ export interface BranchStyle {
   spacing: number;
 }
 
-export type BranchStyleOptions = Partial<BranchStyle>;
+type BranchStyleOptions = Partial<BranchStyle>;
 
-export interface CommitDotStyle {
+interface CommitDotStyle {
   /**
    * Commit dot color
    */
@@ -74,9 +96,9 @@ export interface CommitDotStyle {
   font: string;
 }
 
-export type CommitDotStyleOptions = Partial<CommitDotStyle>;
+type CommitDotStyleOptions = Partial<CommitDotStyle>;
 
-export interface CommitMessageStyle {
+interface CommitMessageStyle {
   /**
    * Commit message color
    */
@@ -103,9 +125,9 @@ export interface CommitMessageStyle {
   font: string;
 }
 
-export type CommitMessageStyleOptions = Partial<CommitMessageStyle>;
+type CommitMessageStyleOptions = Partial<CommitMessageStyle>;
 
-export interface CommitStyleBase {
+interface CommitStyleBase {
   /**
    * Spacing between commits
    */
@@ -120,7 +142,7 @@ export interface CommitStyleBase {
   hasTooltipInCompactMode: boolean;
 }
 
-export interface CommitStyle extends CommitStyleBase {
+interface CommitStyle extends CommitStyleBase {
   /**
    * Commit message style
    */
@@ -131,7 +153,7 @@ export interface CommitStyle extends CommitStyleBase {
   dot: CommitDotStyle;
 }
 
-export interface CommitStyleOptions extends Partial<CommitStyleBase> {
+interface CommitStyleOptions extends Partial<CommitStyleBase> {
   /**
    * Commit message style
    */
@@ -142,7 +164,7 @@ export interface CommitStyleOptions extends Partial<CommitStyleBase> {
   dot?: CommitDotStyleOptions;
 }
 
-export interface TemplateOptions {
+interface TemplateOptions {
   /**
    * Colors scheme: One color for each column
    */
@@ -166,7 +188,7 @@ export interface TemplateOptions {
  *
  * Set of design rules for the rendering.
  */
-export class Template {
+class Template {
   /**
    * Colors scheme: One color for each column
    */
@@ -252,7 +274,7 @@ export class Template {
 /**
  * Black arrow template
  */
-export const blackArrowTemplate = new Template({
+const blackArrowTemplate = new Template({
   colors: ["#6963FF", "#47E8D4", "#6BDB52", "#E84BA5", "#FFA657"],
   branch: {
     color: "#000000",
@@ -280,7 +302,7 @@ export const blackArrowTemplate = new Template({
 /**
  * Metro template
  */
-export const metroTemplate = new Template({
+const metroTemplate = new Template({
   colors: ["#979797", "#008fb5", "#f1c109"],
   branch: {
     lineWidth: 10,
@@ -297,7 +319,7 @@ export const metroTemplate = new Template({
   },
 });
 
-export enum TemplateName {
+enum TemplateName {
   Metro = "metro",
   BlackArrow = "blackarrow",
 }
@@ -308,7 +330,7 @@ export enum TemplateName {
  * @param selectedTemplate Template to extend
  * @param options Template options
  */
-export function templateExtend(
+function templateExtend(
   selectedTemplate: TemplateName,
   options: TemplateOptions,
 ): Template {
@@ -320,7 +342,7 @@ export function templateExtend(
  *
  * @param template Selected template name, or instance.
  */
-export function getTemplate(template?: TemplateName | Template): Template {
+function getTemplate(template?: TemplateName | Template): Template {
   if (!template) return metroTemplate;
 
   if (typeof template === "string") {
