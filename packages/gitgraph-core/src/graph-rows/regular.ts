@@ -2,7 +2,7 @@ import { uniq } from "lodash";
 
 import { Commit } from "../commit";
 
-export default class RegularGraphRows<TNode> {
+export class RegularGraphRows<TNode> {
   protected rows = new Map<Commit["hash"], number>();
 
   public constructor(commits: Array<Commit<TNode>>) {
