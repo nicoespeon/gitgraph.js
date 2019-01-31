@@ -83,31 +83,6 @@ export class Branch<TNode = SVGElement> {
   }
 
   /**
-   * Add a new commit in the branch (as `git commit`).
-   *
-   * @param subject Commit subject
-   */
-  public commit(subject?: string): Branch<TNode>;
-  /**
-   * Add a new commit in the branch (as `git commit`).
-   *
-   * @param options Options of the commit
-   */
-  public commit(options?: GitgraphCommitOptions<TNode>): Branch<TNode>;
-  public commit(
-    options?: GitgraphCommitOptions<TNode> | string,
-  ): Branch<TNode> {
-    // Deal with shorter syntax
-    if (typeof options === "string") options = { subject: options };
-    if (!options) options = {};
-
-    this.commitWithParents(options, []);
-
-    this.onGraphUpdate();
-    return this;
-  }
-
-  /**
    * Create a merge commit.
    *
    * @param branch Branch

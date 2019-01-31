@@ -75,7 +75,7 @@ export class GitgraphUserApi<TNode> {
    */
   public commit(options?: GitgraphCommitOptions<TNode>): this;
   public commit(options?: any): this {
-    this.graph.currentBranch.commit(options);
+    this.graph.currentBranch.getUserApi().commit(options);
     return this;
   }
 
