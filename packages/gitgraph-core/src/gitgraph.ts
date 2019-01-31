@@ -1,17 +1,8 @@
-import Branch, {
-  BranchCommitDefaultOptions,
-  DELETED_BRANCH_NAME,
-  createDeletedBranch,
-} from "./branch";
+import Branch, { DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
 import Commit from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
-import {
-  Template,
-  TemplateName,
-  BranchStyleOptions,
-  getTemplate,
-} from "./template";
+import { Template, TemplateName, getTemplate } from "./template";
 import Refs from "./refs";
 import BranchesPathsCalculator, { BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
@@ -37,21 +28,6 @@ export interface RenderedData<TNode> {
   commits: Array<Commit<TNode>>;
   branchesPaths: BranchesPaths<TNode>;
   commitMessagesX: number;
-}
-
-export interface GitgraphBranchOptions<TNode> {
-  /**
-   * Branch name
-   */
-  name: string;
-  /**
-   * Default options for commits
-   */
-  commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;
-  /**
-   * Branch style
-   */
-  style?: BranchStyleOptions;
 }
 
 export class GitgraphCore<TNode = SVGElement> {
