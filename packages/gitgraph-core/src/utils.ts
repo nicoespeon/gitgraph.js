@@ -2,17 +2,30 @@ import { Commit } from "./commit";
 import { GitgraphCore } from "./gitgraph";
 import { Orientation } from "./orientation";
 
+export {
+  Omit,
+  NonMatchingPropNames,
+  NonMatchingProp,
+  booleanOptionOr,
+  numberOptionOr,
+  pick,
+  debug,
+  isUndefined,
+  withoutUndefinedKeys,
+  arrowSvgPath,
+};
+
 /**
  * Omit some keys from an original type.
  */
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 /**
  * Get all property names not matching a type.
  *
  * @ref http://tycho01.github.io/typical/modules/_object_nonmatchingpropsnames_.html
  */
-export type NonMatchingPropNames<T, X> = {
+type NonMatchingPropNames<T, X> = {
   [K in keyof T]: T[K] extends X ? never : K
 }[keyof T];
 
@@ -21,14 +34,14 @@ export type NonMatchingPropNames<T, X> = {
  *
  * @ref http://tycho01.github.io/typical/modules/_object_nonmatchingprops_.html
  */
-export type NonMatchingProp<T, X> = Pick<T, NonMatchingPropNames<T, X>>;
+type NonMatchingProp<T, X> = Pick<T, NonMatchingPropNames<T, X>>;
 
 /**
  * Provide a default value to a boolean.
  * @param value
  * @param defaultValue
  */
-export function booleanOptionOr(value: any, defaultValue: boolean): boolean {
+function booleanOptionOr(value: any, defaultValue: boolean): boolean {
   return typeof value === "boolean" ? value : defaultValue;
 }
 
@@ -37,7 +50,7 @@ export function booleanOptionOr(value: any, defaultValue: boolean): boolean {
  * @param value
  * @param defaultValue
  */
-export function numberOptionOr(
+function numberOptionOr(
   value: any,
   defaultValue: number | null,
 ): number | null {
@@ -49,7 +62,7 @@ export function numberOptionOr(
  * @param obj The source object
  * @param paths The property paths to pick
  */
-export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
+function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
   return {
     ...paths.reduce((mem, key) => ({ ...mem, [key]: obj[key] }), {}),
   } as Pick<T, K>;
@@ -60,7 +73,7 @@ export function pick<T, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
  * @param commits List of commits
  * @param paths The property paths to pick
  */
-export function debug<TNode = SVGElement>(
+function debug<TNode = SVGElement>(
   commits: Array<Commit<TNode>>,
   paths: Array<keyof Commit<TNode>>,
 ): void {
@@ -75,7 +88,7 @@ export function debug<TNode = SVGElement>(
  *
  * @param obj
  */
-export function isUndefined(obj: any): obj is undefined {
+function isUndefined(obj: any): obj is undefined {
   return obj === undefined;
 }
 
@@ -84,7 +97,7 @@ export function isUndefined(obj: any): obj is undefined {
  *
  * @param obj
  */
-export function withoutUndefinedKeys<T extends object>(
+function withoutUndefinedKeys<T extends object>(
   obj: T = {} as T,
 ): NonMatchingProp<T, undefined> {
   return (Object.keys(obj) as [keyof T]).reduce<T>(
@@ -101,7 +114,7 @@ export function withoutUndefinedKeys<T extends object>(
  * @param parent Parent commit of the target commit
  * @param commit Target commit
  */
-export function arrowSvgPath<TNode = SVGElement>(
+function arrowSvgPath<TNode = SVGElement>(
   graph: GitgraphCore<TNode>,
   parent: Commit<TNode>,
   commit: Commit<TNode>,
