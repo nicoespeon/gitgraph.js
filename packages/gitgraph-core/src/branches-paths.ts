@@ -3,9 +3,11 @@ import { Branch } from "./branch";
 import { CommitStyleBase } from "./template";
 import { pick } from "./utils";
 
-export type BranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
+export { BranchesPaths, Coordinate, BranchesPathsCalculator, toSvgPath };
 
-export interface Coordinate {
+type BranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
+
+interface Coordinate {
   x: number;
   y: number;
 }
@@ -25,7 +27,7 @@ interface InternalCoordinate extends Coordinate {
  * Main benefit is we can split computation in smaller steps without
  * passing around parameters (we can rely on private data).
  */
-export class BranchesPathsCalculator<TNode> {
+class BranchesPathsCalculator<TNode> {
   private commits: Array<Commit<TNode>>;
   private branches: Map<Branch["name"], Branch<TNode>>;
   private commitSpacing: CommitStyleBase["spacing"];
@@ -235,14 +237,12 @@ export class BranchesPathsCalculator<TNode> {
   }
 }
 
-export default BranchesPathsCalculator;
-
 /**
  * Return a string ready to use in `svg.path.d` from coordinates
  *
  * @param coordinates Collection of coordinates
  */
-export function toSvgPath(
+function toSvgPath(
   coordinates: Coordinate[][],
   isBezier: boolean,
   isVertical: boolean,
