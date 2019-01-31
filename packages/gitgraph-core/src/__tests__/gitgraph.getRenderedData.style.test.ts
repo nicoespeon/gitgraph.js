@@ -48,7 +48,7 @@ describe("Gitgraph.getRenderedData.style", () => {
       } as BranchOptions)
       .commit({
         style: { message: { display: false } },
-      } as GitgraphCommitOptions);
+      });
 
     const { commits } = core.getRenderedData();
     const expectedStyle = createExpectedStyle();
