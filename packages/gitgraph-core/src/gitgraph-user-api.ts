@@ -10,7 +10,8 @@ import Branch, {
 import GitgraphCore from "./gitgraph";
 import Refs from "./refs";
 
-interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
+export interface GitgraphCommitOptions<TNode>
+  extends CommitRenderOptions<TNode> {
   author?: string;
   subject?: string;
   body?: string;

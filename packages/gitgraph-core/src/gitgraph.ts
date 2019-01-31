@@ -3,13 +3,12 @@ import Branch, {
   DELETED_BRANCH_NAME,
   createDeletedBranch,
 } from "./branch";
-import Commit, { CommitRenderOptions } from "./commit";
+import Commit from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
 import {
   Template,
   TemplateName,
-  CommitStyleOptions,
   BranchStyleOptions,
   getTemplate,
 } from "./template";
@@ -38,21 +37,6 @@ export interface RenderedData<TNode> {
   commits: Array<Commit<TNode>>;
   branchesPaths: BranchesPaths<TNode>;
   commitMessagesX: number;
-}
-
-export interface GitgraphCommitOptions<TNode = SVGElement>
-  extends CommitRenderOptions<TNode> {
-  author?: string;
-  subject?: string;
-  body?: string;
-  hash?: string;
-  style?: CommitStyleOptions;
-  dotText?: string;
-  tag?: string;
-  onClick?: (commit: Commit<TNode>) => void;
-  onMessageClick?: (commit: Commit<TNode>) => void;
-  onMouseOver?: (commit: Commit<TNode>) => void;
-  onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
 export interface GitgraphBranchOptions<TNode> {
