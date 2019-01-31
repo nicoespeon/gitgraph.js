@@ -71,29 +71,6 @@ export class Branch<TNode = SVGElement> {
   public isDeleted(): boolean {
     return this.name === DELETED_BRANCH_NAME;
   }
-
-  private areCommitsConnected(
-    parentCommitHash: Commit["hash"],
-    childCommitHash: Commit["hash"],
-  ): boolean {
-    const childCommit = this.gitgraph.commits.find(
-      ({ hash }) => childCommitHash === hash,
-    );
-    if (!childCommit) return false;
-
-    const isFirstCommitOfGraph = childCommit.parents.length === 0;
-    if (isFirstCommitOfGraph) return false;
-
-    if (childCommit.parents.includes(parentCommitHash)) {
-      return true;
-    }
-
-    // `childCommitHash` is not a direct child of `parentCommitHash`.
-    // But maybe one of `childCommitHash` parent is.
-    return childCommit.parents.some((directParentHash) =>
-      this.areCommitsConnected(parentCommitHash, directParentHash),
-    );
-  }
 }
 
 export default Branch;
