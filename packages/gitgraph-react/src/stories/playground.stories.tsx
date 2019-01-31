@@ -1,7 +1,7 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, Branch } from "../Gitgraph";
+import { Gitgraph, BranchUserApi } from "../Gitgraph";
 
 class GitgraphPlayground extends React.Component<any, any> {
   constructor(props: any) {
@@ -11,7 +11,9 @@ class GitgraphPlayground extends React.Component<any, any> {
     };
   }
 
-  public addCommit = (branch?: Branch) => {
+  public addCommit = (
+    branch?: BranchUserApi<React.ReactElement<SVGElement>>,
+  ) => {
     if (branch) {
       branch.commit(this.state[`commitMessage${branch.name}`]);
     } else {
@@ -22,7 +24,7 @@ class GitgraphPlayground extends React.Component<any, any> {
   public addBranch = () => {
     if (
       this.state.branches
-        .map((b: Branch) => b.name)
+        .map((b: BranchUserApi<React.ReactElement<SVGElement>>) => b.name)
         .includes(this.state.branchName)
     )
       return;
@@ -48,7 +50,9 @@ class GitgraphPlayground extends React.Component<any, any> {
   };
 
   public render() {
-    const branches: Branch[] = this.state.branches;
+    const branches = this.state.branches as Array<
+      BranchUserApi<React.ReactElement<SVGElement>>
+    >;
     return (
       <div>
         <form

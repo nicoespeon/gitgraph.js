@@ -4,11 +4,11 @@ import { CommitStyleOptions, BranchStyleOptions } from "./template";
 import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
 import Branch, {
   BranchCommitDefaultOptions,
-  BranchOptions,
   DELETED_BRANCH_NAME,
 } from "./branch";
 import GitgraphCore from "./gitgraph";
 import Refs from "./refs";
+import { BranchUserApi } from "./branch-user-api";
 
 export interface GitgraphCommitOptions<TNode>
   extends CommitRenderOptions<TNode> {
@@ -25,7 +25,7 @@ export interface GitgraphCommitOptions<TNode>
   onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
-interface GitgraphBranchOptions<TNode> {
+export interface GitgraphBranchOptions<TNode> {
   /**
    * Branch name
    */
@@ -57,7 +57,7 @@ export class GitgraphUserApi<TNode> {
     this.graph.tags = new Refs();
     this.graph.commits = [];
     this.graph.branches = new Map();
-    this.graph.currentBranch = this.branch("master");
+    this.graph.currentBranch = this.graph.createBranch("master");
     this.onGraphUpdate();
     return this;
   }
@@ -80,35 +80,19 @@ export class GitgraphUserApi<TNode> {
   }
 
   /**
-   * Create a new branch. (as `git branch`)
+   * Create a new branch (as `git branch`).
    *
    * @param options Options of the branch
    */
-  public branch(options: GitgraphBranchOptions<TNode>): Branch<TNode>;
+  public branch(options: GitgraphBranchOptions<TNode>): BranchUserApi<TNode>;
   /**
-   * Create a new branch. (as `git branch`)
+   * Create a new branch (as `git branch`).
    *
    * @param name Name of the created branch
    */
-  public branch(name: string): Branch<TNode>;
-  public branch(args: any): Branch<TNode> {
-    const parentCommitHash = this.graph.refs.getCommit("HEAD");
-    let options: BranchOptions<TNode> = {
-      gitgraph: this.graph,
-      name: "",
-      parentCommitHash,
-      style: this.graph.template.branch,
-      onGraphUpdate: () => this.onGraphUpdate(),
-    };
-    if (typeof args === "string") {
-      options.name = args;
-    } else {
-      options = { ...options, ...args };
-    }
-    const branch = new Branch<TNode>(options);
-    this.graph.branches.set(branch.name, branch);
-
-    return branch;
+  public branch(name: string): BranchUserApi<TNode>;
+  public branch(args: any): BranchUserApi<TNode> {
+    return this.graph.createBranch(args).getUserApi();
   }
 
   /**

@@ -1,6 +1,7 @@
 import Commit, { CommitRenderOptions } from "./commit";
 import { GitgraphCore, Mode } from "./gitgraph";
 import { GitgraphCommitOptions } from "./gitgraph-user-api";
+import { BranchUserApi } from "./branch-user-api";
 import { CommitStyleOptions, CommitStyle, BranchStyle } from "./template";
 import { withoutUndefinedKeys } from "./utils";
 
@@ -59,10 +60,10 @@ export class Branch<TNode = SVGElement> {
   public name: BranchOptions["name"];
   public style: BranchStyle;
   public computedColor?: BranchStyle["color"];
+  public parentCommitHash: BranchOptions["parentCommitHash"];
+  public commitDefaultOptions: BranchCommitDefaultOptions<TNode>;
 
-  private commitDefaultOptions: BranchCommitDefaultOptions<TNode>;
   private gitgraph: GitgraphCore<TNode>;
-  private parentCommitHash: BranchOptions["parentCommitHash"];
   private onGraphUpdate: () => void;
 
   constructor(options: BranchOptions<TNode>) {
@@ -72,6 +73,13 @@ export class Branch<TNode = SVGElement> {
     this.parentCommitHash = options.parentCommitHash;
     this.commitDefaultOptions = options.commitDefaultOptions || { style: {} };
     this.onGraphUpdate = options.onGraphUpdate;
+  }
+
+  /**
+   * Return the API to manipulate Gitgraph branch as a user.
+   */
+  public getUserApi(): BranchUserApi<TNode> {
+    return new BranchUserApi(this, this.gitgraph, this.onGraphUpdate);
   }
 
   /**

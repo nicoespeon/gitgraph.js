@@ -1,6 +1,7 @@
 export * from "./gitgraph";
 export * from "./gitgraph-user-api";
 export * from "./branch";
+export * from "./branch-user-api";
 export * from "./commit";
 export * from "./refs";
 export * from "./template";

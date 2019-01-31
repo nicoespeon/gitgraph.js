@@ -1,4 +1,8 @@
-import Branch, { DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
+import Branch, {
+  DELETED_BRANCH_NAME,
+  createDeletedBranch,
+  BranchOptions,
+} from "./branch";
 import Commit from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
@@ -7,7 +11,7 @@ import Refs from "./refs";
 import BranchesPathsCalculator, { BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
-import { GitgraphUserApi } from "./gitgraph-user-api";
+import { GitgraphUserApi, GitgraphBranchOptions } from "./gitgraph-user-api";
 
 export enum Mode {
   Compact = "compact",
@@ -53,7 +57,7 @@ export class GitgraphCore<TNode = SVGElement> {
     this.template = getTemplate(options.template);
 
     // Set a default `master` branch
-    this.currentBranch = this.getUserApi().branch("master");
+    this.currentBranch = this.createBranch("master");
 
     // Set all options with default values
     this.orientation = options.orientation;
@@ -116,6 +120,38 @@ export class GitgraphCore<TNode = SVGElement> {
     this.computeBranchesColor(branchesPaths);
 
     return { commits, branchesPaths, commitMessagesX };
+  }
+
+  /**
+   * Create a new branch.
+   *
+   * @param options Options of the branch
+   */
+  public createBranch(options: GitgraphBranchOptions<TNode>): Branch<TNode>;
+  /**
+   * Create a new branch. (as `git branch`)
+   *
+   * @param name Name of the created branch
+   */
+  public createBranch(name: string): Branch<TNode>;
+  public createBranch(args: any): Branch<TNode> {
+    const parentCommitHash = this.refs.getCommit("HEAD");
+    let options: BranchOptions<TNode> = {
+      gitgraph: this,
+      name: "",
+      parentCommitHash,
+      style: this.template.branch,
+      onGraphUpdate: () => this.next(),
+    };
+    if (typeof args === "string") {
+      options.name = args;
+    } else {
+      options = { ...options, ...args };
+    }
+    const branch = new Branch<TNode>(options);
+    this.branches.set(branch.name, branch);
+
+    return branch;
   }
 
   /**
