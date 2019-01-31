@@ -1,4 +1,4 @@
-import Branch from "./branch";
+import { Branch } from "./branch";
 import { Commit } from "./commit";
 
 export class GraphColumns<TNode> {

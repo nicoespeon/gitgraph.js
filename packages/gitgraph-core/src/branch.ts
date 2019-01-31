@@ -3,14 +3,21 @@ import { GitgraphCore } from "./gitgraph";
 import { BranchUserApi } from "./user-api/branch-user-api";
 import { CommitStyleOptions, BranchStyle } from "./template";
 
-export interface BranchCommitDefaultOptions<TNode>
-  extends CommitRenderOptions<TNode> {
+export {
+  BranchCommitDefaultOptions,
+  BranchOptions,
+  DELETED_BRANCH_NAME,
+  createDeletedBranch,
+  Branch,
+};
+
+interface BranchCommitDefaultOptions<TNode> extends CommitRenderOptions<TNode> {
   author?: string;
   subject?: string;
   style?: CommitStyleOptions;
 }
 
-export interface BranchOptions<TNode = SVGElement> {
+interface BranchOptions<TNode = SVGElement> {
   /**
    * Gitgraph constructor
    */
@@ -37,9 +44,9 @@ export interface BranchOptions<TNode = SVGElement> {
   onGraphUpdate: () => void;
 }
 
-export const DELETED_BRANCH_NAME = "";
+const DELETED_BRANCH_NAME = "";
 
-export class Branch<TNode = SVGElement> {
+class Branch<TNode = SVGElement> {
   public name: BranchOptions["name"];
   public style: BranchStyle;
   public computedColor?: BranchStyle["color"];
@@ -73,9 +80,7 @@ export class Branch<TNode = SVGElement> {
   }
 }
 
-export default Branch;
-
-export function createDeletedBranch<TNode>(
+function createDeletedBranch<TNode>(
   gitgraph: GitgraphCore<TNode>,
   style: BranchStyle,
   onGraphUpdate: () => void,

@@ -2,7 +2,8 @@ import * as yup from "yup";
 
 import { CommitStyleOptions, BranchStyleOptions } from "../template";
 import { Commit, CommitRenderOptions, CommitOptions } from "../commit";
-import Branch, {
+import {
+  Branch,
   BranchCommitDefaultOptions,
   DELETED_BRANCH_NAME,
 } from "../branch";

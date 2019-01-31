@@ -1,4 +1,5 @@
-import Branch, {
+import {
+  Branch,
   DELETED_BRANCH_NAME,
   createDeletedBranch,
   BranchOptions,
