@@ -66,16 +66,6 @@ export class Branch<TNode = SVGElement> {
   }
 
   /**
-   * Tag the last commit of the branch
-   *
-   * @param name Name of the tag
-   */
-  public tag(name: string): Branch<TNode> {
-    this.gitgraph.getUserApi().tag(name, this.name);
-    return this;
-  }
-
-  /**
    * Return true if branch was deleted.
    */
   public isDeleted(): boolean {
