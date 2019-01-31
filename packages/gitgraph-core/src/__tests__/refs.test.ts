@@ -1,5 +1,5 @@
 import { Commit } from "../commit";
-import Refs from "../refs";
+import { Refs } from "../refs";
 
 const firstCommitHash: Commit["hash"] = "initialCommitHash";
 const secondCommitHash: Commit["hash"] = "secondCommitHash";

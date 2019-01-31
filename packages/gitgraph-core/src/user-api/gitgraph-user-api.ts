@@ -8,7 +8,7 @@ import {
   DELETED_BRANCH_NAME,
 } from "../branch";
 import GitgraphCore from "../gitgraph";
-import Refs from "../refs";
+import { Refs } from "../refs";
 import { BranchUserApi } from "./branch-user-api";
 
 export interface GitgraphCommitOptions<TNode>

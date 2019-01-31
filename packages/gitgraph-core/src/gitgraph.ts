@@ -8,7 +8,7 @@ import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
 import { Template, TemplateName, getTemplate } from "./template";
-import Refs from "./refs";
+import { Refs } from "./refs";
 import BranchesPathsCalculator, { BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";

@@ -1,8 +1,10 @@
 import { Commit } from "./commit";
 
+export { Refs };
+
 type Name = string;
 
-export class Refs {
+class Refs {
   private commitPerName = new Map<Name, Commit["hash"]>();
   private namesPerCommit = new Map<Commit["hash"], Name[]>();
 
@@ -85,5 +87,3 @@ export class Refs {
     this.commitPerName.set(name, commitHashToAdd);
   }
 }
-
-export default Refs;

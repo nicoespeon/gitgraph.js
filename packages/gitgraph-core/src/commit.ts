@@ -1,6 +1,6 @@
 import { CommitStyle } from "./template";
 import { Branch } from "./branch";
-import Refs from "./refs";
+import { Refs } from "./refs";
 
 export { CommitRenderOptions, CommitOptions, Commit };
 
