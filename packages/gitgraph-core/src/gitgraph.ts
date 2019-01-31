@@ -11,7 +11,10 @@ import Refs from "./refs";
 import BranchesPathsCalculator, { BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
-import { GitgraphUserApi, GitgraphBranchOptions } from "./gitgraph-user-api";
+import {
+  GitgraphUserApi,
+  GitgraphBranchOptions,
+} from "./user-api/gitgraph-user-api";
 
 export enum Mode {
   Compact = "compact",

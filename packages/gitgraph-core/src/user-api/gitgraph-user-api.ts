@@ -1,13 +1,13 @@
 import * as yup from "yup";
 
-import { CommitStyleOptions, BranchStyleOptions } from "./template";
-import Commit, { CommitRenderOptions, CommitOptions } from "./commit";
+import { CommitStyleOptions, BranchStyleOptions } from "../template";
+import Commit, { CommitRenderOptions, CommitOptions } from "../commit";
 import Branch, {
   BranchCommitDefaultOptions,
   DELETED_BRANCH_NAME,
-} from "./branch";
-import GitgraphCore from "./gitgraph";
-import Refs from "./refs";
+} from "../branch";
+import GitgraphCore from "../gitgraph";
+import Refs from "../refs";
 import { BranchUserApi } from "./branch-user-api";
 
 export interface GitgraphCommitOptions<TNode>

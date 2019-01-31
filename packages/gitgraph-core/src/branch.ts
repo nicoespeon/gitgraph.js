@@ -1,6 +1,6 @@
 import Commit, { CommitRenderOptions } from "./commit";
 import { GitgraphCore } from "./gitgraph";
-import { BranchUserApi } from "./branch-user-api";
+import { BranchUserApi } from "./user-api/branch-user-api";
 import { CommitStyleOptions, BranchStyle } from "./template";
 
 export interface BranchCommitDefaultOptions<TNode>
