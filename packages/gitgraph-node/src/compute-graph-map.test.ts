@@ -1,9 +1,15 @@
-import { GitgraphCore, Branch, Template } from "gitgraph-core/lib";
+import {
+  GitgraphCore,
+  Template,
+  GitgraphUserApi,
+  BranchUserApi,
+} from "gitgraph-core/lib";
 
 import computeGraphMap, { GraphCommit, GraphMap } from "./compute-graph-map";
 
-let gitgraph: GitgraphCore;
-let master: Branch;
+let core: GitgraphCore;
+let gitgraph: GitgraphUserApi<SVGElement>;
+let master: BranchUserApi<SVGElement>;
 
 describe("compute cells values", () => {
   function expectGraphMapValues(graphMap: GraphMap) {
@@ -18,7 +24,8 @@ describe("compute cells values", () => {
   }
 
   beforeEach(() => {
-    gitgraph = new GitgraphCore();
+    core = new GitgraphCore();
+    gitgraph = core.getUserApi();
     master = gitgraph.branch("master");
   });
 
@@ -28,7 +35,7 @@ describe("compute cells values", () => {
       subject: "Hello",
     });
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const graphCommit: GraphCommit = {
       hash: "9a58c0b",
@@ -48,7 +55,7 @@ describe("compute cells values", () => {
       subject: "World!",
     });
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const graphCommit1: GraphCommit = {
       hash: "9a58c0b",
@@ -71,7 +78,7 @@ describe("compute cells values", () => {
     const develop = gitgraph.branch("develop");
     develop.commit("two");
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const masterGraphCommit = expect.objectContaining({
       message: "one",
@@ -95,7 +102,7 @@ describe("compute cells values", () => {
     master.commit("three");
     develop.commit("four");
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const graphCommit1 = expect.objectContaining({
       message: "one",
@@ -128,7 +135,7 @@ describe("compute cells values", () => {
     develop.commit("two");
     master.merge(develop);
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const masterGraphCommit = expect.objectContaining({
       message: "one",
@@ -158,7 +165,7 @@ describe("compute cells values", () => {
     feat.commit("three");
     master.merge(feat);
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const masterGraphCommit = expect.objectContaining({
       message: "one",
@@ -197,7 +204,7 @@ describe("compute cells values", () => {
     const feat2 = gitgraph.branch("feat2");
     feat2.commit("three");
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const masterCommit = expect.objectContaining({
       message: "one",
@@ -232,7 +239,7 @@ describe("compute cells values", () => {
     const feat2 = gitgraph.branch("feat2");
     feat2.commit("four");
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     const masterCommit1 = expect.objectContaining({
       message: "one",
@@ -279,14 +286,15 @@ describe("compute cells colors", () => {
     const template = new Template({
       colors: ["red", "green", "blue"],
     });
-    gitgraph = new GitgraphCore({ template });
+    core = new GitgraphCore({ template });
+    gitgraph = core.getUserApi();
     master = gitgraph.branch("master");
   });
 
   it("for commits on a single branch", () => {
     master.commit().commit();
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     expectGraphMapColors(graphMap).toEqual([["red", "red"], ["red", "red"]]);
   });
@@ -298,7 +306,7 @@ describe("compute cells colors", () => {
     master.commit();
     develop.commit();
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     expectGraphMapColors(graphMap).toEqual([
       ["red", "", "", "red"],
@@ -316,7 +324,7 @@ describe("compute cells colors", () => {
     develop.commit("two");
     master.merge(develop);
 
-    const graphMap = computeGraphMap(gitgraph);
+    const graphMap = computeGraphMap(core);
 
     expectGraphMapColors(graphMap).toEqual([
       ["red", "", "", "red"],
