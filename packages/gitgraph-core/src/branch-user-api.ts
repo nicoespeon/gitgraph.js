@@ -21,7 +21,11 @@ interface BranchMergeOptions<TNode> {
 }
 
 export class BranchUserApi<TNode> {
-  public name: Branch["name"];
+  /**
+   * Name of the branch.
+   * It needs to be public to be used when we merge another branch.
+   */
+  public readonly name: Branch["name"];
 
   private branch: Branch<TNode>;
   private graph: GitgraphCore<TNode>;
