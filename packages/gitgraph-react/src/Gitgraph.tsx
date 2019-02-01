@@ -10,8 +10,8 @@ import {
   Orientation,
   toSvgPath,
   GitgraphUserApi,
-} from "gitgraph-core/lib/index";
-import { arrowSvgPath } from "gitgraph-core/lib/utils";
+  arrowSvgPath,
+} from "gitgraph-core/lib";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
