@@ -1,16 +1,15 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph } from "gitgraph-react/src/Gitgraph";
-import { Commit } from "gitgraph-core";
+import { Gitgraph, ReactCommitOptions } from "gitgraph-react/src/Gitgraph";
 
 storiesOf("3. Events", module)
   .add("on commit dot click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onClick(commit: Commit<React.ReactElement<SVGElement>>) {
+        const onClick: ReactCommitOptions["onClick"] = (commit) => {
           alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
-        }
+        };
 
         const master = gitgraph.branch("master");
         master.commit({
@@ -29,11 +28,11 @@ storiesOf("3. Events", module)
   .add("on commit message click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onMessageClick(
-          commit: Commit<React.ReactElement<SVGElement>>,
-        ) {
+        const onMessageClick: ReactCommitOptions["onMessageClick"] = (
+          commit,
+        ) => {
           alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
-        }
+        };
 
         const master = gitgraph.branch("master");
         master.commit({
@@ -52,11 +51,11 @@ storiesOf("3. Events", module)
   .add("on commit mouseover", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onMouseOver(commit: Commit<React.ReactElement<SVGElement>>) {
+        const onMouseOver: ReactCommitOptions["onMouseOver"] = (commit) => {
           alert(
             `Mouse is over commit ${commit.hashAbbrev}: "${commit.subject}"`,
           );
-        }
+        };
 
         const master = gitgraph.branch("master");
         master.commit({
@@ -75,11 +74,11 @@ storiesOf("3. Events", module)
   .add("on commit mouseout", () => (
     <Gitgraph>
       {(gitgraph) => {
-        function onMouseOut(commit: Commit<React.ReactElement<SVGElement>>) {
+        const onMouseOut: ReactCommitOptions["onMouseOut"] = (commit) => {
           alert(
             `Mouse is out commit ${commit.hashAbbrev}: "${commit.subject}"`,
           );
-        }
+        };
 
         const master = gitgraph.branch("master");
         master.commit({

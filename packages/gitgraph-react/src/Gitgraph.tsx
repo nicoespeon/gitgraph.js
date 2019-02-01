@@ -3,20 +3,40 @@ import {
   GitgraphCore,
   GitgraphOptions,
   Commit,
+  CommitOptions,
+  CommitRenderOptions,
   BranchesPaths,
   Coordinate,
   MergeStyle,
   Mode,
   Orientation,
-  toSvgPath,
   GitgraphUserApi,
+  templateExtend,
+  TemplateName,
   arrowSvgPath,
+  toSvgPath,
 } from "gitgraph-core";
+
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
-export { Gitgraph, GitgraphProps, GitgraphState };
-export * from "gitgraph-core/lib/index";
+type ReactCommitRenderOptions = CommitRenderOptions<
+  React.ReactElement<SVGElement>
+>;
+type ReactCommitOptions = CommitOptions<React.ReactElement<SVGElement>>;
+
+export {
+  Gitgraph,
+  GitgraphProps,
+  GitgraphState,
+  ReactCommitRenderOptions,
+  ReactCommitOptions,
+  MergeStyle,
+  Mode,
+  Orientation,
+  TemplateName,
+  templateExtend,
+};
 
 interface GitgraphProps {
   options?: GitgraphOptions;

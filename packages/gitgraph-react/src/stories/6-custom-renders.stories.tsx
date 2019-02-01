@@ -1,11 +1,15 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { Gitgraph, Commit } from "../Gitgraph";
-import { Mode, Orientation } from "gitgraph-core";
+import {
+  Gitgraph,
+  ReactCommitRenderOptions,
+  Mode,
+  Orientation,
+} from "../Gitgraph";
 
 storiesOf("6. Custom renders", module)
   .add("with render dot", () => {
-    const renderDot = (commit: Commit<React.ReactElement<SVGElement>>) => (
+    const renderDot: ReactCommitRenderOptions["renderDot"] = (commit) => (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 71.84 75.33"
@@ -45,7 +49,9 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render tooltip", () => {
-    const renderTooltip = (commit: Commit<React.ReactElement<SVGElement>>) => {
+    const renderTooltip: ReactCommitRenderOptions["renderTooltip"] = (
+      commit,
+    ) => {
       const commitSize = commit.style.dot.size * 2;
       return (
         <g transform={`translate(${commitSize + 10}, ${commitSize / 2})`}>
@@ -93,9 +99,9 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message", () => {
-    const renderMessage = (
-      commit: Commit<React.ReactElement<SVGElement>>,
-      commitMessageX: number,
+    const renderMessage: ReactCommitRenderOptions["renderMessage"] = (
+      commit,
+      commitMessageX,
     ) => {
       return (
         <text
@@ -134,9 +140,9 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message (long)", () => {
-    const renderMessage = (
-      commit: Commit<React.ReactElement<SVGElement>>,
-      commitMessageX: number,
+    const renderMessage: ReactCommitRenderOptions["renderMessage"] = (
+      commit,
+      commitMessageX,
     ) => {
       return (
         <g
@@ -187,9 +193,9 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message (long & reverse orientation)", () => {
-    const renderMessage = (
-      commit: Commit<React.ReactElement<SVGElement>>,
-      commitMessageX: number,
+    const renderMessage: ReactCommitRenderOptions["renderMessage"] = (
+      commit,
+      commitMessageX,
     ) => {
       return (
         <g
