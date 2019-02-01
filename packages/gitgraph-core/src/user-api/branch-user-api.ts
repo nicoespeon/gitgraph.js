@@ -1,4 +1,4 @@
-import GitgraphCore, { Mode } from "../gitgraph";
+import { GitgraphCore, Mode } from "../gitgraph";
 import { GitgraphCommitOptions } from "./gitgraph-user-api";
 import { CommitStyleOptions, CommitStyle } from "../template";
 import { Commit } from "../commit";

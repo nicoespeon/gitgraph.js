@@ -17,11 +17,13 @@ import {
   GitgraphBranchOptions,
 } from "./user-api/gitgraph-user-api";
 
-export enum Mode {
+export { Mode, GitgraphOptions, RenderedData, GitgraphCore };
+
+enum Mode {
   Compact = "compact",
 }
 
-export interface GitgraphOptions {
+interface GitgraphOptions {
   template?: TemplateName | Template;
   orientation?: Orientation;
   reverseArrow?: boolean;
@@ -32,13 +34,13 @@ export interface GitgraphOptions {
   commitMessage?: string;
 }
 
-export interface RenderedData<TNode> {
+interface RenderedData<TNode> {
   commits: Array<Commit<TNode>>;
   branchesPaths: BranchesPaths<TNode>;
   commitMessagesX: number;
 }
 
-export class GitgraphCore<TNode = SVGElement> {
+class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
   public isVertical: boolean;
   public reverseArrow: boolean;
@@ -338,5 +340,3 @@ export class GitgraphCore<TNode = SVGElement> {
     this.listeners.forEach((listener) => listener(this.getRenderedData()));
   }
 }
-
-export default GitgraphCore;

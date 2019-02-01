@@ -30,7 +30,7 @@ How it renders the graph is up to you (e.g. canvas, svg, HTML elements…).
 A vanilla JS implementation:
 
 ```js
-import GitgraphCore from "gitgraph-core";
+import { GitgraphCore } from "gitgraph-core";
 
 export function createGitgraph(options) {
   const $target = options.$target || document.getElementId("#gitgraph");
@@ -61,7 +61,7 @@ A React implementation:
 
 ```jsx
 import React from "react";
-import GitgraphCore from "gitgraph-core";
+import { GitgraphCore } from "gitgraph-core";
 
 export class Gitgraph extends React.Component {
   constructor(props) {

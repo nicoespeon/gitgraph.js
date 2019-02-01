@@ -7,7 +7,7 @@ import {
   BranchCommitDefaultOptions,
   DELETED_BRANCH_NAME,
 } from "../branch";
-import GitgraphCore from "../gitgraph";
+import { GitgraphCore } from "../gitgraph";
 import { Refs } from "../refs";
 import { BranchUserApi } from "./branch-user-api";
 
