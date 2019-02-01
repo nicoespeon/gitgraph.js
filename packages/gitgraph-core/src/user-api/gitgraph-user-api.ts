@@ -146,6 +146,7 @@ export class GitgraphUserApi<TNode> {
    * Data can't be typed since it comes from a JSON.
    * We validate input format and throw early if something is invalid.
    *
+   * @experimental
    * @param data JSON from `git2json` output
    */
   public import(data: any) {
