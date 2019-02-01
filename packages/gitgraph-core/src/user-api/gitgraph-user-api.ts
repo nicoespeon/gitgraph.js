@@ -11,8 +11,9 @@ import { GitgraphCore } from "../gitgraph";
 import { Refs } from "../refs";
 import { BranchUserApi } from "./branch-user-api";
 
-export interface GitgraphCommitOptions<TNode>
-  extends CommitRenderOptions<TNode> {
+export { GitgraphCommitOptions, GitgraphBranchOptions, GitgraphUserApi };
+
+interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
   author?: string;
   subject?: string;
   body?: string;
@@ -26,7 +27,7 @@ export interface GitgraphCommitOptions<TNode>
   onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
-export interface GitgraphBranchOptions<TNode> {
+interface GitgraphBranchOptions<TNode> {
   /**
    * Branch name
    */
@@ -41,7 +42,7 @@ export interface GitgraphBranchOptions<TNode> {
   style?: BranchStyleOptions;
 }
 
-export class GitgraphUserApi<TNode> {
+class GitgraphUserApi<TNode> {
   private graph: GitgraphCore<TNode>;
   private onGraphUpdate: () => void;
 
