@@ -15,12 +15,15 @@ import { arrowSvgPath } from "gitgraph-core/lib/utils";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
-export interface GitgraphProps {
+export { Gitgraph, GitgraphProps, GitgraphState };
+export * from "gitgraph-core/lib/index";
+
+interface GitgraphProps {
   options?: GitgraphOptions;
   children: (gitgraph: GitgraphUserApi<React.ReactElement<SVGElement>>) => void;
 }
 
-export interface GitgraphState {
+interface GitgraphState {
   commits: Array<Commit<React.ReactElement<SVGElement>>>;
   branchesPaths: BranchesPaths<React.ReactElement<SVGElement>>;
   commitMessagesX: number;
@@ -33,7 +36,7 @@ export interface GitgraphState {
   currentCommitOver: Commit<React.ReactElement<SVGElement>> | null;
 }
 
-export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
+class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public static defaultProps: Partial<GitgraphProps> = {
     options: {},
   };
@@ -335,6 +338,3 @@ function getMessage(commit: Commit<React.ReactElement<SVGElement>>): string {
 
   return message;
 }
-
-export default Gitgraph;
-export * from "gitgraph-core/lib/index";
