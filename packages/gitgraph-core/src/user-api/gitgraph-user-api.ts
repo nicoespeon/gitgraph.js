@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import { CommitStyleOptions, BranchStyleOptions } from "../template";
+import { TemplateOptions } from "../template";
 import { Commit, CommitRenderOptions, CommitOptions } from "../commit";
 import {
   Branch,
@@ -18,7 +18,7 @@ interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
   subject?: string;
   body?: string;
   hash?: string;
-  style?: CommitStyleOptions;
+  style?: TemplateOptions["commit"];
   dotText?: string;
   tag?: string;
   onClick?: (commit: Commit<TNode>) => void;
@@ -39,7 +39,7 @@ interface GitgraphBranchOptions<TNode> {
   /**
    * Branch style
    */
-  style?: BranchStyleOptions;
+  style?: TemplateOptions["branch"];
 }
 
 class GitgraphUserApi<TNode> {

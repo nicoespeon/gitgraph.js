@@ -1,6 +1,6 @@
 import { GitgraphCore, Mode } from "../gitgraph";
 import { GitgraphCommitOptions } from "./gitgraph-user-api";
-import { CommitStyleOptions, CommitStyle } from "../template";
+import { TemplateOptions, CommitStyle } from "../template";
 import { Commit } from "../commit";
 import { Branch } from "../branch";
 import { withoutUndefinedKeys } from "../utils";
@@ -211,7 +211,7 @@ class BranchUserApi<TNode> {
     this.graph.refs.set(this.branch.name, commitHash);
   }
 
-  private getCommitStyle(style: CommitStyleOptions = {}): CommitStyle {
+  private getCommitStyle(style: TemplateOptions["commit"] = {}): CommitStyle {
     const message = {
       ...withoutUndefinedKeys(this.graph.template.commit.message),
       ...withoutUndefinedKeys(this.branch.commitDefaultOptions.style!.message),

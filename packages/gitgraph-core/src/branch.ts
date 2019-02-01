@@ -1,7 +1,7 @@
 import { Commit, CommitRenderOptions } from "./commit";
 import { GitgraphCore } from "./gitgraph";
 import { BranchUserApi } from "./user-api/branch-user-api";
-import { CommitStyleOptions, BranchStyle } from "./template";
+import { TemplateOptions, BranchStyle } from "./template";
 
 export {
   BranchCommitDefaultOptions,
@@ -14,7 +14,7 @@ export {
 interface BranchCommitDefaultOptions<TNode> extends CommitRenderOptions<TNode> {
   author?: string;
   subject?: string;
-  style?: CommitStyleOptions;
+  style?: TemplateOptions["commit"];
 }
 
 interface BranchOptions<TNode = SVGElement> {
