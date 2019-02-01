@@ -5,7 +5,9 @@ import { Commit } from "../commit";
 import { Branch } from "../branch";
 import { withoutUndefinedKeys } from "../utils";
 
-interface BranchMergeOptions<TNode> {
+export { BranchUserApi, GitgraphMergeOptions };
+
+interface GitgraphMergeOptions<TNode> {
   /**
    * Branch or branch name.
    */
@@ -20,7 +22,7 @@ interface BranchMergeOptions<TNode> {
   fastForward?: boolean;
 }
 
-export class BranchUserApi<TNode> {
+class BranchUserApi<TNode> {
   /**
    * Name of the branch.
    * It needs to be public to be used when we merge another branch.
@@ -84,7 +86,7 @@ export class BranchUserApi<TNode> {
    *
    * @param options Options of the merge
    */
-  public merge(options: BranchMergeOptions<TNode>): this;
+  public merge(options: GitgraphMergeOptions<TNode>): this;
   public merge(...args: any[]): this {
     let options = args[0];
     if (!isBranchMergeOptions<TNode>(options)) {
@@ -235,7 +237,7 @@ export class BranchUserApi<TNode> {
 }
 
 function isBranchMergeOptions<TNode>(
-  options: BranchMergeOptions<TNode> | any,
-): options is BranchMergeOptions<TNode> {
+  options: GitgraphMergeOptions<TNode> | any,
+): options is GitgraphMergeOptions<TNode> {
   return typeof options === "object" && !(options instanceof BranchUserApi);
 }
