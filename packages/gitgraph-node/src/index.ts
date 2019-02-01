@@ -1,4 +1,4 @@
-import { GitgraphCore } from "gitgraph-core/lib";
+import { GitgraphCore } from "gitgraph-core";
 
 // Domain (rendering logic)
 import computeGraphMap from "./compute-graph-map";

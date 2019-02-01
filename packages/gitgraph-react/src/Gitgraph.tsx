@@ -11,7 +11,7 @@ import {
   toSvgPath,
   GitgraphUserApi,
   arrowSvgPath,
-} from "gitgraph-core/lib";
+} from "gitgraph-core";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
