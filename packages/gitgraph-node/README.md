@@ -1,6 +1,10 @@
-# Gitgraph node
+**❗ This rendering library is still under development. Use at your own risks until v2.**
+
+# `gitgraph-node`
 
 Draw pretty git graphs in your terminal.
+
+> This is the node.js rendering library of [GitGraph.js][gitgraph-repo].
 
 ![Gitgraph node in action](./assets/gitgraph-node-in-action.png)
 
@@ -49,16 +53,4 @@ Running `node index.js` will produce following output:
 
 ![Example usage](./assets/example-usage.png)
 
-## Meta
-
-Authors:
-
-- **Nicolas Carlo** - [@nicoespeon](https://twitter.com/nicoespeon) - <http://nicoespeon.com>
-- **Fabien Bernard** - [@fabien0102](https://twitter.com/fabien0102)
-
-Distributed under the [MIT license][mit-license].
-
-[💁 What does "MIT license" means?](license-explained)
-
-[mit-license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
-[license-explained]: http://choosealicense.com/licenses/mit/
+[gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
