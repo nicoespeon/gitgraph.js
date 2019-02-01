@@ -1,95 +1,101 @@
-![gitgraph.js](/assets/logo/gitgraph-logo.png)
+# `gitgraph-core`
 
-# [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js)
+This is the core package of [GitGraph.js][gitgraph-repo]. It contains the main logic for manipulating git-like API and compute the graph that should be rendered.
 
-A JavaScript library to draw pretty git graphs in the browser.
+If you want to use GitGraph.js, you're probably looking for one of the rendering library. They are all listed [at the root level of the monorepo][gitgraph-repo].
 
-Project page: <http://gitgraphjs.com/>
+If you are a contributor to a rendering library, you'll depend on this package. Read on 🤠
 
-## How to start
+## Why this package?
 
-You have different options to start with the library:
+We wanted to deliver GitGraph.js through different libraries, to fit different usages (e.g. React, Angular, Vanilla JS, Node.js…).
 
-- [Download the latest release](https://github.com/nicoespeon/gitgraph.js/releases/latest).
-- Clone the repo: `git clone git@github.com:nicoespeon/gitgraph.js.git`.
-- Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
-- Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
-- Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
+The idea was to extract the common logic, without the rendering part.
 
-Production files are available under the `build/` directory.
+All the GitGraph.js API is defined there: commit, branch, merge, etc. It embraces git semantics.
 
-## Report a bug / Ask for a feature
+## Developing a rendering library
 
-You found some nasty bug or have a cool feature request? [Just open a new
-issue](https://github.com/nicoespeon/gitgraph.js/issues).
+A rendering library is a wrapper around `gitgraph-core`.
 
-Please have a look at the [Issue Guidelines][] from [Nicolas Gallagher][] before
-doing so.
+It should:
 
-[issue guidelines]: https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md
-[nicolas gallagher]: https://github.com/necolas
+- expose the GitGraph.js API to the user
+- subscribe to graph updates to re-render it
 
-## Documentation
+How it renders the graph is up to you (e.g. canvas, svg, HTML elements…).
 
-The JavaScript source code is documented with [JSDoc](http://usejsdoc.org/).
+### Examples of usage
 
-### Available commands
+A vanilla JS implementation:
 
-#### open a live reload server - `npm start`
+```js
+import GitgraphCore from "gitgraph-core";
 
-For a better code experience, this grunt task opens a live server in your
-favorite browser. This server is automatically reloaded when you save a project
-file.
+export function createGitgraph(options) {
+  const $target = options.$target || document.getElementId("#gitgraph");
 
-Please note that `examples/index.html` is the default file for testing ;)
+  const graphOptions = {
+    // Build relevant GitgraphCore options.
+  };
 
-#### test code - `npm test` | `npm run test:watch`
+  // Instantiate the graph.
+  const gitgraph = new GitgraphCore(graphOptions);
 
-Run unit tests with [Jest](https://facebook.github.io/jest/)
+  // Subscribe to graph updates.
+  const gitgraph.subscribe((data) => {
+    render($target, data);
+  });
 
-#### build code - `npm run build`
+  // Return the GitGraph.js API to the user.
+  return gitgraph.getUserApi();
+}
 
-Compile, bundle, uglify, minify code to `/lib`.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) as a guideline for our versioning here.
-
-### What does that mean?
-
-Releases will be numbered with the following format:
-
-```
-<major>.<minor>.<patch>
+function render($target, data) {
+  // Do the rendering…
+  $target.appendChild(renderGraph(data));
+}
 ```
 
-And constructed with the following guidelines:
+A React implementation:
 
-- Breaking backward compatibility bumps the `<major>` (and resets the `<minor>`
-  and `<patch>`)
-- New additions without breaking backward compatibility bump the `<minor>` (and
-  reset the `<patch>`)
-- Bug fixes and misc. changes bump the `<patch>`
+```jsx
+import React from "react";
+import GitgraphCore from "gitgraph-core";
 
-## Authors and contributors
+export class Gitgraph extends React.Component {
+  constructor(props) {
+    super(props);
 
-**Nicolas Carlo** - [@nicoespeon](https://twitter.com/nicoespeon) } <http://nicoespeon.com>
+    this.state = {
+      // Init state.
+    };
 
-**Fabien Bernard** - [@fabien0102](https://twitter.com/fabien0102)
+    // Instantiate the graph.
+    this.gitgraph = new GitgraphCore(props.options);
 
-[![0](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/0)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/0)
-[![1](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/1)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/1)
-[![2](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/2)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/2)
-[![3](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/3)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/3)
-[![4](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/4)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/4)
-[![5](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/5)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/5)
-[![6](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/6)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/6)
-[![7](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/7)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/7)
+    // Subscribe to graph updates.
+    this.gitgraph.subscribe((data) => {
+      this.setState(data);
+    });
+  }
 
-## Copyright and License
+  render() {
+    // Do the rendering…
+    return <svg>{this.renderGraph()}</svg>;
+  }
 
-Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][]
+  componentDidMount() {
+    // Pass the GitGraph.js API to the user.
+    this.props.children(this.gitgraph.getUserApi());
+  }
+}
+```
 
-[mit license]: https://github.com/nicoespeon/gitgraph.js/blob/master/LICENSE.md
+## How does it work?
 
-[> What does that mean?](http://choosealicense.com/licenses/mit/)
+The end-user will be using the rendering library. As we return `gitgraph.getUserApi()`, the user will be able to perform git-like actions (create a branch, commit, merge…).
+
+Every action updates the internal graph. The core library computes the new graph that should be rendered to represent the new state. When it does, it will call its listeners through the `subscribe()` method.
+
+[gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
