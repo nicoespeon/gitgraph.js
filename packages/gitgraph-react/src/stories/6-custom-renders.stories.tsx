@@ -1,15 +1,10 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import {
-  Gitgraph,
-  ReactCommitRenderOptions,
-  Mode,
-  Orientation,
-} from "../Gitgraph";
+import { Gitgraph, CommitOptions, Mode, Orientation } from "../Gitgraph";
 
 storiesOf("6. Custom renders", module)
   .add("with render dot", () => {
-    const renderDot: ReactCommitRenderOptions["renderDot"] = (commit) => (
+    const renderDot: CommitOptions["renderDot"] = (commit) => (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 71.84 75.33"
@@ -49,9 +44,7 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render tooltip", () => {
-    const renderTooltip: ReactCommitRenderOptions["renderTooltip"] = (
-      commit,
-    ) => {
+    const renderTooltip: CommitOptions["renderTooltip"] = (commit) => {
       const commitSize = commit.style.dot.size * 2;
       return (
         <g transform={`translate(${commitSize + 10}, ${commitSize / 2})`}>
@@ -99,7 +92,7 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message", () => {
-    const renderMessage: ReactCommitRenderOptions["renderMessage"] = (
+    const renderMessage: CommitOptions["renderMessage"] = (
       commit,
       commitMessageX,
     ) => {
@@ -140,7 +133,7 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message (long)", () => {
-    const renderMessage: ReactCommitRenderOptions["renderMessage"] = (
+    const renderMessage: CommitOptions["renderMessage"] = (
       commit,
       commitMessageX,
     ) => {
@@ -193,7 +186,7 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message (long & reverse orientation)", () => {
-    const renderMessage: ReactCommitRenderOptions["renderMessage"] = (
+    const renderMessage: CommitOptions["renderMessage"] = (
       commit,
       commitMessageX,
     ) => {

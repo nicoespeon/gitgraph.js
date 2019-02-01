@@ -1,13 +1,13 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, ReactCommitOptions } from "gitgraph-react/src/Gitgraph";
+import { Gitgraph, CommitOptions } from "../Gitgraph";
 
 storiesOf("3. Events", module)
   .add("on commit dot click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onClick: ReactCommitOptions["onClick"] = (commit) => {
+        const onClick: CommitOptions["onClick"] = (commit) => {
           alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
         };
 
@@ -28,9 +28,7 @@ storiesOf("3. Events", module)
   .add("on commit message click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onMessageClick: ReactCommitOptions["onMessageClick"] = (
-          commit,
-        ) => {
+        const onMessageClick: CommitOptions["onMessageClick"] = (commit) => {
           alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
         };
 
@@ -51,7 +49,7 @@ storiesOf("3. Events", module)
   .add("on commit mouseover", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onMouseOver: ReactCommitOptions["onMouseOver"] = (commit) => {
+        const onMouseOver: CommitOptions["onMouseOver"] = (commit) => {
           alert(
             `Mouse is over commit ${commit.hashAbbrev}: "${commit.subject}"`,
           );
@@ -74,7 +72,7 @@ storiesOf("3. Events", module)
   .add("on commit mouseout", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onMouseOut: ReactCommitOptions["onMouseOut"] = (commit) => {
+        const onMouseOut: CommitOptions["onMouseOut"] = (commit) => {
           alert(
             `Mouse is out commit ${commit.hashAbbrev}: "${commit.subject}"`,
           );

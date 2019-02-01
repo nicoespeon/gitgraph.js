@@ -2,19 +2,21 @@ import * as React from "react";
 import {
   GitgraphCore,
   GitgraphOptions,
+  GitgraphUserApi,
+  GitgraphCommitOptions,
+  GitgraphBranchOptions,
+  GitgraphMergeOptions,
+  BranchUserApi,
   Commit,
-  CommitOptions,
-  CommitRenderOptions,
-  BranchesPaths,
-  Coordinate,
   MergeStyle,
   Mode,
   Orientation,
-  GitgraphUserApi,
-  templateExtend,
   TemplateName,
-  arrowSvgPath,
+  templateExtend,
+  BranchesPaths,
+  Coordinate,
   toSvgPath,
+  arrowSvgPath,
 } from "gitgraph-core";
 
 import { Tooltip } from "./Tooltip";
@@ -22,20 +24,24 @@ import { Dot } from "./Dot";
 
 type ReactSvgElement = React.ReactElement<SVGElement>;
 
-type ReactCommitRenderOptions = CommitRenderOptions<ReactSvgElement>;
-type ReactCommitOptions = CommitOptions<ReactSvgElement>;
+type CommitOptions = GitgraphCommitOptions<ReactSvgElement>;
+type BranchOptions = GitgraphBranchOptions<ReactSvgElement>;
+type MergeOptions = GitgraphMergeOptions<ReactSvgElement>;
+type Branch = BranchUserApi<ReactSvgElement>;
 
 export {
   Gitgraph,
   GitgraphProps,
   GitgraphState,
-  ReactCommitRenderOptions,
-  ReactCommitOptions,
+  CommitOptions,
+  BranchOptions,
+  MergeOptions,
+  Branch,
+  TemplateName,
+  templateExtend,
   MergeStyle,
   Mode,
   Orientation,
-  TemplateName,
-  templateExtend,
 };
 
 interface GitgraphProps {
