@@ -55,7 +55,7 @@ export class GitgraphCore<TNode = SVGElement> {
   public branches: Map<Branch["name"], Branch<TNode>> = new Map();
   public currentBranch: Branch<TNode>;
 
-  private listeners: Array<() => void> = [];
+  private listeners: Array<(data: RenderedData<TNode>) => void> = [];
 
   constructor(options: GitgraphOptions = {}) {
     this.template = getTemplate(options.template);
@@ -99,7 +99,7 @@ export class GitgraphCore<TNode = SVGElement> {
    * @param listener A callback to be invoked on every change.
    * @returns A function to remove this change listener.
    */
-  public subscribe(listener: () => void): () => void {
+  public subscribe(listener: (data: RenderedData<TNode>) => void): () => void {
     this.listeners.push(listener);
 
     let isSubscribed = true;
@@ -335,7 +335,7 @@ export class GitgraphCore<TNode = SVGElement> {
    * E.g. a rendering library will know it needs to re-render the graph.
    */
   private next() {
-    this.listeners.forEach((listener) => listener());
+    this.listeners.forEach((listener) => listener(this.getRenderedData()));
   }
 }
 

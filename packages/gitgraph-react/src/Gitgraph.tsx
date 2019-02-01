@@ -56,7 +56,10 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.gitgraph = new GitgraphCore<React.ReactElement<SVGElement>>(
       props.options,
     );
-    this.gitgraph.subscribe(this.onGitgraphCoreRender.bind(this));
+    this.gitgraph.subscribe((data) => {
+      const { commits, branchesPaths, commitMessagesX } = data;
+      this.setState({ commits, branchesPaths, commitMessagesX });
+    });
   }
 
   public render() {
@@ -303,15 +306,6 @@ export class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private getMessageOffset({ x, y }: Coordinate): Coordinate {
     return { x, y: this.state.commitYWithOffsets[y] || y };
-  }
-
-  private onGitgraphCoreRender() {
-    const {
-      commits,
-      branchesPaths,
-      commitMessagesX,
-    } = this.gitgraph.getRenderedData();
-    this.setState({ commits, branchesPaths, commitMessagesX });
   }
 }
 
