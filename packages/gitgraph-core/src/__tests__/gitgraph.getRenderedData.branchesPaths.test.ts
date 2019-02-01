@@ -1,9 +1,6 @@
-import {
-  GitgraphCore,
-  metroTemplate,
-  TemplateName,
-  Orientation,
-} from "../index";
+import { GitgraphCore } from "../gitgraph";
+import { Orientation } from "../orientation";
+import { metroTemplate, TemplateName } from "../template";
 
 describe("Gitgraph.getRenderedData.branchesPaths", () => {
   it("should generate branches paths for a simple case", () => {

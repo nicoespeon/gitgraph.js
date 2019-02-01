@@ -1,4 +1,5 @@
-import { GitgraphCore, Commit } from "../index";
+import { GitgraphCore } from "../gitgraph";
+import { Commit } from "../commit";
 
 describe("Branch", () => {
   let log: Commit[];

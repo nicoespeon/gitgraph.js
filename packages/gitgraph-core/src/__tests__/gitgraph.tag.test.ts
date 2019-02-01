@@ -1,4 +1,4 @@
-import { GitgraphCore } from "../index";
+import { GitgraphCore } from "../gitgraph";
 
 describe("Gitgraph.tag", () => {
   it("should add a tag to a commit", () => {

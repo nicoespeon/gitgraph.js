@@ -1,4 +1,4 @@
-import { GitgraphCore } from "../index";
+import { GitgraphCore } from "../gitgraph";
 
 describe("Gitgraph.commit", () => {
   describe("initial commit", () => {

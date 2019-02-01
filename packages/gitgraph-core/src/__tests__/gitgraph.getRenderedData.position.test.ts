@@ -1,4 +1,5 @@
-import { GitgraphCore, Orientation, Mode } from "../index";
+import { GitgraphCore, Mode } from "../gitgraph";
+import { Orientation } from "../orientation";
 
 describe("Gitgraph.getRenderedData.position", () => {
   it("should deal with 3 straight commits", () => {

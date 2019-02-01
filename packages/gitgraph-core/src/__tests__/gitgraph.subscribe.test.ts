@@ -1,4 +1,4 @@
-import { GitgraphCore } from "../index";
+import { GitgraphCore } from "../gitgraph";
 
 describe("Gitgraph.subscribe", () => {
   it("should call onUpdate on each commit", () => {
