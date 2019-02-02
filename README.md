@@ -64,7 +64,7 @@ Releases use the following format:
 
 - Breaking changes bump `<major>` (and reset `<minor>` & `<patch>`)
 - Backward compatible changes bump `<minor>` (and reset `<patch>`)
-- Bug fixes bump the `<patch>`
+- Bug fixes bump `<patch>`
 
 ## Authors and contributors
 
