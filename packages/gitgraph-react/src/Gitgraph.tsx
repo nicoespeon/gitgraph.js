@@ -17,7 +17,7 @@ import {
   Coordinate,
   toSvgPath,
   arrowSvgPath,
-} from "gitgraph-core";
+} from "@gitgraph/core";
 
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";

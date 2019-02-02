@@ -1,6 +1,6 @@
 export const globals = {
   // Gitgraph
-  "gitgraph-core": "gitgraph.core",
+  "@gitgraph/core": "gitgraph.core",
 };
 
 export default (name) => ({

@@ -23,7 +23,7 @@ Then, use it in your node.js scripts.
 Let's pretend this is your `index.js`:
 
 ```js
-const { Gitgraph, render } = require("gitgraph-node");
+const { Gitgraph, render } = require("@gitgraph/node");
 
 const gitgraph = new Gitgraph();
 

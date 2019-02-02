@@ -15,7 +15,7 @@ Install the package with npm: `npm i --save gitgraph-react`
 Now you can use the `<GitGraph>` component:
 
 ```jsx
-const { Gitgraph } = require("gitgraph-react");
+const { Gitgraph } = require("@gitgraph/react");
 
 function MyComponent() {
   return (

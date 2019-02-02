@@ -1,5 +1,5 @@
 {
-  "name": "gitgraph-node",
+  "name": "@gitgraph/node",
   "version": "2.0.0-alpha",
   "description": "Draw pretty git graphs in the terminal, with node.js",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.1",
-    "gitgraph-core": "^2.0.0-alpha",
+    "@gitgraph/core": "^2.0.0-alpha",
     "lodash": "^4.17.10"
   },
   "devDependencies": {

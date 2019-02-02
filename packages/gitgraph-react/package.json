@@ -1,5 +1,5 @@
 {
-  "name": "gitgraph-react",
+  "name": "@gitgraph/react",
   "version": "2.0.0-alpha",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -40,7 +40,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "gitgraph-core": "^2.0.0-alpha",
+    "@gitgraph/core": "^2.0.0-alpha",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },

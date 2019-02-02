@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Commit } from "gitgraph-core/lib/index";
+import { Commit } from "@gitgraph/core";
 
 export class Tooltip extends React.Component<
   { commit: Commit<React.ReactElement<SVGElement>> },
