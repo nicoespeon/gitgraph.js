@@ -1,4 +1,4 @@
-import { GitgraphCore, Commit } from "gitgraph-core/lib";
+import { GitgraphCore, Commit } from "@gitgraph/core";
 import { flow, fill, includes, range } from "lodash";
 import { unzip } from "lodash/fp";
 

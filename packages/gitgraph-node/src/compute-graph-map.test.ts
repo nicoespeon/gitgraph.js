@@ -1,9 +1,10 @@
 import {
   GitgraphCore,
-  Template,
   GitgraphUserApi,
   BranchUserApi,
-} from "gitgraph-core/lib";
+  templateExtend,
+  TemplateName,
+} from "@gitgraph/core";
 
 import computeGraphMap, { GraphCommit, GraphMap } from "./compute-graph-map";
 
@@ -283,7 +284,7 @@ describe("compute cells colors", () => {
   }
 
   beforeEach(() => {
-    const template = new Template({
+    const template = templateExtend(TemplateName.Metro, {
       colors: ["red", "green", "blue"],
     });
     core = new GitgraphCore({ template });
