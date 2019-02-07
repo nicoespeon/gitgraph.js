@@ -19,6 +19,7 @@ import {
   arrowSvgPath,
 } from "@gitgraph/core";
 
+import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
@@ -71,6 +72,9 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
   private $tooltip: React.ReactElement<SVGGElement> | null = null;
+  private branchesLabels: {
+    [k: string]: React.RefObject<SVGGElement>;
+  } = {};
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -94,7 +98,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <svg ref={this.$graph}>
         {/* Translate graph down => top-most commit tooltip is not cropped */}
         <g transform={`translate(0, ${Tooltip.padding})`}>
-          {this.renderBranches()}
+          {this.renderBranchesPaths()}
+          {this.renderBranchesLabels()}
           {this.renderCommits()}
           {this.$tooltip}
         </g>
@@ -118,8 +123,34 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         "height",
         // As we translate the graph by `Tooltip.padding`,
         // we need to take it into account in height calculation too.
-        (height + Tooltip.padding).toString(),
+        (height + Tooltip.padding + BranchLabel.paddingX).toString(),
       );
+    }
+
+    if (this.$commits.current) {
+      Array.from(this.$commits.current.children).forEach((commit) => {
+        const branchLabel = this.branchesLabels[commit.id];
+        if (!branchLabel || !branchLabel.current) {
+          return;
+        }
+
+        // Here we rely on the .message class name. A ref might be better.
+        const message = commit.getElementsByClassName("message")[0];
+        if (!message) return;
+
+        const matches = message
+          .getAttribute("transform")!
+          .match(/translate\((\d+),\s(\d+)\)/);
+        if (!matches) return;
+
+        const [, x, y] = matches.map((a) => parseInt(a, 10));
+        // For some reason, 1 padding is not included in BBox total width.
+        const branchLabelWidth =
+          branchLabel.current.getBBox().width + BranchLabel.paddingX;
+        const padding = 10;
+        const newX = x + branchLabelWidth + padding;
+        message.setAttribute("transform", `translate(${newX}, ${y})`);
+      });
     }
 
     if (!this.state.shouldRecomputeOffsets) return;
@@ -132,7 +163,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
-  private renderBranches() {
+  private renderBranchesPaths() {
     const offset = this.gitgraph.template.commit.dot.size;
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
@@ -150,6 +181,40 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         transform={`translate(${offset}, ${offset})`}
       />
     ));
+  }
+
+  private renderBranchesLabels() {
+    if (this.gitgraph.isHorizontal) {
+      // TODO: handle branch labels in horizontal mode
+      return null;
+    }
+
+    const branches = Array.from(this.gitgraph.branches.values());
+    return branches
+      .map((branch) => {
+        const commitHash = this.gitgraph.refs.getCommit(branch.name);
+        return this.state.commits.find(({ hash }) => commitHash === hash);
+      })
+      .filter(
+        (commit): commit is Commit<ReactSvgElement> => commit !== undefined,
+      )
+      .filter((commit) => commit.style.message.displayBranch)
+      .map((commit) => {
+        const branch = commit.branchToDisplay;
+        const ref = React.createRef<SVGGElement>();
+
+        const x = this.state.commitMessagesX;
+        const { y } = this.getMessageOffset(commit);
+
+        // Store the ref to adapt commit message position.
+        this.branchesLabels[commit.hashAbbrev] = ref;
+
+        return (
+          <g key={branch} ref={ref} transform={`translate(${x}, ${y})`}>
+            <BranchLabel commit={commit} name={branch} />
+          </g>
+        );
+      });
   }
 
   private renderCommits() {
@@ -178,7 +243,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     }
 
     return (
-      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+      <g
+        key={commit.hashAbbrev}
+        // Store commit ID to match branch label. We could use refs instead.
+        id={commit.hashAbbrev}
+        transform={`translate(${x}, ${y})`}
+      >
         {this.renderDot(commit)}
         {commit.style.message.display && this.renderMessage(commit)}
         {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
@@ -223,7 +293,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private renderMessage(commit: Commit<ReactSvgElement>) {
     if (commit.renderMessage) {
-      return commit.renderMessage(commit, this.state.commitMessagesX);
+      return (
+        <g className="message" transform="translate(0, 0)">
+          {commit.renderMessage(commit, this.state.commitMessagesX)}
+        </g>
+      );
     }
 
     let body = null;
@@ -239,7 +313,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const y = commit.style.dot.size;
 
     return (
-      <g transform={`translate(${x}, ${y})`}>
+      // Class name is used to retrieve the message. We could use a ref instead.
+      <g className="message" transform={`translate(${x}, ${y})`}>
         <text
           alignmentBaseline="central"
           fill={commit.style.message.color}
@@ -339,12 +414,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 function getMessage(commit: Commit<ReactSvgElement>): string {
   let message = "";
 
-  if (commit.style.message.displayBranch && commit.branchToDisplay) {
-    message += `[${commit.branchToDisplay}`;
-    if (commit.tags!.length) {
-      message += `, ${commit.tags!.join(", ")}`;
-    }
-    message += `] `;
+  if (commit.tags!.length) {
+    message += `[${commit.tags!.join(", ")}] `;
   }
 
   if (commit.style.message.displayHash) {
