@@ -42,7 +42,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@gitgraph/core": "^2.0.0-alpha",
+    "@gitgraph/core": "^1.0.0-alpha",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
