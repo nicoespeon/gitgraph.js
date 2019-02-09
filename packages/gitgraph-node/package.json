@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/node",
-  "version": "2.0.0-alpha",
+  "version": "0.1.0",
   "description": "Draw pretty git graphs in the terminal, with node.js",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [

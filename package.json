@@ -1,7 +1,7 @@
 {
   "name": "gitgraph.js",
   "private": true,
-  "version": "2.0.0-alpha",
+  "version": "2.0.0-monorepo",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "description": "A JavaScript library to draw pretty git graphs",
   "contributors": [
