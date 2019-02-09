@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/node",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Draw pretty git graphs in the terminal, with node.js",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -23,7 +23,8 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme","publishConfig": {
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "publishConfig": {
     "access": "public"
   },
   "main": "./src/index.ts",
@@ -32,8 +33,8 @@
     "example:branches": "ts-node examples/branches.ts"
   },
   "dependencies": {
-    "chalk": "^2.4.1",
     "@gitgraph/core": "^1.0.0-alpha",
+    "chalk": "^2.4.1",
     "lodash": "^4.17.10"
   },
   "devDependencies": {

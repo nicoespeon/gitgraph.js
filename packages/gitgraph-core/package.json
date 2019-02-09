@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/core",
-  "version": "0.0.0",
+  "version": "1.0.0-0",
   "description": "Core of gitgraph, a JavaScript library to draw pretty git graphs",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -22,7 +22,8 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",  "publishConfig": {
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "publishConfig": {
     "access": "public"
   },
   "main": "./lib/bundle.umd.js",
@@ -64,7 +65,11 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$"
   }
 }

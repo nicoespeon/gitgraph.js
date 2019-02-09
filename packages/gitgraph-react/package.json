@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/react",
-  "version": "0.0.0",
+  "version": "1.0.0-0",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -23,7 +23,8 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme","publishConfig": {
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "publishConfig": {
     "access": "public"
   },
   "main": "./lib/bundle.umd.js",
