@@ -21,19 +21,6 @@ You'll find usage details in their README.
 
 As a contributor, you might be interested in checking out [gitgraph-core][gitgraph-core]. It contains the core logic for rendering libraries to use.
 
-### If you want to use v1
-
-First, you should know it is no longer maintained 😅
-
-But, you have different options:
-
-- Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
-- Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
-- Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
-- Clone the repo and [checkout the `v1` branch](https://github.com/nicoespeon/gitgraph.js/tree/v1).
-
-Production files are available under the `build/` directory.
-
 ## Contributing
 
 ### [Contributing Guide][contributing]
