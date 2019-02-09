@@ -1,4 +1,4 @@
-**❗ This rendering library is still under development. Use at your own risks until v2.**
+**❗ This rendering library is still under development and is not stable.**
 
 # `gitgraph-node`
 

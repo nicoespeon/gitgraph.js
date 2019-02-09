@@ -1,5 +1,3 @@
-**❗ This rendering library is still under development. Use at your own risks until v2.**
-
 # `gitgraph-react`
 
 Draw pretty git graphs with React.
