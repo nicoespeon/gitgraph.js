@@ -35,7 +35,9 @@
     "build:tsc": "tsc",
     "build:bundle": "rollup -c rollup.config.js",
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
-    "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js"
+    "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test"
   },
   "dependencies": {
     "joi-browser": "13.4.0",
