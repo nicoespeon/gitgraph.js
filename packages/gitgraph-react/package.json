@@ -39,7 +39,8 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@gitgraph/core": "^1.0.0-alpha",
