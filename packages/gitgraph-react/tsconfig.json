@@ -11,7 +11,7 @@
     ],
     "declaration": true,
     "sourceMap": true,
-    "removeComments": true,
+    "removeComments": false,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
