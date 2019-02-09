@@ -1,6 +1,6 @@
 ![GitGraph.js](/assets/logo/gitgraph-logo.png)
 
-A JavaScript library to draw pretty git graphs in the browser.
+A JavaScript library to draw pretty git graphs.
 
 ---
 
@@ -10,7 +10,7 @@ A JavaScript library to draw pretty git graphs in the browser.
 
 ## Getting started
 
-GitGraph.js codebase is a monorepo.
+GitGraph.js codebase is a monorepo. Packages are released under `@gitgraph/*` scope.
 
 As a user, you're probably interested in one of the rendering libraries:
 
