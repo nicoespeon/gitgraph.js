@@ -1,3 +1,5 @@
+**💁‍ Package `gitgraph.js` is no longer maintained. Check for [`@gitgraph/*` packages](https://github.com/nicoespeon/gitgraph.js) instead.**
+
 ![gitgraph.js](/assets/logo/gitgraph-logo.png)
 
 [![Build Status](https://secure.travis-ci.org/nicoespeon/gitgraph.js.png)](http://travis-ci.org/nicoespeon/gitgraph.js)
