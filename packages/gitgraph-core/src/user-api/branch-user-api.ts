@@ -29,19 +29,21 @@ class BranchUserApi<TNode> {
    */
   public readonly name: Branch["name"];
 
-  private branch: Branch<TNode>;
-  private graph: GitgraphCore<TNode>;
-  private onGraphUpdate: () => void;
+  // tslint:disable:variable-name - Prefix `_` = explicitly private for JS users
+  private _branch: Branch<TNode>;
+  private _graph: GitgraphCore<TNode>;
+  private _onGraphUpdate: () => void;
+  // tslint:enable:variable-name
 
   constructor(
     branch: Branch<TNode>,
     graph: GitgraphCore<TNode>,
     onGraphUpdate: () => void,
   ) {
-    this.branch = branch;
+    this._branch = branch;
     this.name = branch.name;
-    this.graph = graph;
-    this.onGraphUpdate = onGraphUpdate;
+    this._graph = graph;
+    this._onGraphUpdate = onGraphUpdate;
   }
 
   /**
@@ -61,8 +63,8 @@ class BranchUserApi<TNode> {
     if (typeof options === "string") options = { subject: options };
     if (!options) options = {};
 
-    this.commitWithParents(options, []);
-    this.onGraphUpdate();
+    this._commitWithParents(options, []);
+    this._onGraphUpdate();
 
     return this;
   }
@@ -95,15 +97,15 @@ class BranchUserApi<TNode> {
     const { branch, subject, fastForward } = options;
 
     const branchName = typeof branch === "string" ? branch : branch.name;
-    const branchLastCommitHash = this.graph.refs.getCommit(branchName);
+    const branchLastCommitHash = this._graph.refs.getCommit(branchName);
     if (!branchLastCommitHash) {
       throw new Error(`The branch called "${branchName}" is unknown`);
     }
 
     let canFastForward = false;
-    const lastCommitHash = this.graph.refs.getCommit(this.branch.name);
+    const lastCommitHash = this._graph.refs.getCommit(this._branch.name);
     if (lastCommitHash) {
-      canFastForward = this.areCommitsConnected(
+      canFastForward = this._areCommitsConnected(
         lastCommitHash,
         branchLastCommitHash,
       );
@@ -112,15 +114,15 @@ class BranchUserApi<TNode> {
     }
 
     if (fastForward && canFastForward) {
-      this.fastForwardTo(branchLastCommitHash);
+      this._fastForwardTo(branchLastCommitHash);
     } else {
-      this.commitWithParents(
+      this._commitWithParents(
         { subject: subject || `Merge branch ${branchName}` },
         [branchLastCommitHash],
       );
     }
 
-    this.onGraphUpdate();
+    this._onGraphUpdate();
     return this;
   }
 
@@ -130,7 +132,7 @@ class BranchUserApi<TNode> {
    * @param name Name of the tag
    */
   public tag(name: string): this {
-    this.graph.getUserApi().tag(name, this.branch.name);
+    this._graph.getUserApi().tag(name, this._branch.name);
     return this;
   }
 
@@ -138,57 +140,59 @@ class BranchUserApi<TNode> {
    * Checkout onto this branch.
    */
   public checkout(): this {
-    this.graph.currentBranch = this.branch;
+    this._graph.currentBranch = this._branch;
     return this;
   }
 
-  private commitWithParents(
+  // tslint:disable:variable-name - Prefix `_` = explicitly private for JS users
+
+  private _commitWithParents(
     options: GitgraphCommitOptions<TNode>,
     parents: string[],
   ): void {
-    const parentOnSameBranch = this.graph.refs.getCommit(this.branch.name);
+    const parentOnSameBranch = this._graph.refs.getCommit(this._branch.name);
     if (parentOnSameBranch) {
       parents.unshift(parentOnSameBranch);
-    } else if (this.branch.parentCommitHash) {
-      parents.unshift(this.branch.parentCommitHash);
+    } else if (this._branch.parentCommitHash) {
+      parents.unshift(this._branch.parentCommitHash);
     }
 
     const { tag, ...commitOptions } = options;
     const commit = new Commit({
-      author: this.branch.commitDefaultOptions.author || this.graph.author,
+      author: this._branch.commitDefaultOptions.author || this._graph.author,
       subject:
-        this.branch.commitDefaultOptions.subject ||
-        (this.graph.commitMessage as string),
+        this._branch.commitDefaultOptions.subject ||
+        (this._graph.commitMessage as string),
       ...commitOptions,
       parents,
-      style: this.getCommitStyle(options.style),
+      style: this._getCommitStyle(options.style),
     });
 
     if (parentOnSameBranch) {
       // Take all the refs from the parent
-      const parentRefs = this.graph.refs.getNames(parentOnSameBranch);
-      parentRefs.forEach((ref) => this.graph.refs.set(ref, commit.hash));
+      const parentRefs = this._graph.refs.getNames(parentOnSameBranch);
+      parentRefs.forEach((ref) => this._graph.refs.set(ref, commit.hash));
     } else {
       // Set the branch ref
-      this.graph.refs.set(this.branch.name, commit.hash);
+      this._graph.refs.set(this._branch.name, commit.hash);
     }
 
     // Add the new commit
-    this.graph.commits.push(commit);
+    this._graph.commits.push(commit);
 
     // Move HEAD on the last commit
     this.checkout();
-    this.graph.refs.set("HEAD", commit.hash);
+    this._graph.refs.set("HEAD", commit.hash);
 
     // Add a tag to the commit if `option.tag` is provide
     if (tag) this.tag(tag);
   }
 
-  private areCommitsConnected(
+  private _areCommitsConnected(
     parentCommitHash: Commit["hash"],
     childCommitHash: Commit["hash"],
   ): boolean {
-    const childCommit = this.graph.commits.find(
+    const childCommit = this._graph.commits.find(
       ({ hash }) => childCommitHash === hash,
     );
     if (!childCommit) return false;
@@ -203,37 +207,39 @@ class BranchUserApi<TNode> {
     // `childCommitHash` is not a direct child of `parentCommitHash`.
     // But maybe one of `childCommitHash` parent is.
     return childCommit.parents.some((directParentHash) =>
-      this.areCommitsConnected(parentCommitHash, directParentHash),
+      this._areCommitsConnected(parentCommitHash, directParentHash),
     );
   }
 
-  private fastForwardTo(commitHash: Commit["hash"]): void {
-    this.graph.refs.set(this.branch.name, commitHash);
+  private _fastForwardTo(commitHash: Commit["hash"]): void {
+    this._graph.refs.set(this._branch.name, commitHash);
   }
 
-  private getCommitStyle(style: TemplateOptions["commit"] = {}): CommitStyle {
+  private _getCommitStyle(style: TemplateOptions["commit"] = {}): CommitStyle {
     const message = {
-      ...withoutUndefinedKeys(this.graph.template.commit.message),
-      ...withoutUndefinedKeys(this.branch.commitDefaultOptions.style!.message),
+      ...withoutUndefinedKeys(this._graph.template.commit.message),
+      ...withoutUndefinedKeys(this._branch.commitDefaultOptions.style!.message),
       ...style.message,
     };
 
-    if (!this.graph.isVertical || this.graph.mode === Mode.Compact) {
+    if (!this._graph.isVertical || this._graph.mode === Mode.Compact) {
       message.display = false;
     }
 
     return {
-      ...withoutUndefinedKeys(this.graph.template.commit),
-      ...withoutUndefinedKeys(this.branch.commitDefaultOptions.style),
+      ...withoutUndefinedKeys(this._graph.template.commit),
+      ...withoutUndefinedKeys(this._branch.commitDefaultOptions.style),
       ...style,
       message,
       dot: {
-        ...withoutUndefinedKeys(this.graph.template.commit.dot),
-        ...withoutUndefinedKeys(this.branch.commitDefaultOptions.style!.dot),
+        ...withoutUndefinedKeys(this._graph.template.commit.dot),
+        ...withoutUndefinedKeys(this._branch.commitDefaultOptions.style!.dot),
         ...style.dot,
       },
     } as CommitStyle;
   }
+
+  // tslint:enable:variable-name
 }
 
 function isBranchMergeOptions<TNode>(

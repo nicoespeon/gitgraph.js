@@ -43,24 +43,26 @@ interface GitgraphBranchOptions<TNode> {
 }
 
 class GitgraphUserApi<TNode> {
-  private graph: GitgraphCore<TNode>;
-  private onGraphUpdate: () => void;
+  // tslint:disable:variable-name - Prefix `_` = explicitly private for JS users
+  private _graph: GitgraphCore<TNode>;
+  private _onGraphUpdate: () => void;
+  // tslint:enable:variable-name
 
   constructor(graph: GitgraphCore<TNode>, onGraphUpdate: () => void) {
-    this.graph = graph;
-    this.onGraphUpdate = onGraphUpdate;
+    this._graph = graph;
+    this._onGraphUpdate = onGraphUpdate;
   }
 
   /**
    * Clear everything (as `rm -rf .git && git init`).
    */
   public clear(): this {
-    this.graph.refs = new Refs();
-    this.graph.tags = new Refs();
-    this.graph.commits = [];
-    this.graph.branches = new Map();
-    this.graph.currentBranch = this.graph.createBranch("master");
-    this.onGraphUpdate();
+    this._graph.refs = new Refs();
+    this._graph.tags = new Refs();
+    this._graph.commits = [];
+    this._graph.branches = new Map();
+    this._graph.currentBranch = this._graph.createBranch("master");
+    this._onGraphUpdate();
     return this;
   }
 
@@ -77,7 +79,7 @@ class GitgraphUserApi<TNode> {
    */
   public commit(options?: GitgraphCommitOptions<TNode>): this;
   public commit(options?: any): this {
-    this.graph.currentBranch.getUserApi().commit(options);
+    this._graph.currentBranch.getUserApi().commit(options);
     return this;
   }
 
@@ -94,7 +96,7 @@ class GitgraphUserApi<TNode> {
    */
   public branch(name: string): BranchUserApi<TNode>;
   public branch(args: any): BranchUserApi<TNode> {
-    return this.graph.createBranch(args).getUserApi();
+    return this._graph.createBranch(args).getUserApi();
   }
 
   /**
@@ -108,7 +110,7 @@ class GitgraphUserApi<TNode> {
     ref?: Commit<TNode> | Commit["hash"] | Branch["name"],
   ): this {
     if (!ref) {
-      const head = this.graph.refs.getCommit("HEAD");
+      const head = this._graph.refs.getCommit("HEAD");
       if (!head) return this;
 
       ref = head;
@@ -116,28 +118,28 @@ class GitgraphUserApi<TNode> {
 
     if (typeof ref !== "string") {
       // `ref` is a `Commit`
-      this.graph.tags.set(name, ref.hash);
-      this.onGraphUpdate();
+      this._graph.tags.set(name, ref.hash);
+      this._onGraphUpdate();
       return this;
     }
 
     let commitHash;
-    if (this.graph.refs.hasCommit(ref)) {
+    if (this._graph.refs.hasCommit(ref)) {
       // `ref` is a `Commit["hash"]`
       commitHash = ref;
     }
 
-    if (this.graph.refs.hasName(ref)) {
+    if (this._graph.refs.hasName(ref)) {
       // `ref` is a `Branch["name"]`
-      commitHash = this.graph.refs.getCommit(ref);
+      commitHash = this._graph.refs.getCommit(ref);
     }
 
     if (!commitHash) {
       throw new Error(`The ref "${ref}" does not exist`);
     }
 
-    this.graph.tags.set(name, commitHash);
-    this.onGraphUpdate();
+    this._graph.tags.set(name, commitHash);
+    this._onGraphUpdate();
     return this;
   }
 
@@ -172,7 +174,7 @@ class GitgraphUserApi<TNode> {
       .validateSync(data)
       .map((options) => ({
         ...options,
-        style: { ...this.graph.template.commit },
+        style: { ...this._graph.template.commit },
         author: `${options.author.name} <${options.author.email}>`,
       }))
       // Git2json outputs is reverse-chronological.
@@ -182,7 +184,7 @@ class GitgraphUserApi<TNode> {
     // Use validated `value`.
     this.clear();
 
-    this.graph.commits = commitOptionsList.map(
+    this._graph.commits = commitOptionsList.map(
       (options) => new Commit(options),
     );
 
@@ -197,16 +199,16 @@ class GitgraphUserApi<TNode> {
         .map((ref) => ref.split(TAG_PREFIX))
         .map(([_, tag]) => tag)
         .filter((tag) => typeof tag === "string");
-      tags.forEach((tag) => this.graph.tags.set(tag, hash));
+      tags.forEach((tag) => this._graph.tags.set(tag, hash));
 
       refs
         .filter((ref) => !ref.startsWith(TAG_PREFIX))
-        .forEach((ref) => this.graph.refs.set(ref, hash));
+        .forEach((ref) => this._graph.refs.set(ref, hash));
     });
 
     // Create branches.
-    this.graph.commits
-      .map((commit) => this.withBranches(commit))
+    this._graph.commits
+      .map((commit) => this._withBranches(commit))
       .reduce((mem, commit) => {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
@@ -214,17 +216,19 @@ class GitgraphUserApi<TNode> {
       }, new Set())
       .forEach((branch) => this.branch(branch));
 
-    this.onGraphUpdate();
+    this._onGraphUpdate();
 
     return this;
   }
+
+  // tslint:disable:variable-name - Prefix `_` = explicitly private for JS users
 
   // TODO: get rid of these duplicated private methods.
   //
   // These belong to Gitgraph. It is duplicated because of `import()`.
   // `import()` should use regular user API instead.
-  private withBranches(commit: Commit<TNode>): Commit<TNode> {
-    const branches = this.getBranches();
+  private _withBranches(commit: Commit<TNode>): Commit<TNode> {
+    const branches = this._getBranches();
 
     let commitBranches = Array.from(
       (branches.get(commit.hash) || new Set()).values(),
@@ -238,22 +242,22 @@ class GitgraphUserApi<TNode> {
     return commit.setBranches(commitBranches);
   }
 
-  private getBranches(): Map<Commit["hash"], Set<Branch["name"]>> {
+  private _getBranches(): Map<Commit["hash"], Set<Branch["name"]>> {
     const result = new Map<Commit["hash"], Set<Branch["name"]>>();
 
     const queue: Array<Commit["hash"]> = [];
-    const branches = this.graph.refs
+    const branches = this._graph.refs
       .getAllNames()
       .filter((name) => name !== "HEAD");
     branches.forEach((branch) => {
-      const commitHash = this.graph.refs.getCommit(branch);
+      const commitHash = this._graph.refs.getCommit(branch);
       if (commitHash) {
         queue.push(commitHash);
       }
 
       while (queue.length > 0) {
         const currentHash = queue.pop() as Commit["hash"];
-        const current = this.graph.commits.find(
+        const current = this._graph.commits.find(
           ({ hash }) => hash === currentHash,
         ) as Commit<TNode>;
         const prevBranches =
@@ -268,4 +272,6 @@ class GitgraphUserApi<TNode> {
 
     return result;
   }
+
+  // tslint:enable:variable-name
 }
