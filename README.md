@@ -1,11 +1,3 @@
-**GitGraph.js v2 is not out yet. Don't use the version on this branch.**
-
-**Check for [the latest release][latest-release] or [the current state of the v2](https://github.com/nicoespeon/gitgraph.js/issues/187) for more information.**
-
-**Thanks 🙏**
-
----
-
 ![GitGraph.js](/assets/logo/gitgraph-logo.png)
 
 A JavaScript library to draw pretty git graphs in the browser.
@@ -38,7 +30,7 @@ But, you have different options:
 - Install with [npm](https://www.npmjs.com): `npm install --save gitgraph.js`.
 - Install with [Bower](http://bower.io/): `bower install gitgraph.js`.
 - Use [the CDNjs hosted lib](https://cdnjs.com/libraries/gitgraph.js).
-- Clone the repo and checkout the `v1` branch.
+- Clone the repo and [checkout the `v1` branch](https://github.com/nicoespeon/gitgraph.js/tree/v1).
 
 Production files are available under the `build/` directory.
 
