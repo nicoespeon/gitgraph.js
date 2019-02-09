@@ -23,7 +23,9 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme","publishConfig": {
+    "access": "public"
+  },
   "main": "./lib/bundle.umd.js",
   "module": "./lib/index.js",
   "jsnext:main": "./lib/index.js",

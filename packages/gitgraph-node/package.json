@@ -23,7 +23,9 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme","publishConfig": {
+    "access": "public"
+  },
   "main": "./src/index.ts",
   "scripts": {
     "example:default": "ts-node examples/default.ts",
