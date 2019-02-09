@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "lib": [
+      "es6"
+    ],
+    "declaration": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true
+  },
+  "includes": [
+    "examples/*.ts",
+  ],
+  "files": [
+    "src/index.ts"
+  ]
+}

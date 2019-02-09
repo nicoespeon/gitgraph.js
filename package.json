@@ -1,55 +1,52 @@
 {
   "name": "gitgraph.js",
-  "version": "1.15.1",
+  "private": true,
+  "version": "2.0.0-alpha",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
-  "description": "A JavaScript library to draw pretty git graphs in the browser",
+  "description": "A JavaScript library to draw pretty git graphs",
   "contributors": [
     {
       "name": "Fabien Bernard",
       "email": "fabien0102@gmail.com"
     }
   ],
-  "main": "./src/gitgraph.js",
-  "types": "./build/gitgraph.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/nicoespeon/gitgraph.js"
   },
+  "license": "MIT",
   "keywords": [
     "git",
     "graph",
     "javascript"
   ],
-  "dependencies": {},
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-copy": "~0.6.0",
-    "grunt-contrib-jasmine": "~0.5.1",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-uglify": "~0.6.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-express": "~1.4.1",
-    "grunt-jsdoc": "2.1.0",
-    "grunt-open": "~0.2.2",
-    "grunt-string-replace": "~1.0.0",
-    "jest": "^19.0.2",
-    "jsdoc-json": "^2.0.0",
-    "load-grunt-tasks": "~0.6.0",
-    "typescript": "^2.2.2",
-    "typescript-formatter": "^5.1.2"
-  },
   "scripts": {
-    "start": "grunt server",
-    "test": "npm run test:scripts && npm run test:src",
-    "test:src": "grunt test",
-    "test:scripts": "jest scripts",
-    "doc": "grunt doc",
-    "dist": "grunt dist",
-    "release": "grunt release",
-    "tsd": "grunt tsd"
+    "build": "lerna run build",
+    "watch": "lerna run watch",
+    "lint": "tslint packages/**/src/**/*",
+    "lint:fix": "npm run lint -- --fix",
+    "pretest": "npm run build",
+    "test": "jest",
+    "clean": "lerna clean"
   },
-  "license": "MIT"
+  "devDependencies": {
+    "@types/jest": "23.1.4",
+    "husky": "1.1.2",
+    "jest": "23.3.0",
+    "lerna": "^2.5.1",
+    "prettier": "1.13.7",
+    "pretty-quick": "1.6.0",
+    "ts-jest": "23.0.0",
+    "tslint": "5.11.0",
+    "tslint-config-prettier": "1.15.0",
+    "typescript": "^3.1.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:fix && pretty-quick --staged"
+    }
+  }
 }

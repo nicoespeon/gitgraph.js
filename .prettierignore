@@ -1,0 +1,3 @@
+*.json
+dist/
+gitgraph-core/lib/
