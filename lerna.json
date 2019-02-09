@@ -3,7 +3,20 @@
   "packages": [
     "packages/*"
   ],
-  "version": "2.0.0-alpha",
+  "ignoreChanges": [
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/stories/**",
+    "**/*.md"
+  ],
+  "command": {
+    "version": {
+      "allowBranch": "master",
+      "exact": true,
+      "message": "chore(release): %s"
+    }
+  },
+  "version": "independent",
   "npmClient": "yarn",
   "useWorkspaces": true
 }
