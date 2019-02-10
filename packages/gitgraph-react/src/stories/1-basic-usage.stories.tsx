@@ -93,7 +93,9 @@ storiesOf("1. Basic usage", module)
 
         // Branch that can be fast-forward on merge.
         const feat1 = gitgraph.branch("feat1");
-        feat1.commit().commit();
+        feat1
+          .commit("First commit of `feat1` branch")
+          .commit("Master will fast-forward here");
         master.merge({ branch: feat1, fastForward: true });
 
         master.commit();
