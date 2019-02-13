@@ -14,12 +14,10 @@ storiesOf("3. Events", module)
         const master = gitgraph.branch("master");
         master.commit({
           subject: "Hello",
-          body: "First commit",
           onClick,
         });
         master.commit({
           subject: "World",
-          body: "Second commit",
           onClick,
         });
       }}
@@ -33,16 +31,8 @@ storiesOf("3. Events", module)
         };
 
         const master = gitgraph.branch("master");
-        master.commit({
-          subject: "Hello",
-          body: "First commit",
-          onMessageClick,
-        });
-        master.commit({
-          subject: "World",
-          body: "Second commit",
-          onMessageClick,
-        });
+        master.commit({ subject: "Hello", onMessageClick });
+        master.commit({ subject: "World", onMessageClick });
       }}
     </Gitgraph>
   ))
@@ -56,16 +46,8 @@ storiesOf("3. Events", module)
         };
 
         const master = gitgraph.branch("master");
-        master.commit({
-          subject: "Hello",
-          body: "First commit",
-          onMouseOver,
-        });
-        master.commit({
-          subject: "World",
-          body: "Second commit",
-          onMouseOver,
-        });
+        master.commit({ subject: "Hello", onMouseOver });
+        master.commit({ subject: "World", onMouseOver });
       }}
     </Gitgraph>
   ))
@@ -79,16 +61,8 @@ storiesOf("3. Events", module)
         };
 
         const master = gitgraph.branch("master");
-        master.commit({
-          subject: "Hello",
-          body: "First commit",
-          onMouseOut,
-        });
-        master.commit({
-          subject: "World",
-          body: "Second commit",
-          onMouseOut,
-        });
+        master.commit({ subject: "Hello", onMouseOut });
+        master.commit({ subject: "World", onMouseOut });
       }}
     </Gitgraph>
   ));
