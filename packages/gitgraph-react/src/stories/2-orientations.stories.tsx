@@ -1,7 +1,7 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Gitgraph, Orientation } from "../Gitgraph";
+import { Gitgraph, Orientation, TemplateName } from "../Gitgraph";
 
 storiesOf("2. Orientations", module)
   .add("vertical reverse", () => (
@@ -31,6 +31,42 @@ storiesOf("2. Orientations", module)
   ))
   .add("horizontal reverse", () => (
     <Gitgraph options={{ orientation: Orientation.HorizontalReverse }}>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        develop.commit("three");
+        master.merge(develop);
+        master.commit();
+      }}
+    </Gitgraph>
+  ))
+  .add("horizontal (black arrow)", () => (
+    <Gitgraph
+      options={{
+        orientation: Orientation.Horizontal,
+        template: TemplateName.BlackArrow,
+      }}
+    >
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        develop.commit("three");
+        master.merge(develop);
+        master.commit();
+      }}
+    </Gitgraph>
+  ))
+  .add("horizontal reverse (black arrow)", () => (
+    <Gitgraph
+      options={{
+        orientation: Orientation.HorizontalReverse,
+        template: TemplateName.BlackArrow,
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");

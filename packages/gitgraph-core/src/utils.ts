@@ -160,7 +160,7 @@ function getAlpha<TNode = SVGElement>(
   let alphaY;
   let alphaX;
 
-  // Angle always start from previous commit Y position:
+  // Angle usually start from previous commit Y position:
   //
   // o
   // ↑ ↖ ︎
@@ -169,7 +169,7 @@ function getAlpha<TNode = SVGElement>(
   // | ↗︎
   // o
   //
-  // So we need to default to commit spacing.
+  // So we can to default to commit spacing.
   // For horizontal orientation => same with commit X position.
   switch (graph.orientation) {
     case Orientation.Horizontal:
@@ -193,26 +193,24 @@ function getAlpha<TNode = SVGElement>(
       break;
   }
 
+  // If commit is distant from its parent, there should be no angle.
+  //
+  //    o ︎
+  //    ↑  <-- arrow is like previous commit was on same X position
+  // o  |
+  // | /
+  // o
+  //
+  // For horizontal orientation => same with commit Y position.
+  if (graph.isVertical) {
+    if (Math.abs(deltaY) > commitSpacing) alphaX = 0;
+  } else {
+    if (Math.abs(deltaX) > commitSpacing) alphaY = 0;
+  }
+
   if (graph.reverseArrow) {
     alphaY *= -1;
     alphaX *= -1;
-
-    // If arrow is reverse, the previous commit position is considered
-    // the same on the straight part of the curved path.
-    //
-    // o
-    // ↓ \
-    // o  ↓  <-- arrow is like previous commit was on same X position
-    // |  o
-    // ↓ ↙︎
-    // o
-    //
-    // For horizontal orientation => same with commit Y position.
-    if (graph.isVertical) {
-      if (Math.abs(deltaY) > commitSpacing) alphaX = 0;
-    } else {
-      if (Math.abs(deltaX) > commitSpacing) alphaY = 0;
-    }
   }
 
   return Math.atan2(alphaY, alphaX);
