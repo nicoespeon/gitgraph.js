@@ -1,6 +1,7 @@
 import { Commit } from "./commit";
 import { GitgraphCore } from "./gitgraph";
 import { Orientation } from "./orientation";
+import { Coordinate } from "./branches-paths";
 
 export {
   Omit,
@@ -116,7 +117,7 @@ function withoutUndefinedKeys<T extends object>(
  */
 function arrowSvgPath<TNode = SVGElement>(
   graph: GitgraphCore<TNode>,
-  parent: Commit<TNode>,
+  parent: Coordinate,
   commit: Commit<TNode>,
 ): string {
   const commitRadius = commit.style.dot.size;
@@ -150,7 +151,7 @@ function arrowSvgPath<TNode = SVGElement>(
 
 function getAlpha<TNode = SVGElement>(
   graph: GitgraphCore<TNode>,
-  parent: Commit<TNode>,
+  parent: Coordinate,
   commit: Commit<TNode>,
 ): number {
   const deltaX = parent.x - commit.x;

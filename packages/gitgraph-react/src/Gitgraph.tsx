@@ -263,10 +263,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     commit.onMouseOver();
   }
 
-  private drawArrow(
-    parent: Commit<ReactSvgElement>,
-    commit: Commit<ReactSvgElement>,
-  ) {
+  private drawArrow(parent: Coordinate, commit: Commit<ReactSvgElement>) {
     const commitRadius = commit.style.dot.size;
 
     // Starting point, relative to commit
