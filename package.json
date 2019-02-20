@@ -21,6 +21,7 @@
     "javascript"
   ],
   "scripts": {
+    "lerna": "lerna",
     "build": "lerna run build",
     "watch": "lerna run watch",
     "lint": "tslint packages/**/src/**/*",
