@@ -8,7 +8,7 @@ Draw pretty git graphs with React.
 
 > You need to have [npm][get-npm] installed.
 
-Install the package with npm: `npm i --save gitgraph-react`
+Install the package with npm: `npm i --save @gitgraph/react`
 
 Now you can use the `<GitGraph>` component:
 

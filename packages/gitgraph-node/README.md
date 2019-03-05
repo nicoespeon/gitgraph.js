@@ -12,7 +12,7 @@ Draw pretty git graphs in your terminal.
 
 > You need to have [npm][get-npm] installed.
 
-Install the package with npm: `npm i --save gitgraph-node`
+Install the package with npm: `npm i --save @gitgraph/node`
 
 Then, use it in your node.js scripts.
 
