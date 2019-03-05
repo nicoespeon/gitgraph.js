@@ -42,11 +42,14 @@ interface RenderedData<TNode> {
 
 class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
+  public get isHorizontal(): boolean {
+    return (
+      this.orientation === Orientation.Horizontal ||
+      this.orientation === Orientation.HorizontalReverse
+    );
+  }
   public get isVertical(): boolean {
-    return [
-      undefined, // default value = Vertical
-      Orientation.VerticalReverse,
-    ].includes(this.orientation);
+    return !this.isHorizontal;
   }
 
   public reverseArrow: boolean;

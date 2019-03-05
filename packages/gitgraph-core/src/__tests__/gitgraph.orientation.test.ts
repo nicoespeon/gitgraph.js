@@ -6,6 +6,7 @@ describe("Gitgraph Orientation", () => {
     const gitgraph = new GitgraphCore();
 
     expect(gitgraph.isVertical).toBe(true);
+    expect(gitgraph.isHorizontal).toBe(false);
   });
 
   it("should tell it's vertical in VerticalReverse orientation", () => {
@@ -14,6 +15,7 @@ describe("Gitgraph Orientation", () => {
     });
 
     expect(gitgraph.isVertical).toBe(true);
+    expect(gitgraph.isHorizontal).toBe(false);
   });
 
   it("should tell it's horizontal in Horizontal orientation", () => {
@@ -22,6 +24,7 @@ describe("Gitgraph Orientation", () => {
     });
 
     expect(gitgraph.isVertical).toBe(false);
+    expect(gitgraph.isHorizontal).toBe(true);
   });
 
   it("should tell it's horizontal in HorizontalReverse orientation", () => {
@@ -30,5 +33,6 @@ describe("Gitgraph Orientation", () => {
     });
 
     expect(gitgraph.isVertical).toBe(false);
+    expect(gitgraph.isHorizontal).toBe(true);
   });
 });
