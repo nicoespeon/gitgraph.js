@@ -184,11 +184,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderBranchesLabels() {
-    if (this.gitgraph.isHorizontal) {
-      // TODO: handle branch labels in horizontal mode
-      return null;
-    }
-
     const branches = Array.from(this.gitgraph.branches.values());
     return branches
       .map((branch) => {
@@ -203,11 +198,18 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         const branch = commit.branchToDisplay;
         const ref = React.createRef<SVGGElement>();
 
-        const x = this.state.commitMessagesX;
-        const { y } = this.getMessageOffset(commit);
-
         // Store the ref to adapt commit message position.
         this.branchesLabels[commit.hashAbbrev] = ref;
+
+        const x = this.gitgraph.isVertical
+          ? this.state.commitMessagesX
+          : commit.x;
+
+        const commitDotSize = commit.style.dot.size * 2;
+        const horizontalMarginTop = 10;
+        const y = this.gitgraph.isVertical
+          ? this.getMessageOffset(commit).y
+          : commit.y + commitDotSize + horizontalMarginTop;
 
         return (
           <g key={branch} ref={ref} transform={`translate(${x}, ${y})`}>
