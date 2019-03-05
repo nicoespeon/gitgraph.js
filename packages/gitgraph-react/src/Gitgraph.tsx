@@ -211,12 +211,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           : commit.y + commitDotSize + horizontalMarginTop;
 
         return (
-          <g
-            key={commit.branchToDisplay}
-            ref={ref}
-            transform={`translate(${x}, ${y})`}
-          >
-            <BranchLabel commit={commit} />
+          <g key={commit.branchToDisplay} ref={ref}>
+            <BranchLabel commit={commit} x={x} y={y} />
           </g>
         );
       });
