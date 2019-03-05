@@ -47,9 +47,14 @@ storiesOf("5. Templates", module)
           .commit("one")
           .commit("two")
           .commit("three");
+
         const develop = gitgraph.branch("develop").commit("four");
         master.commit("five");
         master.merge(develop);
+
+        const feat1 = gitgraph.branch("feat1");
+        master.commit();
+        feat1.commit();
       }}
     </Gitgraph>
   ))
