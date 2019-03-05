@@ -42,7 +42,13 @@ interface RenderedData<TNode> {
 
 class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
-  public isVertical: boolean;
+  public get isVertical(): boolean {
+    return [
+      undefined, // default value = Vertical
+      Orientation.VerticalReverse,
+    ].includes(this.orientation);
+  }
+
   public reverseArrow: boolean;
   public initCommitOffsetX: number;
   public initCommitOffsetY: number;
@@ -67,10 +73,6 @@ class GitgraphCore<TNode = SVGElement> {
 
     // Set all options with default values
     this.orientation = options.orientation;
-    this.isVertical = [
-      undefined, // default value = Vertical
-      Orientation.VerticalReverse,
-    ].includes(this.orientation);
     this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
     this.initCommitOffsetX = numberOptionOr(
       options.initCommitOffsetX,
