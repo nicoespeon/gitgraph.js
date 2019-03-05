@@ -222,7 +222,7 @@ class BranchUserApi<TNode> {
       ...style.message,
     };
 
-    if (!this._graph.isVertical || this._graph.mode === Mode.Compact) {
+    if (this._graph.isHorizontal || this._graph.mode === Mode.Compact) {
       message.display = false;
     }
 

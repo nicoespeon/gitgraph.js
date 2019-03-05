@@ -165,7 +165,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
     const shouldRenderTooltip =
       this.state.currentCommitOver === commit &&
-      (!this.gitgraph.isVertical ||
+      (this.gitgraph.isHorizontal ||
         (this.gitgraph.mode === Mode.Compact &&
           commit.style.hasTooltipInCompactMode));
 
