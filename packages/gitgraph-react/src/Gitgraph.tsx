@@ -195,7 +195,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       )
       .filter((commit) => commit.style.message.displayBranch)
       .map((commit) => {
-        const branch = commit.branchToDisplay;
         const ref = React.createRef<SVGGElement>();
 
         // Store the ref to adapt commit message position.
@@ -212,8 +211,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           : commit.y + commitDotSize + horizontalMarginTop;
 
         return (
-          <g key={branch} ref={ref} transform={`translate(${x}, ${y})`}>
-            <BranchLabel commit={commit} name={branch} />
+          <g
+            key={commit.branchToDisplay}
+            ref={ref}
+            transform={`translate(${x}, ${y})`}
+          >
+            <BranchLabel commit={commit} />
           </g>
         );
       });

@@ -2,7 +2,6 @@ import * as React from "react";
 import { Commit } from "@gitgraph/core";
 
 interface Props {
-  name: string;
   commit: Commit<React.ReactElement<SVGElement>>;
 }
 
@@ -24,7 +23,7 @@ export class BranchLabel extends React.Component<Props, State> {
   }
 
   public render() {
-    const { commit, name } = this.props;
+    const { commit } = this.props;
 
     const radius = 10;
     const bgColor = "white";
@@ -49,7 +48,7 @@ export class BranchLabel extends React.Component<Props, State> {
           x={BranchLabel.paddingX}
           y={boxHeight / 2}
         >
-          {name}
+          {commit.branchToDisplay}
         </text>
       </>
     );
