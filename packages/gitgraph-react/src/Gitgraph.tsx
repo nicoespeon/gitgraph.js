@@ -96,8 +96,9 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public render() {
     return (
       <svg ref={this.$graph}>
+        {/* Translate graph left => left-most branch label is not cropped */}
         {/* Translate graph down => top-most commit tooltip is not cropped */}
-        <g transform={`translate(0, ${Tooltip.padding})`}>
+        <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
           {this.renderBranchesLabels()}
           {this.renderCommits()}
@@ -116,14 +117,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const { height, width } = this.$graph.current.getBBox();
       this.$graph.current.setAttribute(
         "width",
-        // `width` crop the tooltip text without considering the `padding`.
-        (width + Tooltip.padding).toString(),
+        // Add `Tooltip.padding` so we don't crop the tooltip text.
+        // Add `BranchLabel.paddingX` so we don't cut branch label.
+        (width + Tooltip.padding + BranchLabel.paddingX).toString(),
       );
       this.$graph.current.setAttribute(
         "height",
-        // As we translate the graph by `Tooltip.padding`,
-        // we need to take it into account in height calculation too.
-        (height + Tooltip.padding + BranchLabel.paddingX).toString(),
+        // Add `Tooltip.padding` so we don't crop tooltip text
+        // Add `BranchLabel.paddingY` so we don't crop branch label.
+        (height + Tooltip.padding + BranchLabel.paddingY).toString(),
       );
     }
 
