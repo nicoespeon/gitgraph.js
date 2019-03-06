@@ -295,7 +295,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private renderMessage(commit: Commit<ReactSvgElement>) {
     if (commit.renderMessage) {
       return (
-        <g className="message" transform="translate(0, 0)">
+        <g className="message">
           {commit.renderMessage(commit, this.state.commitMessagesX)}
         </g>
       );
