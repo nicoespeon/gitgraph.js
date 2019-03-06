@@ -130,8 +130,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
-    const commits = this.$commits.current.children;
-    this.translateCommitMessages(Array.from(commits));
+    const commits = Array.from(this.$commits.current.children);
+    this.translateCommitMessages(commits);
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
@@ -364,15 +364,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private computeOffsets(
-    commits: HTMLCollection,
+    commits: Element[],
   ): GitgraphState["commitYWithOffsets"] {
     let totalOffsetY = 0;
 
     // In VerticalReverse orientation, commits are in the same order in the DOM.
     const orientedCommits =
       this.gitgraph.orientation === Orientation.VerticalReverse
-        ? Array.from(commits)
-        : Array.from(commits).reverse();
+        ? commits
+        : commits.reverse();
 
     return orientedCommits.reduce<GitgraphState["commitYWithOffsets"]>(
       (newOffsets, commit) => {
