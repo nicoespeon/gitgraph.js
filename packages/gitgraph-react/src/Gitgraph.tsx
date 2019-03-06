@@ -133,7 +133,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     if (!this.$commits.current) return;
 
     const commits = Array.from(this.$commits.current.children);
-    this.translateCommitMessages(commits);
+    this.translateCommitMessagesWithBranchLabel(commits);
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
@@ -339,7 +339,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private translateCommitMessages(commits: Element[]): void {
+  private translateCommitMessagesWithBranchLabel(commits: Element[]): void {
     commits.forEach((commit) => {
       const branchLabel = this.branchesLabels[commit.id];
       if (!branchLabel || !branchLabel.current) {
