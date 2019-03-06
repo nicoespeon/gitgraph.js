@@ -128,29 +128,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     }
 
     if (this.$commits.current) {
-      Array.from(this.$commits.current.children).forEach((commit) => {
-        const branchLabel = this.branchesLabels[commit.id];
-        if (!branchLabel || !branchLabel.current) {
-          return;
-        }
-
-        // Here we rely on the .message class name. A ref might be better.
-        const message = commit.getElementsByClassName("message")[0];
-        if (!message) return;
-
-        const matches = message
-          .getAttribute("transform")!
-          .match(/translate\((\d+),\s(\d+)\)/);
-        if (!matches) return;
-
-        const [, x, y] = matches.map((a) => parseInt(a, 10));
-        // For some reason, 1 padding is not included in BBox total width.
-        const branchLabelWidth =
-          branchLabel.current.getBBox().width + BranchLabel.paddingX;
-        const padding = 10;
-        const newX = x + branchLabelWidth + padding;
-        message.setAttribute("transform", `translate(${newX}, ${y})`);
-      });
+      this.translateCommitMessages(Array.from(this.$commits.current.children));
     }
 
     if (!this.state.shouldRecomputeOffsets) return;
@@ -360,6 +338,32 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         />
       </g>
     );
+  }
+
+  private translateCommitMessages(commits: Element[]): void {
+    commits.forEach((commit) => {
+      const branchLabel = this.branchesLabels[commit.id];
+      if (!branchLabel || !branchLabel.current) {
+        return;
+      }
+
+      // Here we rely on the .message class name. A ref might be better.
+      const message = commit.getElementsByClassName("message")[0];
+      if (!message) return;
+
+      const matches = message
+        .getAttribute("transform")!
+        .match(/translate\((\d+),\s(\d+)\)/);
+      if (!matches) return;
+
+      const [, x, y] = matches.map((a) => parseInt(a, 10));
+      // For some reason, 1 padding is not included in BBox total width.
+      const branchLabelWidth =
+        branchLabel.current.getBBox().width + BranchLabel.paddingX;
+      const padding = 10;
+      const newX = x + branchLabelWidth + padding;
+      message.setAttribute("transform", `translate(${newX}, ${y})`);
+    });
   }
 
   private computeOffsets(
