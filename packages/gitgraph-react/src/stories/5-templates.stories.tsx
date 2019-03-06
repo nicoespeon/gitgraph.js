@@ -103,4 +103,28 @@ storiesOf("5. Templates", module)
           .commit("three");
       }}
     </Gitgraph>
-  ));
+  ))
+  .add("with custom branch labels", () => {
+    const customBranchLabels = templateExtend(TemplateName.Metro, {
+      branch: {
+        label: {
+          bgColor: "#ffce52",
+          color: "black",
+          strokeColor: "#ce9b00",
+          borderRadius: 0,
+          font: "italic 12pt serif",
+        },
+      },
+    });
+
+    return (
+      <Gitgraph options={{ template: customBranchLabels }}>
+        {(gitgraph) => {
+          gitgraph
+            .commit("one")
+            .commit("two")
+            .commit("three");
+        }}
+      </Gitgraph>
+    );
+  });

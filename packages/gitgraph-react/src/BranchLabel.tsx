@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Commit } from "@gitgraph/core";
+import { Branch, Commit } from "@gitgraph/core";
 
 interface Props {
+  branch: Branch<React.ReactElement<SVGElement>>;
   commit: Commit<React.ReactElement<SVGElement>>;
   x: number;
   y: number;
@@ -25,32 +26,29 @@ export class BranchLabel extends React.Component<Props, State> {
   }
 
   public render() {
-    const { commit, x, y } = this.props;
+    const { branch, commit, x, y } = this.props;
 
-    const radius = 10;
-    const bgColor = "white";
     const boxWidth = this.state.textWidth + 2 * BranchLabel.paddingX;
     const boxHeight = this.state.textHeight + 2 * BranchLabel.paddingY;
 
     return (
       <g transform={`translate(${x}, ${y})`}>
         <rect
-          // TODO: re-introduce branch label style options
-          stroke={commit.style.color}
-          fill={bgColor}
-          rx={radius}
+          stroke={branch.style.label.strokeColor || commit.style.color}
+          fill={branch.style.label.bgColor}
+          rx={branch.style.label.borderRadius}
           width={boxWidth}
           height={boxHeight}
         />
         <text
           ref={this.$text}
-          fill={commit.style.color}
-          style={{ font: commit.style.message.font }}
+          fill={branch.style.label.color || commit.style.color}
+          style={{ font: branch.style.label.font }}
           alignmentBaseline="middle"
           x={BranchLabel.paddingX}
           y={boxHeight / 2}
         >
-          {commit.branchToDisplay}
+          {branch.name}
         </text>
       </g>
     );

@@ -162,37 +162,34 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private renderBranchesLabels() {
     const branches = Array.from(this.gitgraph.branches.values());
-    return branches
-      .map((branch) => {
-        const commitHash = this.gitgraph.refs.getCommit(branch.name);
-        return this.state.commits.find(({ hash }) => commitHash === hash);
-      })
-      .filter(
-        (commit): commit is Commit<ReactSvgElement> => commit !== undefined,
-      )
-      .filter((commit) => commit.style.message.displayBranch)
-      .map((commit) => {
-        const ref = React.createRef<SVGGElement>();
+    return branches.map((branch) => {
+      const commitHash = this.gitgraph.refs.getCommit(branch.name);
+      const commit = this.state.commits.find(({ hash }) => commitHash === hash);
 
-        // Store the ref to adapt commit message position.
-        this.branchesLabels[commit.hashAbbrev] = ref;
+      if (!commit) return null;
+      if (!commit.style.message.displayBranch) return null;
 
-        const x = this.gitgraph.isVertical
-          ? this.state.commitMessagesX
-          : commit.x;
+      const ref = React.createRef<SVGGElement>();
 
-        const commitDotSize = commit.style.dot.size * 2;
-        const horizontalMarginTop = 10;
-        const y = this.gitgraph.isVertical
-          ? this.getMessageOffset(commit).y
-          : commit.y + commitDotSize + horizontalMarginTop;
+      // Store the ref to adapt commit message position.
+      this.branchesLabels[commit.hashAbbrev] = ref;
 
-        return (
-          <g key={commit.branchToDisplay} ref={ref}>
-            <BranchLabel commit={commit} x={x} y={y} />
-          </g>
-        );
-      });
+      const x = this.gitgraph.isVertical
+        ? this.state.commitMessagesX
+        : commit.x;
+
+      const commitDotSize = commit.style.dot.size * 2;
+      const horizontalMarginTop = 10;
+      const y = this.gitgraph.isVertical
+        ? this.getMessageOffset(commit).y
+        : commit.y + commitDotSize + horizontalMarginTop;
+
+      return (
+        <g key={branch.name} ref={ref}>
+          <BranchLabel branch={branch} commit={commit} x={x} y={y} />
+        </g>
+      );
+    });
   }
 
   private renderCommits() {
