@@ -217,7 +217,7 @@ class Template {
       color: options.branch.color,
       lineWidth: options.branch.lineWidth || 2,
       mergeStyle: options.branch.mergeStyle || MergeStyle.Bezier,
-      spacing: numberOptionOr(options.branch.spacing, 20) as number,
+      spacing: numberOptionOr(options.branch.spacing, 20),
     };
 
     // Arrow style
@@ -230,7 +230,7 @@ class Template {
     // Commit style
     this.commit = {
       color: options.commit.color,
-      spacing: numberOptionOr(options.commit.spacing, 25) as number,
+      spacing: numberOptionOr(options.commit.spacing, 25),
       hasTooltipInCompactMode: booleanOptionOr(
         options.commit.hasTooltipInCompactMode,
         true,
@@ -238,10 +238,7 @@ class Template {
       dot: {
         color: options.commit.dot.color || options.commit.color,
         size: options.commit.dot.size || 3,
-        strokeWidth: numberOptionOr(
-          options.commit.dot.strokeWidth,
-          0,
-        ) as number,
+        strokeWidth: numberOptionOr(options.commit.dot.strokeWidth, 0),
         strokeColor: options.commit.dot.strokeColor,
         font:
           options.commit.dot.font ||

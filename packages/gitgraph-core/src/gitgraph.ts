@@ -77,14 +77,8 @@ class GitgraphCore<TNode = SVGElement> {
     // Set all options with default values
     this.orientation = options.orientation;
     this.reverseArrow = booleanOptionOr(options.reverseArrow, false);
-    this.initCommitOffsetX = numberOptionOr(
-      options.initCommitOffsetX,
-      0,
-    ) as number;
-    this.initCommitOffsetY = numberOptionOr(
-      options.initCommitOffsetY,
-      0,
-    ) as number;
+    this.initCommitOffsetX = numberOptionOr(options.initCommitOffsetX, 0);
+    this.initCommitOffsetY = numberOptionOr(options.initCommitOffsetY, 0);
     this.mode = options.mode;
     this.author = options.author || "Sergio Flores <saxo-guy@epic.com>";
     this.commitMessage =
