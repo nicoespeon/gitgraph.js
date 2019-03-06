@@ -127,14 +127,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       );
     }
 
-    if (this.$commits.current) {
-      this.translateCommitMessages(Array.from(this.$commits.current.children));
-    }
-
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
     const commits = this.$commits.current.children;
+    this.translateCommitMessages(Array.from(commits));
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
