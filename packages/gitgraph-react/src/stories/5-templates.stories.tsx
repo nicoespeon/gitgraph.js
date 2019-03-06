@@ -3,28 +3,6 @@ import { storiesOf } from "@storybook/react";
 
 import { Gitgraph, templateExtend, TemplateName } from "../Gitgraph";
 
-const templateWithoutHash = templateExtend(TemplateName.Metro, {
-  commit: {
-    message: {
-      displayHash: false,
-    },
-  },
-});
-const templateWithoutAuthor = templateExtend(TemplateName.Metro, {
-  commit: {
-    message: {
-      displayAuthor: false,
-    },
-  },
-});
-const templateWithoutBranch = templateExtend(TemplateName.Metro, {
-  commit: {
-    message: {
-      displayBranch: false,
-    },
-  },
-});
-
 storiesOf("5. Templates", module)
   .add("metro", () => (
     <Gitgraph options={{ template: TemplateName.Metro }}>
@@ -74,36 +52,66 @@ storiesOf("5. Templates", module)
       }}
     </Gitgraph>
   ))
-  .add("without commit hash", () => (
-    <Gitgraph options={{ template: templateWithoutHash }}>
-      {(gitgraph) => {
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
-      }}
-    </Gitgraph>
-  ))
-  .add("without commit author", () => (
-    <Gitgraph options={{ template: templateWithoutAuthor }}>
-      {(gitgraph) => {
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
-      }}
-    </Gitgraph>
-  ))
-  .add("without commit branch", () => (
-    <Gitgraph options={{ template: templateWithoutBranch }}>
-      {(gitgraph) => {
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
-      }}
-    </Gitgraph>
-  ))
+  .add("without commit hash", () => {
+    const withoutHash = templateExtend(TemplateName.Metro, {
+      commit: {
+        message: {
+          displayHash: false,
+        },
+      },
+    });
+
+    return (
+      <Gitgraph options={{ template: withoutHash }}>
+        {(gitgraph) => {
+          gitgraph
+            .commit("one")
+            .commit("two")
+            .commit("three");
+        }}
+      </Gitgraph>
+    );
+  })
+  .add("without commit author", () => {
+    const withoutAuthor = templateExtend(TemplateName.Metro, {
+      commit: {
+        message: {
+          displayAuthor: false,
+        },
+      },
+    });
+
+    return (
+      <Gitgraph options={{ template: withoutAuthor }}>
+        {(gitgraph) => {
+          gitgraph
+            .commit("one")
+            .commit("two")
+            .commit("three");
+        }}
+      </Gitgraph>
+    );
+  })
+  .add("without commit branch", () => {
+    const withoutBranch = templateExtend(TemplateName.Metro, {
+      commit: {
+        message: {
+          displayBranch: false,
+        },
+      },
+    });
+
+    return (
+      <Gitgraph options={{ template: withoutBranch }}>
+        {(gitgraph) => {
+          gitgraph
+            .commit("one")
+            .commit("two")
+            .commit("three");
+        }}
+      </Gitgraph>
+    );
+  })
   .add("with custom branch labels", () => {
     const customBranchLabels = templateExtend(TemplateName.Metro, {
       branch: {
