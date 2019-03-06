@@ -64,9 +64,38 @@ interface BranchStyle {
    * Space between branches
    */
   spacing: number;
+  /**
+   * Branch label style
+   */
+  label: BranchLabelStyleOptions;
 }
 
 type BranchStyleOptions = Partial<BranchStyle>;
+
+interface BranchLabelStyle {
+  /**
+   * Branch label text color
+   */
+  color: string;
+  /**
+   * Branch label stroke color
+   */
+  strokeColor: string;
+  /**
+   * Branch label background color
+   */
+  bgColor: string;
+  /**
+   * Branch label font
+   */
+  font: string;
+  /**
+   * Branch label border radius
+   */
+  borderRadius: number;
+}
+
+type BranchLabelStyleOptions = Partial<BranchLabelStyle>;
 
 interface CommitDotStyle {
   /**
@@ -204,6 +233,7 @@ class Template {
   constructor(options: TemplateOptions) {
     // Options
     options.branch = options.branch || {};
+    options.branch.label = options.branch.label || {};
     options.arrow = options.arrow || {};
     options.commit = options.commit || {};
     options.commit.dot = options.commit.dot || {};
@@ -218,6 +248,16 @@ class Template {
       lineWidth: options.branch.lineWidth || 2,
       mergeStyle: options.branch.mergeStyle || MergeStyle.Bezier,
       spacing: numberOptionOr(options.branch.spacing, 20),
+      label: {
+        color: options.branch.label.color || options.commit.color,
+        strokeColor: options.branch.label.strokeColor || options.commit.color,
+        bgColor: options.branch.label.bgColor || "white",
+        font:
+          options.branch.label.font ||
+          options.commit.message.font ||
+          "normal 12pt Calibri",
+        borderRadius: numberOptionOr(options.branch.label.borderRadius, 10),
+      },
     };
 
     // Arrow style
