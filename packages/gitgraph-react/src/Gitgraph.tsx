@@ -169,6 +169,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const commit = this.state.commits.find(({ hash }) => commitHash === hash);
       if (!commit) return null;
 
+      // For the moment, we don't handle multiple branch labels.
+      // To do so, we'd need to reposition each of them appropriately.
+      if (commit.branchToDisplay !== branch.name) return null;
+
       const ref = React.createRef<SVGGElement>();
 
       // Store the ref to adapt commit message position.
