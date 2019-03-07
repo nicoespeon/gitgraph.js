@@ -356,18 +356,21 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const message = commit.getElementsByClassName("message")[0];
       if (!message) return;
 
-      const matches = message
-        .getAttribute("transform")!
-        .match(/translate\((\d+),\s(\d+)\)/);
+      const transformAttribute =
+        message.getAttribute("transform") || "translate(0, 0)";
+      const matches = transformAttribute.match(/translate\((\d+),/);
       if (!matches) return;
 
-      const [, x, y] = matches.map((a) => parseInt(a, 10));
+      const [, x] = matches.map((a) => parseInt(a, 10));
       // For some reason, 1 padding is not included in BBox total width.
       const branchLabelWidth =
         branchLabel.current.getBBox().width + BranchLabel.paddingX;
       const padding = 10;
       const newX = x + branchLabelWidth + padding;
-      message.setAttribute("transform", `translate(${newX}, ${y})`);
+      message.setAttribute(
+        "transform",
+        transformAttribute.replace(/translate\((\d+),/, `translate(${newX},`),
+      );
     });
   }
 
