@@ -92,17 +92,17 @@ storiesOf("5. Templates", module)
       </Gitgraph>
     );
   })
-  .add("without commit branch", () => {
-    const withoutBranch = templateExtend(TemplateName.Metro, {
-      commit: {
-        message: {
-          displayBranch: false,
+  .add("without branch label", () => {
+    const withoutBranchLabel = templateExtend(TemplateName.Metro, {
+      branch: {
+        label: {
+          display: false,
         },
       },
     });
 
     return (
-      <Gitgraph options={{ template: withoutBranch }}>
+      <Gitgraph options={{ template: withoutBranchLabel }}>
         {(gitgraph) => {
           gitgraph
             .commit("one")

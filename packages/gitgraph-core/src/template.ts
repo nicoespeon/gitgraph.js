@@ -74,6 +74,10 @@ type BranchStyleOptions = Partial<BranchStyle>;
 
 interface BranchLabelStyle {
   /**
+   * Branch label visibility
+   */
+  display: boolean;
+  /**
    * Branch label text color
    */
   color: string;
@@ -249,6 +253,7 @@ class Template {
       mergeStyle: options.branch.mergeStyle || MergeStyle.Bezier,
       spacing: numberOptionOr(options.branch.spacing, 20),
       label: {
+        display: booleanOptionOr(options.branch.label.display, true),
         color: options.branch.label.color || options.commit.color,
         strokeColor: options.branch.label.strokeColor || options.commit.color,
         bgColor: options.branch.label.bgColor || "white",

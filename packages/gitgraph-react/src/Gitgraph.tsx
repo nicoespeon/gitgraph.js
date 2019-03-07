@@ -163,11 +163,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private renderBranchesLabels() {
     const branches = Array.from(this.gitgraph.branches.values());
     return branches.map((branch) => {
+      if (!branch.style.label.display) return null;
+
       const commitHash = this.gitgraph.refs.getCommit(branch.name);
       const commit = this.state.commits.find(({ hash }) => commitHash === hash);
-
       if (!commit) return null;
-      if (!commit.style.message.displayBranch) return null;
 
       const ref = React.createRef<SVGGElement>();
 
