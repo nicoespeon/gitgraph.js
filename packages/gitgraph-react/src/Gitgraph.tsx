@@ -401,6 +401,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           ? customHtmlMessage.getBoundingClientRect().height
           : 0;
 
+        // Force the height of the foreignObject (browser issue)
+        if (firstForeignObject) {
+          firstForeignObject.setAttribute("height", `${messageHeight}px`);
+        }
+
         newOffsets[commitY] = commitY + totalOffsetY;
 
         // Increment total offset after setting the offset
