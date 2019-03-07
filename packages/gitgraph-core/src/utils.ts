@@ -51,10 +51,7 @@ function booleanOptionOr(value: any, defaultValue: boolean): boolean {
  * @param value
  * @param defaultValue
  */
-function numberOptionOr(
-  value: any,
-  defaultValue: number | null,
-): number | null {
+function numberOptionOr(value: any, defaultValue: number): number {
   return typeof value === "number" ? value : defaultValue;
 }
 

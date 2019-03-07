@@ -83,4 +83,34 @@ describe("Branch", () => {
       expect(mergeCommit.parents.length).toBe(2);
     });
   });
+
+  it("should fallback on template style for non-provided keys", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph.branch({ name: "master", style: {} });
+    const master = core.branches.get("master");
+
+    expect(Object.keys(master.style).length).not.toBe(0);
+  });
+
+  it("should fallback on template style of label for non-provided keys", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph.branch({ name: "master", style: { label: {} } });
+    const master = core.branches.get("master");
+
+    expect(Object.keys(master.style.label).length).not.toBe(0);
+  });
+
+  it("should override template style for provided keys", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph.branch({ name: "master", style: { spacing: 12345 } });
+    const master = core.branches.get("master");
+
+    expect(master.style.spacing).toBe(12345);
+  });
 });

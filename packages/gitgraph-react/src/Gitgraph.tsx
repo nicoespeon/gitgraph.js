@@ -19,6 +19,7 @@ import {
   arrowSvgPath,
 } from "@gitgraph/core";
 
+import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
 
@@ -71,6 +72,9 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
   private $tooltip: React.ReactElement<SVGGElement> | null = null;
+  private branchesLabels: {
+    [k: string]: React.RefObject<SVGGElement>;
+  } = {};
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -92,9 +96,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public render() {
     return (
       <svg ref={this.$graph}>
+        {/* Translate graph left => left-most branch label is not cropped */}
         {/* Translate graph down => top-most commit tooltip is not cropped */}
-        <g transform={`translate(0, ${Tooltip.padding})`}>
-          {this.renderBranches()}
+        <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
+          {this.renderBranchesPaths()}
+          {this.renderBranchesLabels()}
           {this.renderCommits()}
           {this.$tooltip}
         </g>
@@ -111,28 +117,30 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const { height, width } = this.$graph.current.getBBox();
       this.$graph.current.setAttribute(
         "width",
-        // `width` crop the tooltip text without considering the `padding`.
-        (width + Tooltip.padding).toString(),
+        // Add `Tooltip.padding` so we don't crop the tooltip text.
+        // Add `BranchLabel.paddingX` so we don't cut branch label.
+        (width + Tooltip.padding + BranchLabel.paddingX).toString(),
       );
       this.$graph.current.setAttribute(
         "height",
-        // As we translate the graph by `Tooltip.padding`,
-        // we need to take it into account in height calculation too.
-        (height + Tooltip.padding).toString(),
+        // Add `Tooltip.padding` so we don't crop tooltip text
+        // Add `BranchLabel.paddingY` so we don't crop branch label.
+        (height + Tooltip.padding + BranchLabel.paddingY).toString(),
       );
     }
 
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
-    const commits = this.$commits.current.children;
+    const commits = Array.from(this.$commits.current.children);
+    this.translateCommitMessagesWithBranchLabel(commits);
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
     });
   }
 
-  private renderBranches() {
+  private renderBranchesPaths() {
     const offset = this.gitgraph.template.commit.dot.size;
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
@@ -150,6 +158,38 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         transform={`translate(${offset}, ${offset})`}
       />
     ));
+  }
+
+  private renderBranchesLabels() {
+    const branches = Array.from(this.gitgraph.branches.values());
+    return branches.map((branch) => {
+      if (!branch.style.label.display) return null;
+
+      const commitHash = this.gitgraph.refs.getCommit(branch.name);
+      const commit = this.state.commits.find(({ hash }) => commitHash === hash);
+      if (!commit) return null;
+
+      const ref = React.createRef<SVGGElement>();
+
+      // Store the ref to adapt commit message position.
+      this.branchesLabels[commit.hashAbbrev] = ref;
+
+      const x = this.gitgraph.isVertical
+        ? this.state.commitMessagesX
+        : commit.x;
+
+      const commitDotSize = commit.style.dot.size * 2;
+      const horizontalMarginTop = 10;
+      const y = this.gitgraph.isVertical
+        ? this.getMessageOffset(commit).y
+        : commit.y + commitDotSize + horizontalMarginTop;
+
+      return (
+        <g key={branch.name} ref={ref}>
+          <BranchLabel branch={branch} commit={commit} x={x} y={y} />
+        </g>
+      );
+    });
   }
 
   private renderCommits() {
@@ -178,7 +218,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     }
 
     return (
-      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+      <g
+        key={commit.hashAbbrev}
+        // Store commit ID to match branch label. We could use refs instead.
+        id={commit.hashAbbrev}
+        transform={`translate(${x}, ${y})`}
+      >
         {this.renderDot(commit)}
         {commit.style.message.display && this.renderMessage(commit)}
         {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
@@ -223,7 +268,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private renderMessage(commit: Commit<ReactSvgElement>) {
     if (commit.renderMessage) {
-      return commit.renderMessage(commit, this.state.commitMessagesX);
+      return (
+        <g className="message">
+          {commit.renderMessage(commit, this.state.commitMessagesX)}
+        </g>
+      );
     }
 
     let body = null;
@@ -239,7 +288,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const y = commit.style.dot.size;
 
     return (
-      <g transform={`translate(${x}, ${y})`}>
+      // Class name is used to retrieve the message. We could use a ref instead.
+      <g className="message" transform={`translate(${x}, ${y})`}>
         <text
           alignmentBaseline="central"
           fill={commit.style.message.color}
@@ -286,16 +336,42 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
+  private translateCommitMessagesWithBranchLabel(commits: Element[]): void {
+    commits.forEach((commit) => {
+      const branchLabel = this.branchesLabels[commit.id];
+      if (!branchLabel || !branchLabel.current) {
+        return;
+      }
+
+      // Here we rely on the .message class name. A ref might be better.
+      const message = commit.getElementsByClassName("message")[0];
+      if (!message) return;
+
+      const matches = message
+        .getAttribute("transform")!
+        .match(/translate\((\d+),\s(\d+)\)/);
+      if (!matches) return;
+
+      const [, x, y] = matches.map((a) => parseInt(a, 10));
+      // For some reason, 1 padding is not included in BBox total width.
+      const branchLabelWidth =
+        branchLabel.current.getBBox().width + BranchLabel.paddingX;
+      const padding = 10;
+      const newX = x + branchLabelWidth + padding;
+      message.setAttribute("transform", `translate(${newX}, ${y})`);
+    });
+  }
+
   private computeOffsets(
-    commits: HTMLCollection,
+    commits: Element[],
   ): GitgraphState["commitYWithOffsets"] {
     let totalOffsetY = 0;
 
     // In VerticalReverse orientation, commits are in the same order in the DOM.
     const orientedCommits =
       this.gitgraph.orientation === Orientation.VerticalReverse
-        ? Array.from(commits)
-        : Array.from(commits).reverse();
+        ? commits
+        : commits.reverse();
 
     return orientedCommits.reduce<GitgraphState["commitYWithOffsets"]>(
       (newOffsets, commit) => {
@@ -339,12 +415,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 function getMessage(commit: Commit<ReactSvgElement>): string {
   let message = "";
 
-  if (commit.style.message.displayBranch && commit.branchToDisplay) {
-    message += `[${commit.branchToDisplay}`;
-    if (commit.tags!.length) {
-      message += `, ${commit.tags!.join(", ")}`;
-    }
-    message += `] `;
+  if (commit.tags!.length) {
+    message += `[${commit.tags!.join(", ")}] `;
   }
 
   if (commit.style.message.displayHash) {
