@@ -151,7 +151,19 @@ class GitgraphCore<TNode = SVGElement> {
     if (typeof args === "string") {
       options.name = args;
     } else {
-      options = { ...options, ...args };
+      args.style = args.style || {};
+      options = {
+        ...options,
+        ...args,
+        style: {
+          ...options.style,
+          ...args.style,
+          label: {
+            ...options.style.label,
+            ...args.style.label,
+          },
+        },
+      };
     }
     const branch = new Branch<TNode>(options);
     this.branches.set(branch.name, branch);
