@@ -89,7 +89,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.gitgraph = new GitgraphCore<ReactSvgElement>(props.options);
     this.gitgraph.subscribe((data) => {
       const { commits, branchesPaths, commitMessagesX } = data;
-      this.setState({ commits, branchesPaths, commitMessagesX });
+      this.setState({
+        commits,
+        branchesPaths,
+        commitMessagesX,
+        shouldRecomputeOffsets: true,
+      });
     });
   }
 
