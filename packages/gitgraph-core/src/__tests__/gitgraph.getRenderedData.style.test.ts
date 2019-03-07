@@ -295,7 +295,6 @@ function createExpectedStyle() {
       color: "#979797",
       display: true,
       displayAuthor: true,
-      displayBranch: true,
       displayHash: true,
       font: "normal 14pt Arial",
     },

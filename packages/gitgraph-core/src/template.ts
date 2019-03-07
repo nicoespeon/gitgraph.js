@@ -140,10 +140,6 @@ interface CommitMessageStyle {
    */
   displayAuthor: boolean;
   /**
-   * Commit message branch display policy
-   */
-  displayBranch: boolean;
-  /**
    * Commit message hash display policy
    */
   displayHash: boolean;
@@ -294,10 +290,6 @@ class Template {
         display: booleanOptionOr(options.commit.message.display, true),
         displayAuthor: booleanOptionOr(
           options.commit.message.displayAuthor,
-          true,
-        ),
-        displayBranch: booleanOptionOr(
-          options.commit.message.displayBranch,
           true,
         ),
         displayHash: booleanOptionOr(options.commit.message.displayHash, true),
