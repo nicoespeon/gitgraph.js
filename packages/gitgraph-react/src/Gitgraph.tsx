@@ -314,9 +314,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private renderArrows(commit: Commit<ReactSvgElement>) {
     return commit.parents.map((parentHash) => {
-      const parent = this.state.commits.find(
-        ({ hash }) => hash === parentHash,
-      ) as Commit<ReactSvgElement>;
+      const parent = this.state.commits.find(({ hash }) => hash === parentHash);
+      if (!parent) return null;
 
       return this.drawArrow(parent, commit);
     });
