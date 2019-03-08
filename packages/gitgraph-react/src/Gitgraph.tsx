@@ -22,6 +22,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
+import { Tag } from "./Tag";
 
 type ReactSvgElement = React.ReactElement<SVGElement>;
 
@@ -107,6 +108,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           {this.renderBranchesPaths()}
           {this.renderCommits()}
           {this.renderBranchesLabels()}
+          {this.renderTags()}
           {this.$tooltip}
         </g>
       </svg>
@@ -198,6 +200,26 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           <BranchLabel branch={branch} commit={commit} x={x} y={y} />
         </g>
       );
+    });
+  }
+
+  private renderTags() {
+    if (this.gitgraph.isHorizontal) {
+      return null;
+    }
+
+    return this.state.commits.map((commit) => {
+      if (!commit.tags) return null;
+
+      // TODO: render all tags of the commit.
+      const tag = commit.tags[0];
+      if (!tag) return null;
+
+      const x = this.state.commitMessagesX;
+      const y = this.getMessageOffset(commit).y;
+
+      // TODO: position tag along other tags, branch label and commit message.
+      return <Tag name={tag} commit={commit} x={x} y={y} />;
     });
   }
 
@@ -429,10 +451,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 // Ideally, it would be a method of Commit: `commit.message()`.
 function getMessage(commit: Commit<ReactSvgElement>): string {
   let message = "";
-
-  if (commit.tags!.length) {
-    message += `[${commit.tags!.join(", ")}] `;
-  }
 
   if (commit.style.message.displayHash) {
     message += `${commit.hashAbbrev} `;
