@@ -248,7 +248,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     return (
       <Dot
         commit={commit}
-        onMouseOver={() => this.onMouseOver(commit)}
+        onMouseOver={() => {
+          this.setState({ currentCommitOver: commit });
+          commit.onMouseOver();
+        }}
         onMouseOut={() => {
           this.setState({ currentCommitOver: null });
           this.$tooltip = null;
@@ -256,11 +259,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         }}
       />
     );
-  }
-
-  private onMouseOver(commit: Commit<ReactSvgElement>): void {
-    this.setState({ currentCommitOver: commit });
-    commit.onMouseOver();
   }
 
   private renderTooltip(commit: Commit<ReactSvgElement>) {
