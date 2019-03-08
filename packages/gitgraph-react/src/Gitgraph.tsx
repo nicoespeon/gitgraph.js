@@ -105,8 +105,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {/* Translate graph down => top-most commit tooltip is not cropped */}
         <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
-          {this.renderBranchesLabels()}
           {this.renderCommits()}
+          {this.renderBranchesLabels()}
           {this.$tooltip}
         </g>
       </svg>
