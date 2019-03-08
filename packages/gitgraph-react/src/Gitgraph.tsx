@@ -400,9 +400,16 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         )[0];
         const customHtmlMessage =
           firstForeignObject && firstForeignObject.firstElementChild;
-        const messageHeight = customHtmlMessage
-          ? customHtmlMessage.getBoundingClientRect().height
-          : 0;
+
+        let messageHeight = 0;
+        if (customHtmlMessage) {
+          const height = customHtmlMessage.getBoundingClientRect().height;
+          const marginTopInPx =
+            window.getComputedStyle(customHtmlMessage).marginTop || "0px";
+          const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
+
+          messageHeight = height + marginTop;
+        }
 
         // Force the height of the foreignObject (browser issue)
         if (firstForeignObject) {
