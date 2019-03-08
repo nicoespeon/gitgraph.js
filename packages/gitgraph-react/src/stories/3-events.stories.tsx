@@ -23,19 +23,6 @@ storiesOf("3. Events", module)
       }}
     </Gitgraph>
   ))
-  .add("on commit message click", () => (
-    <Gitgraph>
-      {(gitgraph) => {
-        const onMessageClick: CommitOptions["onMessageClick"] = (commit) => {
-          alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
-        };
-
-        const master = gitgraph.branch("master");
-        master.commit({ subject: "Hello", onMessageClick });
-        master.commit({ subject: "World", onMessageClick });
-      }}
-    </Gitgraph>
-  ))
   .add("on commit dot mouseover", () => (
     <Gitgraph>
       {(gitgraph) => {
@@ -63,6 +50,19 @@ storiesOf("3. Events", module)
         const master = gitgraph.branch("master");
         master.commit({ subject: "Hello", onMouseOut });
         master.commit({ subject: "World", onMouseOut });
+      }}
+    </Gitgraph>
+  ))
+  .add("on commit message click", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        const onMessageClick: CommitOptions["onMessageClick"] = (commit) => {
+          alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
+        };
+
+        const master = gitgraph.branch("master");
+        master.commit({ subject: "Hello", onMessageClick });
+        master.commit({ subject: "World", onMessageClick });
       }}
     </Gitgraph>
   ));
