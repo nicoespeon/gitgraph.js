@@ -36,7 +36,7 @@ storiesOf("3. Events", module)
       }}
     </Gitgraph>
   ))
-  .add("on commit mouseover", () => (
+  .add("on commit dot mouseover", () => (
     <Gitgraph>
       {(gitgraph) => {
         const onMouseOver: CommitOptions["onMouseOver"] = (commit) => {
@@ -51,7 +51,7 @@ storiesOf("3. Events", module)
       }}
     </Gitgraph>
   ))
-  .add("on commit mouseout", () => (
+  .add("on commit dot mouseout", () => (
     <Gitgraph>
       {(gitgraph) => {
         const onMouseOut: CommitOptions["onMouseOut"] = (commit) => {
