@@ -313,35 +313,29 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderArrows(commit: Commit<ReactSvgElement>) {
+    const commitRadius = commit.style.dot.size;
+
     return commit.parents.map((parentHash) => {
       const parent = this.state.commits.find(({ hash }) => hash === parentHash);
       if (!parent) return null;
 
-      return this.drawArrow(parent, commit);
+      // Starting point, relative to commit
+      const origin = this.gitgraph.reverseArrow
+        ? {
+            x: commitRadius + (parent.x - commit.x),
+            y: commitRadius + (parent.y - commit.y),
+          }
+        : { x: commitRadius, y: commitRadius };
+
+      return (
+        <g transform={`translate(${origin.x}, ${origin.y})`}>
+          <path
+            d={arrowSvgPath(this.gitgraph, parent, commit)}
+            fill={this.gitgraph.template.arrow.color!}
+          />
+        </g>
+      );
     });
-  }
-
-  private drawArrow(parent: Coordinate, commit: Commit<ReactSvgElement>) {
-    const commitRadius = commit.style.dot.size;
-
-    // Starting point, relative to commit
-    const origin = {
-      x: this.gitgraph.reverseArrow
-        ? commitRadius + (parent.x - commit.x)
-        : commitRadius,
-      y: this.gitgraph.reverseArrow
-        ? commitRadius + (parent.y - commit.y)
-        : commitRadius,
-    };
-
-    return (
-      <g transform={`translate(${origin.x}, ${origin.y})`}>
-        <path
-          d={arrowSvgPath(this.gitgraph, parent, commit)}
-          fill={this.gitgraph.template.arrow.color!}
-        />
-      </g>
-    );
   }
 
   private translateCommitMessagesWithBranchLabel(commits: Element[]): void {
