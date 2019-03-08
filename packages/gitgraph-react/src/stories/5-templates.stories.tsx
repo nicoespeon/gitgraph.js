@@ -27,11 +27,11 @@ storiesOf("5. Templates", module)
           .commit("three");
 
         const develop = gitgraph.branch("develop").commit("four");
-        master.commit("five");
+        master.commit("five").tag("important");
         master.merge(develop);
 
         const feat1 = gitgraph.branch("feat1");
-        master.commit();
+        master.commit().tag("v1");
         feat1.commit();
       }}
     </Gitgraph>
