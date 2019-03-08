@@ -1,6 +1,17 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { Gitgraph, CommitOptions, Mode, Orientation } from "../Gitgraph";
+import {
+  Gitgraph,
+  CommitOptions,
+  Mode,
+  Orientation,
+  templateExtend,
+  TemplateName,
+} from "../Gitgraph";
+
+const withoutBranchLabels = templateExtend(TemplateName.Metro, {
+  branch: { label: { display: false } },
+});
 
 storiesOf("6. Custom renders", module)
   .add("with render dot", () => {
@@ -67,7 +78,7 @@ storiesOf("6. Custom renders", module)
     };
 
     return (
-      <Gitgraph options={{ mode: Mode.Compact }}>
+      <Gitgraph options={{ mode: Mode.Compact, template: withoutBranchLabels }}>
         {(gitgraph) => {
           gitgraph
             .commit({ subject: "Initial commit" })
