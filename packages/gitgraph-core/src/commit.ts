@@ -270,6 +270,7 @@ class Commit<TNode = SVGElement> {
       parents: this.parents,
       dotText: this.dotText,
       onClick: this.onClick,
+      onMessageClick: this.onMessageClick,
       onMouseOver: this.onMouseOver,
       onMouseOut: this.onMouseOut,
       renderDot: this.renderDot,
