@@ -103,14 +103,11 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message", () => {
-    const renderMessage: CommitOptions["renderMessage"] = (
-      commit,
-      commitMessageX,
-    ) => {
+    const renderMessage: CommitOptions["renderMessage"] = (commit) => {
       return (
         <text
-          x={commitMessageX - commit.x}
           y={commit.style.dot.size}
+          alignmentBaseline="central"
           fill={commit.style.dot.color}
         >
           {commit.hashAbbrev} - {commit.subject}
@@ -144,17 +141,10 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message (long)", () => {
-    const renderMessage: CommitOptions["renderMessage"] = (
-      commit,
-      commitMessageX,
-    ) => {
+    const renderMessage: CommitOptions["renderMessage"] = (commit) => {
       return (
-        <g
-          transform={`translate(${commitMessageX - commit.x}, ${
-            commit.style.dot.size
-          })`}
-        >
-          <text fill={commit.style.dot.color}>
+        <g transform={`translate(0, ${commit.style.dot.size})`}>
+          <text fill={commit.style.dot.color} alignmentBaseline="central">
             {commit.hashAbbrev} - {commit.subject}
           </text>
           <foreignObject width="600" x="10">
@@ -197,17 +187,10 @@ storiesOf("6. Custom renders", module)
     );
   })
   .add("with render message (long & reverse orientation)", () => {
-    const renderMessage: CommitOptions["renderMessage"] = (
-      commit,
-      commitMessageX,
-    ) => {
+    const renderMessage: CommitOptions["renderMessage"] = (commit) => {
       return (
-        <g
-          transform={`translate(${commitMessageX - commit.x}, ${
-            commit.style.dot.size
-          })`}
-        >
-          <text fill={commit.style.dot.color}>
+        <g transform={`translate(0, ${commit.style.dot.size})`}>
+          <text fill={commit.style.dot.color} alignmentBaseline="central">
             {commit.hashAbbrev} - {commit.subject}
           </text>
           <foreignObject width="600" x="10">

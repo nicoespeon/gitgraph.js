@@ -22,6 +22,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
+import { Tag } from "./Tag";
 
 type ReactSvgElement = React.ReactElement<SVGElement>;
 
@@ -72,8 +73,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
   private $tooltip: React.ReactElement<SVGGElement> | null = null;
-  private branchesLabels: {
-    [k: string]: React.RefObject<SVGGElement>;
+  private commitsElements: {
+    [commitHash: string]: {
+      branchLabel: React.RefObject<SVGGElement> | null;
+      tags: Array<React.RefObject<SVGGElement>>;
+      message: React.RefObject<SVGGElement> | null;
+    };
   } = {};
 
   constructor(props: GitgraphProps) {
@@ -101,11 +106,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public render() {
     return (
       <svg ref={this.$graph}>
-        {/* Translate graph left => left-most branch label is not cropped */}
+        {/* Translate graph left => left-most branch label is not cropped (horizontal) */}
         {/* Translate graph down => top-most commit tooltip is not cropped */}
         <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
-          {this.renderBranchesLabels()}
           {this.renderCommits()}
           {this.$tooltip}
         </g>
@@ -137,8 +141,9 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
+    this.positionCommitsElements();
+
     const commits = Array.from(this.$commits.current.children);
-    this.translateCommitMessagesWithBranchLabel(commits);
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
@@ -163,42 +168,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         transform={`translate(${offset}, ${offset})`}
       />
     ));
-  }
-
-  private renderBranchesLabels() {
-    const branches = Array.from(this.gitgraph.branches.values());
-    return branches.map((branch) => {
-      if (!branch.style.label.display) return null;
-
-      const commitHash = this.gitgraph.refs.getCommit(branch.name);
-      const commit = this.state.commits.find(({ hash }) => commitHash === hash);
-      if (!commit) return null;
-
-      // For the moment, we don't handle multiple branch labels.
-      // To do so, we'd need to reposition each of them appropriately.
-      if (commit.branchToDisplay !== branch.name) return null;
-
-      const ref = React.createRef<SVGGElement>();
-
-      // Store the ref to adapt commit message position.
-      this.branchesLabels[commit.hashAbbrev] = ref;
-
-      const x = this.gitgraph.isVertical
-        ? this.state.commitMessagesX
-        : commit.x;
-
-      const commitDotSize = commit.style.dot.size * 2;
-      const horizontalMarginTop = 10;
-      const y = this.gitgraph.isVertical
-        ? this.getMessageOffset(commit).y
-        : commit.y + commitDotSize + horizontalMarginTop;
-
-      return (
-        <g key={branch.name} ref={ref}>
-          <BranchLabel branch={branch} commit={commit} x={x} y={y} />
-        </g>
-      );
-    });
   }
 
   private renderCommits() {
@@ -227,16 +196,29 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     }
 
     return (
-      <g
-        key={commit.hashAbbrev}
-        // Store commit ID to match branch label. We could use refs instead.
-        id={commit.hashAbbrev}
-        transform={`translate(${x}, ${y})`}
-      >
+      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
         {this.renderDot(commit)}
-        {commit.style.message.display && this.renderMessage(commit)}
         {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
+
+        {/* These elements are positionned after component update. */}
+        <g transform={`translate(${-x}, 0)`}>
+          {commit.style.message.display && this.renderMessage(commit)}
+          {this.renderBranchLabel(commit)}
+          {this.renderTags(commit)}
+        </g>
       </g>
+    );
+  }
+
+  private renderTooltip(commit: Commit<ReactSvgElement>) {
+    if (commit.renderTooltip) {
+      return commit.renderTooltip(commit);
+    }
+
+    return (
+      <Tooltip commit={commit}>
+        {commit.hashAbbrev} - {commit.subject}
+      </Tooltip>
     );
   }
 
@@ -258,55 +240,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           commit.onMouseOut();
         }}
       />
-    );
-  }
-
-  private renderTooltip(commit: Commit<ReactSvgElement>) {
-    if (commit.renderTooltip) {
-      return commit.renderTooltip(commit);
-    }
-
-    return (
-      <Tooltip commit={commit}>
-        {commit.hashAbbrev} - {commit.subject}
-      </Tooltip>
-    );
-  }
-
-  private renderMessage(commit: Commit<ReactSvgElement>) {
-    if (commit.renderMessage) {
-      return (
-        <g className="message">
-          {commit.renderMessage(commit, this.state.commitMessagesX)}
-        </g>
-      );
-    }
-
-    let body = null;
-    if (commit.body) {
-      body = (
-        <foreignObject width="600" x="10">
-          <p>{commit.body}</p>
-        </foreignObject>
-      );
-    }
-
-    const x = this.state.commitMessagesX - commit.x;
-    const y = commit.style.dot.size;
-
-    return (
-      // Class name is used to retrieve the message. We could use a ref instead.
-      <g className="message" transform={`translate(${x}, ${y})`}>
-        <text
-          alignmentBaseline="central"
-          fill={commit.style.message.color}
-          style={{ font: commit.style.message.font }}
-          onClick={commit.onMessageClick}
-        >
-          {getMessage(commit)}
-        </text>
-        {body}
-      </g>
     );
   }
 
@@ -336,32 +269,183 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
-  private translateCommitMessagesWithBranchLabel(commits: Element[]): void {
-    commits.forEach((commit) => {
-      const branchLabel = this.branchesLabels[commit.id];
-      if (!branchLabel || !branchLabel.current) {
-        return;
+  private renderMessage(commit: Commit<ReactSvgElement>) {
+    const ref = this.createMessageRef(commit);
+
+    if (commit.renderMessage) {
+      return <g ref={ref}>{commit.renderMessage(commit)}</g>;
+    }
+
+    let body = null;
+    if (commit.body) {
+      body = (
+        <foreignObject width="600" x="10">
+          <p>{commit.body}</p>
+        </foreignObject>
+      );
+    }
+
+    // Use commit dot radius to align text with the middle of the dot.
+    const y = commit.style.dot.size;
+
+    return (
+      <g ref={ref} transform={`translate(0, ${y})`}>
+        <text
+          alignmentBaseline="central"
+          fill={commit.style.message.color}
+          style={{ font: commit.style.message.font }}
+          onClick={commit.onMessageClick}
+        >
+          {getMessage(commit)}
+        </text>
+        {body}
+      </g>
+    );
+  }
+
+  private renderBranchLabel(commit: Commit<ReactSvgElement>) {
+    // gitgraph-core could compute branch labels into commits directly.
+    // That will make it easier to retrieve them, just like tags.
+    const branches = Array.from(this.gitgraph.branches.values());
+    return branches.map((branch) => {
+      if (!branch.style.label.display) return null;
+
+      const commitHash = this.gitgraph.refs.getCommit(branch.name);
+      if (commit.hash !== commitHash) return null;
+
+      // For the moment, we don't handle multiple branch labels.
+      // To do so, we'd need to reposition each of them appropriately.
+      if (commit.branchToDisplay !== branch.name) return null;
+
+      const ref = this.createBranchLabelRef(commit);
+      const branchLabel = <BranchLabel branch={branch} commit={commit} />;
+
+      if (this.gitgraph.isVertical) {
+        return (
+          <g key={branch.name} ref={ref}>
+            {branchLabel}
+          </g>
+        );
+      } else {
+        const commitDotSize = commit.style.dot.size * 2;
+        const horizontalMarginTop = 10;
+        const y = commitDotSize + horizontalMarginTop;
+
+        return (
+          <g
+            key={branch.name}
+            ref={ref}
+            transform={`translate(${commit.x}, ${y})`}
+          >
+            {branchLabel}
+          </g>
+        );
+      }
+    });
+  }
+
+  private renderTags(commit: Commit<ReactSvgElement>) {
+    if (!commit.tags) return null;
+
+    return commit.tags.map((tag) => {
+      const ref = this.createTagRef(commit);
+
+      return (
+        <g key={`${commit.hashAbbrev}-${tag}`} ref={ref}>
+          <Tag name={tag} commit={commit} />
+        </g>
+      );
+    });
+  }
+
+  private createBranchLabelRef(
+    commit: Commit<ReactSvgElement>,
+  ): React.RefObject<SVGGElement> {
+    const ref = React.createRef<SVGGElement>();
+
+    if (!this.commitsElements[commit.hashAbbrev]) {
+      this.initCommitElements(commit);
+    }
+
+    this.commitsElements[commit.hashAbbrev].branchLabel = ref;
+
+    return ref;
+  }
+
+  private createMessageRef(
+    commit: Commit<ReactSvgElement>,
+  ): React.RefObject<SVGGElement> {
+    const ref = React.createRef<SVGGElement>();
+
+    if (!this.commitsElements[commit.hashAbbrev]) {
+      this.initCommitElements(commit);
+    }
+
+    this.commitsElements[commit.hashAbbrev].message = ref;
+
+    return ref;
+  }
+
+  private createTagRef(
+    commit: Commit<ReactSvgElement>,
+  ): React.RefObject<SVGGElement> {
+    const ref = React.createRef<SVGGElement>();
+
+    if (!this.commitsElements[commit.hashAbbrev]) {
+      this.initCommitElements(commit);
+    }
+
+    this.commitsElements[commit.hashAbbrev].tags.push(ref);
+
+    return ref;
+  }
+
+  private initCommitElements(commit: Commit<ReactSvgElement>): void {
+    this.commitsElements[commit.hashAbbrev] = {
+      branchLabel: null,
+      tags: [],
+      message: null,
+    };
+  }
+
+  private positionCommitsElements(): void {
+    if (this.gitgraph.isHorizontal) {
+      // Elements don't appear on horizontal mode, yet.
+      return;
+    }
+
+    const padding = 10;
+
+    // Ensure commits elements (branch labels, message…) are well positionned.
+    // It can't be done at render time since elements size is dynamic.
+    Object.keys(this.commitsElements).forEach((commitHash) => {
+      const { branchLabel, tags, message } = this.commitsElements[commitHash];
+
+      // We'll store X position progressively and translate elements.
+      let x = this.state.commitMessagesX;
+
+      if (branchLabel && branchLabel.current) {
+        moveElement(branchLabel.current, x);
+
+        // For some reason, one paddingX is missing in BBox width.
+        const branchLabelWidth =
+          branchLabel.current.getBBox().width + BranchLabel.paddingX;
+        x += branchLabelWidth + padding;
       }
 
-      // Here we rely on the .message class name. A ref might be better.
-      const message = commit.getElementsByClassName("message")[0];
-      if (!message) return;
+      tags.forEach((tag) => {
+        if (!tag || !tag.current) return;
 
-      const transformAttribute =
-        message.getAttribute("transform") || "translate(0, 0)";
-      const matches = transformAttribute.match(/translate\((\d+),/);
-      if (!matches) return;
+        moveElement(tag.current, x);
 
-      const [, x] = matches.map((a) => parseInt(a, 10));
-      // For some reason, 1 padding is not included in BBox total width.
-      const branchLabelWidth =
-        branchLabel.current.getBBox().width + BranchLabel.paddingX;
-      const padding = 10;
-      const newX = x + branchLabelWidth + padding;
-      message.setAttribute(
-        "transform",
-        transformAttribute.replace(/translate\((\d+),/, `translate(${newX},`),
-      );
+        // For some reason, one paddingX is missing in BBox width.
+        const tagWidth = tag.current.getBBox().width + Tag.paddingX;
+        x += tagWidth + padding;
+      });
+
+      if (message && message.current) {
+        moveElement(message.current, x);
+      }
     });
   }
 
@@ -430,10 +514,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 function getMessage(commit: Commit<ReactSvgElement>): string {
   let message = "";
 
-  if (commit.tags!.length) {
-    message += `[${commit.tags!.join(", ")}] `;
-  }
-
   if (commit.style.message.displayHash) {
     message += `${commit.hashAbbrev} `;
   }
@@ -445,4 +525,12 @@ function getMessage(commit: Commit<ReactSvgElement>): string {
   }
 
   return message;
+}
+
+function moveElement(target: Element, x: number): void {
+  const transform = target.getAttribute("transform") || "translate(0, 0)";
+  target.setAttribute(
+    "transform",
+    transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
+  );
 }

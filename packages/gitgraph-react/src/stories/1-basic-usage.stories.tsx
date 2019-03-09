@@ -114,7 +114,10 @@ storiesOf("1. Basic usage", module)
         const master = gitgraph.branch("master");
 
         // Tag on branch
-        master.commit().tag("v1.0");
+        master
+          .commit()
+          .tag("v1.0")
+          .tag("first release");
 
         master.commit();
         master.tag("v1.1");
@@ -124,6 +127,8 @@ storiesOf("1. Basic usage", module)
         // Tag on gitgraph
         master.commit();
         gitgraph.tag("v2.0");
+
+        gitgraph.branch("feat1").commit({ tag: "something cool" });
       }}
     </Gitgraph>
   ))
