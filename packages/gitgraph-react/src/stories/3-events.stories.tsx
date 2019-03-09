@@ -1,15 +1,14 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 
-import { Gitgraph, CommitOptions } from "../Gitgraph";
+import { Gitgraph } from "../Gitgraph";
 
 storiesOf("3. Events", module)
   .add("on commit dot click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onClick: CommitOptions["onClick"] = (commit) => {
-          alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
-        };
+        const onClick = action("click on dot");
 
         const master = gitgraph.branch("master");
         master.commit({
@@ -26,11 +25,7 @@ storiesOf("3. Events", module)
   .add("on commit dot mouseover", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onMouseOver: CommitOptions["onMouseOver"] = (commit) => {
-          alert(
-            `Mouse is over commit ${commit.hashAbbrev}: "${commit.subject}"`,
-          );
-        };
+        const onMouseOver = action("mouse over dot");
 
         const master = gitgraph.branch("master");
         master.commit({ subject: "Hello", onMouseOver });
@@ -41,11 +36,7 @@ storiesOf("3. Events", module)
   .add("on commit dot mouseout", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onMouseOut: CommitOptions["onMouseOut"] = (commit) => {
-          alert(
-            `Mouse is out commit ${commit.hashAbbrev}: "${commit.subject}"`,
-          );
-        };
+        const onMouseOut = action("mouse out dot");
 
         const master = gitgraph.branch("master");
         master.commit({ subject: "Hello", onMouseOut });
@@ -56,9 +47,7 @@ storiesOf("3. Events", module)
   .add("on commit message click", () => (
     <Gitgraph>
       {(gitgraph) => {
-        const onMessageClick: CommitOptions["onMessageClick"] = (commit) => {
-          alert(`Commit ${commit.hashAbbrev} clicked: "${commit.subject}"`);
-        };
+        const onMessageClick = action("click on message");
 
         const master = gitgraph.branch("master");
         master.commit({ subject: "Hello", onMessageClick });
