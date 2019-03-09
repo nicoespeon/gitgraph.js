@@ -4,8 +4,6 @@ import { Commit } from "@gitgraph/core";
 interface Props {
   name: string;
   commit: Commit<React.ReactElement<SVGElement>>;
-  x: number;
-  y: number;
 }
 
 interface State {
@@ -26,7 +24,7 @@ export class Tag extends React.Component<Props, State> {
   }
 
   public render() {
-    const { name, commit, x, y } = this.props;
+    const { name, commit } = this.props;
 
     const boxWidth = this.state.textWidth + 2 * Tag.paddingX;
     const boxHeight = this.state.textHeight + 2 * Tag.paddingY;
@@ -40,7 +38,7 @@ export class Tag extends React.Component<Props, State> {
     };
 
     return (
-      <g transform={`translate(${x}, ${y})`}>
+      <g>
         {/* TODO: render a tag-like box, with "<" on the left side */}
         <rect
           stroke={style.strokeColor}

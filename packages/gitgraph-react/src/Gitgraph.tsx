@@ -105,12 +105,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   public render() {
     return (
       <svg ref={this.$graph}>
-        {/* Translate graph left => left-most branch label is not cropped */}
+        {/* Translate graph left => left-most branch label is not cropped (horizontal) */}
         {/* Translate graph down => top-most commit tooltip is not cropped */}
         <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
           {this.renderCommits()}
-          {this.renderBranchesLabels()}
           {this.renderTags()}
           {this.$tooltip}
         </g>
@@ -171,41 +170,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     ));
   }
 
-  private renderBranchesLabels() {
-    // gitgraph-core could compute branch labels into commits directly.
-    // That will make it easier to retrieve them, just like tags.
-    const branches = Array.from(this.gitgraph.branches.values());
-    return branches.map((branch) => {
-      if (!branch.style.label.display) return null;
-
-      const commitHash = this.gitgraph.refs.getCommit(branch.name);
-      const commit = this.state.commits.find(({ hash }) => commitHash === hash);
-      if (!commit) return null;
-
-      // For the moment, we don't handle multiple branch labels.
-      // To do so, we'd need to reposition each of them appropriately.
-      if (commit.branchToDisplay !== branch.name) return null;
-
-      const ref = this.createBranchLabelRef(commit);
-
-      const x = this.gitgraph.isVertical
-        ? this.state.commitMessagesX
-        : commit.x;
-
-      const commitDotSize = commit.style.dot.size * 2;
-      const horizontalMarginTop = 10;
-      const y = this.gitgraph.isVertical
-        ? this.getMessageOffset(commit).y
-        : commit.y + commitDotSize + horizontalMarginTop;
-
-      return (
-        <g key={branch.name} ref={ref}>
-          <BranchLabel branch={branch} commit={commit} x={x} y={y} />
-        </g>
-      );
-    });
-  }
-
   private renderTags() {
     if (this.gitgraph.isHorizontal) {
       return null;
@@ -252,15 +216,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     }
 
     return (
-      <g
-        key={commit.hashAbbrev}
-        // Store commit ID to match branch label. We could use refs instead.
-        id={commit.hashAbbrev}
-        transform={`translate(${x}, ${y})`}
-      >
+      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
         {this.renderDot(commit)}
-        {commit.style.message.display && this.renderMessage(commit)}
         {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
+
+        {/* These elements are positionned after component update. */}
+        <g transform={`translate(${-x}, 0)`}>
+          {commit.style.message.display && this.renderMessage(commit)}
+          {this.renderBranchLabel(commit)}
+        </g>
       </g>
     );
   }
@@ -318,11 +282,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       );
     }
 
-    const x = this.state.commitMessagesX - commit.x;
     const y = commit.style.dot.size;
 
     return (
-      <g ref={ref} transform={`translate(${x}, ${y})`}>
+      <g ref={ref} transform={`translate(0, ${y})`}>
         <text
           alignmentBaseline="central"
           fill={commit.style.message.color}
@@ -334,6 +297,47 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {body}
       </g>
     );
+  }
+
+  private renderBranchLabel(commit: Commit<ReactSvgElement>) {
+    // gitgraph-core could compute branch labels into commits directly.
+    // That will make it easier to retrieve them, just like tags.
+    const branches = Array.from(this.gitgraph.branches.values());
+    return branches.map((branch) => {
+      if (!branch.style.label.display) return null;
+
+      const commitHash = this.gitgraph.refs.getCommit(branch.name);
+      if (commit.hash !== commitHash) return null;
+
+      // For the moment, we don't handle multiple branch labels.
+      // To do so, we'd need to reposition each of them appropriately.
+      if (commit.branchToDisplay !== branch.name) return null;
+
+      const ref = this.createBranchLabelRef(commit);
+      const branchLabel = <BranchLabel branch={branch} commit={commit} />;
+
+      if (this.gitgraph.isVertical) {
+        return (
+          <g key={branch.name} ref={ref}>
+            {branchLabel}
+          </g>
+        );
+      } else {
+        const commitDotSize = commit.style.dot.size * 2;
+        const horizontalMarginTop = 10;
+        const y = commitDotSize + horizontalMarginTop;
+
+        return (
+          <g
+            key={branch.name}
+            ref={ref}
+            transform={`translate(${commit.x}, ${y})`}
+          >
+            {branchLabel}
+          </g>
+        );
+      }
+    });
   }
 
   private renderArrows(commit: Commit<ReactSvgElement>) {
@@ -398,6 +402,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private positionCommitsElements(): void {
+    if (this.gitgraph.isHorizontal) {
+      // Elements don't appear on horizontal mode, yet.
+      return;
+    }
+
     const padding = 10;
 
     // Ensure commits elements (branch labels, message…) are well positionned.
@@ -406,20 +415,19 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const { branchLabel, message } = this.commitsElements[commitHash];
 
       // We'll store X position progressively and translate elements.
-      let x = 0;
+      let x = this.state.commitMessagesX;
 
       if (branchLabel && branchLabel.current) {
+        x += getX(branchLabel.current);
+        moveElement(branchLabel.current, x);
+
+        // For some reason, one paddingX is missing in BBox width.
         const branchLabelWidth =
           branchLabel.current.getBBox().width + BranchLabel.paddingX;
         x += branchLabelWidth + padding;
-
-        // Branch label is the first element => don't move it.
       }
 
       if (message && message.current) {
-        const transform = message.current.getAttribute("transform");
-        if (!transform) return;
-
         x += getX(message.current);
         moveElement(message.current, x);
       }
