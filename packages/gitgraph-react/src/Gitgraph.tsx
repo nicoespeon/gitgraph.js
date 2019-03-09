@@ -531,6 +531,6 @@ function moveElement(target: Element, x: number): void {
   const transform = target.getAttribute("transform") || "translate(0, 0)";
   target.setAttribute(
     "transform",
-    transform.replace(/translate\((\d+),/, `translate(${x},`),
+    transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
   );
 }
