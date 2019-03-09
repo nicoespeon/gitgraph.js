@@ -76,6 +76,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private commitsElements: {
     [commitHash: string]: {
       branchLabel: React.RefObject<SVGGElement> | null;
+      tag: React.RefObject<SVGGElement> | null;
       message: React.RefObject<SVGGElement> | null;
     };
   } = {};
@@ -110,7 +111,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
           {this.renderCommits()}
-          {this.renderTags()}
           {this.$tooltip}
         </g>
       </svg>
@@ -170,26 +170,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     ));
   }
 
-  private renderTags() {
-    if (this.gitgraph.isHorizontal) {
-      return null;
-    }
-
-    return this.state.commits.map((commit) => {
-      if (!commit.tags) return null;
-
-      // TODO: render all tags of the commit.
-      const tag = commit.tags[0];
-      if (!tag) return null;
-
-      const x = this.state.commitMessagesX;
-      const y = this.getMessageOffset(commit).y;
-
-      // TODO: position tag along other tags, branch label and commit message.
-      return <Tag name={tag} commit={commit} x={x} y={y} />;
-    });
-  }
-
   private renderCommits() {
     return (
       <g ref={this.$commits}>
@@ -224,6 +204,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         <g transform={`translate(${-x}, 0)`}>
           {commit.style.message.display && this.renderMessage(commit)}
           {this.renderBranchLabel(commit)}
+          {this.renderTags(commit)}
         </g>
       </g>
     );
@@ -340,6 +321,22 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
+  private renderTags(commit: Commit<ReactSvgElement>) {
+    if (!commit.tags) return null;
+
+    // TODO: render all tags of the commit.
+    const tag = commit.tags[0];
+    if (!tag) return null;
+
+    const ref = this.createTagRef(commit);
+
+    return (
+      <g key={`${commit.hashAbbrev}-${tag}`} ref={ref}>
+        <Tag name={tag} commit={commit} />
+      </g>
+    );
+  }
+
   private renderArrows(commit: Commit<ReactSvgElement>) {
     const commitRadius = commit.style.dot.size;
 
@@ -394,9 +391,24 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     return ref;
   }
 
+  private createTagRef(
+    commit: Commit<ReactSvgElement>,
+  ): React.RefObject<SVGGElement> {
+    const ref = React.createRef<SVGGElement>();
+
+    if (!this.commitsElements[commit.hashAbbrev]) {
+      this.initCommitElements(commit);
+    }
+
+    this.commitsElements[commit.hashAbbrev].tag = ref;
+
+    return ref;
+  }
+
   private initCommitElements(commit: Commit<ReactSvgElement>): void {
     this.commitsElements[commit.hashAbbrev] = {
       branchLabel: null,
+      tag: null,
       message: null,
     };
   }
@@ -412,7 +424,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     // Ensure commits elements (branch labels, message…) are well positionned.
     // It can't be done at render time since elements size is dynamic.
     Object.keys(this.commitsElements).forEach((commitHash) => {
-      const { branchLabel, message } = this.commitsElements[commitHash];
+      const { branchLabel, tag, message } = this.commitsElements[commitHash];
 
       // We'll store X position progressively and translate elements.
       let x = this.state.commitMessagesX;
@@ -425,6 +437,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         const branchLabelWidth =
           branchLabel.current.getBBox().width + BranchLabel.paddingX;
         x += branchLabelWidth + padding;
+      }
+
+      if (tag && tag.current) {
+        x += getX(tag.current);
+        moveElement(tag.current, x);
+
+        // For some reason, one paddingX is missing in BBox width.
+        const tagWidth = tag.current.getBBox().width + Tag.paddingX;
+        x += tagWidth + padding;
       }
 
       if (message && message.current) {
