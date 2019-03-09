@@ -1,4 +1,4 @@
-# `gitgraph-core`
+# `@gitgraph/core`
 
 This is the core package of [GitGraph.js][gitgraph-repo]. It contains the main logic for manipulating git-like API and compute the graph that should be rendered.
 
@@ -16,7 +16,7 @@ All the GitGraph.js API is defined there: commit, branch, merge, etc. It embrace
 
 ## Developing a rendering library
 
-A rendering library is a wrapper around `gitgraph-core`.
+A rendering library is a wrapper around `@gitgraph/core`.
 
 It should:
 

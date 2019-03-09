@@ -304,7 +304,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderBranchLabel(commit: Commit<ReactSvgElement>) {
-    // gitgraph-core could compute branch labels into commits directly.
+    // @gitgraph/core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
     const branches = Array.from(this.gitgraph.branches.values());
     return branches.map((branch) => {

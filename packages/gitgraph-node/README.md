@@ -1,6 +1,6 @@
 **❗ This rendering library is still under development and is not stable.**
 
-# `gitgraph-node`
+# `@gitgraph/node`
 
 Draw pretty git graphs in your terminal.
 

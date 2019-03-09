@@ -1,4 +1,4 @@
-# `gitgraph-react`
+# `@gitgraph/react`
 
 Draw pretty git graphs with React.
 
