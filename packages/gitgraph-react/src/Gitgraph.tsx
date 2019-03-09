@@ -398,29 +398,31 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private positionCommitsElements(): void {
+    const padding = 10;
+
     // Ensure commits elements (branch labels, message…) are well positionned.
     // It can't be done at render time since elements size is dynamic.
     Object.keys(this.commitsElements).forEach((commitHash) => {
       const { branchLabel, message } = this.commitsElements[commitHash];
 
-      if (!branchLabel || !branchLabel.current) return;
-      if (!message || !message.current) return;
+      // We'll store X position progressively and translate elements.
+      let x = 0;
 
-      const transformAttribute =
-        message.current.getAttribute("transform") || "translate(0, 0)";
-      const matches = transformAttribute.match(/translate\((\d+),/);
-      if (!matches) return;
+      if (branchLabel && branchLabel.current) {
+        const branchLabelWidth =
+          branchLabel.current.getBBox().width + BranchLabel.paddingX;
+        x += branchLabelWidth + padding;
 
-      const [, x] = matches.map((a) => parseInt(a, 10));
-      // For some reason, 1 padding is not included in BBox total width.
-      const branchLabelWidth =
-        branchLabel.current.getBBox().width + BranchLabel.paddingX;
-      const padding = 10;
-      const newX = x + branchLabelWidth + padding;
-      message.current.setAttribute(
-        "transform",
-        transformAttribute.replace(/translate\((\d+),/, `translate(${newX},`),
-      );
+        // Branch label is the first element => don't move it.
+      }
+
+      if (message && message.current) {
+        const transform = message.current.getAttribute("transform");
+        if (!transform) return;
+
+        x += getX(message.current);
+        moveElement(message.current, x);
+      }
     });
   }
 
@@ -500,4 +502,23 @@ function getMessage(commit: Commit<ReactSvgElement>): string {
   }
 
   return message;
+}
+
+function moveElement(target: Element, x: number): void {
+  const transform = target.getAttribute("transform") || "translate(0, 0)";
+  target.setAttribute(
+    "transform",
+    transform.replace(/translate\((\d+),/, `translate(${x},`),
+  );
+}
+
+function getX(target: Element): number {
+  const transform = target.getAttribute("transform");
+  if (!transform) return 0;
+
+  const matches = transform.match(/translate\((\d+),/);
+  if (!matches) return 0;
+
+  const [, x] = matches.map((a) => parseInt(a, 10));
+  return x;
 }
