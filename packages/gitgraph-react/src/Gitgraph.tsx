@@ -273,11 +273,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const ref = this.createMessageRef(commit);
 
     if (commit.renderMessage) {
-      return (
-        <g ref={ref}>
-          {commit.renderMessage(commit, this.state.commitMessagesX)}
-        </g>
-      );
+      return <g ref={ref}>{commit.renderMessage(commit)}</g>;
     }
 
     let body = null;

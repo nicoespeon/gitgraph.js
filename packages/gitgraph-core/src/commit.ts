@@ -6,7 +6,7 @@ export { CommitRenderOptions, CommitOptions, Commit };
 
 interface CommitRenderOptions<TNode> {
   renderDot?: (commit: Commit<TNode>) => TNode;
-  renderMessage?: (commit: Commit<TNode>, commitMessagesX: number) => TNode;
+  renderMessage?: (commit: Commit<TNode>) => TNode;
   renderTooltip?: (commit: Commit<TNode>) => TNode;
 }
 
@@ -161,10 +161,7 @@ class Commit<TNode = SVGElement> {
   /**
    * Custom message render
    */
-  public renderMessage?: (
-    commit: Commit<TNode>,
-    commitMessagesX: number,
-  ) => TNode;
+  public renderMessage?: (commit: Commit<TNode>) => TNode;
   /**
    * Custom tooltip render
    */
