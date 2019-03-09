@@ -210,6 +210,18 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
+  private renderTooltip(commit: Commit<ReactSvgElement>) {
+    if (commit.renderTooltip) {
+      return commit.renderTooltip(commit);
+    }
+
+    return (
+      <Tooltip commit={commit}>
+        {commit.hashAbbrev} - {commit.subject}
+      </Tooltip>
+    );
+  }
+
   private renderDot(commit: Commit<ReactSvgElement>) {
     if (commit.renderDot) {
       return commit.renderDot(commit);
@@ -231,16 +243,30 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private renderTooltip(commit: Commit<ReactSvgElement>) {
-    if (commit.renderTooltip) {
-      return commit.renderTooltip(commit);
-    }
+  private renderArrows(commit: Commit<ReactSvgElement>) {
+    const commitRadius = commit.style.dot.size;
 
-    return (
-      <Tooltip commit={commit}>
-        {commit.hashAbbrev} - {commit.subject}
-      </Tooltip>
-    );
+    return commit.parents.map((parentHash) => {
+      const parent = this.state.commits.find(({ hash }) => hash === parentHash);
+      if (!parent) return null;
+
+      // Starting point, relative to commit
+      const origin = this.gitgraph.reverseArrow
+        ? {
+            x: commitRadius + (parent.x - commit.x),
+            y: commitRadius + (parent.y - commit.y),
+          }
+        : { x: commitRadius, y: commitRadius };
+
+      return (
+        <g transform={`translate(${origin.x}, ${origin.y})`}>
+          <path
+            d={arrowSvgPath(this.gitgraph, parent, commit)}
+            fill={this.gitgraph.template.arrow.color!}
+          />
+        </g>
+      );
+    });
   }
 
   private renderMessage(commit: Commit<ReactSvgElement>) {
@@ -335,32 +361,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         <Tag name={tag} commit={commit} />
       </g>
     );
-  }
-
-  private renderArrows(commit: Commit<ReactSvgElement>) {
-    const commitRadius = commit.style.dot.size;
-
-    return commit.parents.map((parentHash) => {
-      const parent = this.state.commits.find(({ hash }) => hash === parentHash);
-      if (!parent) return null;
-
-      // Starting point, relative to commit
-      const origin = this.gitgraph.reverseArrow
-        ? {
-            x: commitRadius + (parent.x - commit.x),
-            y: commitRadius + (parent.y - commit.y),
-          }
-        : { x: commitRadius, y: commitRadius };
-
-      return (
-        <g transform={`translate(${origin.x}, ${origin.y})`}>
-          <path
-            d={arrowSvgPath(this.gitgraph, parent, commit)}
-            fill={this.gitgraph.template.arrow.color!}
-          />
-        </g>
-      );
-    });
   }
 
   private createBranchLabelRef(
