@@ -289,6 +289,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       );
     }
 
+    // Use commit dot radius to align text with the middle of the dot.
     const y = commit.style.dot.size;
 
     return (
