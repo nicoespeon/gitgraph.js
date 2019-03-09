@@ -76,7 +76,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private commitsElements: {
     [commitHash: string]: {
       branchLabel: React.RefObject<SVGGElement> | null;
-      tag: React.RefObject<SVGGElement> | null;
+      tags: Array<React.RefObject<SVGGElement>>;
       message: React.RefObject<SVGGElement> | null;
     };
   } = {};
@@ -351,17 +351,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private renderTags(commit: Commit<ReactSvgElement>) {
     if (!commit.tags) return null;
 
-    // TODO: render all tags of the commit.
-    const tag = commit.tags[0];
-    if (!tag) return null;
+    return commit.tags.map((tag) => {
+      const ref = this.createTagRef(commit);
 
-    const ref = this.createTagRef(commit);
-
-    return (
-      <g key={`${commit.hashAbbrev}-${tag}`} ref={ref}>
-        <Tag name={tag} commit={commit} />
-      </g>
-    );
+      return (
+        <g key={`${commit.hashAbbrev}-${tag}`} ref={ref}>
+          <Tag name={tag} commit={commit} />
+        </g>
+      );
+    });
   }
 
   private createBranchLabelRef(
@@ -401,7 +399,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       this.initCommitElements(commit);
     }
 
-    this.commitsElements[commit.hashAbbrev].tag = ref;
+    this.commitsElements[commit.hashAbbrev].tags.push(ref);
 
     return ref;
   }
@@ -409,7 +407,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private initCommitElements(commit: Commit<ReactSvgElement>): void {
     this.commitsElements[commit.hashAbbrev] = {
       branchLabel: null,
-      tag: null,
+      tags: [],
       message: null,
     };
   }
@@ -425,7 +423,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     // Ensure commits elements (branch labels, message…) are well positionned.
     // It can't be done at render time since elements size is dynamic.
     Object.keys(this.commitsElements).forEach((commitHash) => {
-      const { branchLabel, tag, message } = this.commitsElements[commitHash];
+      const { branchLabel, tags, message } = this.commitsElements[commitHash];
 
       // We'll store X position progressively and translate elements.
       let x = this.state.commitMessagesX;
@@ -440,14 +438,16 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         x += branchLabelWidth + padding;
       }
 
-      if (tag && tag.current) {
+      tags.forEach((tag) => {
+        if (!tag || !tag.current) return;
+
         x += getX(tag.current);
         moveElement(tag.current, x);
 
         // For some reason, one paddingX is missing in BBox width.
         const tagWidth = tag.current.getBBox().width + Tag.paddingX;
         x += tagWidth + padding;
-      }
+      });
 
       if (message && message.current) {
         x += getX(message.current);
