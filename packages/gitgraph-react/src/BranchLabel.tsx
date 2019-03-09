@@ -43,6 +43,7 @@ export class BranchLabel extends React.Component<Props, State> {
           fill={branch.style.label.color || commit.style.color}
           style={{ font: branch.style.label.font }}
           alignmentBaseline="middle"
+          dominantBaseline="middle"
           x={BranchLabel.paddingX}
           y={boxHeight / 2}
         >

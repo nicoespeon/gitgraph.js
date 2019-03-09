@@ -62,6 +62,7 @@ export class Tag extends React.Component<Props, State> {
           fill={style.color}
           style={{ font: style.font }}
           alignmentBaseline="middle"
+          dominantBaseline="middle"
           x={offset + Tag.paddingX}
           y={0}
         >
