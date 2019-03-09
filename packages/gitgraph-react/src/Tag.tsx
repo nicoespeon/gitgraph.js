@@ -26,34 +26,44 @@ export class Tag extends React.Component<Props, State> {
   public render() {
     const { name, commit } = this.props;
 
-    const boxWidth = this.state.textWidth + 2 * Tag.paddingX;
-    const boxHeight = this.state.textHeight + 2 * Tag.paddingY;
-
     const style = {
-      strokeColor: commit.style.color,
       bgColor: commit.style.color,
       borderRadius: 10,
+      pointerWidth: 12,
       color: "white",
       font: commit.style.message.font,
     };
 
+    const offset = style.pointerWidth;
+    const radius = style.borderRadius;
+    const boxWidth = offset + this.state.textWidth + 2 * Tag.paddingX;
+    const boxHeight = this.state.textHeight + 2 * Tag.paddingY;
+
+    const path = [
+      "M 0,0",
+      `L ${offset},${boxHeight / 2}`,
+      `V ${boxHeight / 2}`,
+      `Q ${offset},${boxHeight / 2} ${offset + radius},${boxHeight / 2}`,
+      `H ${boxWidth - radius}`,
+      `Q ${boxWidth},${boxHeight / 2} ${boxWidth},${boxHeight / 2 - radius}`,
+      `V -${boxHeight / 2 - radius}`,
+      `Q ${boxWidth},-${boxHeight / 2} ${boxWidth - radius},-${boxHeight / 2}`,
+      `H ${offset + radius}`,
+      `Q ${offset},-${boxHeight / 2} ${offset},-${boxHeight / 2}`,
+      `V -${boxHeight / 2}`,
+      "z",
+    ].join(" ");
+
     return (
-      <g>
-        {/* TODO: render a tag-like box, with "<" on the left side */}
-        <rect
-          stroke={style.strokeColor}
-          fill={style.bgColor}
-          rx={style.borderRadius}
-          width={boxWidth}
-          height={boxHeight}
-        />
+      <g transform={`translate(0, ${commit.style.dot.size})`}>
+        <path d={path} fill={style.bgColor} />
         <text
           ref={this.$text}
           fill={style.color}
           style={{ font: style.font }}
           alignmentBaseline="middle"
-          x={Tag.paddingX}
-          y={boxHeight / 2}
+          x={offset + Tag.paddingX}
+          y={0}
         >
           {name}
         </text>
