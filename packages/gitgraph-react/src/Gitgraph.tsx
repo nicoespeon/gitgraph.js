@@ -425,7 +425,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       let x = this.state.commitMessagesX;
 
       if (branchLabel && branchLabel.current) {
-        x += getX(branchLabel.current);
         moveElement(branchLabel.current, x);
 
         // For some reason, one paddingX is missing in BBox width.
@@ -437,7 +436,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       tags.forEach((tag) => {
         if (!tag || !tag.current) return;
 
-        x += getX(tag.current);
         moveElement(tag.current, x);
 
         // For some reason, one paddingX is missing in BBox width.
@@ -446,7 +444,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       });
 
       if (message && message.current) {
-        x += getX(message.current);
         moveElement(message.current, x);
       }
     });
@@ -536,15 +533,4 @@ function moveElement(target: Element, x: number): void {
     "transform",
     transform.replace(/translate\((\d+),/, `translate(${x},`),
   );
-}
-
-function getX(target: Element): number {
-  const transform = target.getAttribute("transform");
-  if (!transform) return 0;
-
-  const matches = transform.match(/translate\((\d+),/);
-  if (!matches) return 0;
-
-  const [, x] = matches.map((a) => parseInt(a, 10));
-  return x;
 }
