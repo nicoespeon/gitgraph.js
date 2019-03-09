@@ -127,6 +127,8 @@ storiesOf("1. Basic usage", module)
         // Tag on gitgraph
         master.commit();
         gitgraph.tag("v2.0");
+
+        gitgraph.branch("feat1").commit({ tag: "something cool" });
       }}
     </Gitgraph>
   ))
