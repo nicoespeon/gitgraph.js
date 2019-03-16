@@ -27,6 +27,7 @@ export class Tag extends React.Component<Props, State> {
     const { name, commit } = this.props;
 
     const style = {
+      strokeColor: commit.style.color,
       bgColor: commit.style.color,
       borderRadius: 10,
       pointerWidth: 12,
@@ -56,7 +57,7 @@ export class Tag extends React.Component<Props, State> {
 
     return (
       <g transform={`translate(0, ${commit.style.dot.size})`}>
-        <path d={path} fill={style.bgColor} />
+        <path d={path} fill={style.bgColor} stroke={style.strokeColor} />
         <text
           ref={this.$text}
           fill={style.color}
