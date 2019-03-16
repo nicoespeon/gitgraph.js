@@ -207,6 +207,8 @@ interface TemplateOptions {
   commit?: CommitStyleOptions;
 }
 
+export const DEFAULT_FONT = "normal 12pt Calibri";
+
 /**
  * Gitgraph template
  *
@@ -256,7 +258,7 @@ class Template {
         font:
           options.branch.label.font ||
           options.commit.message.font ||
-          "normal 12pt Calibri",
+          DEFAULT_FONT,
         borderRadius: numberOptionOr(options.branch.label.borderRadius, 10),
       },
     };
@@ -294,7 +296,7 @@ class Template {
         ),
         displayHash: booleanOptionOr(options.commit.message.displayHash, true),
         color: options.commit.message.color || options.commit.color,
-        font: options.commit.message.font || "normal 12pt Calibri",
+        font: options.commit.message.font || DEFAULT_FONT,
       },
     };
   }
