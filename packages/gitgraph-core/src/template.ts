@@ -338,6 +338,8 @@ class Template {
     };
 
     // Tag style
+    // This one is computed in the Tag instance. It needs Commit style
+    // that is partially computed at runtime (for colors).
     this.tag = options.tag || {};
   }
 }

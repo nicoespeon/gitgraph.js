@@ -5,6 +5,7 @@ import {
   BranchOptions,
 } from "./branch";
 import { Commit } from "./commit";
+import { Tag } from "./tag";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
 import { Template, TemplateName, getTemplate } from "./template";
@@ -181,11 +182,21 @@ class GitgraphCore<TNode = SVGElement> {
 
     const columns = new GraphColumns<TNode>(commitsWithBranches);
 
-    return commitsWithBranches
-      .map((commit) => commit.setRefs(this.refs))
-      .map((commit) => commit.setTags(this.tags))
-      .map((commit) => this.withPosition(commit, columns))
-      .map((commit) => this.setDefaultColor(commit, columns));
+    return (
+      commitsWithBranches
+        .map((commit) => commit.setRefs(this.refs))
+        .map((commit) => this.withPosition(commit, columns))
+        .map((commit) => this.setDefaultColor(commit, columns))
+        // Tags need commit style to be computed (with default color).
+        .map((commit) =>
+          commit.setTags(
+            // TODO: move it into setTags
+            this.tags
+              .getNames(commit.hash)
+              .map((name) => new Tag(name, this.template.tag, commit.style)),
+          ),
+        )
+    );
   }
 
   /**

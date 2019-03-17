@@ -1,4 +1,5 @@
 import { GitgraphCore } from "../gitgraph";
+import { Tag } from "../tag";
 
 describe("Gitgraph.getRenderedData.tags", () => {
   it("should tag a commit", () => {
@@ -12,11 +13,8 @@ describe("Gitgraph.getRenderedData.tags", () => {
 
     const { commits } = core.getRenderedData();
 
-    expect(commits).toMatchObject([
-      { subject: "one" },
-      { subject: "with tag", tags: ["1.0.0"] },
-      { subject: "three" },
-    ]);
+    expect(commits[1].tags.length).toBe(1);
+    expect(commits[1].tags[0].name).toBe("1.0.0");
   });
 
   it("should tag the last commit of the branch", () => {

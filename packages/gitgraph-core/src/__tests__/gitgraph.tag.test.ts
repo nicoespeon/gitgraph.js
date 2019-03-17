@@ -62,11 +62,11 @@ describe("Gitgraph.tag", () => {
 
     const { commits } = core.getRenderedData();
 
-    expect(commits).toMatchObject([
-      { subject: "one", tags: [] },
-      { subject: "two", tags: [] },
-      { subject: "three", tags: [] },
-      { subject: "four-tagged", tags: ["tag-one", "tag-two"] },
-    ]);
+    expect(commits[0].tags.length).toBe(0);
+    expect(commits[1].tags.length).toBe(0);
+    expect(commits[2].tags.length).toBe(0);
+    expect(commits[3].tags.length).toBe(2);
+    expect(commits[3].tags[0].name).toBe("tag-one");
+    expect(commits[3].tags[1].name).toBe("tag-two");
   });
 });
