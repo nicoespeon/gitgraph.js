@@ -1,4 +1,4 @@
-import { CommitStyle } from "./template";
+import { CommitStyle, TagStyle } from "./template";
 import { Branch } from "./branch";
 import { Refs } from "./refs";
 import { Tag } from "./tag";
@@ -220,8 +220,10 @@ class Commit<TNode = SVGElement> {
     return this;
   }
 
-  public setTags(tags: Tag[]): this {
-    this.tags = tags;
+  public setTags(tags: Refs, tagStyle: Partial<TagStyle>): this {
+    this.tags = tags
+      .getNames(this.hash)
+      .map((name) => new Tag(name, tagStyle, this.style));
     return this;
   }
 
