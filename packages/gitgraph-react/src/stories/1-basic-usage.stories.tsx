@@ -146,6 +146,34 @@ storiesOf("1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("branch with style", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        const master = gitgraph.branch({
+          name: "master",
+          style: {
+            label: {
+              bgColor: "#ffce52",
+              color: "black",
+              strokeColor: "#ce9b00",
+              borderRadius: 0,
+              font: "italic 12pt serif",
+            },
+          },
+        });
+
+        master
+          .commit()
+          .commit()
+          .commit();
+
+        gitgraph
+          .branch("feat1")
+          .commit()
+          .commit();
+      }}
+    </Gitgraph>
+  ))
   .add("compact mode", () => (
     <Gitgraph options={{ mode: Mode.Compact }}>
       {(gitgraph) => {
