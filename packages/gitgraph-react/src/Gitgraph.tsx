@@ -22,7 +22,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
-import { Tag } from "./Tag";
+import { TagElement } from "./Tag";
 
 type ReactSvgElement = React.ReactElement<SVGElement>;
 
@@ -351,8 +351,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const ref = this.createTagRef(commit);
 
       return (
-        <g key={`${commit.hashAbbrev}-${tag}`} ref={ref}>
-          <Tag name={tag} commit={commit} />
+        <g
+          key={`${commit.hashAbbrev}-${tag.name}`}
+          ref={ref}
+          transform={`translate(0, ${commit.style.dot.size})`}
+        >
+          <TagElement tag={tag} />
         </g>
       );
     });
@@ -439,7 +443,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         moveElement(tag.current, x);
 
         // For some reason, one paddingX is missing in BBox width.
-        const tagWidth = tag.current.getBBox().width + Tag.paddingX;
+        const tagWidth = tag.current.getBBox().width + TagElement.paddingX;
         x += tagWidth + padding;
       });
 

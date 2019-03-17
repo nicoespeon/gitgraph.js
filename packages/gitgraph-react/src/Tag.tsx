@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Commit } from "@gitgraph/core";
+import { Tag } from "@gitgraph/core";
 
 interface Props {
-  name: string;
-  commit: Commit<React.ReactElement<SVGElement>>;
+  tag: Tag;
 }
 
 interface State {
@@ -11,7 +10,7 @@ interface State {
   textHeight: number;
 }
 
-export class Tag extends React.Component<Props, State> {
+export class TagElement extends React.Component<Props, State> {
   public static readonly paddingX = 10;
   public static readonly paddingY = 5;
   public readonly state = { textWidth: 0, textHeight: 0 };
@@ -24,21 +23,12 @@ export class Tag extends React.Component<Props, State> {
   }
 
   public render() {
-    const { name, commit } = this.props;
+    const { tag } = this.props;
 
-    const style = {
-      strokeColor: commit.style.color,
-      bgColor: commit.style.color,
-      borderRadius: 10,
-      pointerWidth: 12,
-      color: "white",
-      font: commit.style.message.font,
-    };
-
-    const offset = style.pointerWidth;
-    const radius = style.borderRadius;
-    const boxWidth = offset + this.state.textWidth + 2 * Tag.paddingX;
-    const boxHeight = this.state.textHeight + 2 * Tag.paddingY;
+    const offset = tag.style.pointerWidth;
+    const radius = tag.style.borderRadius;
+    const boxWidth = offset + this.state.textWidth + 2 * TagElement.paddingX;
+    const boxHeight = this.state.textHeight + 2 * TagElement.paddingY;
 
     const path = [
       "M 0,0",
@@ -56,18 +46,22 @@ export class Tag extends React.Component<Props, State> {
     ].join(" ");
 
     return (
-      <g transform={`translate(0, ${commit.style.dot.size})`}>
-        <path d={path} fill={style.bgColor} stroke={style.strokeColor} />
+      <g>
+        <path
+          d={path}
+          fill={tag.style.bgColor}
+          stroke={tag.style.strokeColor}
+        />
         <text
           ref={this.$text}
-          fill={style.color}
-          style={{ font: style.font }}
+          fill={tag.style.color}
+          style={{ font: tag.style.font }}
           alignmentBaseline="middle"
           dominantBaseline="middle"
-          x={offset + Tag.paddingX}
+          x={offset + TagElement.paddingX}
           y={0}
         >
-          {name}
+          {tag.name}
         </text>
       </g>
     );
