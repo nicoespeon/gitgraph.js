@@ -10,6 +10,7 @@ export {
 } from "./user-api/branch-user-api";
 export { Branch } from "./branch";
 export { Commit } from "./commit";
+export { Tag } from "./tag";
 export { Refs } from "./refs";
 export { MergeStyle, TemplateName, templateExtend } from "./template";
 export { Orientation } from "./orientation";
