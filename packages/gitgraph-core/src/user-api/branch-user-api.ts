@@ -22,6 +22,10 @@ interface GitgraphMergeOptions<TNode> {
   fastForward?: boolean;
 }
 
+interface BranchTagOptions {
+  name: string;
+}
+
 class BranchUserApi<TNode> {
   /**
    * Name of the branch.
@@ -129,9 +133,17 @@ class BranchUserApi<TNode> {
   /**
    * Tag the last commit of the branch.
    *
+   * @param options Options of the tag
+   */
+  public tag(options: BranchTagOptions): this;
+  /**
+   * Tag the last commit of the branch.
+   *
    * @param name Name of the tag
    */
-  public tag(name: string): this {
+  public tag(name: string): this;
+  public tag(options?: any): this {
+    const name = typeof options === "string" ? options : options.name;
     this._graph.getUserApi().tag(name, this._branch.name);
     return this;
   }

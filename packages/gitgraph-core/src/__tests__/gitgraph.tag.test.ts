@@ -43,6 +43,28 @@ describe("Gitgraph.tag", () => {
     expect(core.tags.getCommit("this-one")).toEqual("tagged-hash");
   });
 
+  it("should tag a branch directly", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    const dev = gitgraph.branch("dev");
+    dev.commit({ subject: "tagged", hash: "tagged-hash" });
+    dev.tag("this-one");
+
+    expect(core.tags.getCommit("this-one")).toEqual("tagged-hash");
+  });
+
+  it("should tag a branch directly with options param", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    const dev = gitgraph.branch("dev");
+    dev.commit({ subject: "tagged", hash: "tagged-hash" });
+    dev.tag({ name: "this-one" });
+
+    expect(core.tags.getCommit("this-one")).toEqual("tagged-hash");
+  });
+
   it("should add a tag to HEAD", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
