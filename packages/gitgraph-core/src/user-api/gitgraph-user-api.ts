@@ -27,6 +27,11 @@ interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
   onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
+interface GitgraphTagOptions<TNode> {
+  name: string;
+  ref?: Commit<TNode> | Commit["hash"] | Branch["name"];
+}
+
 interface GitgraphBranchOptions<TNode> {
   /**
    * Branch name
@@ -102,13 +107,31 @@ class GitgraphUserApi<TNode> {
   /**
    * Tag a specific commit.
    *
+   * @param options Options of the tag
+   */
+  public tag(options: GitgraphTagOptions<TNode>): this;
+  /**
+   * Tag a specific commit.
+   *
    * @param name Name of the tag
    * @param ref Commit or branch name or commit hash
    */
   public tag(
     name: string,
     ref?: Commit<TNode> | Commit["hash"] | Branch["name"],
-  ): this {
+  ): this;
+  public tag(...args: any[]): this {
+    // Deal with shorter syntax
+    let name;
+    let ref;
+    if (typeof args[0] === "string") {
+      name = args[0];
+      ref = args[1];
+    } else {
+      name = args[0].name;
+      ref = args[0].ref;
+    }
+
     if (!ref) {
       const head = this._graph.refs.getCommit("HEAD");
       if (!head) return this;

@@ -33,6 +33,16 @@ describe("Gitgraph.tag", () => {
     expect(core.tags.getCommit("this-one")).toEqual("three-tagged-hash");
   });
 
+  it("should add a tag to a branch with options param", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph.branch("dev").commit({ subject: "tagged", hash: "tagged-hash" });
+    gitgraph.tag({ name: "this-one", ref: "dev" });
+
+    expect(core.tags.getCommit("this-one")).toEqual("tagged-hash");
+  });
+
   it("should add a tag to HEAD", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
