@@ -80,6 +80,19 @@ describe("Gitgraph.tag", () => {
     expect(core.tags.getCommit("this-one")).toEqual("four-tagged-hash");
   });
 
+  it("should throw if given reference doesn't exist", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph
+      .branch("master")
+      .commit({ subject: "tagged", hash: "tagged-hash" });
+
+    expect(() => gitgraph.tag("this-one", "unknown")).toThrowError(
+      'The ref "unknown" does not exist',
+    );
+  });
+
   it("should add tags into render output", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
