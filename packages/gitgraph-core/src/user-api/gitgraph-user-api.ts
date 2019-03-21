@@ -117,13 +117,13 @@ class GitgraphUserApi<TNode> {
    * @param ref Commit or branch name or commit hash
    */
   public tag(
-    name: string,
-    ref?: Commit<TNode> | Commit["hash"] | Branch["name"],
+    name: GitgraphTagOptions<TNode>["name"],
+    ref?: GitgraphTagOptions<TNode>["ref"],
   ): this;
   public tag(...args: any[]): this {
     // Deal with shorter syntax
-    let name;
-    let ref;
+    let name: GitgraphTagOptions<TNode>["name"];
+    let ref: GitgraphTagOptions<TNode>["ref"];
     if (typeof args[0] === "string") {
       name = args[0];
       ref = args[1];
