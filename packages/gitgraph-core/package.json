@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "joi-browser": "13.4.0",
-    "lodash": "4.17.10",
+    "lodash": "4.17.11",
     "yup": "0.26.3"
   },
   "devDependencies": {
