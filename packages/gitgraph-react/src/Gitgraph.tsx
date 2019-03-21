@@ -22,7 +22,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { Dot } from "./Dot";
-import { Tag } from "./Tag";
+import { Tag, TAG_PADDING_X } from "./Tag";
 
 type ReactSvgElement = React.ReactElement<SVGElement>;
 
@@ -443,7 +443,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         moveElement(tag.current, x);
 
         // For some reason, one paddingX is missing in BBox width.
-        const tagWidth = tag.current.getBBox().width + Tag.paddingX;
+        const tagWidth = tag.current.getBBox().width + TAG_PADDING_X;
         x += tagWidth + padding;
       });
 
