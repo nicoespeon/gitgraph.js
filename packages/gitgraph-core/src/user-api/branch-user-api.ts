@@ -144,7 +144,7 @@ class BranchUserApi<TNode> {
   public tag(name: BranchTagOptions["name"]): this;
   public tag(options?: any): this {
     const name = typeof options === "string" ? options : options.name;
-    this._graph.getUserApi().tag(name, this._branch.name);
+    this._graph.getUserApi().tag({ name, ref: this._branch.name });
     return this;
   }
 
