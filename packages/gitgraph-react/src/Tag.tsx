@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Tag } from "@gitgraph/core";
+import { Tag as CoreTag } from "@gitgraph/core";
 
 interface Props {
-  tag: Tag;
+  tag: CoreTag;
 }
 
 interface State {
@@ -10,7 +10,7 @@ interface State {
   textHeight: number;
 }
 
-export class TagElement extends React.Component<Props, State> {
+export class Tag extends React.Component<Props, State> {
   public static readonly paddingX = 10;
   public static readonly paddingY = 5;
   public readonly state = { textWidth: 0, textHeight: 0 };
@@ -27,8 +27,8 @@ export class TagElement extends React.Component<Props, State> {
 
     const offset = tag.style.pointerWidth;
     const radius = tag.style.borderRadius;
-    const boxWidth = offset + this.state.textWidth + 2 * TagElement.paddingX;
-    const boxHeight = this.state.textHeight + 2 * TagElement.paddingY;
+    const boxWidth = offset + this.state.textWidth + 2 * Tag.paddingX;
+    const boxHeight = this.state.textHeight + 2 * Tag.paddingY;
 
     const path = [
       "M 0,0",
@@ -58,7 +58,7 @@ export class TagElement extends React.Component<Props, State> {
           style={{ font: tag.style.font }}
           alignmentBaseline="middle"
           dominantBaseline="middle"
-          x={offset + TagElement.paddingX}
+          x={offset + Tag.paddingX}
           y={0}
         >
           {tag.name}
