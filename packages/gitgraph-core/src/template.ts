@@ -101,6 +101,35 @@ interface BranchLabelStyle {
 
 type BranchLabelStyleOptions = Partial<BranchLabelStyle>;
 
+export interface TagStyle {
+  /**
+   * Tag text color
+   */
+  color: string;
+  /**
+   * Tag stroke color
+   */
+  strokeColor?: string;
+  /**
+   * Tag background color
+   */
+  bgColor?: string;
+  /**
+   * Tag font
+   */
+  font: string;
+  /**
+   * Tag border radius
+   */
+  borderRadius: number;
+  /**
+   * Width of the tag pointer
+   */
+  pointerWidth: number;
+}
+
+type TagStyleOptions = Partial<TagStyle>;
+
 interface CommitDotStyle {
   /**
    * Commit dot color
@@ -205,6 +234,10 @@ interface TemplateOptions {
    * Commit style
    */
   commit?: CommitStyleOptions;
+  /**
+   * Tag style
+   */
+  tag?: TagStyleOptions;
 }
 
 export const DEFAULT_FONT = "normal 12pt Calibri";
@@ -231,6 +264,10 @@ class Template {
    * Commit style
    */
   public commit: CommitStyle;
+  /**
+   * Tag style
+   */
+  public tag: TagStyleOptions;
 
   constructor(options: TemplateOptions) {
     // Options
@@ -299,6 +336,11 @@ class Template {
         font: options.commit.message.font || DEFAULT_FONT,
       },
     };
+
+    // Tag style
+    // This one is computed in the Tag instance. It needs Commit style
+    // that is partially computed at runtime (for colors).
+    this.tag = options.tag || {};
   }
 }
 

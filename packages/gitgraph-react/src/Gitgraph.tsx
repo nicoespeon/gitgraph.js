@@ -351,8 +351,12 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       const ref = this.createTagRef(commit);
 
       return (
-        <g key={`${commit.hashAbbrev}-${tag}`} ref={ref}>
-          <Tag name={tag} commit={commit} />
+        <g
+          key={`${commit.hashAbbrev}-${tag.name}`}
+          ref={ref}
+          transform={`translate(0, ${commit.style.dot.size})`}
+        >
+          <Tag tag={tag} />
         </g>
       );
     });

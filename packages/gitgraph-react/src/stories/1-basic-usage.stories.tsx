@@ -128,7 +128,22 @@ storiesOf("1. Basic usage", module)
         master.commit();
         gitgraph.tag("v2.0");
 
-        gitgraph.branch("feat1").commit({ tag: "something cool" });
+        // Custom tags
+        const customTagStyle = {
+          bgColor: "orange",
+          strokeColor: "orange",
+          borderRadius: 0,
+          pointerWidth: 0,
+        };
+        gitgraph.tag({
+          name: "last release",
+          style: customTagStyle,
+        });
+
+        gitgraph
+          .branch("feat1")
+          .commit()
+          .tag({ name: "something cool", style: customTagStyle });
       }}
     </Gitgraph>
   ))
@@ -143,6 +158,34 @@ storiesOf("1. Basic usage", module)
         develop.commit("six");
         feat1.commit("seven");
         feat2.commit("height");
+      }}
+    </Gitgraph>
+  ))
+  .add("branch with style", () => (
+    <Gitgraph>
+      {(gitgraph) => {
+        const master = gitgraph.branch({
+          name: "master",
+          style: {
+            label: {
+              bgColor: "#ffce52",
+              color: "black",
+              strokeColor: "#ce9b00",
+              borderRadius: 0,
+              font: "italic 12pt serif",
+            },
+          },
+        });
+
+        master
+          .commit()
+          .commit()
+          .commit();
+
+        gitgraph
+          .branch("feat1")
+          .commit()
+          .commit();
       }}
     </Gitgraph>
   ))

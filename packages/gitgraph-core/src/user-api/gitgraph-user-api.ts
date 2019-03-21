@@ -27,6 +27,12 @@ interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
   onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
+interface GitgraphTagOptions {
+  name: string;
+  ref?: Commit["hash"] | Branch["name"];
+  style?: TemplateOptions["tag"];
+}
+
 interface GitgraphBranchOptions<TNode> {
   /**
    * Branch name
@@ -102,25 +108,38 @@ class GitgraphUserApi<TNode> {
   /**
    * Tag a specific commit.
    *
+   * @param options Options of the tag
+   */
+  public tag(options: GitgraphTagOptions): this;
+  /**
+   * Tag a specific commit.
+   *
    * @param name Name of the tag
    * @param ref Commit or branch name or commit hash
    */
   public tag(
-    name: string,
-    ref?: Commit<TNode> | Commit["hash"] | Branch["name"],
-  ): this {
+    name: GitgraphTagOptions["name"],
+    ref?: GitgraphTagOptions["ref"],
+  ): this;
+  public tag(...args: any[]): this {
+    // Deal with shorter syntax
+    let name: GitgraphTagOptions["name"];
+    let ref: GitgraphTagOptions["ref"];
+    let style: GitgraphTagOptions["style"];
+    if (typeof args[0] === "string") {
+      name = args[0];
+      ref = args[1];
+    } else {
+      name = args[0].name;
+      ref = args[0].ref;
+      style = args[0].style;
+    }
+
     if (!ref) {
       const head = this._graph.refs.getCommit("HEAD");
       if (!head) return this;
 
       ref = head;
-    }
-
-    if (typeof ref !== "string") {
-      // `ref` is a `Commit`
-      this._graph.tags.set(name, ref.hash);
-      this._onGraphUpdate();
-      return this;
     }
 
     let commitHash;
@@ -139,6 +158,7 @@ class GitgraphUserApi<TNode> {
     }
 
     this._graph.tags.set(name, commitHash);
+    this._graph.tagStyles[name] = style;
     this._onGraphUpdate();
     return this;
   }

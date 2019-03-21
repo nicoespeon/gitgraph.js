@@ -115,16 +115,9 @@ describe("Gitgraph.import", () => {
     gitgraph.import(data);
 
     const { commits } = core.getRenderedData();
-    expect(commits).toMatchObject([
-      {
-        subject: "first",
-        tags: ["stable"],
-      },
-      {
-        subject: "second",
-        tags: ["v1.0"],
-      },
-    ]);
+
+    expect(commits[0].tags[0].name).toBe("stable");
+    expect(commits[1].tags[0].name).toBe("v1.0");
   });
 
   it("should not put tags in refs", () => {

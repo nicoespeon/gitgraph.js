@@ -1,6 +1,7 @@
-import { CommitStyle } from "./template";
+import { CommitStyle, TagStyle } from "./template";
 import { Branch } from "./branch";
 import { Refs } from "./refs";
+import { Tag } from "./tag";
 
 export { CommitRenderOptions, CommitOptions, Commit };
 
@@ -137,7 +138,7 @@ class Commit<TNode = SVGElement> {
   /**
    * List of tags attached
    */
-  public tags?: string[];
+  public tags?: Tag[];
   /**
    * Callback to execute on click.
    */
@@ -219,8 +220,13 @@ class Commit<TNode = SVGElement> {
     return this;
   }
 
-  public setTags(tags: Refs): this {
-    this.tags = tags.getNames(this.hash);
+  public setTags(
+    tags: Refs,
+    getTagStyle: (name: Tag["name"]) => Partial<TagStyle>,
+  ): this {
+    this.tags = tags
+      .getNames(this.hash)
+      .map((name) => new Tag(name, getTagStyle(name), this.style));
     return this;
   }
 

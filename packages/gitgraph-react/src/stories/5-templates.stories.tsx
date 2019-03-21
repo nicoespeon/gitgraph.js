@@ -135,4 +135,30 @@ storiesOf("5. Templates", module)
         }}
       </Gitgraph>
     );
+  })
+  .add("with custom tags", () => {
+    const customTags = templateExtend(TemplateName.Metro, {
+      tag: {
+        color: "black",
+        strokeColor: "#ce9b00",
+        bgColor: "#ffce52",
+        font: "italic 12pt serif",
+        borderRadius: 0,
+        pointerWidth: 6,
+      },
+    });
+
+    return (
+      <Gitgraph options={{ template: customTags }}>
+        {(gitgraph) => {
+          gitgraph
+            .commit("one")
+            .tag("v1")
+            .commit("two")
+            .tag("v2")
+            .tag("important")
+            .commit("three");
+        }}
+      </Gitgraph>
+    );
   });
