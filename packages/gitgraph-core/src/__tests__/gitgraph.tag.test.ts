@@ -84,6 +84,27 @@ describe("Gitgraph.tag", () => {
     expect(core.tags.getCommit("this-one")).toEqual("tagged-hash");
   });
 
+  it("should add a tag to a branch with style", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+    const tagStyle = {
+      color: "black",
+      strokeColor: "#ce9b00",
+      bgColor: "#ffce52",
+      font: "italic 12pt serif",
+      borderRadius: 0,
+      pointerWidth: 6,
+    };
+
+    gitgraph
+      .branch("dev")
+      .commit({ subject: "tagged", hash: "tagged-hash" })
+      .tag({ name: "this-one", style: tagStyle });
+    const { commits } = core.getRenderedData();
+
+    expect(commits[0].tags[0].style).toEqual(tagStyle);
+  });
+
   it("should add a tag to HEAD", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();

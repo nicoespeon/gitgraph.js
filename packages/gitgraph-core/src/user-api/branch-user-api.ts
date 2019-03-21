@@ -24,6 +24,7 @@ interface GitgraphMergeOptions<TNode> {
 
 interface BranchTagOptions {
   name: string;
+  style?: TemplateOptions["tag"];
 }
 
 class BranchUserApi<TNode> {
@@ -143,8 +144,17 @@ class BranchUserApi<TNode> {
    */
   public tag(name: BranchTagOptions["name"]): this;
   public tag(options?: any): this {
-    const name = typeof options === "string" ? options : options.name;
-    this._graph.getUserApi().tag({ name, ref: this._branch.name });
+    let name: BranchTagOptions["name"];
+    let style: BranchTagOptions["style"];
+
+    if (typeof options === "string") {
+      name = options;
+    } else {
+      name = options.name;
+      style = options.style;
+    }
+
+    this._graph.getUserApi().tag({ name, ref: this._branch.name, style });
     return this;
   }
 
