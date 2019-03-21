@@ -220,10 +220,13 @@ class Commit<TNode = SVGElement> {
     return this;
   }
 
-  public setTags(tags: Refs, tagStyle: Partial<TagStyle>): this {
+  public setTags(
+    tags: Refs,
+    getTagStyle: (name: Tag["name"]) => Partial<TagStyle>,
+  ): this {
     this.tags = tags
       .getNames(this.hash)
-      .map((name) => new Tag(name, tagStyle, this.style));
+      .map((name) => new Tag(name, getTagStyle(name), this.style));
     return this;
   }
 

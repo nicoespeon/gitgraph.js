@@ -7,7 +7,12 @@ import {
 import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
 import { GraphColumns } from "./graph-columns";
-import { Template, TemplateName, getTemplate } from "./template";
+import {
+  Template,
+  TemplateOptions,
+  TemplateName,
+  getTemplate,
+} from "./template";
 import { Refs } from "./refs";
 import { BranchesPathsCalculator, BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
@@ -62,6 +67,7 @@ class GitgraphCore<TNode = SVGElement> {
 
   public refs = new Refs();
   public tags = new Refs();
+  public tagStyles: { [name: string]: TemplateOptions["tag"] } = {};
   public commits: Array<Commit<TNode>> = [];
   public branches: Map<Branch["name"], Branch<TNode>> = new Map();
   public currentBranch: Branch<TNode>;
@@ -187,7 +193,11 @@ class GitgraphCore<TNode = SVGElement> {
         .map((commit) => this.withPosition(commit, columns))
         .map((commit) => this.setDefaultColor(commit, columns))
         // Tags need commit style to be computed (with default color).
-        .map((commit) => commit.setTags(this.tags, this.template.tag))
+        .map((commit) =>
+          commit.setTags(this.tags, (name) =>
+            Object.assign({}, this.tagStyles[name], this.template.tag),
+          ),
+        )
     );
   }
 

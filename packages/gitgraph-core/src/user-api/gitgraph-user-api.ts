@@ -125,12 +125,14 @@ class GitgraphUserApi<TNode> {
     // Deal with shorter syntax
     let name: GitgraphTagOptions["name"];
     let ref: GitgraphTagOptions["ref"];
+    let style: GitgraphTagOptions["style"];
     if (typeof args[0] === "string") {
       name = args[0];
       ref = args[1];
     } else {
       name = args[0].name;
       ref = args[0].ref;
+      style = args[0].style;
     }
 
     if (!ref) {
@@ -156,6 +158,7 @@ class GitgraphUserApi<TNode> {
     }
 
     this._graph.tags.set(name, commitHash);
+    this._graph.tagStyles[name] = style;
     this._onGraphUpdate();
     return this;
   }

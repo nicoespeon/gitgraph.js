@@ -127,8 +127,20 @@ storiesOf("1. Basic usage", module)
         // Tag on gitgraph
         master.commit();
         gitgraph.tag("v2.0");
+        gitgraph.tag({
+          name: "last release",
+          style: {
+            bgColor: "orange",
+            strokeColor: "orange",
+            borderRadius: 0,
+            pointerWidth: 0,
+          },
+        });
 
-        gitgraph.branch("feat1").commit({ tag: "something cool" });
+        gitgraph
+          .branch("feat1")
+          .commit()
+          .tag({ name: "something cool" });
       }}
     </Gitgraph>
   ))
