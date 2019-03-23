@@ -29,6 +29,7 @@
     "pretest": "npm run build",
     "test": "jest",
     "test:e2e": "lerna run test:e2e",
+    "test:ci": "CI=true npm run test && npm run test:e2e",
     "clean": "lerna clean"
   },
   "devDependencies": {
