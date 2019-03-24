@@ -1,11 +1,12 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
+import { createFixedHashGenerator } from "./helpers";
 import { Gitgraph, Mode } from "../Gitgraph";
 
 storiesOf("1. Basic usage", module)
   .add("default", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -17,7 +18,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("stop on last commit", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -30,7 +31,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("commit after merge", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")
@@ -46,7 +47,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("multiple merges", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master");
         master.commit().commit();
@@ -66,7 +67,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("multiple merges in master", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master");
         master.commit("one").commit("two");
@@ -86,7 +87,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("merge with fast-forward", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master");
         master.commit();
@@ -109,7 +110,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("tags", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master");
 
@@ -148,7 +149,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("branch colors", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("one");
         const develop = gitgraph.branch("develop").commit("two");
@@ -162,7 +163,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("branch with style", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const master = gitgraph.branch({
           name: "master",
@@ -190,7 +191,12 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("compact mode", () => (
-    <Gitgraph options={{ mode: Mode.Compact }}>
+    <Gitgraph
+      options={{
+        mode: Mode.Compact,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")
@@ -214,7 +220,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("commit dot text", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         gitgraph
           .commit({ subject: "Initial commit", dotText: "1" })
@@ -228,7 +234,7 @@ storiesOf("1. Basic usage", module)
     </Gitgraph>
   ))
   .add("commit message body", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         gitgraph
           .commit("Initial commit")

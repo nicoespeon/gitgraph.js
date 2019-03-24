@@ -1,11 +1,17 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
+import { createFixedHashGenerator } from "./helpers";
 import { Gitgraph, Orientation, TemplateName } from "../Gitgraph";
 
 storiesOf("2. Orientations", module)
   .add("vertical reverse", () => (
-    <Gitgraph options={{ orientation: Orientation.VerticalReverse }}>
+    <Gitgraph
+      options={{
+        orientation: Orientation.VerticalReverse,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -17,7 +23,12 @@ storiesOf("2. Orientations", module)
     </Gitgraph>
   ))
   .add("horizontal", () => (
-    <Gitgraph options={{ orientation: Orientation.Horizontal }}>
+    <Gitgraph
+      options={{
+        orientation: Orientation.Horizontal,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -30,7 +41,12 @@ storiesOf("2. Orientations", module)
     </Gitgraph>
   ))
   .add("horizontal reverse", () => (
-    <Gitgraph options={{ orientation: Orientation.HorizontalReverse }}>
+    <Gitgraph
+      options={{
+        orientation: Orientation.HorizontalReverse,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
         const develop = gitgraph.branch("develop");
@@ -47,6 +63,7 @@ storiesOf("2. Orientations", module)
       options={{
         orientation: Orientation.Horizontal,
         template: TemplateName.BlackArrow,
+        generateCommitHash: createFixedHashGenerator(),
       }}
     >
       {(gitgraph) => {
@@ -65,6 +82,7 @@ storiesOf("2. Orientations", module)
       options={{
         orientation: Orientation.HorizontalReverse,
         template: TemplateName.BlackArrow,
+        generateCommitHash: createFixedHashGenerator(),
       }}
     >
       {(gitgraph) => {

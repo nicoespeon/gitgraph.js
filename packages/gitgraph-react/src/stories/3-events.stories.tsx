@@ -2,11 +2,12 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
+import { createFixedHashGenerator } from "./helpers";
 import { Gitgraph } from "../Gitgraph";
 
 storiesOf("3. Events", module)
   .add("on commit dot click", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const onClick = action("click on dot");
 
@@ -23,7 +24,7 @@ storiesOf("3. Events", module)
     </Gitgraph>
   ))
   .add("on commit dot mouseover", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const onMouseOver = action("mouse over dot");
 
@@ -34,7 +35,7 @@ storiesOf("3. Events", module)
     </Gitgraph>
   ))
   .add("on commit dot mouseout", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const onMouseOut = action("mouse out dot");
 
@@ -45,7 +46,7 @@ storiesOf("3. Events", module)
     </Gitgraph>
   ))
   .add("on commit message click", () => (
-    <Gitgraph>
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
         const onMessageClick = action("click on message");
 
