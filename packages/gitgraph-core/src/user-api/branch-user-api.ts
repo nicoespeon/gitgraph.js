@@ -181,6 +181,7 @@ class BranchUserApi<TNode> {
 
     const { tag, ...commitOptions } = options;
     const commit = new Commit({
+      hash: this._graph.generateCommitHash(),
       author: this._branch.commitDefaultOptions.author || this._graph.author,
       subject:
         this._branch.commitDefaultOptions.subject ||

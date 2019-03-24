@@ -106,4 +106,23 @@ describe("Gitgraph.commit", () => {
       expect(two.parentsAbbrev).toEqual([one.hashAbbrev]);
     });
   });
+
+  it("should use given algorithm to generate commit hash", () => {
+    let index = 0;
+    const core = new GitgraphCore({
+      generateCommitHash: () => {
+        index += 1;
+        return `commit${index}`;
+      },
+    });
+    const gitgraph = core.getUserApi();
+
+    gitgraph.commit().commit();
+
+    const { commits } = core.getRenderedData();
+    const [commit1, commit2] = commits;
+
+    expect(commit1.hash).toBe("commit1");
+    expect(commit2.hash).toBe("commit2");
+  });
 });
