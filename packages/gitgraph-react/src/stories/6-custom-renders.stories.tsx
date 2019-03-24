@@ -1,5 +1,7 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
+
+import { createFixedHashGenerator } from "./helpers";
 import {
   Gitgraph,
   CommitOptions,
@@ -30,7 +32,7 @@ storiesOf("6. Custom renders", module)
     );
 
     return (
-      <Gitgraph>
+      <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
         {(gitgraph) => {
           gitgraph
             .commit({ subject: "Initial commit" })
@@ -78,7 +80,13 @@ storiesOf("6. Custom renders", module)
     };
 
     return (
-      <Gitgraph options={{ mode: Mode.Compact, template: withoutBranchLabels }}>
+      <Gitgraph
+        options={{
+          mode: Mode.Compact,
+          template: withoutBranchLabels,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit({ subject: "Initial commit" })
@@ -116,7 +124,7 @@ storiesOf("6. Custom renders", module)
     };
 
     return (
-      <Gitgraph>
+      <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
         {(gitgraph) => {
           gitgraph
             .commit({ subject: "Initial commit" })
@@ -164,7 +172,7 @@ storiesOf("6. Custom renders", module)
     };
 
     return (
-      <Gitgraph>
+      <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
         {(gitgraph) => {
           gitgraph
             .commit({ subject: "Initial commit" })
@@ -210,7 +218,12 @@ storiesOf("6. Custom renders", module)
     };
 
     return (
-      <Gitgraph options={{ orientation: Orientation.VerticalReverse }}>
+      <Gitgraph
+        options={{
+          orientation: Orientation.VerticalReverse,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit({ subject: "Initial commit" })

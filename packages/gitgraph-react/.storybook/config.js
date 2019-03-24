@@ -1,3 +1,4 @@
+import "storybook-chromatic";
 import { addParameters, configure } from "@storybook/react";
 
 addParameters({

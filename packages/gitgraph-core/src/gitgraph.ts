@@ -37,6 +37,7 @@ interface GitgraphOptions {
   mode?: Mode;
   author?: string;
   commitMessage?: string;
+  generateCommitHash?: () => Commit["hash"];
 }
 
 interface RenderedData<TNode> {
@@ -63,6 +64,7 @@ class GitgraphCore<TNode = SVGElement> {
   public mode?: Mode;
   public author: string;
   public commitMessage: string;
+  public generateCommitHash: () => Commit["hash"] | undefined;
   public template: Template;
 
   public refs = new Refs();
@@ -89,6 +91,10 @@ class GitgraphCore<TNode = SVGElement> {
     this.author = options.author || "Sergio Flores <saxo-guy@epic.com>";
     this.commitMessage =
       options.commitMessage || "He doesn't like George Michael! Boooo!";
+    this.generateCommitHash =
+      typeof options.generateCommitHash === "function"
+        ? options.generateCommitHash
+        : () => undefined;
   }
 
   /**

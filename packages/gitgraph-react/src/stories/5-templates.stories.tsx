@@ -1,11 +1,17 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
+import { createFixedHashGenerator } from "./helpers";
 import { Gitgraph, templateExtend, TemplateName } from "../Gitgraph";
 
 storiesOf("5. Templates", module)
   .add("metro", () => (
-    <Gitgraph options={{ template: TemplateName.Metro }}>
+    <Gitgraph
+      options={{
+        template: TemplateName.Metro,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")
@@ -18,7 +24,12 @@ storiesOf("5. Templates", module)
     </Gitgraph>
   ))
   .add("blackArrow", () => (
-    <Gitgraph options={{ template: TemplateName.BlackArrow }}>
+    <Gitgraph
+      options={{
+        template: TemplateName.BlackArrow,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
       {(gitgraph) => {
         const master = gitgraph
           .branch("master")
@@ -38,7 +49,11 @@ storiesOf("5. Templates", module)
   ))
   .add("blackArrow with reverse arrow", () => (
     <Gitgraph
-      options={{ template: TemplateName.BlackArrow, reverseArrow: true }}
+      options={{
+        template: TemplateName.BlackArrow,
+        reverseArrow: true,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
     >
       {(gitgraph) => {
         const master = gitgraph
@@ -62,7 +77,12 @@ storiesOf("5. Templates", module)
     });
 
     return (
-      <Gitgraph options={{ template: withoutHash }}>
+      <Gitgraph
+        options={{
+          template: withoutHash,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit("one")
@@ -82,7 +102,12 @@ storiesOf("5. Templates", module)
     });
 
     return (
-      <Gitgraph options={{ template: withoutAuthor }}>
+      <Gitgraph
+        options={{
+          template: withoutAuthor,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit("one")
@@ -102,7 +127,12 @@ storiesOf("5. Templates", module)
     });
 
     return (
-      <Gitgraph options={{ template: withoutBranchLabel }}>
+      <Gitgraph
+        options={{
+          template: withoutBranchLabel,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit("one")
@@ -126,7 +156,12 @@ storiesOf("5. Templates", module)
     });
 
     return (
-      <Gitgraph options={{ template: customBranchLabels }}>
+      <Gitgraph
+        options={{
+          template: customBranchLabels,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit("one")
@@ -149,7 +184,12 @@ storiesOf("5. Templates", module)
     });
 
     return (
-      <Gitgraph options={{ template: customTags }}>
+      <Gitgraph
+        options={{
+          template: customTags,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
         {(gitgraph) => {
           gitgraph
             .commit("one")
