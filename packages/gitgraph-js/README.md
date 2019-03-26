@@ -13,10 +13,13 @@ Install the package with npm: `npm i --save @gitgraph/js`
 Now you can use the `<GitGraph>` component:
 
 ```js
-const { Gitgraph } = require("@gitgraph/js");
+const { createGitgraph } = require("@gitgraph/js");
+
+// Get the graph container HTML element.
+const graphContainer = document.getElementById("graph-container");
 
 // Instantiate the graph.
-const gitgraph = new Gitgraph();
+const gitgraph = createGitgraph(graphContainer);
 
 // Simulate git commands with Gitgraph API.
 const master = gitgraph.branch("master");

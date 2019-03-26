@@ -1,6 +1,21 @@
-export { Gitgraph };
+import { GitgraphCore } from "@gitgraph/core";
 
-function Gitgraph() {
-  // tslint:disable-next-line
-  console.log("This will generate a nice git graph soon.");
+export { createGitgraph };
+
+function createGitgraph(graphContainer: HTMLElement) {
+  const gitgraph = new GitgraphCore();
+  gitgraph.subscribe((data) => {
+    const { commits } = data;
+
+    const commitsElements = commits.map((commit) => {
+      const element = document.createElement("p");
+      element.innerHTML = `(x) [${commit.hashAbbrev}] ${commit.subject}`;
+      return element;
+    });
+
+    graphContainer.innerHTML = "";
+    commitsElements.forEach((element) => graphContainer.appendChild(element));
+  });
+
+  return gitgraph.getUserApi();
 }
