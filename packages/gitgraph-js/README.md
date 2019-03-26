@@ -44,5 +44,10 @@ This code will render the following graph:
 
 ![Example of usage](./assets/example-usage.png)
 
+## More examples
+
+[A bunch of scenarios][stories] has been simulated in our Storybook. You can give them a look 👀
+
 [get-npm]: https://www.npmjs.com/get-npm
 [gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
+[stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js/src/stories
