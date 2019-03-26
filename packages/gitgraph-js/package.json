@@ -1,0 +1,64 @@
+{
+  "name": "@gitgraph/js",
+  "version": "0.0.0",
+  "description": "Draw pretty git graphs in the browser",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "contributors": [
+    {
+      "name": "Fabien Bernard",
+      "email": "fabien0102@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+  },
+  "keywords": [
+    "git",
+    "graph",
+    "javascript"
+  ],
+  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./lib/bundle.umd.js",
+  "module": "./lib/index.js",
+  "jsnext:main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "watch": "tsc -w",
+    "build": "run-s build:*",
+    "build:clear": "rimraf ./lib",
+    "build:tsc": "tsc",
+    "build:bundle": "rollup -c rollup.config.js",
+    "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
+    "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@gitgraph/core": "^1.1.0-1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@types/node": "^9.4.6",
+    "babel-loader": "^7.0.0",
+    "browserify": "^14.5.0",
+    "npm-run-all": "^4.1.2",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.51.8",
+    "ts-loader": "4.0.0",
+    "typescript": "3.3.4000",
+    "uglify-es": "^3.3.9"
+  }
+}
