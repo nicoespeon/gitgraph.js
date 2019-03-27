@@ -1,4 +1,11 @@
-import { GitgraphCore, Commit, RenderedData } from "@gitgraph/core";
+import {
+  GitgraphCore,
+  Commit,
+  RenderedData,
+  MergeStyle,
+  toSvgPath,
+  Coordinate,
+} from "@gitgraph/core";
 
 export { createGitgraph };
 
@@ -20,7 +27,7 @@ function createGitgraph(graphContainer: HTMLElement) {
   return gitgraph.getUserApi();
 
   function render(data: RenderedData<SVGElement>): void {
-    const { commits } = data;
+    const { commits, branchesPaths } = data;
 
     // Reset SVG with new content.
     svg.innerHTML = "";
@@ -29,7 +36,10 @@ function createGitgraph(graphContainer: HTMLElement) {
         // Translate graph left => left-most branch label is not cropped (horizontal)
         // Translate graph down => top-most commit tooltip is not cropped
         translate: { x: BranchLabelPaddingX, y: TooltipPadding },
-        children: [renderCommits(commits)],
+        children: [
+          renderBranchesPaths(gitgraph, branchesPaths),
+          renderCommits(commits),
+        ],
       }),
     );
   }
@@ -60,6 +70,34 @@ function adaptSvgOnUpdate(svg: SVGSVGElement): void {
   });
 }
 
+function renderBranchesPaths(
+  gitgraph: GitgraphCore,
+  branchesPaths: RenderedData<SVGElement>["branchesPaths"],
+): SVGElement {
+  const offset = gitgraph.template.commit.dot.size;
+  const isBezier = gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
+
+  const paths = Array.from(branchesPaths).map(([branch, coordinates]) => {
+    const path = createPath();
+    path.setAttribute(
+      "d",
+      toSvgPath(
+        coordinates.map((coordinate) => coordinate.map(getMessageOffset)),
+        isBezier,
+        gitgraph.isVertical,
+      ),
+    );
+    path.setAttribute("fill", "transparent");
+    path.setAttribute("stroke", branch.computedColor || "");
+    path.setAttribute("stroke-width", branch.style.lineWidth.toString());
+    path.setAttribute("transform", `translate(${offset}, ${offset})`);
+
+    return path;
+  });
+
+  return createG({ children: paths });
+}
+
 function renderCommits(commits: Commit[]): SVGGElement {
   return createG({ children: commits.map(renderCommit) });
 }
@@ -79,9 +117,14 @@ function renderCommit(commit: Commit): SVGGElement {
   });
 
   return createG({
-    translate: { x: commit.x, y: commit.y },
+    translate: getMessageOffset(commit),
     children: [message],
   });
+}
+
+function getMessageOffset({ x, y }: Coordinate): Coordinate {
+  // TODO: handle missing `commitYWithOffsets` concept
+  return { x, y };
 }
 
 // === SVG utilities
@@ -120,4 +163,8 @@ function createG(options?: GOptions): SVGGElement {
 
 function createText(): SVGTextElement {
   return document.createElementNS(SVG_NAMESPACE, "text");
+}
+
+function createPath(): SVGPathElement {
+  return document.createElementNS(SVG_NAMESPACE, "path");
 }
