@@ -109,7 +109,7 @@ function renderCommit(commit: Commit): SVGGElement {
   text.setAttribute("fill", commit.style.message.color || "");
   text.setAttribute("style", `font: ${commit.style.message.font}`);
   text.addEventListener("click", commit.onMessageClick);
-  text.textContent = commit.subject;
+  text.textContent = commit.message;
 
   const message = createG({
     translate: { x: 0, y: commit.style.dot.size },
