@@ -118,6 +118,24 @@ class Commit<TNode = SVGElement> {
    */
   public body: string;
   /**
+   * Message
+   */
+  public get message() {
+    let message = "";
+
+    if (this.style.message.displayHash) {
+      message += `${this.hashAbbrev} `;
+    }
+
+    message += this.subject;
+
+    if (this.style.message.displayAuthor) {
+      message += ` - ${this.author.name} <${this.author.email}>`;
+    }
+
+    return message;
+  }
+  /**
    * Style
    */
   public style: CommitStyle;
