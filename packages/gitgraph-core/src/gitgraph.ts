@@ -197,7 +197,15 @@ class GitgraphCore<TNode = SVGElement> {
       commitsWithBranches
         .map((commit) => commit.setRefs(this.refs))
         .map((commit) => this.withPosition(commit, columns))
-        .map((commit) => this.setDefaultColor(commit, columns))
+        // Fallback commit computed color on branch color.
+        .map((commit) =>
+          commit.withDefaultColor(
+            this.getBranchDefaultColor(
+              commitsWithBranches,
+              commit.branchToDisplay,
+            ),
+          ),
+        )
         // Tags need commit style to be computed (with default color).
         .map((commit) =>
           commit.setTags(this.tags, (name) =>
@@ -234,14 +242,9 @@ class GitgraphCore<TNode = SVGElement> {
     commits: Array<Commit<TNode>>,
     branchesPaths: BranchesPaths<TNode>,
   ): void {
-    const columns = new GraphColumns<TNode>(commits);
-
     Array.from(branchesPaths).forEach(([branch]) => {
-      const column = columns.get(branch.name);
-      const defaultColor = this.template.colors[
-        column % this.template.colors.length
-      ];
-      branch.computedColor = branch.style.color || defaultColor;
+      branch.computedColor =
+        branch.style.color || this.getBranchDefaultColor(commits, branch.name);
     });
   }
 
@@ -353,20 +356,19 @@ class GitgraphCore<TNode = SVGElement> {
   }
 
   /**
-   * Set default color to one commit.
+   * Return the default color for given branch.
    *
-   * @param commit One commit
+   * @param commits List of graph commits
+   * @param branchName Name of the branch
    */
-  private setDefaultColor(
-    commit: Commit<TNode>,
-    columns: GraphColumns<TNode>,
-  ): Commit<TNode> {
-    const column = columns.get(commit.branchToDisplay);
-    const defaultColor = this.template.colors[
-      column % this.template.colors.length
-    ];
+  private getBranchDefaultColor(
+    commits: Array<Commit<TNode>>,
+    branchName: Branch["name"],
+  ): string {
+    const columns = new GraphColumns<TNode>(commits);
+    const column = columns.get(branchName);
 
-    return commit.withDefaultColor(defaultColor);
+    return this.template.colors[column % this.template.colors.length];
   }
 
   /**
