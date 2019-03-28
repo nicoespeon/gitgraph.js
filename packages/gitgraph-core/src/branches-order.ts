@@ -1,7 +1,7 @@
 import { Branch } from "./branch";
 import { Commit } from "./commit";
 
-export class GraphColumns<TNode> {
+export class BranchesOrder<TNode> {
   private branches: Set<Branch["name"]> = new Set();
 
   public constructor(commits: Array<Commit<TNode>>) {
@@ -9,7 +9,7 @@ export class GraphColumns<TNode> {
   }
 
   /**
-   * Return the column index corresponding to given branch name.
+   * Return the order of the given branch name.
    *
    * @param branchName Name of the branch
    */
