@@ -6,7 +6,7 @@ import {
 } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
-import { GraphColumns } from "./graph-columns";
+import { BranchesOrder } from "./branches-order";
 import {
   Template,
   TemplateOptions,
@@ -134,7 +134,7 @@ class GitgraphCore<TNode = SVGElement> {
     const branchesPaths = this.computeRenderedBranchesPaths(commits);
     const commitMessagesX = this.computeCommitMessagesX(branchesPaths);
 
-    this.computeBranchesColor(branchesPaths);
+    this.computeBranchesColor(commits, branchesPaths);
 
     return { commits, branchesPaths, commitMessagesX };
   }
@@ -191,13 +191,19 @@ class GitgraphCore<TNode = SVGElement> {
       this.withBranches(commit),
     );
 
-    const columns = new GraphColumns<TNode>(commitsWithBranches);
-
     return (
       commitsWithBranches
         .map((commit) => commit.setRefs(this.refs))
-        .map((commit) => this.withPosition(commit, columns))
-        .map((commit) => this.setDefaultColor(commit, columns))
+        .map((commit) => this.withPosition(commitsWithBranches, commit))
+        // Fallback commit computed color on branch color.
+        .map((commit) =>
+          commit.withDefaultColor(
+            this.getBranchDefaultColor(
+              commitsWithBranches,
+              commit.branchToDisplay,
+            ),
+          ),
+        )
         // Tags need commit style to be computed (with default color).
         .map((commit) =>
           commit.setTags(this.tags, (name) =>
@@ -227,14 +233,16 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Set branches colors based on branches paths.
    *
+   * @param commits List of graph commits
    * @param branchesPaths Branches paths to be rendered
    */
-  private computeBranchesColor(branchesPaths: BranchesPaths<TNode>): void {
-    Array.from(branchesPaths).forEach(([branch], i) => {
-      const defaultColor = this.template.colors[
-        i % this.template.colors.length
-      ];
-      branch.computedColor = branch.style.color || defaultColor;
+  private computeBranchesColor(
+    commits: Array<Commit<TNode>>,
+    branchesPaths: BranchesPaths<TNode>,
+  ): void {
+    Array.from(branchesPaths).forEach(([branch]) => {
+      branch.computedColor =
+        branch.style.color || this.getBranchDefaultColor(commits, branch.name);
     });
   }
 
@@ -303,21 +311,27 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Add position to given commit.
    *
-   * @param commit A commit
+   * @param commits List of graph commits
+   * @param commit Commit to position
    */
   private withPosition(
+    commitsWithBranches: Array<Commit<TNode>>,
     commit: Commit<TNode>,
-    columns: GraphColumns<TNode>,
   ): Commit<TNode> {
     const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
-    const column = columns.get(commit.branchToDisplay);
+
+    const branchesOrder = new BranchesOrder<TNode>(
+      commitsWithBranches,
+      this.template.colors,
+    );
+    const order = branchesOrder.get(commit.branchToDisplay);
 
     switch (this.orientation) {
       default:
         return commit.setPosition({
-          x: this.initCommitOffsetX + this.template.branch.spacing * column,
+          x: this.initCommitOffsetX + this.template.branch.spacing * order,
           y:
             this.initCommitOffsetY +
             this.template.commit.spacing * (maxRow - row),
@@ -325,14 +339,14 @@ class GitgraphCore<TNode = SVGElement> {
 
       case Orientation.VerticalReverse:
         return commit.setPosition({
-          x: this.initCommitOffsetX + this.template.branch.spacing * column,
+          x: this.initCommitOffsetX + this.template.branch.spacing * order,
           y: this.initCommitOffsetY + this.template.commit.spacing * row,
         });
 
       case Orientation.Horizontal:
         return commit.setPosition({
           x: this.initCommitOffsetX + this.template.commit.spacing * row,
-          y: this.initCommitOffsetY + this.template.branch.spacing * column,
+          y: this.initCommitOffsetY + this.template.branch.spacing * order,
         });
 
       case Orientation.HorizontalReverse:
@@ -340,26 +354,27 @@ class GitgraphCore<TNode = SVGElement> {
           x:
             this.initCommitOffsetX +
             this.template.commit.spacing * (maxRow - row),
-          y: this.initCommitOffsetY + this.template.branch.spacing * column,
+          y: this.initCommitOffsetY + this.template.branch.spacing * order,
         });
     }
   }
 
   /**
-   * Set default color to one commit.
+   * Return the default color for given branch.
    *
-   * @param commit One commit
+   * @param commits List of graph commits
+   * @param branchName Name of the branch
    */
-  private setDefaultColor(
-    commit: Commit<TNode>,
-    columns: GraphColumns<TNode>,
-  ): Commit<TNode> {
-    const column = columns.get(commit.branchToDisplay);
-    const defaultColor = this.template.colors[
-      column % this.template.colors.length
-    ];
+  private getBranchDefaultColor(
+    commits: Array<Commit<TNode>>,
+    branchName: Branch["name"],
+  ): string {
+    const branchesOrder = new BranchesOrder<TNode>(
+      commits,
+      this.template.colors,
+    );
 
-    return commit.withDefaultColor(defaultColor);
+    return branchesOrder.getColorOf(branchName);
   }
 
   /**
