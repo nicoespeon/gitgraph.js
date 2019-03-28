@@ -191,7 +191,10 @@ class GitgraphCore<TNode = SVGElement> {
       this.withBranches(commit),
     );
 
-    const branchesOrder = new BranchesOrder<TNode>(commitsWithBranches);
+    const branchesOrder = new BranchesOrder<TNode>(
+      commitsWithBranches,
+      this.template.colors,
+    );
 
     return (
       commitsWithBranches
@@ -365,10 +368,12 @@ class GitgraphCore<TNode = SVGElement> {
     commits: Array<Commit<TNode>>,
     branchName: Branch["name"],
   ): string {
-    const branchesOrder = new BranchesOrder<TNode>(commits);
-    const order = branchesOrder.get(branchName);
+    const branchesOrder = new BranchesOrder<TNode>(
+      commits,
+      this.template.colors,
+    );
 
-    return this.template.colors[order % this.template.colors.length];
+    return branchesOrder.getColorOf(branchName);
   }
 
   /**
