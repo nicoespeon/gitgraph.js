@@ -191,15 +191,10 @@ class GitgraphCore<TNode = SVGElement> {
       this.withBranches(commit),
     );
 
-    const branchesOrder = new BranchesOrder<TNode>(
-      commitsWithBranches,
-      this.template.colors,
-    );
-
     return (
       commitsWithBranches
         .map((commit) => commit.setRefs(this.refs))
-        .map((commit) => this.withPosition(commit, branchesOrder))
+        .map((commit) => this.withPosition(commitsWithBranches, commit))
         // Fallback commit computed color on branch color.
         .map((commit) =>
           commit.withDefaultColor(
@@ -316,15 +311,21 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Add position to given commit.
    *
-   * @param commit A commit
+   * @param commits List of graph commits
+   * @param commit Commit to position
    */
   private withPosition(
+    commitsWithBranches: Array<Commit<TNode>>,
     commit: Commit<TNode>,
-    branchesOrder: BranchesOrder<TNode>,
   ): Commit<TNode> {
     const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
+
+    const branchesOrder = new BranchesOrder<TNode>(
+      commitsWithBranches,
+      this.template.colors,
+    );
     const order = branchesOrder.get(commit.branchToDisplay);
 
     switch (this.orientation) {
