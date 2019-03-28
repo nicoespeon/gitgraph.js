@@ -168,6 +168,25 @@ describe("Gitgraph.getRenderedData.style", () => {
     ]);
   });
 
+  it("should override the color with custom branch color", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    gitgraph.branch({ name: "master", style: { color: "pink" } }).commit("one");
+
+    const { commits } = core.getRenderedData();
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        style: {
+          color: "pink",
+          message: { color: "pink" },
+          dot: { color: "pink" },
+        },
+      },
+    ]);
+  });
+
   it("should hide commit message if orientation is horizontal", () => {
     const core = new GitgraphCore({
       orientation: Orientation.Horizontal,

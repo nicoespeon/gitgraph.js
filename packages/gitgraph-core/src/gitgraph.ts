@@ -130,11 +130,32 @@ class GitgraphCore<TNode = SVGElement> {
    * Rendering libraries will use this to implement their rendering strategy.
    */
   public getRenderedData(): RenderedData<TNode> {
-    const commits = this.computeRenderedCommits();
+    let commits = this.computeRenderedCommits();
     const branchesPaths = this.computeRenderedBranchesPaths(commits);
     const commitMessagesX = this.computeCommitMessagesX(branchesPaths);
 
     this.computeBranchesColor(commits, branchesPaths);
+
+    commits = commits
+      .map((commit) => {
+        const matchedBranch = Array.from(branchesPaths)
+          .map(([branch]) => branch)
+          .find(({ name }) => commit.branchToDisplay === name);
+
+        if (!matchedBranch) {
+          return commit.withDefaultColor(
+            this.getBranchDefaultColor(commits, commit.branchToDisplay),
+          );
+        }
+
+        return commit.withDefaultColor(matchedBranch.computedColor!);
+      })
+      // Tags need commit style to be computed (with default color).
+      .map((commit) =>
+        commit.setTags(this.tags, (name) =>
+          Object.assign({}, this.tagStyles[name], this.template.tag),
+        ),
+      );
 
     return { commits, branchesPaths, commitMessagesX };
   }
@@ -191,26 +212,9 @@ class GitgraphCore<TNode = SVGElement> {
       this.withBranches(commit),
     );
 
-    return (
-      commitsWithBranches
-        .map((commit) => commit.setRefs(this.refs))
-        .map((commit) => this.withPosition(commitsWithBranches, commit))
-        // Fallback commit computed color on branch color.
-        .map((commit) =>
-          commit.withDefaultColor(
-            this.getBranchDefaultColor(
-              commitsWithBranches,
-              commit.branchToDisplay,
-            ),
-          ),
-        )
-        // Tags need commit style to be computed (with default color).
-        .map((commit) =>
-          commit.setTags(this.tags, (name) =>
-            Object.assign({}, this.tagStyles[name], this.template.tag),
-          ),
-        )
-    );
+    return commitsWithBranches
+      .map((commit) => commit.setRefs(this.refs))
+      .map((commit) => this.withPosition(commitsWithBranches, commit));
   }
 
   /**
@@ -252,6 +256,7 @@ class GitgraphCore<TNode = SVGElement> {
    * @param branchesPaths Branches paths to be rendered
    */
   private computeCommitMessagesX(branchesPaths: BranchesPaths<TNode>): number {
+    // TODO: remove duplication with BranchesOrder
     const numberOfColumns = Array.from(branchesPaths).length;
     return numberOfColumns * this.template.branch.spacing;
   }
