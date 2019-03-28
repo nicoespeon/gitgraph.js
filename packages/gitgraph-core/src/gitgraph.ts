@@ -134,7 +134,7 @@ class GitgraphCore<TNode = SVGElement> {
     const branchesPaths = this.computeRenderedBranchesPaths(commits);
     const commitMessagesX = this.computeCommitMessagesX(branchesPaths);
 
-    this.computeBranchesColor(branchesPaths);
+    this.computeBranchesColor(commits, branchesPaths);
 
     return { commits, branchesPaths, commitMessagesX };
   }
@@ -227,12 +227,19 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Set branches colors based on branches paths.
    *
+   * @param commits List of graph commits
    * @param branchesPaths Branches paths to be rendered
    */
-  private computeBranchesColor(branchesPaths: BranchesPaths<TNode>): void {
-    Array.from(branchesPaths).forEach(([branch], i) => {
+  private computeBranchesColor(
+    commits: Array<Commit<TNode>>,
+    branchesPaths: BranchesPaths<TNode>,
+  ): void {
+    const columns = new GraphColumns<TNode>(commits);
+
+    Array.from(branchesPaths).forEach(([branch]) => {
+      const column = columns.get(branch.name);
       const defaultColor = this.template.colors[
-        i % this.template.colors.length
+        column % this.template.colors.length
       ];
       branch.computedColor = branch.style.color || defaultColor;
     });
