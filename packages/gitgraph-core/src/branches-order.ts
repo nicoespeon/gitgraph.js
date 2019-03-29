@@ -8,9 +8,10 @@ type Color = string;
 /**
  * Function used to determine the order of the branches in the rendered graph.
  *
- * Returns:
- * - negative number if `branchNameA` should be rendered before `branchNameB`
- * - positive number if `branchNameA` should be rendered after `branchNameB`
+ * Returns a value:
+ * - < 0 if `branchNameA` should render before `branchNameB`
+ * - \> 0 if `branchNameA` should render after `branchNameB`
+ * - = 0 if ordering of both branches shouldn't change
  */
 type CompareBranchesOrder = (
   branchNameA: Branch["name"],
