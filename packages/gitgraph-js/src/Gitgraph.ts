@@ -104,12 +104,12 @@ function renderCommits(commits: Commit[]): SVGGElement {
 
 function renderCommit(commit: Commit): SVGGElement {
   // TODO: mimic `renderCommit` from @gitgraph/react.
-  const text = createText();
-  text.setAttribute("alignment-baseline", "central");
-  text.setAttribute("fill", commit.style.message.color || "");
-  text.setAttribute("style", `font: ${commit.style.message.font}`);
-  text.addEventListener("click", commit.onMessageClick);
-  text.textContent = commit.message;
+  const text = createText({
+    content: commit.message,
+    fill: commit.style.message.color || "",
+    font: commit.style.message.font,
+    onClick: commit.onMessageClick,
+  });
 
   const message = commit.style.message.display
     ? createG({
@@ -163,8 +163,36 @@ function createG(options?: GOptions): SVGGElement {
   return g;
 }
 
-function createText(): SVGTextElement {
-  return document.createElementNS(SVG_NAMESPACE, "text");
+interface TextOptions {
+  content?: string;
+  fill?: string;
+  font?: string;
+  onClick?: () => void;
+}
+
+function createText(options?: TextOptions): SVGTextElement {
+  const text = document.createElementNS(SVG_NAMESPACE, "text");
+  text.setAttribute("alignment-baseline", "central");
+
+  if (!options) return text;
+
+  if (options.content) {
+    text.textContent = options.content;
+  }
+
+  if (options.fill) {
+    text.setAttribute("fill", options.fill);
+  }
+
+  if (options.font) {
+    text.setAttribute("style", `font: ${options.font}`);
+  }
+
+  if (options.onClick) {
+    text.addEventListener("click", options.onClick);
+  }
+
+  return text;
 }
 
 function createPath(): SVGPathElement {
