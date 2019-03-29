@@ -14,8 +14,8 @@ export class BranchesOrder<TNode> {
   ) {
     this.colors = colors;
     commits.forEach((commit) => this.branches.add(commit.branchToDisplay));
+
     if (compareFunction) {
-      // reorder branches according to `orderFunction`
       this.branches = new Set(Array.from(this.branches).sort(compareFunction));
     }
   }
