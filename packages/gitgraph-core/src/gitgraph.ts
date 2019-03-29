@@ -3,7 +3,7 @@ import {
   DELETED_BRANCH_NAME,
   createDeletedBranch,
   BranchOptions,
-  BranchesOrderFunction,
+  CompareBranchesOrder,
 } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
@@ -39,7 +39,7 @@ interface GitgraphOptions {
   author?: string;
   commitMessage?: string;
   generateCommitHash?: () => Commit["hash"];
-  branchesOrderFunction?: BranchesOrderFunction;
+  compareBranchesOrder?: CompareBranchesOrder;
 }
 
 interface RenderedData<TNode> {
@@ -67,7 +67,7 @@ class GitgraphCore<TNode = SVGElement> {
   public author: string;
   public commitMessage: string;
   public generateCommitHash: () => Commit["hash"] | undefined;
-  public branchesOrderFunction: BranchesOrderFunction | undefined;
+  public branchesOrderFunction: CompareBranchesOrder | undefined;
   public template: Template;
 
   public refs = new Refs();
@@ -99,8 +99,8 @@ class GitgraphCore<TNode = SVGElement> {
         ? options.generateCommitHash
         : () => undefined;
     this.branchesOrderFunction =
-      typeof options.branchesOrderFunction === "function"
-        ? options.branchesOrderFunction
+      typeof options.compareBranchesOrder === "function"
+        ? options.compareBranchesOrder
         : undefined;
   }
 

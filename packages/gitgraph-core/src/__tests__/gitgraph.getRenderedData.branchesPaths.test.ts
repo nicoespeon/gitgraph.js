@@ -1,6 +1,6 @@
 import { GitgraphCore } from "../gitgraph";
 import { Orientation } from "../orientation";
-import { BranchesOrderFunction } from "../branch";
+import { CompareBranchesOrder } from "../branch";
 import { metroTemplate, TemplateName } from "../template";
 
 describe("Gitgraph.getRenderedData.branchesPaths", () => {
@@ -443,14 +443,14 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   it("should generate branches paths if I define branches order function", () => {
     const desiredBranchesOrder = ["dev", "master"];
 
-    const branchesOrderFunction: BranchesOrderFunction = (
+    const compareBranchesOrder: CompareBranchesOrder = (
       branchNameA,
       branchNameB,
     ) =>
       desiredBranchesOrder.indexOf(branchNameA) -
       desiredBranchesOrder.indexOf(branchNameB);
 
-    const core = new GitgraphCore({ branchesOrderFunction });
+    const core = new GitgraphCore({ compareBranchesOrder });
     const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master");

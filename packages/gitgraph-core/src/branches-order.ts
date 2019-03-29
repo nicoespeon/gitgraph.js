@@ -1,4 +1,4 @@
-import { Branch, BranchesOrderFunction } from "./branch";
+import { Branch, CompareBranchesOrder } from "./branch";
 import { Commit } from "./commit";
 
 type Color = string;
@@ -10,13 +10,13 @@ export class BranchesOrder<TNode> {
   public constructor(
     commits: Array<Commit<TNode>>,
     colors: Color[],
-    orderFunction: BranchesOrderFunction | undefined,
+    compareFunction: CompareBranchesOrder | undefined,
   ) {
     this.colors = colors;
     commits.forEach((commit) => this.branches.add(commit.branchToDisplay));
-    if (orderFunction) {
+    if (compareFunction) {
       // reorder branches according to `orderFunction`
-      this.branches = new Set(Array.from(this.branches).sort(orderFunction));
+      this.branches = new Set(Array.from(this.branches).sort(compareFunction));
     }
   }
 
