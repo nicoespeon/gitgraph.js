@@ -3,6 +3,7 @@ import {
   DELETED_BRANCH_NAME,
   createDeletedBranch,
   BranchOptions,
+  BranchesOrderFunction,
 } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
@@ -38,6 +39,7 @@ interface GitgraphOptions {
   author?: string;
   commitMessage?: string;
   generateCommitHash?: () => Commit["hash"];
+  branchesOrderFunction?: BranchesOrderFunction;
 }
 
 interface RenderedData<TNode> {
@@ -65,6 +67,7 @@ class GitgraphCore<TNode = SVGElement> {
   public author: string;
   public commitMessage: string;
   public generateCommitHash: () => Commit["hash"] | undefined;
+  public branchesOrderFunction: BranchesOrderFunction | undefined;
   public template: Template;
 
   public refs = new Refs();
@@ -95,6 +98,10 @@ class GitgraphCore<TNode = SVGElement> {
       typeof options.generateCommitHash === "function"
         ? options.generateCommitHash
         : () => undefined;
+    this.branchesOrderFunction =
+      typeof options.branchesOrderFunction === "function"
+        ? options.branchesOrderFunction
+        : undefined;
   }
 
   /**
@@ -325,6 +332,7 @@ class GitgraphCore<TNode = SVGElement> {
     const branchesOrder = new BranchesOrder<TNode>(
       commitsWithBranches,
       this.template.colors,
+      this.branchesOrderFunction,
     );
     const order = branchesOrder.get(commit.branchToDisplay);
 
@@ -372,6 +380,7 @@ class GitgraphCore<TNode = SVGElement> {
     const branchesOrder = new BranchesOrder<TNode>(
       commits,
       this.template.colors,
+      this.branchesOrderFunction,
     );
 
     return branchesOrder.getColorOf(branchName);

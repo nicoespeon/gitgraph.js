@@ -1,5 +1,6 @@
 import { GitgraphCore } from "../gitgraph";
 import { Orientation } from "../orientation";
+import { BranchesOrderFunction } from "../branch";
 import { metroTemplate, TemplateName } from "../template";
 
 describe("Gitgraph.getRenderedData.branchesPaths", () => {
@@ -437,5 +438,50 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     const result = Array.from(branchesPaths);
     expect(result[1][0].name).toBe("feat");
     expect(result[1][0].computedColor).toBe("#000000");
+  });
+
+  it("should generate branches paths if I define branches order function", () => {
+    const desiredBranchesOrder = ["dev", "master"];
+
+    const branchesOrderFunction: BranchesOrderFunction = (
+      branchNameA,
+      branchNameB,
+    ) =>
+      desiredBranchesOrder.indexOf(branchNameA) -
+      desiredBranchesOrder.indexOf(branchNameB);
+
+    const core = new GitgraphCore({ branchesOrderFunction });
+    const gitgraph = core.getUserApi();
+
+    const master = gitgraph.branch("master");
+    master.commit("one").commit("two");
+    const dev = gitgraph.branch("dev");
+    dev.commit("three");
+    master.commit("four");
+    dev.commit("five");
+    master.merge(dev);
+
+    const { branchesPaths } = core.getRenderedData();
+
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].name).toBe("master");
+    expect(result[0][0].computedColor).toBe(metroTemplate.colors[1]);
+    expect(result[0][1][0]).toEqual([
+      { x: 50, y: 80 * 5 }, // one
+      { x: 50, y: 80 * 4 }, // two
+      { x: 50, y: 80 * 3 },
+      { x: 50, y: 80 * 2 }, // four
+      { x: 50, y: 80 * 1 },
+      { x: 50, y: 0 }, // Merge commit
+    ]);
+    expect(result[1][0].name).toBe("dev");
+    expect(result[1][0].computedColor).toBe(metroTemplate.colors[0]);
+    expect(result[1][1][0]).toEqual([
+      { x: 50, y: 80 * 4 }, // two - start branch
+      { x: 0, y: 80 * 3 }, // three
+      { x: 0, y: 80 * 2 },
+      { x: 0, y: 80 * 1 }, // five
+      { x: 50, y: 0 }, // Merge commit
+    ]);
   });
 });
