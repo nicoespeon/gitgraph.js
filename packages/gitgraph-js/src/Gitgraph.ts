@@ -111,10 +111,12 @@ function renderCommit(commit: Commit): SVGGElement {
   text.addEventListener("click", commit.onMessageClick);
   text.textContent = commit.message;
 
-  const message = createG({
-    translate: { x: 0, y: commit.style.dot.size },
-    children: [text],
-  });
+  const message = commit.style.message.display
+    ? createG({
+        translate: { x: 0, y: commit.style.dot.size },
+        children: [text],
+      })
+    : null;
 
   return createG({
     translate: getMessageOffset(commit),
