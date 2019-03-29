@@ -27,7 +27,7 @@ function createGitgraph(graphContainer: HTMLElement) {
   return gitgraph.getUserApi();
 
   function render(data: RenderedData<SVGElement>): void {
-    const { commits, branchesPaths } = data;
+    const { commits, branchesPaths, commitMessagesX } = data;
 
     // Reset SVG with new content.
     svg.innerHTML = "";
@@ -38,7 +38,7 @@ function createGitgraph(graphContainer: HTMLElement) {
         translate: { x: BranchLabelPaddingX, y: TooltipPadding },
         children: [
           renderBranchesPaths(gitgraph, branchesPaths),
-          renderCommits(commits),
+          renderCommits(commits, commitMessagesX),
         ],
       }),
     );
@@ -98,7 +98,10 @@ function renderBranchesPaths(
   return createG({ children: paths });
 }
 
-function renderCommits(commits: Commit[]): SVGGElement {
+function renderCommits(
+  commits: Commit[],
+  commitMessagesX: number,
+): SVGGElement {
   return createG({ children: commits.map(renderCommit) });
 
   function renderCommit(commit: Commit): SVGGElement {
@@ -119,7 +122,13 @@ function renderCommits(commits: Commit[]): SVGGElement {
 
     return createG({
       translate: getMessageOffset(commit),
-      children: [renderDot(commit), message],
+      children: [
+        renderDot(commit),
+        createG({
+          translate: { x: commitMessagesX - commit.x, y: 0 },
+          children: [message],
+        }),
+      ],
     });
   }
 }
