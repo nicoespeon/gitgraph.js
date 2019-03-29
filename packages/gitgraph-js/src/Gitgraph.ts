@@ -100,28 +100,28 @@ function renderBranchesPaths(
 
 function renderCommits(commits: Commit[]): SVGGElement {
   return createG({ children: commits.map(renderCommit) });
-}
 
-function renderCommit(commit: Commit): SVGGElement {
-  // TODO: mimic `renderCommit` from @gitgraph/react.
-  const text = createText({
-    content: commit.message,
-    fill: commit.style.message.color || "",
-    font: commit.style.message.font,
-    onClick: commit.onMessageClick,
-  });
+  function renderCommit(commit: Commit): SVGGElement {
+    // TODO: mimic `renderCommit` from @gitgraph/react.
+    const text = createText({
+      content: commit.message,
+      fill: commit.style.message.color || "",
+      font: commit.style.message.font,
+      onClick: commit.onMessageClick,
+    });
 
-  const message = commit.style.message.display
-    ? createG({
-        translate: { x: 0, y: commit.style.dot.size },
-        children: [text],
-      })
-    : null;
+    const message = commit.style.message.display
+      ? createG({
+          translate: { x: 0, y: commit.style.dot.size },
+          children: [text],
+        })
+      : null;
 
-  return createG({
-    translate: getMessageOffset(commit),
-    children: [renderDot(commit), message],
-  });
+    return createG({
+      translate: getMessageOffset(commit),
+      children: [renderDot(commit), message],
+    });
+  }
 }
 
 function renderDot(commit: Commit): SVGElement {
