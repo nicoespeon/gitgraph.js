@@ -15,13 +15,16 @@ export const Dot: React.SFC<DotProps> = ({
   /*
     In order to handle strokes, we need to do some complex stuff here… 😅
 
-    Problem: strokes are drawn inside & outside the circle. The outside part get cropped (because the circle is now larger than computed).
+    Problem: strokes are drawn inside & outside the circle.
+    But we want the stroke to be drawn inside only!
+
+    The outside overlaps with other elements, as we expect the dot to have a fixed size. So we want to crop the outside part.
 
     Solution:
     1. Create the circle in a <defs>
     2. Define a clip path that references the circle
     3. Use the clip path, adding the stroke.
-    4. Double stroke width because half of it (outside part) is clipped.
+    4. Double stroke width as half of it will be clipped (the outside part).
 
     Ref.: https://stackoverflow.com/a/32162431/3911841
 
