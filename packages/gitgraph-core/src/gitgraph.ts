@@ -3,11 +3,10 @@ import {
   DELETED_BRANCH_NAME,
   createDeletedBranch,
   BranchOptions,
-  CompareBranchesOrder,
 } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
-import { BranchesOrder } from "./branches-order";
+import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
 import {
   Template,
   TemplateOptions,

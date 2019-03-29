@@ -6,7 +6,6 @@ import { TemplateOptions, BranchStyle } from "./template";
 export {
   BranchCommitDefaultOptions,
   BranchOptions,
-  CompareBranchesOrder,
   DELETED_BRANCH_NAME,
   createDeletedBranch,
   Branch,
@@ -44,18 +43,6 @@ interface BranchOptions<TNode = SVGElement> {
    */
   onGraphUpdate: () => void;
 }
-
-/**
- * Function used to determine the order of the branches in the rendered graph.
- *
- * Returns:
- * - negative number if `branchNameA` should be rendered before `branchNameB`
- * - positive number if `branchNameA` should be rendered after `branchNameB`
- */
-type CompareBranchesOrder = (
-  branchNameA: Branch["name"],
-  branchNameB: Branch["name"],
-) => number;
 
 const DELETED_BRANCH_NAME = "";
 

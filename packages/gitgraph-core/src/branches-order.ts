@@ -1,9 +1,23 @@
-import { Branch, CompareBranchesOrder } from "./branch";
+import { Branch } from "./branch";
 import { Commit } from "./commit";
+
+export { BranchesOrder, CompareBranchesOrder };
 
 type Color = string;
 
-export class BranchesOrder<TNode> {
+/**
+ * Function used to determine the order of the branches in the rendered graph.
+ *
+ * Returns:
+ * - negative number if `branchNameA` should be rendered before `branchNameB`
+ * - positive number if `branchNameA` should be rendered after `branchNameB`
+ */
+type CompareBranchesOrder = (
+  branchNameA: Branch["name"],
+  branchNameB: Branch["name"],
+) => number;
+
+class BranchesOrder<TNode> {
   private branches: Set<Branch["name"]> = new Set();
   private colors: Color[];
 

@@ -1,6 +1,6 @@
 import { GitgraphCore } from "../gitgraph";
 import { Orientation } from "../orientation";
-import { CompareBranchesOrder } from "../branch";
+import { CompareBranchesOrder } from "../branches-order";
 import { metroTemplate, TemplateName } from "../template";
 
 describe("Gitgraph.getRenderedData.branchesPaths", () => {
