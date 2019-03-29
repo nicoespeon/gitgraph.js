@@ -140,7 +140,7 @@ interface GOptions {
     x: number;
     y: number;
   };
-  children?: SVGElement[];
+  children?: Array<SVGElement | null>;
 }
 
 function createG(options?: GOptions): SVGGElement {
@@ -155,7 +155,7 @@ function createG(options?: GOptions): SVGGElement {
   }
 
   if (options.children) {
-    options.children.forEach((child) => g.appendChild(child));
+    options.children.forEach((child) => child && g.appendChild(child));
   }
 
   return g;
