@@ -120,8 +120,70 @@ function renderCommit(commit: Commit): SVGGElement {
 
   return createG({
     translate: getMessageOffset(commit),
-    children: [message],
+    children: [renderDot(commit), message],
   });
+}
+
+function renderDot(commit: Commit): SVGElement {
+  if (commit.renderDot) {
+    return commit.renderDot(commit);
+  }
+
+  /*
+    In order to handle strokes, we need to do some complex stuff here… 😅
+
+    Problem: strokes are drawn inside & outside the circle.
+    But we want the stroke to be drawn inside only!
+
+    The outside overlaps with other elements, as we expect the dot to have a fixed size. So we want to crop the outside part.
+
+    Solution:
+    1. Create the circle in a <defs>
+    2. Define a clip path that references the circle
+    3. Use the clip path, adding the stroke.
+    4. Double stroke width as half of it will be clipped (the outside part).
+
+    Ref.: https://stackoverflow.com/a/32162431/3911841
+
+    P.S. there is a proposal for a stroke-alignment property,
+    but it's still a W3C Draft ¯\_(ツ)_/¯
+    https://svgwg.org/specs/strokes/#SpecifyingStrokeAlignment
+  */
+  const circleId = commit.hash;
+  const circle = createCircle({
+    id: circleId,
+    radius: commit.style.dot.size,
+    fill: commit.style.dot.color || "",
+  });
+
+  const clipPathId = `clip-${commit.hash}`;
+  const circleClipPath = document.createElementNS(SVG_NAMESPACE, "clipPath");
+  circleClipPath.setAttribute("id", clipPathId);
+  circleClipPath.appendChild(createUse(circleId));
+
+  const circleDefs = document.createElementNS(SVG_NAMESPACE, "defs");
+  circleDefs.appendChild(circle);
+  circleDefs.appendChild(circleClipPath);
+
+  const useCirclePath = createUse(circleId);
+  useCirclePath.setAttribute("clip-path", `url(#${clipPathId})`);
+  useCirclePath.setAttribute("stroke", commit.style.dot.strokeColor || "");
+  const strokeWidth = commit.style.dot.strokeWidth
+    ? commit.style.dot.strokeWidth * 2
+    : 0;
+  useCirclePath.setAttribute("stroke-width", strokeWidth.toString());
+
+  const dotText = commit.dotText
+    ? createText({
+        content: commit.dotText,
+        font: commit.style.dot.font,
+        anchor: "middle",
+        translate: { x: commit.style.dot.size, y: commit.style.dot.size },
+      })
+    : null;
+
+  // TODO: missing event handlers on <g>
+  return createG({ children: [circleDefs, useCirclePath, dotText] });
 }
 
 function getMessageOffset({ x, y }: Coordinate): Coordinate {
@@ -167,6 +229,11 @@ interface TextOptions {
   content?: string;
   fill?: string;
   font?: string;
+  anchor?: "start" | "middle" | "end";
+  translate?: {
+    x: number;
+    y: number;
+  };
   onClick?: () => void;
 }
 
@@ -188,6 +255,15 @@ function createText(options?: TextOptions): SVGTextElement {
     text.setAttribute("style", `font: ${options.font}`);
   }
 
+  if (options.anchor) {
+    text.setAttribute("text-anchor", options.anchor);
+  }
+
+  if (options.translate) {
+    text.setAttribute("x", options.translate.x.toString());
+    text.setAttribute("y", options.translate.y.toString());
+  }
+
   if (options.onClick) {
     text.addEventListener("click", options.onClick);
   }
@@ -195,6 +271,44 @@ function createText(options?: TextOptions): SVGTextElement {
   return text;
 }
 
+interface CircleOptions {
+  id?: string;
+  radius?: number;
+  fill?: string;
+}
+
+function createCircle(options?: CircleOptions): SVGCircleElement {
+  const circle = document.createElementNS(SVG_NAMESPACE, "circle");
+
+  if (!options) return circle;
+
+  if (options.id) {
+    circle.setAttribute("id", options.id);
+  }
+
+  if (options.radius) {
+    circle.setAttribute("cx", options.radius.toString());
+    circle.setAttribute("cy", options.radius.toString());
+    circle.setAttribute("r", options.radius.toString());
+  }
+
+  if (options.fill) {
+    circle.setAttribute("fill", options.fill);
+  }
+
+  return circle;
+}
+
 function createPath(): SVGPathElement {
   return document.createElementNS(SVG_NAMESPACE, "path");
+}
+
+function createUse(href: string): SVGUseElement {
+  const use = document.createElementNS(SVG_NAMESPACE, "use");
+  use.setAttribute("href", `#${href}`);
+  // xlink:href is deprecated in SVG2, but we keep it for retro-compatibility
+  // => https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use#Browser_compatibility
+  use.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#${href}`);
+
+  return use;
 }
