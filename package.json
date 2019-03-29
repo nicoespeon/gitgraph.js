@@ -36,7 +36,7 @@
     "@types/jest": "23.1.4",
     "husky": "1.1.2",
     "jest": "23.3.0",
-    "lerna": "^2.5.1",
+    "lerna": "3.13.1",
     "prettier": "1.13.7",
     "pretty-quick": "1.6.0",
     "ts-jest": "23.0.0",
