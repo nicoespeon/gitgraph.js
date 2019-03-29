@@ -99,7 +99,7 @@ class BranchUserApi<TNode> {
     if (!isBranchMergeOptions<TNode>(options)) {
       options = { branch: args[0], subject: args[1], fastForward: false };
     }
-    const { branch, subject, fastForward } = options;
+    const { branch, subject, fastForward, ...commitOptions } = options;
 
     const branchName = typeof branch === "string" ? branch : branch.name;
     const branchLastCommitHash = this._graph.refs.getCommit(branchName);
@@ -122,7 +122,7 @@ class BranchUserApi<TNode> {
       this._fastForwardTo(branchLastCommitHash);
     } else {
       this._commitWithParents(
-        { subject: subject || `Merge branch ${branchName}` },
+        { subject: subject || `Merge branch ${branchName}`, ...commitOptions },
         [branchLastCommitHash],
       );
     }
