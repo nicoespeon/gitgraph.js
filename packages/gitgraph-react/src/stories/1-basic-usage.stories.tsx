@@ -2,7 +2,7 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { createFixedHashGenerator } from "./helpers";
-import { Gitgraph, Mode } from "../Gitgraph";
+import { Gitgraph, Mode, Branch } from "../Gitgraph";
 
 storiesOf("1. Basic usage", module)
   .add("default", () => (
@@ -249,4 +249,32 @@ storiesOf("1. Basic usage", module)
           .commit();
       }}
     </Gitgraph>
-  ));
+  ))
+  .add("custom branch order", () => {
+    const branchesOrder = ["feat1", "develop", "master"];
+
+    const compareBranchesOrder = (a: Branch["name"], b: Branch["name"]) =>
+      branchesOrder.indexOf(a) - branchesOrder.indexOf(b);
+
+    return (
+      <Gitgraph
+        options={{
+          generateCommitHash: createFixedHashGenerator(),
+          compareBranchesOrder,
+        }}
+      >
+        {(gitgraph) => {
+          const master = gitgraph.branch("master").commit("Initial commit");
+          const develop = gitgraph.branch("develop").commit();
+          const feat1 = gitgraph
+            .branch("feat1")
+            .commit()
+            .commit();
+          master.commit();
+          develop.commit();
+          master.merge(develop);
+          feat1.commit();
+        }}
+      </Gitgraph>
+    );
+  });
