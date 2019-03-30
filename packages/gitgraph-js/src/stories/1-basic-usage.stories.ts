@@ -1,7 +1,7 @@
 // @ts-ignore: @storybook/html doesn't have types yet
 import { storiesOf } from "@storybook/html";
 
-import { createGitgraph } from "../gitgraph-new";
+import { createGitgraph } from "../gitgraph";
 
 storiesOf("1. Basic usage", module).add("default", () => {
   const graphContainer = document.createElement("div");

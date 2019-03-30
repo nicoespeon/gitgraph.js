@@ -1,1 +1,1 @@
-export * from "./gitgraph-new";
+export * from "./gitgraph";
