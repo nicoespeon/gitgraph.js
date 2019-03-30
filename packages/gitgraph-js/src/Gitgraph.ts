@@ -12,17 +12,19 @@ import {
   createG,
   createText,
   createCircle,
-  createRect,
   createUse,
   createPath,
   createClipPath,
   createDefs,
 } from "./svg-elements";
+import {
+  renderBranchLabel,
+  PADDING_X as BRANCH_LABEL_PADDING_X,
+  PADDING_Y as BRANCH_LABEL_PADDING_Y,
+} from "./branch-label";
 
 export { createGitgraph };
 
-const BranchLabelPaddingX = 10;
-const BranchLabelPaddingY = 5;
 const TooltipPadding = 10;
 
 function createGitgraph(graphContainer: HTMLElement) {
@@ -47,7 +49,7 @@ function createGitgraph(graphContainer: HTMLElement) {
       createG({
         // Translate graph left => left-most branch label is not cropped (horizontal)
         // Translate graph down => top-most commit tooltip is not cropped
-        translate: { x: BranchLabelPaddingX, y: TooltipPadding },
+        translate: { x: BRANCH_LABEL_PADDING_X, y: TooltipPadding },
         children: [
           renderBranchesPaths(gitgraph, branchesPaths),
           renderCommits(gitgraph, commits, commitMessagesX),
@@ -64,14 +66,14 @@ function adaptSvgOnUpdate(svg: SVGSVGElement): void {
     svg.setAttribute(
       "width",
       // Add `TooltipPadding` so we don't crop the tooltip text.
-      // Add `BranchLabelPaddingX` so we don't cut branch label.
-      (width + BranchLabelPaddingX + TooltipPadding).toString(),
+      // Add `BRANCH_LABEL_PADDING_X` so we don't cut branch label.
+      (width + BRANCH_LABEL_PADDING_X + TooltipPadding).toString(),
     );
     svg.setAttribute(
       "height",
       // Add `TooltipPadding` so we don't crop tooltip text
-      // Add `BranchLabelPaddingY` so we don't crop branch label.
-      (height + BranchLabelPaddingY + TooltipPadding).toString(),
+      // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
+      (height + BRANCH_LABEL_PADDING_Y + TooltipPadding).toString(),
     );
   });
 
@@ -163,30 +165,7 @@ function renderBranchLabels(
     // To do so, we'd need to reposition each of them appropriately.
     if (commit.branchToDisplay !== branch.name) return null;
 
-    // TODO: compute dynamically
-    const boxWidth = 78; // state.textWidth + 2 * BranchLabelPaddingX;
-    const boxHeight = 31; // state.textHeight + 2 * BranchLabelPaddingY;
-
-    const branchLabel = createG({
-      children: [
-        createRect({
-          width: boxWidth,
-          height: boxHeight,
-          borderRadius: branch.style.label.borderRadius,
-          stroke: branch.style.label.strokeColor || commit.style.color,
-          fill: branch.style.label.bgColor,
-        }),
-        createText({
-          content: branch.name,
-          translate: {
-            x: BranchLabelPaddingX,
-            y: boxHeight / 2,
-          },
-          font: branch.style.label.font,
-          fill: branch.style.label.color || commit.style.color,
-        }),
-      ],
-    });
+    const branchLabel = renderBranchLabel(branch, commit);
 
     if (gitgraph.isVertical) {
       return createG({ children: [branchLabel] });
