@@ -267,16 +267,16 @@ function createSvg(): SVGSVGElement {
 }
 
 interface GOptions {
+  children: Array<SVGElement | null>;
   translate?: {
     x: number;
     y: number;
   };
-  children?: Array<SVGElement | null>;
 }
 
-function createG(options?: GOptions): SVGGElement {
+function createG(options: GOptions): SVGGElement {
   const g = document.createElementNS(SVG_NAMESPACE, "g");
-  if (!options) return g;
+  options.children.forEach((child) => child && g.appendChild(child));
 
   if (options.translate) {
     g.setAttribute(
@@ -285,15 +285,11 @@ function createG(options?: GOptions): SVGGElement {
     );
   }
 
-  if (options.children) {
-    options.children.forEach((child) => child && g.appendChild(child));
-  }
-
   return g;
 }
 
 interface TextOptions {
-  content?: string;
+  content: string;
   fill?: string;
   font?: string;
   anchor?: "start" | "middle" | "end";
@@ -304,16 +300,11 @@ interface TextOptions {
   onClick?: () => void;
 }
 
-function createText(options?: TextOptions): SVGTextElement {
+function createText(options: TextOptions): SVGTextElement {
   const text = document.createElementNS(SVG_NAMESPACE, "text");
   text.setAttribute("alignment-baseline", "central");
   text.setAttribute("dominant-baseline", "central");
-
-  if (!options) return text;
-
-  if (options.content) {
-    text.textContent = options.content;
-  }
+  text.textContent = options.content;
 
   if (options.fill) {
     text.setAttribute("fill", options.fill);
@@ -340,24 +331,19 @@ function createText(options?: TextOptions): SVGTextElement {
 }
 
 interface CircleOptions {
+  radius: number;
   id?: string;
-  radius?: number;
   fill?: string;
 }
 
-function createCircle(options?: CircleOptions): SVGCircleElement {
+function createCircle(options: CircleOptions): SVGCircleElement {
   const circle = document.createElementNS(SVG_NAMESPACE, "circle");
-
-  if (!options) return circle;
+  circle.setAttribute("cx", options.radius.toString());
+  circle.setAttribute("cy", options.radius.toString());
+  circle.setAttribute("r", options.radius.toString());
 
   if (options.id) {
     circle.setAttribute("id", options.id);
-  }
-
-  if (options.radius) {
-    circle.setAttribute("cx", options.radius.toString());
-    circle.setAttribute("cy", options.radius.toString());
-    circle.setAttribute("r", options.radius.toString());
   }
 
   if (options.fill) {
