@@ -195,6 +195,7 @@ function renderDot(commit: Commit): SVGElement {
   return createG({ children: [circleDefs, useCirclePath, dotText] });
 }
 
+// TODO: maybe we should rename. It's confusing and used for commit dot too.
 function getMessageOffset({ x, y }: Coordinate): Coordinate {
   // TODO: handle missing `commitYWithOffsets` concept
   return { x, y };
