@@ -203,7 +203,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {/* These elements are positionned after component update. */}
         <g transform={`translate(${-x}, 0)`}>
           {commit.style.message.display && this.renderMessage(commit)}
-          {this.renderBranchLabel(commit)}
+          {this.renderBranchLabels(commit)}
           {this.renderTags(commit)}
         </g>
       </g>
@@ -303,7 +303,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private renderBranchLabel(commit: Commit<ReactSvgElement>) {
+  private renderBranchLabels(commit: Commit<ReactSvgElement>) {
     // @gitgraph/core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
     const branches = Array.from(this.gitgraph.branches.values());
