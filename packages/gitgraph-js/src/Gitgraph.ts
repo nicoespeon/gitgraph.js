@@ -38,7 +38,7 @@ function createGitgraph(graphContainer: HTMLElement) {
         translate: { x: BranchLabelPaddingX, y: TooltipPadding },
         children: [
           renderBranchesPaths(gitgraph, branchesPaths),
-          renderCommits(commits, commitMessagesX),
+          renderCommits(gitgraph, commits, commitMessagesX),
         ],
       }),
     );
@@ -99,6 +99,7 @@ function renderBranchesPaths(
 }
 
 function renderCommits(
+  gitgraph: GitgraphCore,
   commits: Commit[],
   commitMessagesX: number,
 ): SVGGElement {
@@ -126,11 +127,67 @@ function renderCommits(
         renderDot(commit),
         createG({
           translate: { x: commitMessagesX - commit.x, y: 0 },
-          children: [message],
+          children: [message, ...renderBranchLabels(gitgraph, commit)],
         }),
       ],
     });
   }
+}
+
+function renderBranchLabels(
+  gitgraph: GitgraphCore,
+  commit: Commit,
+): Array<SVGElement | null> {
+  // @gitgraph/core could compute branch labels into commits directly.
+  // That will make it easier to retrieve them, just like tags.
+  const branches = Array.from(gitgraph.branches.values());
+  return branches.map((branch) => {
+    if (!branch.style.label.display) return null;
+
+    const commitHash = gitgraph.refs.getCommit(branch.name);
+    if (commit.hash !== commitHash) return null;
+
+    // For the moment, we don't handle multiple branch labels.
+    // To do so, we'd need to reposition each of them appropriately.
+    if (commit.branchToDisplay !== branch.name) return null;
+
+    // TODO: compute dynamically
+    const boxWidth = 78; // state.textWidth + 2 * BranchLabelPaddingX;
+    const boxHeight = 31; // state.textHeight + 2 * BranchLabelPaddingY;
+
+    const branchLabel = createG({
+      children: [
+        createRect({
+          width: boxWidth,
+          height: boxHeight,
+          borderRadius: branch.style.label.borderRadius,
+          stroke: branch.style.label.strokeColor || commit.style.color,
+          fill: branch.style.label.bgColor,
+        }),
+        createText({
+          content: branch.name,
+          translate: {
+            x: BranchLabelPaddingX,
+            y: boxHeight / 2,
+          },
+          font: branch.style.label.font,
+          fill: branch.style.label.color || commit.style.color,
+        }),
+      ],
+    });
+
+    if (gitgraph.isVertical) {
+      return createG({ children: [branchLabel] });
+    } else {
+      const commitDotSize = commit.style.dot.size * 2;
+      const horizontalMarginTop = 10;
+
+      return createG({
+        translate: { x: commit.x, y: commitDotSize + horizontalMarginTop },
+        children: [branchLabel],
+      });
+    }
+  });
 }
 
 function renderDot(commit: Commit): SVGElement {
@@ -250,6 +307,7 @@ interface TextOptions {
 function createText(options?: TextOptions): SVGTextElement {
   const text = document.createElementNS(SVG_NAMESPACE, "text");
   text.setAttribute("alignment-baseline", "central");
+  text.setAttribute("dominant-baseline", "central");
 
   if (!options) return text;
 
@@ -307,6 +365,34 @@ function createCircle(options?: CircleOptions): SVGCircleElement {
   }
 
   return circle;
+}
+
+interface RectOptions {
+  width: number;
+  height: number;
+  borderRadius?: number;
+  fill?: string;
+  stroke?: string;
+}
+
+function createRect(options: RectOptions): SVGRectElement {
+  const rect = document.createElementNS(SVG_NAMESPACE, "rect");
+  rect.setAttribute("width", options.width.toString());
+  rect.setAttribute("height", options.height.toString());
+
+  if (options.borderRadius) {
+    rect.setAttribute("rx", options.borderRadius.toString());
+  }
+
+  if (options.fill) {
+    rect.setAttribute("fill", options.fill || "transparent");
+  }
+
+  if (options.stroke) {
+    rect.setAttribute("stroke", options.stroke);
+  }
+
+  return rect;
 }
 
 function createPath(): SVGPathElement {
