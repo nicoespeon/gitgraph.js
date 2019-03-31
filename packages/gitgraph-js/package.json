@@ -1,5 +1,6 @@
 {
   "name": "@gitgraph/js",
+  "private": true,
   "version": "0.0.0",
   "description": "Draw pretty git graphs in the browser",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
