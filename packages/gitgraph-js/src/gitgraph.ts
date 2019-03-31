@@ -26,6 +26,7 @@ import {
 export { createGitgraph };
 
 const TooltipPadding = 10;
+let commitMessagesX = 0;
 
 function createGitgraph(graphContainer: HTMLElement) {
   // Create an `svg` context in which we'll render the graph.
@@ -41,7 +42,8 @@ function createGitgraph(graphContainer: HTMLElement) {
   return gitgraph.getUserApi();
 
   function render(data: RenderedData<SVGElement>): void {
-    const { commits, branchesPaths, commitMessagesX } = data;
+    const { commits, branchesPaths } = data;
+    commitMessagesX = data.commitMessagesX;
 
     // Reset SVG with new content.
     svg.innerHTML = "";
@@ -52,7 +54,7 @@ function createGitgraph(graphContainer: HTMLElement) {
         translate: { x: BRANCH_LABEL_PADDING_X, y: TooltipPadding },
         children: [
           renderBranchesPaths(gitgraph, branchesPaths),
-          renderCommits(gitgraph, commits, commitMessagesX),
+          renderCommits(gitgraph, commits),
         ],
       }),
     );
@@ -112,11 +114,7 @@ function renderBranchesPaths(
   return createG({ children: paths });
 }
 
-function renderCommits(
-  gitgraph: GitgraphCore,
-  commits: Commit[],
-  commitMessagesX: number,
-): SVGGElement {
+function renderCommits(gitgraph: GitgraphCore, commits: Commit[]): SVGGElement {
   return createG({ children: commits.map(renderCommit) });
 
   function renderCommit(commit: Commit): SVGGElement {
