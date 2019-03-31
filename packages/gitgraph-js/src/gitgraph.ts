@@ -26,17 +26,27 @@ import {
 export { createGitgraph };
 
 const TooltipPadding = 10;
+const TAG_PADDING_X = 10;
+
+const commitsElements: {
+  [commitHash: string]: {
+    branchLabel: SVGGElement | null;
+    tags: SVGGElement[];
+    message: SVGGElement | null;
+  };
+} = {};
 let commitMessagesX = 0;
 
 function createGitgraph(graphContainer: HTMLElement) {
   // Create an `svg` context in which we'll render the graph.
   const svg = createSvg();
-  adaptSvgOnUpdate(svg);
   graphContainer.appendChild(svg);
 
   // React on gitgraph updates to re-render the graph.
   const gitgraph = new GitgraphCore();
   gitgraph.subscribe(render);
+
+  adaptSvgOnUpdate(svg, gitgraph);
 
   // Return usable API for end-user.
   return gitgraph.getUserApi();
@@ -61,7 +71,7 @@ function createGitgraph(graphContainer: HTMLElement) {
   }
 }
 
-function adaptSvgOnUpdate(svg: SVGSVGElement): void {
+function adaptSvgOnUpdate(svg: SVGSVGElement, gitgraph: GitgraphCore): void {
   const observer = new MutationObserver(() => {
     const { height, width } = svg.getBBox();
 
@@ -77,6 +87,8 @@ function adaptSvgOnUpdate(svg: SVGSVGElement): void {
       // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
       (height + BRANCH_LABEL_PADDING_Y + TooltipPadding).toString(),
     );
+
+    positionCommitsElements(gitgraph);
   });
 
   observer.observe(svg, {
@@ -84,6 +96,55 @@ function adaptSvgOnUpdate(svg: SVGSVGElement): void {
     subtree: false,
     childList: true,
   });
+}
+
+function positionCommitsElements(gitgraph: GitgraphCore): void {
+  if (gitgraph.isHorizontal) {
+    // Elements don't appear on horizontal mode, yet.
+    return;
+  }
+
+  const padding = 10;
+
+  // Ensure commits elements (branch labels, message…) are well positionned.
+  // It can't be done at render time since elements size is dynamic.
+  Object.keys(commitsElements).forEach((commitHash) => {
+    const { branchLabel, tags, message } = commitsElements[commitHash];
+
+    // We'll store X position progressively and translate elements.
+    let x = commitMessagesX;
+
+    if (branchLabel) {
+      moveElement(branchLabel, x);
+
+      // For some reason, one paddingX is missing in BBox width.
+      const branchLabelWidth =
+        branchLabel.getBBox().width + BRANCH_LABEL_PADDING_X;
+      x += branchLabelWidth + padding;
+    }
+
+    tags.forEach((tag) => {
+      if (!tag) return;
+
+      moveElement(tag, x);
+
+      // For some reason, one paddingX is missing in BBox width.
+      const tagWidth = tag.getBBox().width + TAG_PADDING_X;
+      x += tagWidth + padding;
+    });
+
+    if (message) {
+      moveElement(message, x);
+    }
+  });
+}
+
+function moveElement(target: Element, x: number): void {
+  const transform = target.getAttribute("transform") || "translate(0, 0)";
+  target.setAttribute(
+    "transform",
+    transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
+  );
 }
 
 function renderBranchesPaths(
