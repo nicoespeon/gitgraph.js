@@ -1,12 +1,12 @@
 import { Branch, Commit } from "@gitgraph/core";
 import { createG, createRect, createText } from "./svg-elements";
 
-export { renderBranchLabel, PADDING_X, PADDING_Y };
+export { createBranchLabel, PADDING_X, PADDING_Y };
 
 const PADDING_X = 10;
 const PADDING_Y = 5;
 
-function renderBranchLabel(branch: Branch, commit: Commit): SVGElement {
+function createBranchLabel(branch: Branch, commit: Commit): SVGElement {
   const rect = createRect({
     width: 0,
     height: 0,

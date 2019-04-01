@@ -19,7 +19,7 @@ import {
   createDefs,
 } from "./svg-elements";
 import {
-  renderBranchLabel,
+  createBranchLabel,
   PADDING_X as BRANCH_LABEL_PADDING_X,
   PADDING_Y as BRANCH_LABEL_PADDING_Y,
 } from "./branch-label";
@@ -253,7 +253,7 @@ function createGitgraph(
       let branchLabel;
       if (gitgraph.isVertical) {
         branchLabel = createG({
-          children: [renderBranchLabel(branch, commit)],
+          children: [createBranchLabel(branch, commit)],
         });
       } else {
         const commitDotSize = commit.style.dot.size * 2;
@@ -261,7 +261,7 @@ function createGitgraph(
 
         branchLabel = createG({
           translate: { x: commit.x, y: commitDotSize + horizontalMarginTop },
-          children: [renderBranchLabel(branch, commit)],
+          children: [createBranchLabel(branch, commit)],
         });
       }
 
