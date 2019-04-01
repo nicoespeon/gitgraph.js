@@ -52,8 +52,10 @@ describe("Gitgraph.getRenderedData.commits", () => {
     develop.commit("two");
     master.merge({
       branch: develop,
-      subject: "Release a new feature",
-      commitOptions: { author: "Fabien Bernard <fabien0102@gmail.com>" },
+      commitOptions: {
+        subject: "Release a new feature",
+        author: "Fabien Bernard <fabien0102@gmail.com>",
+      },
     });
 
     const { commits } = core.getRenderedData();

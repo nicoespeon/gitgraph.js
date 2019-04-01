@@ -13,10 +13,6 @@ interface GitgraphMergeOptions<TNode> {
    */
   branch: string | BranchUserApi<TNode>;
   /**
-   * Merge commit message subject.
-   */
-  subject?: string;
-  /**
    * If `true`, perform a fast-forward merge (if possible).
    */
   fastForward?: boolean;
@@ -101,11 +97,14 @@ class BranchUserApi<TNode> {
   public merge(...args: any[]): this {
     let options = args[0];
     if (!isBranchMergeOptions<TNode>(options)) {
-      options = { branch: args[0], subject: args[1], fastForward: false };
+      options = {
+        branch: args[0],
+        fastForward: false,
+        commitOptions: { subject: args[1] },
+      };
     }
     const {
       branch,
-      subject,
       fastForward,
       commitOptions,
     } = options as GitgraphMergeOptions<TNode>;
@@ -131,7 +130,12 @@ class BranchUserApi<TNode> {
       this._fastForwardTo(branchLastCommitHash);
     } else {
       this._commitWithParents(
-        { subject: subject || `Merge branch ${branchName}`, ...commitOptions },
+        {
+          ...commitOptions,
+          subject:
+            (commitOptions && commitOptions.subject) ||
+            `Merge branch ${branchName}`,
+        },
         [branchLastCommitHash],
       );
     }
