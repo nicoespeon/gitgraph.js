@@ -23,11 +23,11 @@ import {
   PADDING_X as BRANCH_LABEL_PADDING_X,
   PADDING_Y as BRANCH_LABEL_PADDING_Y,
 } from "./branch-label";
+import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
 
 export { createGitgraph };
 
 const TooltipPadding = 10;
-const TAG_PADDING_X = 10;
 
 function createGitgraph(
   graphContainer: HTMLElement,
@@ -113,12 +113,13 @@ function createGitgraph(
         }
 
         tags.forEach((tag) => {
-          if (!tag) return;
-
           moveElement(tag, x);
 
-          // For some reason, one paddingX is missing in BBox width.
-          const tagWidth = tag.getBBox().width + TAG_PADDING_X;
+          // BBox width misses box padding and offset
+          // => they are set later, on branch label update.
+          // We would need to make branch label update happen before to solve it.
+          const offset = parseFloat(tag.getAttribute("data-offset") || "0");
+          const tagWidth = tag.getBBox().width + 2 * TAG_PADDING_X + offset;
           x += tagWidth + padding;
         });
 
@@ -224,8 +225,11 @@ function createGitgraph(
           // TODO: render arrows
           createG({
             translate: { x: -x, y: 0 },
-            // TODO: render tags
-            children: [message, ...renderBranchLabels(commit)],
+            children: [
+              message,
+              ...renderBranchLabels(commit),
+              ...renderTags(commit),
+            ],
           }),
         ],
       });
@@ -264,6 +268,21 @@ function createGitgraph(
       setBranchLabelRef(commit, branchLabel);
 
       return branchLabel;
+    });
+  }
+
+  function renderTags(commit: Commit): SVGGElement[] {
+    if (!commit.tags) return [];
+
+    return commit.tags.map((tag) => {
+      const tagElement = createTag(tag);
+
+      setTagRef(commit, tagElement);
+
+      return createG({
+        translate: { x: 0, y: commit.style.dot.size },
+        children: [tagElement],
+      });
     });
   }
 
@@ -349,17 +368,13 @@ function createGitgraph(
     commitsElements[commit.hashAbbrev].message = message;
   }
 
-  // TODO: enable this when tag are implemented
-  // function setTagRef(
-  //   commit: Commit,
-  //   tag: SVGGElement
-  // ): void {
-  //   if (!commitsElements[commit.hashAbbrev]) {
-  //     initCommitElements(commit);
-  //   }
+  function setTagRef(commit: Commit, tag: SVGGElement): void {
+    if (!commitsElements[commit.hashAbbrev]) {
+      initCommitElements(commit);
+    }
 
-  //   commitsElements[commit.hashAbbrev].tags.push(tag);
-  // }
+    commitsElements[commit.hashAbbrev].tags.push(tag);
+  }
 
   function initCommitElements(commit: Commit): void {
     commitsElements[commit.hashAbbrev] = {

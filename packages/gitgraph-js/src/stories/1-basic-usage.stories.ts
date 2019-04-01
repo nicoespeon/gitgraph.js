@@ -133,6 +133,49 @@ storiesOf("1. Basic usage", module)
 
     return graphContainer;
   })
+  .add("tags", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+    });
+
+    const master = gitgraph.branch("master");
+
+    // Tag on branch
+    master
+      .commit()
+      .tag("v1.0")
+      .tag("first release");
+
+    master.commit();
+    master.tag("v1.1");
+
+    master.commit({ tag: "v1.2" });
+
+    // Tag on gitgraph
+    master.commit();
+    gitgraph.tag("v2.0");
+
+    // Custom tags
+    const customTagStyle = {
+      bgColor: "orange",
+      strokeColor: "orange",
+      borderRadius: 0,
+      pointerWidth: 0,
+    };
+    gitgraph.tag({
+      name: "last release",
+      style: customTagStyle,
+    });
+
+    gitgraph
+      .branch("feat1")
+      .commit()
+      .tag({ name: "something cool", style: customTagStyle });
+
+    return graphContainer;
+  })
   .add("branch colors", () => {
     const graphContainer = document.createElement("div");
 
