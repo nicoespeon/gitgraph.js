@@ -131,8 +131,41 @@ function createRect(options: RectOptions): SVGRectElement {
   return rect;
 }
 
-function createPath(): SVGPathElement {
-  return document.createElementNS(SVG_NAMESPACE, "path");
+interface PathOptions {
+  d: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  translate?: {
+    x: number;
+    y: number;
+  };
+}
+
+function createPath(options: PathOptions): SVGPathElement {
+  const path = document.createElementNS(SVG_NAMESPACE, "path");
+  path.setAttribute("d", options.d);
+
+  if (options.fill) {
+    path.setAttribute("fill", options.fill);
+  }
+
+  if (options.stroke) {
+    path.setAttribute("stroke", options.stroke);
+  }
+
+  if (options.strokeWidth) {
+    path.setAttribute("stroke-width", options.strokeWidth.toString());
+  }
+
+  if (options.translate) {
+    path.setAttribute(
+      "transform",
+      `translate(${options.translate.x}, ${options.translate.y})`,
+    );
+  }
+
+  return path;
 }
 
 function createUse(href: string): SVGUseElement {

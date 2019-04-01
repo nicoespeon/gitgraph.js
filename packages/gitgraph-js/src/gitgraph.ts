@@ -160,21 +160,20 @@ function createGitgraph(
     const isBezier = gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
 
     const paths = Array.from(branchesPaths).map(([branch, coordinates]) => {
-      const path = createPath();
-      path.setAttribute(
-        "d",
-        toSvgPath(
+      return createPath({
+        d: toSvgPath(
           coordinates.map((coordinate) => coordinate.map(getMessageOffset)),
           isBezier,
           gitgraph.isVertical,
         ),
-      );
-      path.setAttribute("fill", "transparent");
-      path.setAttribute("stroke", branch.computedColor || "");
-      path.setAttribute("stroke-width", branch.style.lineWidth.toString());
-      path.setAttribute("transform", `translate(${offset}, ${offset})`);
-
-      return path;
+        fill: "transparent",
+        stroke: branch.computedColor || "",
+        strokeWidth: branch.style.lineWidth,
+        translate: {
+          x: offset,
+          y: offset,
+        },
+      });
     });
 
     return createG({ children: paths });
