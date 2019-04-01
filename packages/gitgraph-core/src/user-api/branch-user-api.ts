@@ -20,6 +20,10 @@ interface GitgraphMergeOptions<TNode> {
    * If `true`, perform a fast-forward merge (if possible).
    */
   fastForward?: boolean;
+  /**
+   * Commit options.
+   */
+  commitOptions?: GitgraphCommitOptions<TNode>;
 }
 
 interface BranchTagOptions {
@@ -99,7 +103,12 @@ class BranchUserApi<TNode> {
     if (!isBranchMergeOptions<TNode>(options)) {
       options = { branch: args[0], subject: args[1], fastForward: false };
     }
-    const { branch, subject, fastForward, ...commitOptions } = options;
+    const {
+      branch,
+      subject,
+      fastForward,
+      commitOptions,
+    } = options as GitgraphMergeOptions<TNode>;
 
     const branchName = typeof branch === "string" ? branch : branch.name;
     const branchLastCommitHash = this._graph.refs.getCommit(branchName);

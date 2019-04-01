@@ -40,4 +40,30 @@ describe("Gitgraph.getRenderedData.commits", () => {
       { subject: "Release a new feature" },
     ]);
   });
+
+  it("should accept custom commit options on merge", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    const master = gitgraph.branch("master");
+    master.commit("one");
+
+    const develop = gitgraph.branch("develop");
+    develop.commit("two");
+    master.merge({
+      branch: develop,
+      subject: "Release a new feature",
+      commitOptions: { author: "Fabien Bernard <fabien0102@gmail.com>" },
+    });
+
+    const { commits } = core.getRenderedData();
+
+    expect(commits[2]).toMatchObject({
+      subject: "Release a new feature",
+      author: {
+        name: "Fabien Bernard",
+        email: "fabien0102@gmail.com",
+      },
+    });
+  });
 });
