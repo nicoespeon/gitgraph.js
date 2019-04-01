@@ -2,7 +2,7 @@
 import { storiesOf } from "@storybook/html";
 
 import { createFixedHashGenerator } from "./helpers";
-import { createGitgraph } from "../gitgraph";
+import { createGitgraph, Mode, Branch } from "../gitgraph";
 
 storiesOf("1. Basic usage", module)
   .add("default", () => {
@@ -223,6 +223,99 @@ storiesOf("1. Basic usage", module)
       .branch("feat1")
       .commit()
       .commit();
+
+    return graphContainer;
+  })
+  .add("compact mode", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      mode: Mode.Compact,
+      generateCommitHash: createFixedHashGenerator(),
+    });
+    const master = gitgraph
+      .branch("master")
+      .commit()
+      .commit();
+
+    // Branch has more commits.
+    const develop = gitgraph.branch("develop").commit();
+    master.merge(develop);
+
+    // Branch & master have as much commits.
+    const feat1 = gitgraph.branch("feat1").commit();
+    master.commit();
+    master.merge(feat1);
+
+    // Master has more commits.
+    const feat2 = gitgraph.branch("feat2").commit();
+    master.commit().commit();
+    master.merge(feat2);
+
+    return graphContainer;
+  })
+  .add("commit dot text", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+    });
+
+    gitgraph
+      .commit({ subject: "Initial commit", dotText: "1" })
+      .commit({
+        subject: "Another commit",
+        dotText: "2",
+        style: { dot: { font: "italic 12pt Calibri" } },
+      })
+      .commit({ subject: "Do something crazy", dotText: "🙀" });
+
+    return graphContainer;
+  })
+  .add("commit message body", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+    });
+
+    gitgraph
+      .commit("Initial commit")
+      .commit({
+        subject: "Commit with a body",
+        body:
+          "Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.",
+      })
+      .commit({
+        body: "This is to explain the rationale behind this commit.",
+      })
+      .commit();
+
+    return graphContainer;
+  })
+  .add("custom branch order", () => {
+    const branchesOrder = ["feat1", "develop", "master"];
+
+    const compareBranchesOrder = (a: Branch["name"], b: Branch["name"]) =>
+      branchesOrder.indexOf(a) - branchesOrder.indexOf(b);
+
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+      compareBranchesOrder,
+    });
+
+    const master = gitgraph.branch("master").commit("Initial commit");
+    const develop = gitgraph.branch("develop").commit();
+    const feat1 = gitgraph
+      .branch("feat1")
+      .commit()
+      .commit();
+    master.commit();
+    develop.commit();
+    master.merge(develop);
+    feat1.commit();
 
     return graphContainer;
   });

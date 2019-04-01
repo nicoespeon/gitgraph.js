@@ -6,6 +6,8 @@ import {
   MergeStyle,
   toSvgPath,
   Coordinate,
+  Mode,
+  Branch,
 } from "@gitgraph/core";
 
 import {
@@ -25,7 +27,7 @@ import {
 } from "./branch-label";
 import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
 
-export { createGitgraph };
+export { createGitgraph, Mode, Branch };
 
 const TooltipPadding = 10;
 
