@@ -1,5 +1,6 @@
 import {
   GitgraphCore,
+  GitgraphOptions,
   Commit,
   RenderedData,
   MergeStyle,
@@ -28,7 +29,10 @@ export { createGitgraph };
 const TooltipPadding = 10;
 const TAG_PADDING_X = 10;
 
-function createGitgraph(graphContainer: HTMLElement) {
+function createGitgraph(
+  graphContainer: HTMLElement,
+  options?: GitgraphOptions,
+) {
   let commitsElements: {
     [commitHash: string]: {
       branchLabel: SVGGElement | null;
@@ -44,7 +48,7 @@ function createGitgraph(graphContainer: HTMLElement) {
   graphContainer.appendChild(svg);
 
   // React on gitgraph updates to re-render the graph.
-  const gitgraph = new GitgraphCore();
+  const gitgraph = new GitgraphCore(options);
   gitgraph.subscribe(render);
 
   // Return usable API for end-user.
