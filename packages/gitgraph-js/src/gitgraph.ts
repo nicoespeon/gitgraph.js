@@ -75,8 +75,61 @@ function createGitgraph(
 
   function adaptSvgOnUpdate(): void {
     const observer = new MutationObserver(() => {
-      const { height, width } = svg.getBBox();
+      positionCommitsElements();
+      adaptGraphDimensions();
+    });
 
+    observer.observe(svg, {
+      attributes: false,
+      subtree: false,
+      childList: true,
+    });
+
+    function positionCommitsElements(): void {
+      if (gitgraph.isHorizontal) {
+        // Elements don't appear on horizontal mode, yet.
+        return;
+      }
+
+      const padding = 10;
+
+      // Ensure commits elements (branch labels, message…) are well positionned.
+      // It can't be done at render time since elements size is dynamic.
+      Object.keys(commitsElements).forEach((commitHash) => {
+        const { branchLabel, tags, message } = commitsElements[commitHash];
+
+        // We'll store X position progressively and translate elements.
+        let x = commitMessagesX;
+
+        if (branchLabel) {
+          moveElement(branchLabel, x);
+
+          // BBox width misses box padding
+          // => they are set later, on branch label update.
+          // We would need to make branch label update happen before to solve it.
+          const branchLabelWidth =
+            branchLabel.getBBox().width + 2 * BRANCH_LABEL_PADDING_X;
+          x += branchLabelWidth + padding;
+        }
+
+        tags.forEach((tag) => {
+          if (!tag) return;
+
+          moveElement(tag, x);
+
+          // For some reason, one paddingX is missing in BBox width.
+          const tagWidth = tag.getBBox().width + TAG_PADDING_X;
+          x += tagWidth + padding;
+        });
+
+        if (message) {
+          moveElement(message, x);
+        }
+      });
+    }
+
+    function adaptGraphDimensions(): void {
+      const { height, width } = svg.getBBox();
       svg.setAttribute(
         "width",
         // Add `TooltipPadding` so we don't crop the tooltip text.
@@ -89,58 +142,7 @@ function createGitgraph(
         // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
         (height + BRANCH_LABEL_PADDING_Y + TooltipPadding).toString(),
       );
-
-      positionCommitsElements();
-    });
-
-    observer.observe(svg, {
-      attributes: false,
-      subtree: false,
-      childList: true,
-    });
-  }
-
-  function positionCommitsElements(): void {
-    if (gitgraph.isHorizontal) {
-      // Elements don't appear on horizontal mode, yet.
-      return;
     }
-
-    const padding = 10;
-
-    // Ensure commits elements (branch labels, message…) are well positionned.
-    // It can't be done at render time since elements size is dynamic.
-    Object.keys(commitsElements).forEach((commitHash) => {
-      const { branchLabel, tags, message } = commitsElements[commitHash];
-
-      // We'll store X position progressively and translate elements.
-      let x = commitMessagesX;
-
-      if (branchLabel) {
-        moveElement(branchLabel, x);
-
-        // BBox width misses box padding
-        // => they are set later, on branch label update.
-        // We would need to make branch label update happen before to solve it.
-        const branchLabelWidth =
-          branchLabel.getBBox().width + 2 * BRANCH_LABEL_PADDING_X;
-        x += branchLabelWidth + padding;
-      }
-
-      tags.forEach((tag) => {
-        if (!tag) return;
-
-        moveElement(tag, x);
-
-        // For some reason, one paddingX is missing in BBox width.
-        const tagWidth = tag.getBBox().width + TAG_PADDING_X;
-        x += tagWidth + padding;
-      });
-
-      if (message) {
-        moveElement(message, x);
-      }
-    });
   }
 
   function moveElement(target: Element, x: number): void {
