@@ -29,7 +29,7 @@ const TooltipPadding = 10;
 const TAG_PADDING_X = 10;
 
 function createGitgraph(graphContainer: HTMLElement) {
-  const commitsElements: {
+  let commitsElements: {
     [commitHash: string]: {
       branchLabel: SVGGElement | null;
       tags: SVGGElement[];
@@ -51,6 +51,9 @@ function createGitgraph(graphContainer: HTMLElement) {
   return gitgraph.getUserApi();
 
   function render(data: RenderedData<SVGElement>): void {
+    // Reset before new rendering to flush previous state.
+    commitsElements = {};
+
     const { commits, branchesPaths } = data;
     commitMessagesX = data.commitMessagesX;
 
@@ -112,9 +115,11 @@ function createGitgraph(graphContainer: HTMLElement) {
       if (branchLabel) {
         moveElement(branchLabel, x);
 
-        // For some reason, one paddingX is missing in BBox width.
+        // BBox width misses box padding
+        // => they are set later, on branch label update.
+        // We would need to make branch label update happen before to solve it.
         const branchLabelWidth =
-          branchLabel.getBBox().width + BRANCH_LABEL_PADDING_X;
+          branchLabel.getBBox().width + 2 * BRANCH_LABEL_PADDING_X;
         x += branchLabelWidth + padding;
       }
 
@@ -173,7 +178,23 @@ function createGitgraph(graphContainer: HTMLElement) {
     return createG({ children: commits.map(renderCommit) });
 
     function renderCommit(commit: Commit): SVGGElement {
-      // TODO: mimic `renderCommit` from @gitgraph/react.
+      const { x, y } = getMessageOffset(commit);
+
+      // TODO: implement with tooltips
+      //   const shouldRenderTooltip =
+      //   this.state.currentCommitOver === commit &&
+      //   (this.gitgraph.isHorizontal ||
+      //     (this.gitgraph.mode === Mode.Compact &&
+      //       commit.style.hasTooltipInCompactMode));
+
+      // if (shouldRenderTooltip) {
+      //   this.$tooltip = (
+      //     <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+      //       {this.renderTooltip(commit)}
+      //     </g>
+      //   );
+      // }
+
       const text = createText({
         content: commit.message,
         fill: commit.style.message.color || "",
@@ -181,6 +202,7 @@ function createGitgraph(graphContainer: HTMLElement) {
         onClick: commit.onMessageClick,
       });
 
+      // TODO: handle custom renderMessage
       const message = commit.style.message.display
         ? createG({
             translate: { x: 0, y: commit.style.dot.size },
@@ -188,12 +210,16 @@ function createGitgraph(graphContainer: HTMLElement) {
           })
         : null;
 
+      setMessageRef(commit, message);
+
       return createG({
-        translate: getMessageOffset(commit),
+        translate: { x, y },
         children: [
           renderDot(commit),
+          // TODO: render arrows
           createG({
-            translate: { x: commitMessagesX - commit.x, y: 0 },
+            translate: { x: -x, y: 0 },
+            // TODO: render tags
             children: [message, ...renderBranchLabels(commit)],
           }),
         ],
@@ -215,19 +241,24 @@ function createGitgraph(graphContainer: HTMLElement) {
       // To do so, we'd need to reposition each of them appropriately.
       if (commit.branchToDisplay !== branch.name) return null;
 
-      const branchLabel = renderBranchLabel(branch, commit);
-
+      let branchLabel;
       if (gitgraph.isVertical) {
-        return createG({ children: [branchLabel] });
+        branchLabel = createG({
+          children: [renderBranchLabel(branch, commit)],
+        });
       } else {
         const commitDotSize = commit.style.dot.size * 2;
         const horizontalMarginTop = 10;
 
-        return createG({
+        branchLabel = createG({
           translate: { x: commit.x, y: commitDotSize + horizontalMarginTop },
-          children: [branchLabel],
+          children: [renderBranchLabel(branch, commit)],
         });
       }
+
+      setBranchLabelRef(commit, branchLabel);
+
+      return branchLabel;
     });
   }
 
@@ -295,5 +326,41 @@ function createGitgraph(graphContainer: HTMLElement) {
   function getMessageOffset({ x, y }: Coordinate): Coordinate {
     // TODO: handle missing `commitYWithOffsets` concept
     return { x, y };
+  }
+
+  function setBranchLabelRef(commit: Commit, branchLabels: SVGGElement): void {
+    if (!commitsElements[commit.hashAbbrev]) {
+      initCommitElements(commit);
+    }
+
+    commitsElements[commit.hashAbbrev].branchLabel = branchLabels;
+  }
+
+  function setMessageRef(commit: Commit, message: SVGGElement | null): void {
+    if (!commitsElements[commit.hashAbbrev]) {
+      initCommitElements(commit);
+    }
+
+    commitsElements[commit.hashAbbrev].message = message;
+  }
+
+  // TODO: enable this when tag are implemented
+  // function setTagRef(
+  //   commit: Commit,
+  //   tag: SVGGElement
+  // ): void {
+  //   if (!commitsElements[commit.hashAbbrev]) {
+  //     initCommitElements(commit);
+  //   }
+
+  //   commitsElements[commit.hashAbbrev].tags.push(tag);
+  // }
+
+  function initCommitElements(commit: Commit): void {
+    commitsElements[commit.hashAbbrev] = {
+      branchLabel: null,
+      tags: [],
+      message: null,
+    };
   }
 }
