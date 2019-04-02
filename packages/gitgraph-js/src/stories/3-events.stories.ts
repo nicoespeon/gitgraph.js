@@ -56,4 +56,19 @@ storiesOf("3. Events", module)
     master.commit({ subject: "World", onMouseOut });
 
     return graphContainer;
+  })
+  .add("on commit message click", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+    });
+
+    const onMessageClick = action("click on message");
+
+    const master = gitgraph.branch("master");
+    master.commit({ subject: "Hello", onMessageClick });
+    master.commit({ subject: "World", onMessageClick });
+
+    return graphContainer;
   });
