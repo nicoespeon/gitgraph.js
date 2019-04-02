@@ -4,13 +4,14 @@ import {
   Commit,
   RenderedData,
   MergeStyle,
+  arrowSvgPath,
   toSvgPath,
   Coordinate,
   Mode,
   Branch,
   Orientation,
   TemplateName,
-  arrowSvgPath,
+  templateExtend,
 } from "@gitgraph/core";
 
 import {
@@ -31,7 +32,14 @@ import {
 } from "./branch-label";
 import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
 
-export { createGitgraph, Mode, Branch, Orientation, TemplateName };
+export {
+  createGitgraph,
+  Mode,
+  Branch,
+  Orientation,
+  TemplateName,
+  templateExtend,
+};
 
 const TooltipPadding = 10;
 
