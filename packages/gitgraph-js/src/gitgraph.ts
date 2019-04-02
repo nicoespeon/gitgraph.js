@@ -29,7 +29,7 @@ import {
 } from "./branch-label";
 import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
 
-export { createGitgraph, Mode, Branch };
+export { createGitgraph, Mode, Branch, Orientation };
 
 const TooltipPadding = 10;
 
