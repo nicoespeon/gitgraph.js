@@ -227,8 +227,9 @@ class GitgraphUserApi<TNode> {
     });
 
     // Create branches.
+    const branches = this._getBranches();
     this._graph.commits
-      .map((commit) => this._withBranches(commit))
+      .map((commit) => this._withBranches(branches, commit))
       .reduce((mem, commit) => {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
@@ -247,9 +248,10 @@ class GitgraphUserApi<TNode> {
   //
   // These belong to Gitgraph. It is duplicated because of `import()`.
   // `import()` should use regular user API instead.
-  private _withBranches(commit: Commit<TNode>): Commit<TNode> {
-    const branches = this._getBranches();
-
+  private _withBranches(
+    branches: Map<Commit["hash"], Set<Branch["name"]>>,
+    commit: Commit<TNode>,
+  ): Commit<TNode> {
     let commitBranches = Array.from(
       (branches.get(commit.hash) || new Set()).values(),
     );
