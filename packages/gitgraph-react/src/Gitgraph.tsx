@@ -158,7 +158,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       <path
         key={branch.name}
         d={toSvgPath(
-          coordinates.map((a) => a.map((b) => this.getMessageOffset(b))),
+          coordinates.map((a) => a.map((b) => this.getWithCommitOffset(b))),
           isBezier,
           this.gitgraph.isVertical,
         )}
@@ -179,7 +179,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private renderCommit(commit: Commit<ReactSvgElement>) {
-    const { x, y } = this.getMessageOffset(commit);
+    const { x, y } = this.getWithCommitOffset(commit);
 
     const shouldRenderTooltip =
       this.state.currentCommitOver === commit &&
@@ -507,7 +507,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     );
   }
 
-  private getMessageOffset({ x, y }: Coordinate): Coordinate {
+  private getWithCommitOffset({ x, y }: Coordinate): Coordinate {
     return { x, y: this.state.commitYWithOffsets[y] || y };
   }
 }

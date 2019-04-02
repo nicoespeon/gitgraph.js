@@ -232,7 +232,7 @@ function createGitgraph(
     const paths = Array.from(branchesPaths).map(([branch, coordinates]) => {
       return createPath({
         d: toSvgPath(
-          coordinates.map((coordinate) => coordinate.map(getMessageOffset)),
+          coordinates.map((coordinate) => coordinate.map(getWithCommitOffset)),
           isBezier,
           gitgraph.isVertical,
         ),
@@ -253,7 +253,7 @@ function createGitgraph(
     return createG({ children: commits.map(renderCommit) });
 
     function renderCommit(commit: Commit): SVGGElement {
-      const { x, y } = getMessageOffset(commit);
+      const { x, y } = getWithCommitOffset(commit);
 
       // TODO: implement with tooltips
       //   const shouldRenderTooltip =
@@ -453,8 +453,7 @@ function createGitgraph(
     });
   }
 
-  // TODO: maybe we should rename. It's confusing and used for commit dot too.
-  function getMessageOffset({ x, y }: Coordinate): Coordinate {
+  function getWithCommitOffset({ x, y }: Coordinate): Coordinate {
     return { x, y: commitYWithOffsets[y] || y };
   }
 
