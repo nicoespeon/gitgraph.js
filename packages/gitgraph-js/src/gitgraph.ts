@@ -203,23 +203,6 @@ function createGitgraph(
       //   );
       // }
 
-      const text = createText({
-        content: commit.message,
-        fill: commit.style.message.color || "",
-        font: commit.style.message.font,
-        onClick: commit.onMessageClick,
-      });
-
-      // TODO: handle custom renderMessage
-      const message = commit.style.message.display
-        ? createG({
-            translate: { x: 0, y: commit.style.dot.size },
-            children: [text],
-          })
-        : null;
-
-      setMessageRef(commit, message);
-
       return createG({
         translate: { x, y },
         children: [
@@ -228,7 +211,7 @@ function createGitgraph(
           createG({
             translate: { x: -x, y: 0 },
             children: [
-              message,
+              renderMessage(commit),
               ...renderBranchLabels(commit),
               ...renderTags(commit),
             ],
@@ -236,6 +219,30 @@ function createGitgraph(
         ],
       });
     }
+  }
+
+  function renderMessage(commit: Commit): SVGElement | null {
+    if (!commit.style.message.display) {
+      return null;
+    }
+
+    // TODO: handle custom renderMessage
+
+    const text = createText({
+      content: commit.message,
+      fill: commit.style.message.color || "",
+      font: commit.style.message.font,
+      onClick: commit.onMessageClick,
+    });
+
+    const message = createG({
+      translate: { x: 0, y: commit.style.dot.size },
+      children: [text],
+    });
+
+    setMessageRef(commit, message);
+
+    return message;
   }
 
   function renderBranchLabels(commit: Commit): Array<SVGElement | null> {
