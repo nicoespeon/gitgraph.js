@@ -200,18 +200,29 @@ function createGitgraph(
 
     function adaptGraphDimensions(): void {
       const { height, width } = svg.getBBox();
-      svg.setAttribute(
-        "width",
-        // Add `TooltipPadding` so we don't crop the tooltip text.
-        // Add `BRANCH_LABEL_PADDING_X` so we don't cut branch label.
-        (width + BRANCH_LABEL_PADDING_X + TooltipPadding).toString(),
-      );
-      svg.setAttribute(
-        "height",
-        // Add `TooltipPadding` so we don't crop tooltip text
-        // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
-        (height + BRANCH_LABEL_PADDING_Y + TooltipPadding).toString(),
-      );
+
+      // FIXME: In horizontal mode, we mimic @gitgraph/react behavior
+      // => it gets re-rendered after offsets are computed
+      // => it applies paddings twice!
+      //
+      // It works… by chance. Technically, we should compute what would
+      // *actually* go beyond the computed limits of the graph.
+      const horizontalCustomOffset = 50;
+
+      const widthOffset = gitgraph.isHorizontal
+        ? horizontalCustomOffset
+        : // Add `TooltipPadding` so we don't crop the tooltip text.
+          // Add `BRANCH_LABEL_PADDING_X` so we don't cut branch label.
+          BRANCH_LABEL_PADDING_X + TooltipPadding;
+
+      const heightOffset = gitgraph.isHorizontal
+        ? horizontalCustomOffset
+        : // Add `TooltipPadding` so we don't crop tooltip text
+          // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
+          BRANCH_LABEL_PADDING_Y + TooltipPadding;
+
+      svg.setAttribute("width", (width + widthOffset).toString());
+      svg.setAttribute("height", (height + heightOffset).toString());
     }
   }
 
