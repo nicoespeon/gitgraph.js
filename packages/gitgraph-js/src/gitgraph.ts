@@ -8,6 +8,7 @@ import {
   Coordinate,
   Mode,
   Branch,
+  Orientation,
 } from "@gitgraph/core";
 
 import {
@@ -32,6 +33,10 @@ export { createGitgraph, Mode, Branch };
 
 const TooltipPadding = 10;
 
+interface CommitYWithOffsets {
+  [key: number]: number;
+}
+
 function createGitgraph(
   graphContainer: HTMLElement,
   options?: GitgraphOptions,
@@ -43,6 +48,14 @@ function createGitgraph(
       message: SVGGElement | null;
     };
   } = {};
+  // Store a map to replace commits y with the correct value,
+  // including the message offset. Allows custom, flexible message height.
+  // E.g. {20: 30} means for commit: y=20 -> y=30
+  // Offset should be computed when graph is rendered (componentDidUpdate).
+  let commitYWithOffsets: CommitYWithOffsets = {};
+  let shouldRecomputeOffsets = false;
+  let lastData: RenderedData<SVGElement>;
+  let $commits: SVGElement;
   let commitMessagesX = 0;
 
   // Create an `svg` context in which we'll render the graph.
@@ -52,7 +65,10 @@ function createGitgraph(
 
   // React on gitgraph updates to re-render the graph.
   const gitgraph = new GitgraphCore(options);
-  gitgraph.subscribe(render);
+  gitgraph.subscribe((data) => {
+    shouldRecomputeOffsets = true;
+    render(data);
+  });
 
   // Return usable API for end-user.
   return gitgraph.getUserApi();
@@ -64,6 +80,12 @@ function createGitgraph(
     const { commits, branchesPaths } = data;
     commitMessagesX = data.commitMessagesX;
 
+    // Store data so we can re-render after offsets are computed.
+    lastData = data;
+
+    // Store $commits so we can compute offsets from actual height.
+    $commits = renderCommits(commits);
+
     // Reset SVG with new content.
     svg.innerHTML = "";
     svg.appendChild(
@@ -71,15 +93,21 @@ function createGitgraph(
         // Translate graph left => left-most branch label is not cropped (horizontal)
         // Translate graph down => top-most commit tooltip is not cropped
         translate: { x: BRANCH_LABEL_PADDING_X, y: TooltipPadding },
-        children: [renderBranchesPaths(branchesPaths), renderCommits(commits)],
+        children: [renderBranchesPaths(branchesPaths), $commits],
       }),
     );
   }
 
   function adaptSvgOnUpdate(): void {
     const observer = new MutationObserver(() => {
-      positionCommitsElements();
-      adaptGraphDimensions();
+      if (shouldRecomputeOffsets) {
+        shouldRecomputeOffsets = false;
+        computeOffsets();
+        render(lastData);
+      } else {
+        positionCommitsElements();
+        adaptGraphDimensions();
+      }
     });
 
     observer.observe(svg, {
@@ -87,6 +115,44 @@ function createGitgraph(
       subtree: false,
       childList: true,
     });
+
+    function computeOffsets(): void {
+      const commits: Element[] = Array.from($commits.children);
+      let totalOffsetY = 0;
+
+      // In VerticalReverse orientation, commits are in the same order in the DOM.
+      const orientedCommits =
+        gitgraph.orientation === Orientation.VerticalReverse
+          ? commits
+          : commits.reverse();
+
+      commitYWithOffsets = orientedCommits.reduce<CommitYWithOffsets>(
+        (newOffsets, commit) => {
+          const commitY = parseInt(
+            commit
+              .getAttribute("transform")!
+              .split(",")[1]
+              .slice(0, -1),
+            10,
+          );
+
+          const firstForeignObject = commit.getElementsByTagName(
+            "foreignObject",
+          )[0];
+          const customHtmlMessage =
+            firstForeignObject && firstForeignObject.firstElementChild;
+
+          newOffsets[commitY] = commitY + totalOffsetY;
+
+          // Increment total offset after setting the offset
+          // => offset next commits accordingly.
+          totalOffsetY += getMessageHeight(customHtmlMessage);
+
+          return newOffsets;
+        },
+        {},
+      );
+    }
 
     function positionCommitsElements(): void {
       if (gitgraph.isHorizontal) {
@@ -252,21 +318,12 @@ function createGitgraph(
         });
 
         const observer = new MutationObserver(() => {
-          const customHtmlMessage = body.firstElementChild;
-
-          let messageHeight = 0;
-          if (customHtmlMessage) {
-            const height = customHtmlMessage.getBoundingClientRect().height;
-            const marginTopInPx =
-              window.getComputedStyle(customHtmlMessage).marginTop || "0px";
-            const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
-
-            messageHeight = height + marginTop;
-          }
-
           // Ideally, it would be great to refactor these behavior into SVG elements.
           // Force the height of the foreignObject (browser issue)
-          body.setAttribute("height", messageHeight.toString());
+          body.setAttribute(
+            "height",
+            getMessageHeight(body.firstElementChild).toString(),
+          );
         });
 
         observer.observe(message, {
@@ -398,8 +455,7 @@ function createGitgraph(
 
   // TODO: maybe we should rename. It's confusing and used for commit dot too.
   function getMessageOffset({ x, y }: Coordinate): Coordinate {
-    // TODO: handle missing `commitYWithOffsets` concept
-    return { x, y };
+    return { x, y: commitYWithOffsets[y] || y };
   }
 
   function setBranchLabelRef(commit: Commit, branchLabels: SVGGElement): void {
@@ -433,4 +489,18 @@ function createGitgraph(
       message: null,
     };
   }
+}
+
+function getMessageHeight(message: Element | null): number {
+  let messageHeight = 0;
+
+  if (message) {
+    const height = message.getBoundingClientRect().height;
+    const marginTopInPx = window.getComputedStyle(message).marginTop || "0px";
+    const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
+
+    messageHeight = height + marginTop;
+  }
+
+  return messageHeight;
 }
