@@ -2,13 +2,16 @@ import {
   GitgraphCore,
   GitgraphOptions,
   Commit,
+  GitgraphCommitOptions,
   RenderedData,
   MergeStyle,
   arrowSvgPath,
   toSvgPath,
   Coordinate,
   Mode,
-  Branch,
+  BranchUserApi,
+  GitgraphBranchOptions,
+  GitgraphMergeOptions,
   Orientation,
   TemplateName,
   templateExtend,
@@ -32,13 +35,22 @@ import {
 } from "./branch-label";
 import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
 
+type CommitOptions = GitgraphCommitOptions<SVGElement>;
+type BranchOptions = GitgraphBranchOptions<SVGElement>;
+type MergeOptions = GitgraphMergeOptions<SVGElement>;
+type Branch = BranchUserApi<SVGElement>;
+
 export {
   createGitgraph,
-  Mode,
+  CommitOptions,
   Branch,
+  BranchOptions,
+  MergeOptions,
+  Mode,
   Orientation,
   TemplateName,
   templateExtend,
+  MergeStyle,
 };
 
 const TooltipPadding = 10;
