@@ -19,6 +19,7 @@ import {
   createPath,
   createClipPath,
   createDefs,
+  createForeignObject,
 } from "./svg-elements";
 import {
   createBranchLabel,
@@ -242,6 +243,42 @@ function createGitgraph(
         translate: { x: 0, y: commit.style.dot.size },
         children: [text],
       });
+
+      if (commit.body) {
+        const body = createForeignObject({
+          width: 600,
+          translate: { x: 10, y: 0 },
+          content: commit.body,
+        });
+
+        const observer = new MutationObserver(() => {
+          const customHtmlMessage = body.firstElementChild;
+
+          let messageHeight = 0;
+          if (customHtmlMessage) {
+            const height = customHtmlMessage.getBoundingClientRect().height;
+            const marginTopInPx =
+              window.getComputedStyle(customHtmlMessage).marginTop || "0px";
+            const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
+
+            messageHeight = height + marginTop;
+          }
+
+          // Ideally, it would be great to refactor these behavior into SVG elements.
+          // Force the height of the foreignObject (browser issue)
+          body.setAttribute("height", messageHeight.toString());
+        });
+
+        observer.observe(message, {
+          attributes: false,
+          subtree: false,
+          childList: true,
+        });
+
+        // Add message after observer is set up => react based on body height.
+        // We might refactor it by including `onChildrenUpdate()` to `createG()`.
+        message.appendChild(body);
+      }
     }
 
     setMessageRef(commit, message);

@@ -8,6 +8,7 @@ export {
   createUse,
   createClipPath,
   createDefs,
+  createForeignObject,
 };
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -187,4 +188,31 @@ function createDefs(children: SVGElement[]): SVGDefsElement {
   children.forEach((child) => defs.appendChild(child));
 
   return defs;
+}
+
+interface ForeignObjectOptions {
+  content: string;
+  width: number;
+  translate?: {
+    x: number;
+    y: number;
+  };
+}
+
+function createForeignObject(
+  options: ForeignObjectOptions,
+): SVGForeignObjectElement {
+  const result = document.createElementNS(SVG_NAMESPACE, "foreignObject");
+  result.setAttribute("width", options.width.toString());
+
+  if (options.translate) {
+    result.setAttribute("x", options.translate.x.toString());
+    result.setAttribute("y", options.translate.y.toString());
+  }
+
+  const p = document.createElement("p");
+  p.textContent = options.content;
+  result.appendChild(p);
+
+  return result;
 }
