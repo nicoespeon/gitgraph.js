@@ -226,19 +226,23 @@ function createGitgraph(
       return null;
     }
 
-    // TODO: handle custom renderMessage
+    let message;
 
-    const text = createText({
-      content: commit.message,
-      fill: commit.style.message.color || "",
-      font: commit.style.message.font,
-      onClick: commit.onMessageClick,
-    });
+    if (commit.renderMessage) {
+      message = createG({ children: [commit.renderMessage(commit)] });
+    } else {
+      const text = createText({
+        content: commit.message,
+        fill: commit.style.message.color || "",
+        font: commit.style.message.font,
+        onClick: commit.onMessageClick,
+      });
 
-    const message = createG({
-      translate: { x: 0, y: commit.style.dot.size },
-      children: [text],
-    });
+      message = createG({
+        translate: { x: 0, y: commit.style.dot.size },
+        children: [text],
+      });
+    }
 
     setMessageRef(commit, message);
 
