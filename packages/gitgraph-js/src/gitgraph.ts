@@ -10,6 +10,7 @@ import {
   Branch,
   Orientation,
   TemplateName,
+  arrowSvgPath,
 } from "@gitgraph/core";
 
 import {
@@ -286,7 +287,8 @@ function createGitgraph(
         translate: { x, y },
         children: [
           renderDot(commit),
-          // TODO: render arrows
+          ...renderArrows(commit),
+
           createG({
             translate: { x: -x, y: 0 },
             children: [
@@ -296,6 +298,34 @@ function createGitgraph(
             ],
           }),
         ],
+      });
+    }
+
+    function renderArrows(commit: Commit): Array<SVGElement | null> {
+      if (!gitgraph.template.arrow.size) {
+        return [null];
+      }
+
+      const commitRadius = commit.style.dot.size;
+
+      return commit.parents.map((parentHash) => {
+        const parent = commits.find(({ hash }) => hash === parentHash);
+        if (!parent) return null;
+
+        // Starting point, relative to commit
+        const origin = gitgraph.reverseArrow
+          ? {
+              x: commitRadius + (parent.x - commit.x),
+              y: commitRadius + (parent.y - commit.y),
+            }
+          : { x: commitRadius, y: commitRadius };
+
+        const path = createPath({
+          d: arrowSvgPath(gitgraph, parent, commit),
+          fill: gitgraph.template.arrow.color || "",
+        });
+
+        return createG({ translate: origin, children: [path] });
       });
     }
   }
