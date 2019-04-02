@@ -23,6 +23,7 @@ interface GOptions {
     x: number;
     y: number;
   };
+  onClick?: () => void;
 }
 
 function createG(options: GOptions): SVGGElement {
@@ -34,6 +35,10 @@ function createG(options: GOptions): SVGGElement {
       "transform",
       `translate(${options.translate.x}, ${options.translate.y})`,
     );
+  }
+
+  if (options.onClick) {
+    g.addEventListener("click", options.onClick);
   }
 
   return g;

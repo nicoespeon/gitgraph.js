@@ -491,6 +491,7 @@ function createGitgraph(
 
     // TODO: missing event handlers on <g>
     return createG({
+      onClick: commit.onClick,
       children: [createDefs([circle, circleClipPath]), useCirclePath, dotText],
     });
   }
