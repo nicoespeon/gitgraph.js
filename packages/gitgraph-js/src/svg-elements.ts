@@ -24,6 +24,8 @@ interface GOptions {
     y: number;
   };
   onClick?: () => void;
+  onMouseOver?: () => void;
+  onMouseOut?: () => void;
 }
 
 function createG(options: GOptions): SVGGElement {
@@ -39,6 +41,14 @@ function createG(options: GOptions): SVGGElement {
 
   if (options.onClick) {
     g.addEventListener("click", options.onClick);
+  }
+
+  if (options.onMouseOver) {
+    g.addEventListener("mouseover", options.onMouseOver);
+  }
+
+  if (options.onMouseOut) {
+    g.addEventListener("mouseout", options.onMouseOut);
   }
 
   return g;

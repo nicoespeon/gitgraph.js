@@ -489,9 +489,10 @@ function createGitgraph(
         })
       : null;
 
-    // TODO: missing event handlers on <g>
     return createG({
       onClick: commit.onClick,
+      onMouseOver: commit.onMouseOver,
+      onMouseOut: commit.onMouseOut,
       children: [createDefs([circle, circleClipPath]), useCirclePath, dotText],
     });
   }
