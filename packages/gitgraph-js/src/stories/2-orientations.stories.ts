@@ -76,4 +76,23 @@ storiesOf("2. Orientations", module)
     master.commit();
 
     return graphContainer;
+  })
+  .add("horizontal reverse (black arrow)", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+      orientation: Orientation.HorizontalReverse,
+      template: TemplateName.BlackArrow,
+    });
+
+    const master = gitgraph.branch("master").commit("Initial commit");
+    const develop = gitgraph.branch("develop");
+    develop.commit("one");
+    master.commit("two");
+    develop.commit("three");
+    master.merge(develop);
+    master.commit();
+
+    return graphContainer;
   });
