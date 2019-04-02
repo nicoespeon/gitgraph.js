@@ -9,6 +9,7 @@ import {
   Mode,
   Branch,
   Orientation,
+  TemplateName,
 } from "@gitgraph/core";
 
 import {
@@ -29,7 +30,7 @@ import {
 } from "./branch-label";
 import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
 
-export { createGitgraph, Mode, Branch, Orientation };
+export { createGitgraph, Mode, Branch, Orientation, TemplateName };
 
 const TooltipPadding = 10;
 

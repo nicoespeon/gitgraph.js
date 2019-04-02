@@ -2,7 +2,7 @@
 import { storiesOf } from "@storybook/html";
 
 import { createFixedHashGenerator } from "./helpers";
-import { createGitgraph, Orientation } from "../gitgraph";
+import { createGitgraph, Orientation, TemplateName } from "../gitgraph";
 
 storiesOf("2. Orientations", module)
   .add("vertical reverse", () => {
@@ -46,6 +46,25 @@ storiesOf("2. Orientations", module)
     const gitgraph = createGitgraph(graphContainer, {
       generateCommitHash: createFixedHashGenerator(),
       orientation: Orientation.HorizontalReverse,
+    });
+
+    const master = gitgraph.branch("master").commit("Initial commit");
+    const develop = gitgraph.branch("develop");
+    develop.commit("one");
+    master.commit("two");
+    develop.commit("three");
+    master.merge(develop);
+    master.commit();
+
+    return graphContainer;
+  })
+  .add("horizontal (black arrow)", () => {
+    const graphContainer = document.createElement("div");
+
+    const gitgraph = createGitgraph(graphContainer, {
+      generateCommitHash: createFixedHashGenerator(),
+      orientation: Orientation.Horizontal,
+      template: TemplateName.BlackArrow,
     });
 
     const master = gitgraph.branch("master").commit("Initial commit");
