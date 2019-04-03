@@ -360,82 +360,73 @@ function createGitgraph(
     if (commit.renderMessage) {
       message = createG({ children: [] });
 
-      const observer = new MutationObserver((mutations) => {
-        // Since we are only appending message content, we expect 1 mutation.
-        const messageMutation = mutations[0];
-        if (!messageMutation) return;
-
-        const messageNode = messageMutation.target.firstChild;
-        if (!messageNode) return;
-
-        messageNode.childNodes.forEach((node) => {
-          if (node.nodeName !== "foreignObject") return;
-
-          // We have to access the first child's parentElement to retrieve
-          // the Element instead of the Node => we can compute dimensions.
-          const foreignObject =
-            node.firstChild && node.firstChild.parentElement;
-          if (!foreignObject) return;
-
-          // Force the height of the foreignObject (browser issue)
-          foreignObject.setAttribute(
-            "height",
-            getMessageHeight(foreignObject.firstElementChild).toString(),
-          );
-        });
-      });
-
-      observer.observe(message, {
-        attributes: false,
-        subtree: false,
-        childList: true,
-      });
-
+      // Add message after observer is set up => react based on body height.
+      // We might refactor it by including `onChildrenUpdate()` to `createG()`.
+      adaptMessageBodyHeight(message);
       message.appendChild(commit.renderMessage(commit));
-    } else {
-      const text = createText({
-        content: commit.message,
-        fill: commit.style.message.color || "",
-        font: commit.style.message.font,
-        onClick: commit.onMessageClick,
+
+      setMessageRef(commit, message);
+
+      return message;
+    }
+
+    const text = createText({
+      content: commit.message,
+      fill: commit.style.message.color || "",
+      font: commit.style.message.font,
+      onClick: commit.onMessageClick,
+    });
+
+    message = createG({
+      translate: { x: 0, y: commit.style.dot.size },
+      children: [text],
+    });
+
+    if (commit.body) {
+      const body = createForeignObject({
+        width: 600,
+        translate: { x: 10, y: 0 },
+        content: commit.body,
       });
 
-      message = createG({
-        translate: { x: 0, y: commit.style.dot.size },
-        children: [text],
-      });
-
-      if (commit.body) {
-        const body = createForeignObject({
-          width: 600,
-          translate: { x: 10, y: 0 },
-          content: commit.body,
-        });
-
-        const observer = new MutationObserver(() => {
-          // Ideally, it would be great to refactor these behavior into SVG elements.
-          // Force the height of the foreignObject (browser issue)
-          body.setAttribute(
-            "height",
-            getMessageHeight(body.firstElementChild).toString(),
-          );
-        });
-
-        observer.observe(message, {
-          attributes: false,
-          subtree: false,
-          childList: true,
-        });
-
-        // Add message after observer is set up => react based on body height.
-        // We might refactor it by including `onChildrenUpdate()` to `createG()`.
-        message.appendChild(body);
-      }
+      // Add message after observer is set up => react based on body height.
+      // We might refactor it by including `onChildrenUpdate()` to `createG()`.
+      adaptMessageBodyHeight(message);
+      message.appendChild(body);
     }
 
     setMessageRef(commit, message);
 
     return message;
+  }
+
+  function adaptMessageBodyHeight(message: SVGElement): void {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(({ target }) => setChildrenForeignObjectHeight(target));
+    });
+
+    observer.observe(message, {
+      attributes: false,
+      subtree: false,
+      childList: true,
+    });
+
+    function setChildrenForeignObjectHeight(node: Node): void {
+      if (node.nodeName === "foreignObject") {
+        // We have to access the first child's parentElement to retrieve
+        // the Element instead of the Node => we can compute dimensions.
+        const foreignObject = node.firstChild && node.firstChild.parentElement;
+        if (!foreignObject) return;
+
+        // Force the height of the foreignObject (browser issue)
+        foreignObject.setAttribute(
+          "height",
+          getMessageHeight(foreignObject.firstElementChild).toString(),
+        );
+      }
+
+      node.childNodes.forEach(setChildrenForeignObjectHeight);
+    }
   }
 
   function renderBranchLabels(commit: Commit): Array<SVGElement | null> {
