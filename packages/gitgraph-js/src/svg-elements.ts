@@ -13,8 +13,34 @@ export {
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
-function createSvg(): SVGSVGElement {
-  return document.createElementNS(SVG_NAMESPACE, "svg");
+interface SVGOptions {
+  viewBox?: string;
+  height?: number;
+  width?: number;
+  children?: SVGElement[];
+}
+
+function createSvg(options?: SVGOptions): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NAMESPACE, "svg");
+  if (!options) return svg;
+
+  if (options.children) {
+    options.children.forEach((child) => svg.appendChild(child));
+  }
+
+  if (options.viewBox) {
+    svg.setAttribute("viewBox", options.viewBox);
+  }
+
+  if (options.height) {
+    svg.setAttribute("height", options.height.toString());
+  }
+
+  if (options.width) {
+    svg.setAttribute("width", options.width.toString());
+  }
+
+  return svg;
 }
 
 interface GOptions {
@@ -23,6 +49,9 @@ interface GOptions {
     x: number;
     y: number;
   };
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
   onClick?: () => void;
   onMouseOver?: () => void;
   onMouseOut?: () => void;
@@ -37,6 +66,18 @@ function createG(options: GOptions): SVGGElement {
       "transform",
       `translate(${options.translate.x}, ${options.translate.y})`,
     );
+  }
+
+  if (options.fill) {
+    g.setAttribute("fill", options.fill);
+  }
+
+  if (options.stroke) {
+    g.setAttribute("stroke", options.stroke);
+  }
+
+  if (options.strokeWidth) {
+    g.setAttribute("stroke-width", options.strokeWidth.toString());
   }
 
   if (options.onClick) {
