@@ -358,7 +358,40 @@ function createGitgraph(
     let message;
 
     if (commit.renderMessage) {
-      message = createG({ children: [commit.renderMessage(commit)] });
+      message = createG({ children: [] });
+
+      const observer = new MutationObserver((mutations) => {
+        // Since we are only appending message content, we expect 1 mutation.
+        const messageMutation = mutations[0];
+        if (!messageMutation) return;
+
+        const messageNode = messageMutation.target.firstChild;
+        if (!messageNode) return;
+
+        messageNode.childNodes.forEach((node) => {
+          if (node.nodeName !== "foreignObject") return;
+
+          // We have to access the first child's parentElement to retrieve
+          // the Element instead of the Node => we can compute dimensions.
+          const foreignObject =
+            node.firstChild && node.firstChild.parentElement;
+          if (!foreignObject) return;
+
+          // Force the height of the foreignObject (browser issue)
+          foreignObject.setAttribute(
+            "height",
+            getMessageHeight(foreignObject.firstElementChild).toString(),
+          );
+        });
+      });
+
+      observer.observe(message, {
+        attributes: false,
+        subtree: false,
+        childList: true,
+      });
+
+      message.appendChild(commit.renderMessage(commit));
     } else {
       const text = createText({
         content: commit.message,
