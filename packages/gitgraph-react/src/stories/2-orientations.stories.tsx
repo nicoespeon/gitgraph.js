@@ -111,4 +111,20 @@ storiesOf("2. Orientations", module)
         dev.commit();
       }}
     </Gitgraph>
+  ))
+  .add("horizontal reverse (commit after merge)", () => (
+    <Gitgraph
+      options={{
+        orientation: Orientation.HorizontalReverse,
+        generateCommitHash: createFixedHashGenerator(),
+      }}
+    >
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit();
+        const dev = gitgraph.branch("dev").commit();
+        master.commit();
+        master.merge(dev);
+        dev.commit();
+      }}
+    </Gitgraph>
   ));
