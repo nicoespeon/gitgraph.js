@@ -32,6 +32,7 @@ class BranchesPathsCalculator<TNode> {
   private branches: Map<Branch["name"], Branch<TNode>>;
   private commitSpacing: CommitStyleBase["spacing"];
   private isGraphVertical: boolean;
+  private isGraphReverse: boolean;
   private createDeletedBranch: () => Branch<TNode>;
   private branchesPaths: InternalBranchesPaths<TNode> = new Map<
     Branch<TNode>,
@@ -43,12 +44,14 @@ class BranchesPathsCalculator<TNode> {
     branches: Map<Branch["name"], Branch<TNode>>,
     commitSpacing: CommitStyleBase["spacing"],
     isGraphVertical: boolean,
+    isGraphReverse: boolean,
     createDeletedBranch: () => Branch<TNode>,
   ) {
     this.commits = commits;
     this.branches = branches;
     this.commitSpacing = commitSpacing;
     this.isGraphVertical = isGraphVertical;
+    this.isGraphReverse = isGraphReverse;
     this.createDeletedBranch = createDeletedBranch;
   }
 
@@ -170,6 +173,10 @@ class BranchesPathsCalculator<TNode> {
         points = points.sort((a, b) => (a.x > b.x ? 1 : -1));
       }
 
+      if (this.isGraphReverse) {
+        points = points.reverse();
+      }
+
       const paths = points.reduce<Coordinate[][]>(
         (mem, point, i) => {
           if (point.mergeCommit) {
@@ -182,6 +189,10 @@ class BranchesPathsCalculator<TNode> {
         },
         [[]],
       );
+
+      if (this.isGraphReverse) {
+        paths.forEach((path) => path.reverse());
+      }
 
       // Add intermediate points on each sub paths
       if (this.isGraphVertical) {
