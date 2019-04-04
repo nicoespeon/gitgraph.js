@@ -58,6 +58,12 @@ class GitgraphCore<TNode = SVGElement> {
   public get isVertical(): boolean {
     return !this.isHorizontal;
   }
+  public get isReverse(): boolean {
+    return (
+      this.orientation === Orientation.HorizontalReverse ||
+      this.orientation === Orientation.VerticalReverse
+    );
+  }
 
   public reverseArrow: boolean;
   public initCommitOffsetX: number;
@@ -232,6 +238,7 @@ class GitgraphCore<TNode = SVGElement> {
       this.branches,
       this.template.commit.spacing,
       this.isVertical,
+      this.isReverse,
       () => createDeletedBranch(this, this.template.branch, () => this.next()),
     ).execute();
   }

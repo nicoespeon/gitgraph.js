@@ -172,6 +172,46 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     ]);
   });
 
+  it("should deal with a commit after a merge (vertical reverse)", () => {
+    const core = new GitgraphCore({ orientation: Orientation.VerticalReverse });
+    const gitgraph = core.getUserApi();
+
+    const master = gitgraph.branch("master").commit();
+    const dev = gitgraph.branch("dev").commit();
+    master.commit();
+    master.merge(dev);
+    dev.commit();
+
+    const { branchesPaths } = core.getRenderedData();
+
+    // We can't use `toMatchObject` here due to circular ref inside Branch.
+    const result = Array.from(branchesPaths);
+    expect(result[0][0].name).toBe("master");
+    expect(result[0][1]).toEqual([
+      [
+        { x: 0, y: 80 * 3 },
+        { x: 0, y: 80 * 2 },
+        { x: 0, y: 80 * 1 },
+        { x: 0, y: 80 * 0 },
+      ],
+    ]);
+    expect(result[1][0].name).toBe("dev");
+    expect(result[1][1]).toEqual([
+      [
+        { x: 0, y: 80 * 3 }, // Merge commit on master
+        { x: 50, y: 80 * 2 },
+        { x: 50, y: 80 * 1 },
+        { x: 0, y: 80 * 0 },
+      ],
+      [
+        { x: 50, y: 80 * 4 }, // Last commit on dev
+        { x: 50, y: 80 * 3 },
+        { x: 50, y: 80 * 2 },
+        { x: 50, y: 80 * 1 },
+      ],
+    ]);
+  });
+
   it("should deal with 3 branches (with multiple merges in master)", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
