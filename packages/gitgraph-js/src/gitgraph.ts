@@ -34,6 +34,7 @@ import {
   PADDING_Y as BRANCH_LABEL_PADDING_Y,
 } from "./branch-label";
 import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
+import { createTooltip, PADDING as TOOLTIP_PADDING } from "./tooltip";
 
 type CommitOptions = GitgraphCommitOptions<SVGElement>;
 type BranchOptions = GitgraphBranchOptions<SVGElement>;
@@ -52,8 +53,6 @@ export {
   templateExtend,
   MergeStyle,
 };
-
-const TooltipPadding = 10;
 
 interface CommitYWithOffsets {
   [key: number]: number;
@@ -79,6 +78,7 @@ function createGitgraph(
   let lastData: RenderedData<SVGElement>;
   let $commits: SVGElement;
   let commitMessagesX = 0;
+  let $tooltip: SVGElement | null = null;
 
   // Create an `svg` context in which we'll render the graph.
   const svg = createSvg();
@@ -114,7 +114,7 @@ function createGitgraph(
       createG({
         // Translate graph left => left-most branch label is not cropped (horizontal)
         // Translate graph down => top-most commit tooltip is not cropped
-        translate: { x: BRANCH_LABEL_PADDING_X, y: TooltipPadding },
+        translate: { x: BRANCH_LABEL_PADDING_X, y: TOOLTIP_PADDING },
         children: [renderBranchesPaths(branchesPaths), $commits],
       }),
     );
@@ -134,7 +134,8 @@ function createGitgraph(
 
     observer.observe(svg, {
       attributes: false,
-      subtree: false,
+      // Listen to subtree changes to react when we append the tooltip.
+      subtree: true,
       childList: true,
     });
 
@@ -233,15 +234,15 @@ function createGitgraph(
 
       const widthOffset = gitgraph.isHorizontal
         ? horizontalCustomOffset
-        : // Add `TooltipPadding` so we don't crop the tooltip text.
+        : // Add `TOOLTIP_PADDING` so we don't crop the tooltip text.
           // Add `BRANCH_LABEL_PADDING_X` so we don't cut branch label.
-          BRANCH_LABEL_PADDING_X + TooltipPadding;
+          BRANCH_LABEL_PADDING_X + TOOLTIP_PADDING;
 
       const heightOffset = gitgraph.isHorizontal
         ? horizontalCustomOffset
-        : // Add `TooltipPadding` so we don't crop tooltip text
+        : // Add `TOOLTIP_PADDING` so we don't crop tooltip text
           // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
-          BRANCH_LABEL_PADDING_Y + TooltipPadding;
+          BRANCH_LABEL_PADDING_Y + TOOLTIP_PADDING;
 
       svg.setAttribute("width", (width + widthOffset).toString());
       svg.setAttribute("height", (height + heightOffset).toString());
@@ -287,21 +288,6 @@ function createGitgraph(
 
     function renderCommit(commit: Commit): SVGGElement {
       const { x, y } = getWithCommitOffset(commit);
-
-      // TODO: implement with tooltips
-      //   const shouldRenderTooltip =
-      //   this.state.currentCommitOver === commit &&
-      //   (this.gitgraph.isHorizontal ||
-      //     (this.gitgraph.mode === Mode.Compact &&
-      //       commit.style.hasTooltipInCompactMode));
-
-      // if (shouldRenderTooltip) {
-      //   this.$tooltip = (
-      //     <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
-      //       {this.renderTooltip(commit)}
-      //     </g>
-      //   );
-      // }
 
       return createG({
         translate: { x, y },
@@ -535,10 +521,33 @@ function createGitgraph(
 
     return createG({
       onClick: commit.onClick,
-      onMouseOver: commit.onMouseOver,
-      onMouseOut: commit.onMouseOut,
+      onMouseOver: () => {
+        appendTooltipToGraph(commit);
+        commit.onMouseOver();
+      },
+      onMouseOut: () => {
+        if ($tooltip) $tooltip.remove();
+        commit.onMouseOut();
+      },
       children: [createDefs([circle, circleClipPath]), useCirclePath, dotText],
     });
+  }
+
+  function appendTooltipToGraph(commit: Commit): void {
+    if (!svg.firstChild) return;
+    if (gitgraph.isVertical && gitgraph.mode !== Mode.Compact) return;
+    if (gitgraph.isVertical && !commit.style.hasTooltipInCompactMode) return;
+
+    const tooltip = commit.renderTooltip
+      ? commit.renderTooltip(commit)
+      : createTooltip(commit);
+
+    $tooltip = createG({
+      translate: getWithCommitOffset(commit),
+      children: [tooltip],
+    });
+
+    svg.firstChild.appendChild($tooltip);
   }
 
   function getWithCommitOffset({ x, y }: Coordinate): Coordinate {
