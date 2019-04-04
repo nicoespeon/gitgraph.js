@@ -26,6 +26,7 @@ function createTag(tag: Tag): SVGGElement {
 
   const observer = new MutationObserver(() => {
     const { height, width } = text.getBBox();
+    if (height === 0 || width === 0) return;
 
     const radius = tag.style.borderRadius;
     const boxWidth = offset + width + 2 * PADDING_X;
