@@ -13,7 +13,7 @@
     "version": {
       "allowBranch": "master",
       "exact": true,
-      "message": "chore(release): %s"
+      "message": "Publish"
     }
   },
   "version": "independent",
