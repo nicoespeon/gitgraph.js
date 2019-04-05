@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@gitgraph/react": "^1.1.0-4",
-    "@gitgraph/js": "file:../gitgraph-js/lib"
+    "@gitgraph/js": "^1.0.0-0"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",
