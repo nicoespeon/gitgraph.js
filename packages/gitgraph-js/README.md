@@ -10,7 +10,20 @@ Draw pretty git graphs with vanilla JS.
 
 Install the package with npm: `npm i --save @gitgraph/js`
 
-Now you can use the `<GitGraph>` component:
+Now you can use `createGitgraph` to render your graph in a DOM element:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- … -->
+</head>
+<body>
+  <!-- DOM element in which we'll mount our graph -->
+  <div id="#graph-container"></div>
+</body>
+</html>
+```
 
 ```js
 const { createGitgraph } = require("@gitgraph/js");
