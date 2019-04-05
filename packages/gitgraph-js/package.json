@@ -45,25 +45,17 @@
     "build:bundle": "rollup -c rollup.config.js",
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
-    "storybook": "start-storybook -p 6007",
     "prepare": "npm run build"
   },
   "dependencies": {
     "@gitgraph/core": "1.1.0-3"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@storybook/addon-actions": "^5.0.5",
-    "@storybook/addons": "^5.0.5",
-    "@storybook/html": "^5.0.5",
     "@types/node": "^9.4.6",
-    "@types/storybook__addon-actions": "^3.4.2",
-    "babel-loader": "^8.0.5",
     "browserify": "^14.5.0",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.51.8",
-    "ts-loader": "4.0.0",
     "typescript": "3.3.4000",
     "uglify-es": "^3.3.9"
   }

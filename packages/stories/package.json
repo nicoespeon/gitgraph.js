@@ -15,7 +15,8 @@
     "storybook": "start-storybook -p 6006"
   },
   "dependencies": {
-    "@gitgraph/react": "^1.1.0-4"
+    "@gitgraph/react": "^1.1.0-4",
+    "@gitgraph/js": "file:../gitgraph-js/lib"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",
