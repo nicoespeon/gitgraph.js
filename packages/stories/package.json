@@ -1,0 +1,38 @@
+{
+  "name": "@gitgraph/stories",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Stories of @gitgraph rendering libraries for E2E tests",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "contributors": [
+    {
+      "name": "Fabien Bernard",
+      "email": "fabien0102@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "scripts": {
+    "storybook": "start-storybook -p 6006"
+  },
+  "dependencies": {
+    "@gitgraph/react": "^1.1.0-4"
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.3",
+    "@emotion/core": "10.0.10",
+    "@emotion/styled": "10.0.10",
+    "@storybook/addon-actions": "5.0.6",
+    "@storybook/addons": "5.0.6",
+    "@storybook/react": "5.0.6",
+    "@storybook/core": "5.0.6",
+    "@types/react": "16.8.8",
+    "@types/react-dom": "16.8.3",
+    "@types/storybook__addon-actions": "3.4.2",
+    "@types/storybook__react": "4.0.1",
+    "babel-loader": "8.0.5",
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
+    "ts-loader": "4.0.0",
+    "typescript": "3.3.4000"
+  }
+}
