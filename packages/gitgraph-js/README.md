@@ -1,5 +1,3 @@
-**❗ This rendering library is still under development and is not stable.**
-
 # `@gitgraph/js`
 
 Draw pretty git graphs with vanilla JS.
