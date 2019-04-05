@@ -1,11 +1,11 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
+import { Gitgraph } from "@gitgraph/react";
 
-import { createFixedHashGenerator } from "./helpers";
-import { Gitgraph } from "../Gitgraph";
+import { createFixedHashGenerator } from "../helpers";
 
-storiesOf("3. Events", module)
+storiesOf("gitgraph-react/3. Events", module)
   .add("on commit dot click", () => (
     <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {

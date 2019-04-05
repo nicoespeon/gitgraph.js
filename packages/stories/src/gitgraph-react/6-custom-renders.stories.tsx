@@ -1,7 +1,5 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-
-import { createFixedHashGenerator } from "./helpers";
 import {
   Gitgraph,
   CommitOptions,
@@ -9,13 +7,15 @@ import {
   Orientation,
   templateExtend,
   TemplateName,
-} from "../Gitgraph";
+} from "@gitgraph/react";
+
+import { createFixedHashGenerator } from "../helpers";
 
 const withoutBranchLabels = templateExtend(TemplateName.Metro, {
   branch: { label: { display: false } },
 });
 
-storiesOf("6. Custom renders", module)
+storiesOf("gitgraph-react/6. Custom renders", module)
   .add("with render dot", () => {
     const renderDot: CommitOptions["renderDot"] = (commit) => (
       <svg

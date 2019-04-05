@@ -52,4 +52,4 @@ function MyComponent() {
 
 [get-npm]: https://www.npmjs.com/get-npm
 [gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
-[stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-react/src/stories
+[stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/stories/src/gitgraph-react/

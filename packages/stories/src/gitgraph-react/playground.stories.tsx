@@ -1,7 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-
-import { Gitgraph, Branch } from "../Gitgraph";
+import { Gitgraph, Branch } from "@gitgraph/react";
 
 class GitgraphPlayground extends React.Component<any, any> {
   constructor(props: any) {
@@ -112,4 +111,6 @@ class GitgraphPlayground extends React.Component<any, any> {
   }
 }
 
-storiesOf("Playground", module).add("default", () => <GitgraphPlayground />);
+storiesOf("gitgraph-react/Playground", module).add("default", () => (
+  <GitgraphPlayground />
+));

@@ -3,7 +3,7 @@
     "rootDir": "src",
     "outDir": "lib",
     "target": "es5",
-    "module": "commonjs",
+    "module": "es2015",
     "jsx": "react",
     "lib": [
       "dom",
@@ -11,14 +11,13 @@
     ],
     "declaration": true,
     "sourceMap": true,
-    "removeComments": true,
+    "removeComments": false,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "moduleResolution": "node",
   },
-  "files": [
-    "src/index.tsx"
-  ]
+  "include": ["src/**/*"]
 }

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
+import { Gitgraph, Orientation, TemplateName } from "@gitgraph/react";
 
-import { createFixedHashGenerator } from "./helpers";
-import { Gitgraph, Orientation, TemplateName } from "../Gitgraph";
+import { createFixedHashGenerator } from "../helpers";
 
-storiesOf("2. Orientations", module)
+storiesOf("gitgraph-react/2. Orientations", module)
   .add("vertical reverse", () => (
     <Gitgraph
       options={{

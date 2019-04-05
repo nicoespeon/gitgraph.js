@@ -1,10 +1,10 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
+import { Gitgraph, templateExtend, TemplateName } from "@gitgraph/react";
 
-import { createFixedHashGenerator } from "./helpers";
-import { Gitgraph, templateExtend, TemplateName } from "../Gitgraph";
+import { createFixedHashGenerator } from "../helpers";
 
-storiesOf("5. Templates", module)
+storiesOf("gitgraph-react/5. Templates", module)
   .add("metro", () => (
     <Gitgraph
       options={{
