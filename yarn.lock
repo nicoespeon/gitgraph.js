@@ -974,16 +974,6 @@
     "@emotion/sheet" "0.9.2"
     "@emotion/utils" "0.11.1"
 
-"@emotion/core@^10.0.9":
-  version "10.0.9"
-  resolved "https://registry.yarnpkg.com/@emotion/core/-/core-10.0.9.tgz#f8afbccb0011100680f5dc94657b410c6aa1350e"
-  dependencies:
-    "@emotion/cache" "^10.0.9"
-    "@emotion/css" "^10.0.9"
-    "@emotion/serialize" "^0.11.6"
-    "@emotion/sheet" "0.9.2"
-    "@emotion/utils" "0.11.1"
-
 "@emotion/css@^10.0.7":
   version "10.0.7"
   resolved "https://registry.yarnpkg.com/@emotion/css/-/css-10.0.7.tgz#fbee607e07aeea444b147719b6472612fff9199b"
@@ -1056,15 +1046,6 @@
     "@emotion/utils" "0.11.1"
     object-assign "^4.1.1"
 
-"@emotion/styled-base@^10.0.9":
-  version "10.0.9"
-  resolved "https://registry.yarnpkg.com/@emotion/styled-base/-/styled-base-10.0.9.tgz#634b43d1f0309c35c5b342c775b01610517d2529"
-  dependencies:
-    "@emotion/is-prop-valid" "0.7.3"
-    "@emotion/serialize" "^0.11.6"
-    "@emotion/utils" "0.11.1"
-    object-assign "^4.1.1"
-
 "@emotion/styled@10.0.10":
   version "10.0.10"
   resolved "https://registry.yarnpkg.com/@emotion/styled/-/styled-10.0.10.tgz#ec241a9389a585b2c2638b709c262c28469ed92e"
@@ -1078,13 +1059,6 @@
   dependencies:
     "@emotion/styled-base" "^10.0.7"
     babel-plugin-emotion "^10.0.7"
-
-"@emotion/styled@^10.0.9":
-  version "10.0.9"
-  resolved "https://registry.yarnpkg.com/@emotion/styled/-/styled-10.0.9.tgz#3d940ec8b989853fd422dab6278a2803e1c4a608"
-  dependencies:
-    "@emotion/styled-base" "^10.0.9"
-    babel-plugin-emotion "^10.0.9"
 
 "@emotion/stylis@0.8.3":
   version "0.8.3"
@@ -10027,9 +10001,9 @@ stealthy-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
 
-storybook-chromatic@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/storybook-chromatic/-/storybook-chromatic-1.3.1.tgz#0f6586f7555124e5e3ca8e1e5a89731dfef01a11"
+storybook-chromatic@1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/storybook-chromatic/-/storybook-chromatic-1.3.2.tgz#e95ceeb3c94b1a1574f5b6daa69479ae17f05a8f"
   dependencies:
     "@babel/runtime" "^7.3.1"
     "@chromaui/localtunnel" "1.9.1-chromatic.3"

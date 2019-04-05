@@ -12,7 +12,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "test:e2e": "CHROMATIC_APP_CODE=fpva75oqc1g chromatic test --exit-zero-on-changes"
   },
   "dependencies": {
     "@gitgraph/react": "^1.1.0-4",
@@ -33,6 +34,7 @@
     "babel-loader": "8.0.5",
     "react": "16.8.4",
     "react-dom": "16.8.4",
+    "storybook-chromatic": "1.3.2",
     "ts-loader": "4.0.0",
     "typescript": "3.3.4000"
   }
