@@ -14,6 +14,7 @@ GitGraph.js codebase is a monorepo. Packages are released under `@gitgraph/*` sc
 
 As a user, you're probably interested in one of the rendering libraries:
 
+- [gitgraph-js][gitgraph-js]
 - [gitgraph-react][gitgraph-react]
 - [gitgraph-node][gitgraph-node]
 
@@ -72,6 +73,7 @@ Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][lice
 [new-issue]: https://github.com/nicoespeon/gitgraph.js/issues
 [good-first-issues]: https://github.com/nicoespeon/gitgraph.js/issues?q=is%3Aissue+is%3Aopen+label%3A%22%3Awave%3A+Good+first+issue%22
 [gitgraph-core]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-core
+[gitgraph-js]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js
 [gitgraph-react]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-react
 [gitgraph-node]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-node
 [semver]: http://semver.org/
