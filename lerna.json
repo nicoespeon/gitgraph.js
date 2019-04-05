@@ -6,7 +6,6 @@
   "ignoreChanges": [
     "**/__tests__/**",
     "**/*.test.ts",
-    "**/stories/**",
     "**/*.md"
   ],
   "command": {
