@@ -1,5 +1,5 @@
 /* ==========================================================
- *                  GitGraph v1.15.1
+ *                  GitGraph v1.15.2
  *      https://github.com/nicoespeon/gitgraph.js
  * ==========================================================
  * Copyright (c) 2019 Nicolas CARLO (@nicoespeon) ٩(^‿^)۶
