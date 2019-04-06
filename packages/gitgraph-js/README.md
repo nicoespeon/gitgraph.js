@@ -4,6 +4,10 @@ Draw pretty git graphs with vanilla JS.
 
 > This is the vanilla JS rendering library of [GitGraph.js][gitgraph-repo].
 
+## If you're coming from `gitgraph.js` package
+
+[Here's a guide to help you migrate][migration-guide] to `@gitgraph/js`.
+
 ## Get started
 
 > You need to have [npm][get-npm] installed.
@@ -64,3 +68,4 @@ This code will render the following graph:
 [get-npm]: https://www.npmjs.com/get-npm
 [gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
 [stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/stories/src/gitgraph-js/
+[migration-guide]: ./MIGRATE_FROM_GITGRAPH.JS.md
