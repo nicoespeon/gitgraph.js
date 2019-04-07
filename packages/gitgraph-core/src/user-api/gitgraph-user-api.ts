@@ -175,6 +175,9 @@ class GitgraphUserApi<TNode> {
       "Only `git2json` format is supported for imported data.",
     );
 
+    // We manually validate input data instead of using a lib like yup.
+    // => this is to keep bundlesize small.
+
     if (!Array.isArray(data)) {
       throw invalidData;
     }
