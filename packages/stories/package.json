@@ -1,5 +1,6 @@
 {
   "name": "@gitgraph/stories",
+  "version": "0.0.0",
   "private": true,
   "description": "Stories of @gitgraph rendering libraries for E2E tests",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",

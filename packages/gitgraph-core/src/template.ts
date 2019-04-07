@@ -1,5 +1,3 @@
-import { merge } from "lodash";
-
 import { booleanOptionOr, numberOptionOr } from "./utils";
 
 export {
@@ -407,7 +405,44 @@ function templateExtend(
   selectedTemplate: TemplateName,
   options: TemplateOptions,
 ): Template {
-  return merge({}, getTemplate(selectedTemplate), options);
+  const template = getTemplate(selectedTemplate);
+
+  if (!options.branch) options.branch = {};
+  if (!options.commit) options.commit = {};
+
+  // This is tedious, but it seems acceptable so we don't need lodash
+  // as we want to keep bundlesize small.
+  return {
+    colors: options.colors || template.colors,
+    arrow: {
+      ...template.arrow,
+      ...options.arrow,
+    },
+    branch: {
+      ...template.branch,
+      ...options.branch,
+      label: {
+        ...template.branch.label,
+        ...options.branch.label,
+      },
+    },
+    commit: {
+      ...template.commit,
+      ...options.commit,
+      dot: {
+        ...template.commit.dot,
+        ...options.commit.dot,
+      },
+      message: {
+        ...template.commit.message,
+        ...options.commit.message,
+      },
+    },
+    tag: {
+      ...template.tag,
+      ...options.tag,
+    },
+  };
 }
 
 /**

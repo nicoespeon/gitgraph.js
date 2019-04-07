@@ -43,12 +43,9 @@
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
-    "joi-browser": "13.4.0",
-    "lodash": "4.17.11",
     "yup": "0.26.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.116",
     "@types/node": "^9.4.6",
     "@types/yup": "0.24.9",
     "browserify": "^14.5.0",
@@ -57,9 +54,6 @@
     "rollup": "^0.51.8",
     "typescript": "^3.1.0",
     "uglify-es": "^3.3.9"
-  },
-  "browser": {
-    "joi": "joi-browser"
   },
   "jest": {
     "transform": {
