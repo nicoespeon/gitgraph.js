@@ -1,5 +1,3 @@
-import * as yup from "yup";
-
 import { TemplateOptions } from "../template";
 import { Commit, CommitRenderOptions, CommitOptions } from "../commit";
 import {
@@ -172,26 +170,30 @@ class GitgraphUserApi<TNode> {
    * @experimental
    * @param data JSON from `git2json` output
    */
-  public import(data: any) {
-    // Validate `data` format.
-    const schema = yup.array().of(
-      yup.object({
-        refs: yup.array().of(yup.string()),
-        hash: yup.string(),
-        parents: yup.array().of(yup.string()),
-        author: yup.object({
-          name: yup.string(),
-          email: yup.string(),
-        }),
-        subject: yup.string(),
-        body: yup.string(),
-      }),
+  public import(data: unknown) {
+    const invalidData = new Error(
+      "Only `git2json` format is supported for imported data.",
     );
+
+    if (!Array.isArray(data)) {
+      throw invalidData;
+    }
+
+    const areDataValid = data.every((options) => {
+      return (
+        typeof options === "object" &&
+        typeof options.author === "object" &&
+        Array.isArray(options.refs)
+      );
+    });
+
+    if (!areDataValid) {
+      throw invalidData;
+    }
 
     const commitOptionsList: Array<
       CommitOptions<TNode> & { refs: string[] }
-    > = schema
-      .validateSync(data)
+    > = data
       .map((options) => ({
         ...options,
         style: { ...this._graph.template.commit },
