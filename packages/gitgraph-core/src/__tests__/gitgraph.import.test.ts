@@ -6,22 +6,29 @@ import { Template } from "../template";
 
 describe("Gitgraph.import", () => {
   describe("on invalid input", () => {
+    const INVALID_INPUT_ERROR =
+      "Only `git2json` format is supported for imported data.";
+
     it("should throw if input is not an array", () => {
       const gitgraph = new GitgraphCore().getUserApi();
 
-      expect(() => gitgraph.import({})).toThrow();
+      expect(() => gitgraph.import({})).toThrow(INVALID_INPUT_ERROR);
     });
 
     it("should throw if commits are not objects", () => {
       const gitgraph = new GitgraphCore().getUserApi();
 
-      expect(() => gitgraph.import(["invalid-commit"])).toThrow();
+      expect(() => gitgraph.import(["invalid-commit"])).toThrow(
+        INVALID_INPUT_ERROR,
+      );
     });
 
     it("should throw if commits refs are not array", () => {
       const gitgraph = new GitgraphCore().getUserApi();
 
-      expect(() => gitgraph.import([{ refs: "invalid-refs" }])).toThrow();
+      expect(() => gitgraph.import([{ refs: "invalid-refs" }])).toThrow(
+        INVALID_INPUT_ERROR,
+      );
     });
   });
 

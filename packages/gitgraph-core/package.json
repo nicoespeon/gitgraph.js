@@ -42,12 +42,8 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm run test"
   },
-  "dependencies": {
-    "yup": "0.26.3"
-  },
   "devDependencies": {
     "@types/node": "^9.4.6",
-    "@types/yup": "0.24.9",
     "browserify": "^14.5.0",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
