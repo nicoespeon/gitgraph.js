@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/stories",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Stories of @gitgraph rendering libraries for E2E tests",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -16,8 +16,8 @@
     "test:e2e": "CHROMATIC_APP_CODE=fpva75oqc1g chromatic test --exit-zero-on-changes"
   },
   "dependencies": {
-    "@gitgraph/js": "1.0.0-2",
-    "@gitgraph/react": "1.1.0-6"
+    "@gitgraph/js": "1.0.0-3",
+    "@gitgraph/react": "1.1.0-7"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",

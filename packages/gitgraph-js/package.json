@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/js",
-  "version": "1.0.0-2",
+  "version": "1.0.0-3",
   "description": "Draw pretty git graphs in the browser",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -47,7 +47,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@gitgraph/core": "1.1.0-4"
+    "@gitgraph/core": "1.1.0-5"
   },
   "devDependencies": {
     "@types/node": "^9.4.6",
