@@ -43,11 +43,9 @@
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
-    "lodash": "4.17.11",
     "yup": "0.26.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.116",
     "@types/node": "^9.4.6",
     "@types/yup": "0.24.9",
     "browserify": "^14.5.0",

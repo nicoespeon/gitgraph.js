@@ -1,5 +1,3 @@
-import { uniq } from "lodash";
-
 import { Commit } from "../commit";
 
 export class RegularGraphRows<TNode> {
@@ -22,4 +20,20 @@ export class RegularGraphRows<TNode> {
       this.rows.set(commit.hash, i);
     });
   }
+}
+
+/**
+ * Creates a duplicate-free version of an array.
+ *
+ * Don't use lodash's `uniq` as it increased bundlesize a lot for such a
+ * simple function.
+ * => The way we bundle for browser seems not to work with `lodash-es`.
+ * => I didn't to get tree-shaking to work with `lodash` (the CommonJS version).
+ *
+ * @param array Array of values
+ */
+function uniq<T>(array: T[]): T[] {
+  const set = new Set();
+  array.forEach((value) => set.add(value));
+  return Array.from(set);
 }
