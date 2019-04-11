@@ -83,6 +83,7 @@ class GitgraphCore<TNode = SVGElement> {
   public currentBranch: Branch<TNode>;
 
   private listeners: Array<(data: RenderedData<TNode>) => void> = [];
+  private nextTimeoutId: number | null = null;
 
   constructor(options: GitgraphOptions = {}) {
     this.template = getTemplate(options.template);
@@ -400,6 +401,13 @@ class GitgraphCore<TNode = SVGElement> {
    * E.g. a rendering library will know it needs to re-render the graph.
    */
   private next() {
-    this.listeners.forEach((listener) => listener(this.getRenderedData()));
+    if (this.nextTimeoutId) {
+      window.clearTimeout(this.nextTimeoutId);
+    }
+
+    // Use setTimeout() with `0` to debounce call to next tick.
+    this.nextTimeoutId = window.setTimeout(() => {
+      this.listeners.forEach((listener) => listener(this.getRenderedData()));
+    }, 0);
   }
 }

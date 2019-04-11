@@ -1,5 +1,7 @@
 import { GitgraphCore } from "../gitgraph";
 
+jest.useFakeTimers();
+
 describe("Gitgraph.subscribe", () => {
   it("should call onUpdate on each commit", () => {
     const core = new GitgraphCore();
@@ -13,7 +15,10 @@ describe("Gitgraph.subscribe", () => {
       .commit()
       .commit();
 
-    expect(onUpdate.mock.calls.length).toBe(3);
+    jest.runAllTimers();
+
+    expect(onUpdate).toHaveBeenCalledTimes(1);
+    expect(onUpdate.mock.calls[0][0].commits.length).toBe(3);
   });
 
   it("should call render on merge", () => {
@@ -34,7 +39,10 @@ describe("Gitgraph.subscribe", () => {
       .commit();
     master.merge(dev);
 
-    expect(onUpdate.mock.calls.length).toBe(6);
+    jest.runAllTimers();
+
+    expect(onUpdate).toHaveBeenCalledTimes(1);
+    expect(onUpdate.mock.calls[0][0].commits.length).toBe(6);
   });
 
   it("should be able to unsubscribe", () => {
@@ -50,13 +58,19 @@ describe("Gitgraph.subscribe", () => {
       .commit()
       .commit();
 
+    jest.runAllTimers();
+
     unsubscribe();
+
     const dev = gitgraph
       .branch("dev")
       .commit()
       .commit();
     master.merge(dev);
 
-    expect(onUpdate.mock.calls.length).toBe(3);
+    jest.runAllTimers();
+
+    expect(onUpdate).toHaveBeenCalledTimes(1);
+    expect(onUpdate.mock.calls[0][0].commits.length).toBe(3);
   });
 });
