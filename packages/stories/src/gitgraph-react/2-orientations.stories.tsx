@@ -31,6 +31,10 @@ storiesOf("gitgraph-react/2. Orientations", module)
     >
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit("Initial commit");
+
+        // Shouldn't render tags on horizontal mode
+        master.tag("v1.0");
+
         const develop = gitgraph.branch("develop");
         develop.commit("one");
         master.commit("two");

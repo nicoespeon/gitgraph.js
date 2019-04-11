@@ -452,6 +452,7 @@ function createGitgraph(
 
   function renderTags(commit: Commit): SVGGElement[] {
     if (!commit.tags) return [];
+    if (gitgraph.isHorizontal) return [];
 
     return commit.tags.map((tag) => {
       const tagElement = createTag(tag);
