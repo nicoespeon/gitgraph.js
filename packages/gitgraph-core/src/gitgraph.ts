@@ -5,8 +5,7 @@ import {
   BranchOptions,
 } from "./branch";
 import { Commit } from "./commit";
-import { createGraphRows } from "./graph-rows";
-import { RegularGraphRows } from "./graph-rows/regular";
+import { createGraphRows, GraphRows } from "./graph-rows";
 import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
 import {
   Template,
@@ -343,7 +342,7 @@ class GitgraphCore<TNode = SVGElement> {
    * @param commit Commit to position
    */
   private withPosition(
-    rows: RegularGraphRows<TNode>,
+    rows: GraphRows<TNode>,
     branchesOrder: BranchesOrder<TNode>,
     commit: Commit<TNode>,
   ): Commit<TNode> {

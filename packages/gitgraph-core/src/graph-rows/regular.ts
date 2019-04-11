@@ -24,6 +24,7 @@ export class RegularGraphRows<TNode> {
     commits.forEach((commit, i) => {
       this.rows.set(commit.hash, i);
     });
+    this.maxRowCache = undefined;
   }
 }
 
