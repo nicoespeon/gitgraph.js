@@ -190,6 +190,17 @@ storiesOf("gitgraph-react/1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("multiple branches at the same commit", () => (
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit("one");
+        const feat1 = gitgraph.branch("feat/1");
+        gitgraph.branch("develop");
+        feat1.commit("two");
+        master.merge(feat1);
+      }}
+    </Gitgraph>
+  ))
   .add("compact mode", () => (
     <Gitgraph
       options={{

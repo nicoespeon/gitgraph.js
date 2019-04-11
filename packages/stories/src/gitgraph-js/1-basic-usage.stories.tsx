@@ -226,6 +226,21 @@ storiesOf("gitgraph-js/1. Basic usage", module)
       }}
     </GraphContainer>
   ))
+  .add("multiple branches at the same commit", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+        });
+
+        const master = gitgraph.branch("master").commit("one");
+        const feat1 = gitgraph.branch("feat/1");
+        gitgraph.branch("develop");
+        feat1.commit("two");
+        master.merge(feat1);
+      }}
+    </GraphContainer>
+  ))
   .add("compact mode", () => (
     <GraphContainer>
       {(graphContainer) => {
