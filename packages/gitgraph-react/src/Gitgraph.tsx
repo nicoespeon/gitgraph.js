@@ -346,6 +346,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
 
   private renderTags(commit: Commit<ReactSvgElement>) {
     if (!commit.tags) return null;
+    if (this.gitgraph.isHorizontal) return null;
 
     return commit.tags.map((tag) => {
       const ref = this.createTagRef(commit);
