@@ -68,4 +68,4 @@ This code will render the following graph:
 [get-npm]: https://www.npmjs.com/get-npm
 [gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
 [stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/stories/src/gitgraph-js/
-[migration-guide]: ./MIGRATE_FROM_GITGRAPH.JS.md
+[migration-guide]: https://github.com/nicoespeon/gitgraph.js/blob/master/packages/gitgraph-js/MIGRATE_FROM_GITGRAPH.JS.md
