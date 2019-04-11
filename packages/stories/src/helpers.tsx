@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { createRef, useLayoutEffect } from "react";
 
 export {
   GraphContainer,
@@ -26,19 +26,15 @@ function createFixedHashGenerator() {
 function GraphContainer(props: {
   children: (graphContainer: HTMLElement) => void;
 }) {
-  useEffect(() => {
-    const graphContainer = document.createElement("div");
+  const graphContainer = createRef<HTMLDivElement>();
 
-    const body = document.getElementsByTagName("body")[0];
-    body.appendChild(graphContainer);
-    props.children(graphContainer);
+  useLayoutEffect(() => {
+    if (graphContainer.current) {
+      props.children(graphContainer.current);
+    }
+  });
 
-    return () => {
-      body.removeChild(graphContainer);
-    };
-  }, []);
-
-  return <></>;
+  return <div ref={graphContainer} />;
 }
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
