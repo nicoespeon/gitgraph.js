@@ -106,6 +106,28 @@ storiesOf("gitgraph-js/1. Basic usage", module)
       }}
     </GraphContainer>
   ))
+  .add("multiple merges from same commit", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+        });
+
+        const master = gitgraph.branch("master");
+        master.commit("Initial version");
+
+        const develop = gitgraph.branch("develop").commit("Do something");
+        const fix = gitgraph.branch("fix");
+        const release = gitgraph.branch("release");
+        fix.commit("Bug fixed.");
+
+        release.merge(fix);
+        develop.merge(fix, "Bugfixes are always merged back to develop");
+
+        master.merge(develop, "New release");
+      }}
+    </GraphContainer>
+  ))
   .add("merge with fast-forward", () => (
     <GraphContainer>
       {(graphContainer) => {
