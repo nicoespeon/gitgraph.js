@@ -6,6 +6,7 @@ import {
 } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows } from "./graph-rows";
+import { RegularGraphRows } from "./graph-rows/regular";
 import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
 import {
   Template,
@@ -199,21 +200,26 @@ class GitgraphCore<TNode = SVGElement> {
    * Return commits with data for rendering.
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
+    const branches = this.getBranches();
     const commitsWithBranches = this.commits.map((commit) =>
-      this.withBranches(commit),
+      this.withBranches(branches, commit),
+    );
+
+    const rows = createGraphRows(this.mode, this.commits);
+    const branchesOrder = new BranchesOrder<TNode>(
+      commitsWithBranches,
+      this.template.colors,
+      this.branchesOrderFunction,
     );
 
     return (
       commitsWithBranches
         .map((commit) => commit.setRefs(this.refs))
-        .map((commit) => this.withPosition(commitsWithBranches, commit))
+        .map((commit) => this.withPosition(rows, branchesOrder, commit))
         // Fallback commit computed color on branch color.
         .map((commit) =>
           commit.withDefaultColor(
-            this.getBranchDefaultColor(
-              commitsWithBranches,
-              commit.branchToDisplay,
-            ),
+            this.getBranchDefaultColor(branchesOrder, commit.branchToDisplay),
           ),
         )
         // Tags need commit style to be computed (with default color).
@@ -253,9 +259,15 @@ class GitgraphCore<TNode = SVGElement> {
     commits: Array<Commit<TNode>>,
     branchesPaths: BranchesPaths<TNode>,
   ): void {
+    const branchesOrder = new BranchesOrder<TNode>(
+      commits,
+      this.template.colors,
+      this.branchesOrderFunction,
+    );
     Array.from(branchesPaths).forEach(([branch]) => {
       branch.computedColor =
-        branch.style.color || this.getBranchDefaultColor(commits, branch.name);
+        branch.style.color ||
+        this.getBranchDefaultColor(branchesOrder, branch.name);
     });
   }
 
@@ -272,11 +284,13 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Add `branches` property to commit.
    *
+   * @param branches All branches mapped by commit hash
    * @param commit Commit
    */
-  private withBranches(commit: Commit<TNode>): Commit<TNode> {
-    const branches = this.getBranches();
-
+  private withBranches(
+    branches: Map<Commit["hash"], Set<Branch["name"]>>,
+    commit: Commit<TNode>,
+  ): Commit<TNode> {
     let commitBranches = Array.from(
       (branches.get(commit.hash) || new Set()).values(),
     );
@@ -324,22 +338,18 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Add position to given commit.
    *
-   * @param commits List of graph commits
+   * @param rows Graph rows
+   * @param branchesOrder Computed order of branches
    * @param commit Commit to position
    */
   private withPosition(
-    commitsWithBranches: Array<Commit<TNode>>,
+    rows: RegularGraphRows<TNode>,
+    branchesOrder: BranchesOrder<TNode>,
     commit: Commit<TNode>,
   ): Commit<TNode> {
-    const rows = createGraphRows(this.mode, this.commits);
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
 
-    const branchesOrder = new BranchesOrder<TNode>(
-      commitsWithBranches,
-      this.template.colors,
-      this.branchesOrderFunction,
-    );
     const order = branchesOrder.get(commit.branchToDisplay);
 
     switch (this.orientation) {
@@ -376,19 +386,13 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Return the default color for given branch.
    *
-   * @param commits List of graph commits
+   * @param branchesOrder Computed order of branches
    * @param branchName Name of the branch
    */
   private getBranchDefaultColor(
-    commits: Array<Commit<TNode>>,
+    branchesOrder: BranchesOrder<TNode>,
     branchName: Branch["name"],
   ): string {
-    const branchesOrder = new BranchesOrder<TNode>(
-      commits,
-      this.template.colors,
-      this.branchesOrderFunction,
-    );
-
     return branchesOrder.getColorOf(branchName);
   }
 

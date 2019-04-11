@@ -3,6 +3,8 @@ import { Commit } from "../commit";
 export class RegularGraphRows<TNode> {
   protected rows = new Map<Commit["hash"], number>();
 
+  private maxRowCache: number | undefined = undefined;
+
   public constructor(commits: Array<Commit<TNode>>) {
     this.computeRowsFromCommits(commits);
   }
@@ -12,7 +14,10 @@ export class RegularGraphRows<TNode> {
   }
 
   public getMaxRow(): number {
-    return uniq(Array.from(this.rows.values())).length - 1;
+    if (this.maxRowCache === undefined) {
+      this.maxRowCache = uniq(Array.from(this.rows.values())).length - 1;
+    }
+    return this.maxRowCache;
   }
 
   protected computeRowsFromCommits(commits: Array<Commit<TNode>>): void {
