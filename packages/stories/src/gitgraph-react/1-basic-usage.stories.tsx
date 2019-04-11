@@ -86,6 +86,24 @@ storiesOf("gitgraph-react/1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("multiple merges from same commit", () => (
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master");
+        master.commit("Initial version");
+
+        const develop = gitgraph.branch("develop").commit("Do something");
+        const fix = gitgraph.branch("fix");
+        const release = gitgraph.branch("release");
+        fix.commit("Bug fixed.");
+
+        release.merge(fix);
+        develop.merge(fix, "Bugfixes are always merged back to develop");
+
+        master.merge(develop, "New release");
+      }}
+    </Gitgraph>
+  ))
   .add("merge with fast-forward", () => (
     <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
