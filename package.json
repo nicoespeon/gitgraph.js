@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "23.1.4",
+    "concurrently": "4.1.0",
     "husky": "1.1.2",
     "jest": "23.3.0",
     "lerna": "3.13.1",
