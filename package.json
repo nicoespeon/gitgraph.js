@@ -24,6 +24,8 @@
     "lerna": "lerna",
     "build": "lerna run build",
     "watch": "lerna run watch",
+    "storybook": "lerna run storybook",
+    "develop": "concurrently npm:watch npm:storybook",
     "lint": "tslint packages/**/src/**/*",
     "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run build",
