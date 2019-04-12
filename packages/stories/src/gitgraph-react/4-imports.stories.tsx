@@ -5,6 +5,7 @@ import { Gitgraph } from "@gitgraph/react";
 import simpleGraph from "../import-fixtures/simple-graph";
 import deletedBranch from "../import-fixtures/deleted-branch";
 import gitflow from "../import-fixtures/gitflow";
+import largeGraph from "../import-fixtures/large-graph";
 
 storiesOf("gitgraph-react/4. Imports", module)
   .add("simple graph", () => (
@@ -27,4 +28,16 @@ storiesOf("gitgraph-react/4. Imports", module)
         gitgraph.import(gitflow);
       }}
     </Gitgraph>
-  ));
+  ))
+  .add(
+    "large graph",
+    () => (
+      <Gitgraph>
+        {(gitgraph) => {
+          gitgraph.import(largeGraph);
+        }}
+      </Gitgraph>
+    ),
+    // Chromatic can't take a snapshot, it's too big!
+    { chromatic: { disable: true } },
+  );
