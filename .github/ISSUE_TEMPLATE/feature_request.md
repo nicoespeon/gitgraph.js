@@ -3,7 +3,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
-labels: 2 - Feature
+labels: ':sparkles: Feature'
 assignees: ''
 
 ---
