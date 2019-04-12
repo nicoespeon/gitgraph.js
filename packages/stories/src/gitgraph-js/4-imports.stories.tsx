@@ -6,6 +6,7 @@ import { GraphContainer } from "../helpers";
 import simpleGraph from "../import-fixtures/simple-graph";
 import deletedBranch from "../import-fixtures/deleted-branch";
 import gitflow from "../import-fixtures/gitflow";
+import largeGraph from "../import-fixtures/large-graph";
 
 storiesOf("gitgraph-js/4. Imports", module)
   .add("simple graph", () => (
@@ -32,6 +33,15 @@ storiesOf("gitgraph-js/4. Imports", module)
         const gitgraph = createGitgraph(graphContainer);
 
         gitgraph.import(gitflow);
+      }}
+    </GraphContainer>
+  ))
+  .add("large graph", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer);
+
+        gitgraph.import(largeGraph);
       }}
     </GraphContainer>
   ));
