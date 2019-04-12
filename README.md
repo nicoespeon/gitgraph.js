@@ -22,6 +22,30 @@ You'll find usage details in their README.
 
 As a contributor, you might be interested in checking out [gitgraph-core][gitgraph-core]. It contains the core logic for rendering libraries to use.
 
+## Running the project locally
+
+Pre-requisites:
+
+- [node.js][node]
+- [yarn][yarn]
+
+Setting things up:
+
+1.  Clone the repository: `git clone git@github.com:nicoespeon/gitgraph.js.git`
+1.  Install dependencies: `yarn install`
+1.  Bootstrap the project: `yarn run lerna bootstrap`
+
+[Lerna][lerna] will install dependencies of all packages and links any cross-dependencies.
+
+Available root-level commands are detailed in `package.json`. You would usually need:
+
+- `yarn test` to run [Jest][jest] unit tests (`yarn test --watch` for watch mode)
+- `yarn develop` to start [Storybook][storybook], watching for changes of all packages
+
+> You can also go to specific packages and run available commands detailed in their `package.json`. For example, you could `cd packages/gitgraph-core/` and run `yarn test --watch` to only run tests of this package.
+>
+> But root-level commands are more convenient!
+
 ## Contributing
 
 ### [Contributing Guide][contributing]
@@ -67,6 +91,18 @@ Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][lice
 
 💁‍ [What does that mean?](http://choosealicense.com/licenses/mit/)
 
+## Thanks
+
+<a href="https://www.chromaticqa.com/"><img src="https://cdn-images-1.medium.com/letterbox/147/36/50/50/1*oHHjTjInDOBxIuYHDY2gFA.png?source=logoAvatar-d7276495b101---37816ec27d7a" width="120"/></a>
+
+Thanks to [Chromatic](https://www.chromaticqa.com/) for providing the visual testing platform that help us catch visual regressions for the rendering libs.
+
+[node]: https://nodejs.org/
+[yarn]: https://yarnpkg.com/
+[lerna]: https://github.com/lerna/lerna
+[storybook]: https://storybook.js.org/
+[jest]: https://jestjs.io/
+[semver]: http://semver.org/
 [contributing]: CONTRIBUTING.md
 [license]: LICENSE.md
 [latest-release]: https://github.com/nicoespeon/gitgraph.js/releases/latest
@@ -76,10 +112,3 @@ Copyright (c) 2013 Nicolas CARLO and Fabien BERNARD under the [MIT license][lice
 [gitgraph-js]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js
 [gitgraph-react]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-react
 [gitgraph-node]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-node
-[semver]: http://semver.org/
-
-## Thanks
-
-<a href="https://www.chromaticqa.com/"><img src="https://cdn-images-1.medium.com/letterbox/147/36/50/50/1*oHHjTjInDOBxIuYHDY2gFA.png?source=logoAvatar-d7276495b101---37816ec27d7a" width="120"/></a>
-
-Thanks to [Chromatic](https://www.chromaticqa.com/) for providing the visual testing platform that help us catch visual regressions for the rendering libs.
