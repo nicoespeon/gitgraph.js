@@ -36,12 +36,17 @@ storiesOf("gitgraph-js/4. Imports", module)
       }}
     </GraphContainer>
   ))
-  .add("large graph", () => (
-    <GraphContainer>
-      {(graphContainer) => {
-        const gitgraph = createGitgraph(graphContainer);
+  .add(
+    "large graph",
+    () => (
+      <GraphContainer>
+        {(graphContainer) => {
+          const gitgraph = createGitgraph(graphContainer);
 
-        gitgraph.import(largeGraph);
-      }}
-    </GraphContainer>
-  ));
+          gitgraph.import(largeGraph);
+        }}
+      </GraphContainer>
+    ),
+    // Chromatic can't take a snapshot, it's too big!
+    { chromatic: { disable: true } },
+  );

@@ -29,10 +29,15 @@ storiesOf("gitgraph-react/4. Imports", module)
       }}
     </Gitgraph>
   ))
-  .add("large graph", () => (
-    <Gitgraph>
-      {(gitgraph) => {
-        gitgraph.import(largeGraph);
-      }}
-    </Gitgraph>
-  ));
+  .add(
+    "large graph",
+    () => (
+      <Gitgraph>
+        {(gitgraph) => {
+          gitgraph.import(largeGraph);
+        }}
+      </Gitgraph>
+    ),
+    // Chromatic can't take a snapshot, it's too big!
+    { chromatic: { disable: true } },
+  );
