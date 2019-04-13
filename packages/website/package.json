@@ -1,0 +1,33 @@
+{
+  "name": "@gitgraph/website",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Gitgraphjs.com website",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "contributors": [
+    {
+      "name": "Fabien Bernard",
+      "email": "fabien0102@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "build": "mdx-deck build deck.mdx && cp -R assets dist",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@gitgraph/js": "^1.0.0-4",
+    "@gitgraph/react": "^1.1.0-8"
+  },
+  "devDependencies": {
+    "gh-pages": "2.0.1",
+    "mdx-deck": "1.10.2",
+    "mdx-deck-live-code": "1.0.1",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "styled-components": "4.2.0"
+  }
+}
