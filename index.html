@@ -1,241 +1,62 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Gitgraph.js</title>
-  <link id="favicon" rel="shortcut icon" type="image/png" href="img/favicon.png">
-  <link rel="stylesheet" type="text/css" href="css/index.css" />
-  <link rel="stylesheet" type="text/css" href="css/gitgraph.css" />
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<style>*{box-sizing:border-box}body{font-family:system-ui,sans-serif;margin:0}</style>
+<meta name='generator' content='mdx-deck'>
+<title data-head="true">GitGraph.js</title><meta name="twitter:card" content="https://gitgraphjs.com" data-head="true"/><meta name="twitter:site" content="@nicoespeon" data-head="true"/><meta name="twitter:title" content="GitGraph.js" data-head="true"/><meta name="twitter:description" content="A JavaScript library to draw pretty git graphs." data-head="true"/><meta name="twitter:image" content="https://gitgraphjs.com/cover.png" data-head="true"/><meta name="og:image" content="https://gitgraphjs.com/cover.png" data-head="true"/><link rel="shortcut icon" type="image/png" href="./assets/favicon.png" data-head="true"/>
 </head>
 <body>
-  <header>
-    <img src="img/gitgraph-logo.png" alt="Gitgraph.js main logo">
+<div id=root><div><div mode="NORMAL" step="0" width="100vw" height="100vh" color="text" class="Root-sc-14f5wl6-0 bzhqxG"><link href="https://fonts.googleapis.com/css?family=Annie+Use+Your+Telescope" rel="stylesheet"/><div class="Carousel__CarouselRoot-sc-1sjk1xy-0 uVStT"><div class="Carousel__CarouselInner-sc-1sjk1xy-1 fnjkwn"><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h1 class="sr-only">GitGraph.js</h1><img src="./assets/gitgraph-logo.png" class="components__img-mhn4yb-9 evkkKK"/><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">A JavaScript library<br/>to draw pretty git graphs.</h2><small>Use ⬅️ and ➡️ keys to navigate</small></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Why this library? 🤔</h2><ul font-size="2" class="components__ul-mhn4yb-3 wJUqW"><li class="components__li-mhn4yb-5 flYqAW">To draw git graphs examples that are <u>easy to maintain</u></li><li class="components__li-mhn4yb-5 flYqAW">For presentations, blog posts…</li><li class="components__li-mhn4yb-5 flYqAW">… or any use case that implies to render a git graph!</li></ul></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">📦 Install GitGraph.js</h2><ul font-size="2" class="components__ul-mhn4yb-3 wJUqW"><li class="components__li-mhn4yb-5 flYqAW">For JS (<small><a href="https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js#gitgraphjs" color="link" class="components__a-mhn4yb-1 kmwXOo">README</a></small>): <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">npm i @gitgraph/js</code></li><li class="components__li-mhn4yb-5 flYqAW">For React (<small><a href="https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-react#gitgraphreact" color="link" class="components__a-mhn4yb-1 kmwXOo">README</a></small>): <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">npm i @gitgraph/react</code></li></ul></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy">Importing the JS library</h3><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#999988;font-style:italic">&lt;!-- Somewhere in the DOM --&gt;</span>
+<span class="token" style="color:#00009f"><span class="token" style="color:#00009f"><span class="token" style="color:#393A34">&lt;</span>div</span> <span class="token" style="color:#00a4db">id</span><span class="token" style="color:#e3116c"><span class="token" style="color:#393A34">=</span><span class="token" style="color:#393A34">&quot;</span>gitgraph<span class="token" style="color:#393A34">&quot;</span></span><span class="token" style="color:#393A34">&gt;</span></span><span class="token" style="color:#00009f"><span class="token" style="color:#00009f"><span class="token" style="color:#393A34">&lt;/</span>div</span><span class="token" style="color:#393A34">&gt;</span></span>
+</code></pre><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#00a4db">import</span> <span class="token" style="color:#393A34">{</span> createGitgraph <span class="token" style="color:#393A34">}</span> <span class="token" style="color:#00a4db">from</span> <span class="token" style="color:#e3116c">&quot;@gitgraph/js&quot;</span><span class="token" style="color:#393A34">;</span>
 
-    <!-- GitHub ribbon -->
-    <a href="https://github.com/nicoespeon/gitgraph.js">
-      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub">
-    </a>
+<span class="token" style="color:#00a4db">const</span> graphContainer <span class="token" style="color:#393A34">=</span> document<span class="token" style="color:#393A34">.</span><span class="token" style="color:#9a050f;font-weight:bold">getElementById</span><span class="token" style="color:#393A34">(</span><span class="token" style="color:#e3116c">&quot;gitgraph&quot;</span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+<span class="token" style="color:#00a4db">const</span> gitgraph <span class="token" style="color:#393A34">=</span> <span class="token" style="color:#9a050f;font-weight:bold">createGitgraph</span><span class="token" style="color:#393A34">(</span>graphContainer<span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy">Importing the React library</h3><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#00a4db">import</span> <span class="token" style="color:#393A34">{</span> Gitgraph <span class="token" style="color:#393A34">}</span> <span class="token" style="color:#00a4db">from</span> <span class="token" style="color:#e3116c">&quot;@gitgraph/react&quot;</span><span class="token" style="color:#393A34">;</span>
 
-    <nav>
-      <a href="#" id="nav-presentation">Presentation</a>
-      <a href="#" id="nav-init">Quick start</a>
-      <a href="#" id="nav-base">Basics</a>
-      <a href="#" id="nav-branch">Branches</a>
-      <a href="#" id="nav-commit">Commits</a>
-      <a href="#" id="nav-checkout">Checkout</a>
-      <a href="#" id="nav-merge">Merge</a>
-    </nav>
-  </header>
-
-  <section>
-    <!-- GitGraph canvas -->
-    <canvas id="gitGraph"></canvas>
-
-    <!-- Details divs -->
-    <div id="detail-presentation" class="gitgraph-detail">
-      <p>Git is a powerful tool, sometimes hard to handle.</p>
-      <p><strong>Gitgraph.js</strong> is a simple JavaScript library which is meant to help you visually presenting git branching stuff like a git workflow, a tricky git command or whatever git tree you'd have in mind.</p>
-      <p>We use canvas so you don't have to draw your branching illustrations into Photoshop nor Keynote to present something cool. Just <strong>code it</strong> directly in the browser.</p>
-      <p><em>One does not simply illustrate git branching models. This library is the one to draw them all.</em></p>
-    </div>
-
-    <div id="detail-init" class="gitgraph-detail">
-      <p>This is very straightforward:</p>
-      <h3>1. Download gitgraph.js</h3>
-      <p>With git <img src="img/github-logo.png" alt="github logo"> : </p><pre class="prettyprint lang-bsh">git clone http://github.com/nicoespeon/gitgraph.js.git</pre>
-      <p>With Bower <img src="img/bower-logo.png" alt="bower logo"> : </p><pre class="prettyprint">bower install gitgraph.js</pre>
-      <p>With npm <img src="img/npm-logo.png" alt="npm logo"> : </p><pre class="prettyprint">npm install --save gitgraph.js</pre>
-      <p>With your browser : <a href="https://cdnjs.com/libraries/gitgraph.js">use the CDNjs hosted lib</a> or <a href="https://github.com/nicoespeon/gitgraph.js/releases/latest">download the zip / tar.gz source code</a></p>
-      <h3>2. Prepare the HTML</h3>
-      <p>Load the library: </p><pre class="prettyprint">&lt;script src="js/gitgraph.min.js"&gt;&lt;/script&gt;</pre>
-      <p>Add the stylesheet: </p><pre class="prettyprint">&lt;link rel="stylesheet" type="text/css" href="css/gitgraph.css" /&gt;</pre>
-      <p>Then, just add a canvas container: </p><pre class="prettyprint">&lt;canvas id="gitGraph"&gt;&lt;/canvas&gt;</pre>
-      <h3>3. Unleash the graph!</h3>
-      <p>Now you're all set, ready to commit and draw a nice git graph in JavaScript \o/</p>
-    </div>
-
-    <div id="detail-base" class="gitgraph-detail">
-      <p>Once files are loaded and canvas is created, you could use the <code>GitGraph</code> object.</p>
-      <pre class="prettyprint">var gitgraph = new GitGraph();</pre>
-      <p>Eventually, you could add some options here: </p>
-      <ul>
-        <li>a specific<code>template</code>: <code>"blackarrow"</code> or <code>"metro"</code> (default)</li>
-        <li>the graph <code>orientation</code>:
-          <ul>
-            <li><code>"vertical-reverse"</code></li>
-            <li><code>"horizontal"</code></li>
-            <li><code>"horizontal-reverse"</code></li>
-            <li><code>"vertical"</code> (default)</li>
-          </ul>
-        </li>
-        <li>the display <code>mode</code>: <code>"compact"</code> for a compact mode, or <code>"extended"</code> (default)</li>
-        <li>the <code>elementId</code>: the canvas ID (<code>"gitGraph"</code> is the default)</li>
-        <li>a default <code>author</code> for commits</li>
-      </ul>
-      <p>For instance:</p>
-      <pre class="prettyprint lang-js">var gitgraph = new GitGraph({
-  template: "blackarrow",
-  reverseArrow: false,
-  orientation: "horizontal",
-  mode: "compact"
-});</pre>
-      <canvas id="gitgraph-template-blackarrow"></canvas>
-      <p>Or with another template:</p>
-      <pre class="prettyprint lang-js">var gitgraph = new GitGraph({
-  template: "metro",
-  orientation: "horizontal",
-  mode: "compact"
-});</pre>
-      <canvas id="gitgraph-template-metro" height="50px"></canvas>
-    </div>
-
-    <div id="detail-branch" class="gitgraph-detail">
-      <p>Let's create our first branch. We give the branch name as a parameter.</p>
-      <pre class="prettyprint">var master = gitgraph.branch("master");</pre>
-      <p>Now, <code>gitgraph.HEAD</code> is set to <code>master</code> so we can add some commits on the fly and create a new branch:</p>
-      <pre class="prettyprint">gitgraph.commit().commit().commit();         // 3 commits upon HEAD
-var develop = gitgraph.branch("develop");    // New branch from HEAD
-var myfeature = develop.branch("myfeature"); // New branch from develop
-
-// Well, if you need to go deeper…
-
-var hotfix = gitgraph.branch({
-  parentBranch: develop,
-  name: "hotfix",
-  column: 2             // which column index it should be displayed in
-});</pre>
-      <p>The <code>develop</code> branch is based from <code>HEAD</code>, which was on <code>master</code>.</p>
-      <p>It does exactly what you'd expect!</p>
-    </div>
-
-    <div id="detail-commit" class="gitgraph-detail">
-      <p>Let's do some custom commits.</p>
-      <p>Basically, define your commit message:</p>
-      <pre class="prettyprint">master.commit("This commit is mine"); // Add a commit on master branch</pre>
-      <p>Or you may want to go a bit further:</p>
-      <pre class="prettyprint">develop.commit({
-  dotColor: "white",
-  dotSize: 10,
-  dotStrokeWidth: 10,
-  sha1: "666",
-  message: "Pimp dat commit",
-  author: "Jacky &lt;prince@dutunning.com&gt;",
-  tag: "a-super-tag",
-  onClick: function(commit) {
-    console.log("Oh, you clicked my commit?!", commit);
-  }
-});</pre>
-      <p>Note that I can choose either to commit on any existing branch, either on the <code>HEAD</code> with <code>gitgraph.commit()</code>.</p>
-    </div>
-
-    <div id="detail-checkout" class="gitgraph-detail">
-      <p>Even though it's not indispensable, we introduced the <code>HEAD</code> principle in <strong>Gitgraph.js</strong>. Except that our tag is just a reference to a branch for the library.</p>
-      <p>That way you could eventually checkout to another branch:</p>
-      <pre class="prettyprint">master.checkout();</pre>
-      <p>And so create a <code>feature-of-death</code> from the <code>develop</code> branch that way:</p>
-      <pre class="prettyprint">develop.checkout();
-var featureOfDeath = gitgraph.branch("feature-of-death");</pre>
-    </div>
-
-    <div id="detail-merge" class="gitgraph-detail">
-      <p>You can merge a branch into another, that simply:</p>
-      <pre class="prettyprint">master.merge(develop); // Merge master into develop</pre>
-      <p>But wait, there's more! Customize the merge commit, your way, just like any other commit:</p>
-      <pre class="prettyprint">master.merge(develop, "Epic merge commit");
-// —> Custom merge message FTW \o/
-
-master.merge(develop, { dotColor: "red" });
-// —> The commit will be red, 'coz red is fashion!
-
-master.merge(develop, { message: "New release", tag: "v1.0.0" });
-// —> Let's tag this merge commit!</pre>
-      <p>And you can delete a branch to create another one on the same column:</p>
-      <pre class="prettyprint">master.delete();</pre>
-    </div>
-
-    <div id="detail-interact" class="gitgraph-detail">
-      <p>You can handle basic interactions with the generated graph:</p>
-      <pre class="prettyprint">gitGraph.canvas.addEventListener( "graph:render", function ( event ) {
-  console.log( event.data.id, "graph has been rendered" );
-} );
-
-gitGraph.canvas.addEventListener( "commit:mouseover", function ( event ) {
-  console.log( "You're over a commit.", event.data );
-  this.style.cursor = "pointer";
-} );
-
-gitGraph.canvas.addEventListener("commit:mouseout", function (event) {
-  console.log( "You just left this commit ->", event.data );
-  this.style.cursor = "auto";
-});</pre>
-      <p>Or you can be define that per-commit, remember:</p>
-      <pre class="prettyprint">develop.commit({
-  message: "Pimp dat commit",
-  author: "Jacky &lt;prince@dutunning.com&gt;",
-  onClick: function(commit) {
-    console.log("Oh, you clicked my commit?!", commit);
-  }
-});</pre>
-    </div>
-
-    <div id="detail-your-template" class="gitgraph-detail">
-      <p>Feeling in control freak mood? Just define your very own template and use it right away:</p>
-      <pre class="prettyprint">var myTemplateConfig = {
-  colors: [ "#F00", "#0F0", "#00F" ], // branches colors, 1 per column
-  branch: {
-    lineWidth: 8,
-    spacingX: 50,
-    showLabel: true,                  // display branch names on graph
-  },
-  commit: {
-    spacingY: -80,
-    dot: {
-      size: 12
-    },
-    message: {
-      displayAuthor: true,
-      displayBranch: false,
-      displayHash: false,
-      font: "normal 12pt Arial"
-    },
-    shouldDisplayTooltipsInCompactMode: false, // default = true
-    tooltipHTMLFormatter: function ( commit ) {
-      return "<strong>" + commit.sha1 + "</strong>" + ": " + commit.message;
-    }
-  }
-};
-var myTemplate = new GitGraph.Template( myTemplateConfig );</pre>
-      <p>Usage is straightforward:</p>
-      <pre class="prettyprint">var gitGraph = new GitGraph( {template: myTemplate} );</pre>
-    </div>
-
-    <div id="detail-contribute" class="gitgraph-detail">
-      <p>You get some fuckingood features ideas, or spotted some nasty bugs? Just come and open an issue or a Pull-Request on the <a href="http://github.com/nicoespeon/gitgraph.js">project repo</a>.</p>
-      <p>Looking for some technical documentation? <a href="docs/index.html">Here you go</a>!</p>
-    </div>
-
-    <div id="detail-examples" class="gitgraph-detail">
-      <p>The following use cases have been included for inspiration:</p>
-      <ul>
-        <li><a href="./examples/index.html">a generic workflow example</a></li>
-        <li><a href="./examples/gitflowsupport.html">a gitflow example</a></li>
-      </ul>
-      <p>You'll find <a href="http://github.com/nicoespeon/gitgraph.js/tree/master/examples">the source code</a> in the repository.</p>
-      <p>Well, you also can check the source code of this page ;)</p>
-    </div>
-
-    <div id="detail-sergio" class="gitgraph-detail">
-      <iframe width="560" height="315" src="//www.youtube.com/embed/GaoLU6zKaws?rel=0" frameborder="0" allowfullscreen></iframe>
-    </div>
-  </section>
-
-  <!-- Scripts -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-  <script src="js/gitgraph.1.0.0.min.js"></script>
-  <script src="js/index.js"></script>
-
-  <!-- Google Analytics -->
-  <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-39957541-3"]);_gaq.push(["_trackPageview"]);(function(){var ga=document.createElement("script");ga.type="text/javascript";ga.async=true;ga.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga,s)})();</script>
+<span class="token" style="color:#999988;font-style:italic">// Now you can use the component =&gt;</span>
+<span class="token" style="color:#00009f"><span class="token" style="color:#00009f"><span class="token" style="color:#393A34">&lt;</span><span class="token,class-name">Gitgraph</span></span><span class="token" style="color:#393A34">&gt;</span></span><span class="token" style="color:#393A34">{</span><span class="token" style="color:#393A34">(</span><span class="token,parameter">gitgraph</span><span class="token" style="color:#393A34">)</span> <span class="token" style="color:#393A34">=&gt;</span> <span class="token" style="color:#393A34">{</span><span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">}</span><span class="token" style="color:#00009f"><span class="token" style="color:#00009f"><span class="token" style="color:#393A34">&lt;/</span><span class="token,class-name">Gitgraph</span></span><span class="token" style="color:#393A34">&gt;</span></span><span class="token" style="color:#393A34">;</span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><div style="height:100vh;width:100vw;color:#393A34;display:flex;align-items:center;justify-content:center"><div style="height:100vh;display:flex;flex-direction:column;justify-content:center"><h2 style="color:#000;font-size:2em">👾 Start using <code color='code'>gitgraph</code></h2><div style="flex-grow:1;display:flex;align-items:center;overflow:hidden"><pre style="margin:0;overflow:hidden;text-align:center;position:relative;color:#393A34;font-family:Menlo, monospace" class="prism-code language-javascript"><div style="position:relative"><code class="scroll-content undefined" style="display:inline-block;text-align:left;width:100%;font-family:Menlo, monospace"><div class="token-line" style="color:#393A34"><span class="scroll-selected token keyword css-oeiq0y" style="color:#00a4db;font-style:italic">const</span><span class="scroll-selected token plain css-oeiq0y"> master </span><span class="scroll-selected token operator css-oeiq0y">=</span><span class="scroll-selected token plain css-oeiq0y"> gitgraph</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">branch</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;master&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">master</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Init the project&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y" style="display:inline-block"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">master</span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">  </span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Add README&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">  </span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Add tests&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">  </span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Implement feature&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y" style="display:inline-block"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">master</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">tag</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;v1.0&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y" style="display:inline-block"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y"></span><span class="scroll-selected token keyword css-oeiq0y" style="color:#00a4db;font-style:italic">const</span><span class="scroll-selected token plain css-oeiq0y"> newFeature </span><span class="scroll-selected token operator css-oeiq0y">=</span><span class="scroll-selected token plain css-oeiq0y"> gitgraph</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">branch</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;new-feature&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">newFeature</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Implement an awesome feature&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y" style="display:inline-block"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">master</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Hotfix a bug&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">newFeature</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">commit</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Fix tests&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y" style="display:inline-block"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y"></span><span class="scroll-selected token comment css-oeiq0y" style="color:#999988">// Merge `newFeature` into `master`</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y">master</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">.</span><span class="scroll-selected token function css-oeiq0y" style="color:#9a050f">merge</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">(</span><span class="scroll-selected token plain css-oeiq0y">newFeature</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">,</span><span class="scroll-selected token plain css-oeiq0y"> </span><span class="scroll-selected token string css-oeiq0y" style="color:#e3116c">&quot;Release new version&quot;</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">)</span><span class="scroll-selected token punctuation css-oeiq0y" style="color:#36acaa">;</span><span class="scroll-selected token plain css-oeiq0y"></span></div><div class="token-line" style="color:#393A34"><span class="scroll-selected token plain css-oeiq0y" style="display:inline-block"></span></div></code></div></pre></div><div style="height:35px"></div></div></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div color="background" class="Invert-sc-1sax20x-0 docxxv"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Advanced usage</h2></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">You can customize the graph with <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options</code></p><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#999988;font-style:italic">// @gitgraph/js − Pass `options` as second param</span>
+<span class="token" style="color:#00a4db">const</span> gitgraph <span class="token" style="color:#393A34">=</span> <span class="token" style="color:#9a050f;font-weight:bold">createGitgraph</span><span class="token" style="color:#393A34">(</span>graphContainer<span class="token" style="color:#393A34">,</span> options<span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+</code></pre><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#999988;font-style:italic">// @gitgraph/react − Provide `options` as props</span>
+<span class="token" style="color:#00009f"><span class="token" style="color:#00009f"><span class="token" style="color:#393A34">&lt;</span><span class="token,class-name">Gitgraph</span></span> <span class="token" style="color:#00a4db">options</span><span class="token,script,language-javascript"><span class="token,script-punctuation" style="color:#393A34">=</span><span class="token" style="color:#393A34">{</span>options<span class="token" style="color:#393A34">}</span></span><span class="token" style="color:#393A34">&gt;</span></span><span class="token" style="color:#393A34">{</span><span class="token" style="color:#393A34">(</span><span class="token,parameter">gitgraph</span><span class="token" style="color:#393A34">)</span> <span class="token" style="color:#393A34">=&gt;</span> <span class="token" style="color:#393A34">{</span><span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">}</span><span class="token" style="color:#00009f"><span class="token" style="color:#00009f"><span class="token" style="color:#393A34">&lt;/</span><span class="token,class-name">Gitgraph</span></span><span class="token" style="color:#393A34">&gt;</span></span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div class="Split__Root-sc-12ot84a-0 jAFSiZ"><div class="Flex-sc-1wyx7c4-0 sc-ckVGcZ ikSKGy"><div width="0.5" class="Box-rhjs1i-0 fdilWx"><svg><g transform="translate(10, 10)"><g></g></g></svg></div><div width="0.5" class="Box-rhjs1i-0 fdilWx"><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.orientation</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">Default is vertical</p></div></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div class="Split__Root-sc-12ot84a-0 jAFSiZ"><div class="Flex-sc-1wyx7c4-0 sc-ckVGcZ ikSKGy"><div width="0.5" class="Box-rhjs1i-0 fdilWx"><svg><g transform="translate(10, 10)"><g></g></g></svg></div><div width="0.5" class="Box-rhjs1i-0 fdilWx"><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.orientation</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">With <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">&quot;vertical-reverse&quot;</code></p></div></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.orientation</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">With <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">&quot;horizontal&quot;</code></p><svg><g transform="translate(10, 10)"><g></g></g></svg><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">You also have <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">&quot;horizontal-reverse&quot;</code></p></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div class="Split__Root-sc-12ot84a-0 jAFSiZ"><div class="Flex-sc-1wyx7c4-0 sc-ckVGcZ ikSKGy"><div width="0.5" class="Box-rhjs1i-0 fdilWx"><svg><g transform="translate(10, 10)"><g></g></g></svg></div><div width="0.5" class="Box-rhjs1i-0 fdilWx"><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.template</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">Default is <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">&quot;metro&quot;</code></p></div></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div class="Split__Root-sc-12ot84a-0 jAFSiZ"><div class="Flex-sc-1wyx7c4-0 sc-ckVGcZ ikSKGy"><div width="0.5" class="Box-rhjs1i-0 fdilWx"><svg><g transform="translate(10, 10)"><g></g></g></svg></div><div width="0.5" class="Box-rhjs1i-0 fdilWx"><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.template</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">With <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">&quot;blackarrow&quot;</code></p></div></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.template</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">You can create your own with <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">templateExtend()</code>:</p><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#00a4db">const</span> options <span class="token" style="color:#393A34">=</span> <span class="token" style="color:#393A34">{</span>
+  template<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#9a050f;font-weight:bold">templateExtend</span><span class="token" style="color:#393A34">(</span><span class="token" style="color:#e3116c">&quot;metro&quot;</span><span class="token" style="color:#393A34">,</span> <span class="token" style="color:#393A34">{</span>
+    colors<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#393A34">[</span><span class="token" style="color:#e3116c">&quot;red&quot;</span><span class="token" style="color:#393A34">,</span> <span class="token" style="color:#e3116c">&quot;blue&quot;</span><span class="token" style="color:#393A34">,</span> <span class="token" style="color:#e3116c">&quot;orange&quot;</span><span class="token" style="color:#393A34">]</span><span class="token" style="color:#393A34">,</span>
+    <span class="token" style="color:#999988;font-style:italic">// …</span>
+  <span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">,</span>
+<span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">;</span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div class="Split__Root-sc-12ot84a-0 jAFSiZ"><div class="Flex-sc-1wyx7c4-0 sc-ckVGcZ ikSKGy"><div width="0.5" class="Box-rhjs1i-0 fdilWx"><svg><g transform="translate(10, 10)"><g></g></g></svg></div><div width="0.5" class="Box-rhjs1i-0 fdilWx"><h3 font-size="2" class="components__Heading-mhn4yb-0-h3 sc-cSHVUG Zzzy"><code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options.mode</code></h3><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">You can opt-in <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">&quot;compact&quot;</code></p><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">It renders commit messages in tooltips</p></div></div></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Create branch with <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options</code></h2><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none">gitgraph<span class="token" style="color:#393A34">.</span><span class="token" style="color:#9a050f;font-weight:bold">branch</span><span class="token" style="color:#393A34">(</span><span class="token" style="color:#393A34">{</span>
+  name<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#e3116c">&quot;develop&quot;</span><span class="token" style="color:#393A34">,</span>
+  style<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#393A34">{</span>
+    <span class="token" style="color:#999988;font-style:italic">// Specific style for this branch</span>
+  <span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">,</span>
+<span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Create commit with <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options</code></h2><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none">master<span class="token" style="color:#393A34">.</span><span class="token" style="color:#9a050f;font-weight:bold">commit</span><span class="token" style="color:#393A34">(</span><span class="token" style="color:#393A34">{</span>
+  subject<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#e3116c">&quot;Add feature&quot;</span><span class="token" style="color:#393A34">,</span>
+  body<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#e3116c">&quot;More details about the feature…&quot;</span><span class="token" style="color:#393A34">,</span>
+  dotText<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#e3116c">&quot;❤️&quot;</span><span class="token" style="color:#393A34">,</span>
+  tag<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#e3116c">&quot;v1.2&quot;</span><span class="token" style="color:#393A34">,</span>
+  style<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#393A34">{</span>
+    <span class="token" style="color:#999988;font-style:italic">// Specific style for this commit</span>
+  <span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">,</span>
+<span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Merge branch with <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">options</code></h2><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none">master<span class="token" style="color:#393A34">.</span><span class="token" style="color:#9a050f;font-weight:bold">merge</span><span class="token" style="color:#393A34">(</span><span class="token" style="color:#393A34">{</span>
+  branch<span class="token" style="color:#393A34">:</span> develop<span class="token" style="color:#393A34">,</span>
+  fastForward<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#36acaa">true</span><span class="token" style="color:#393A34">,</span>
+  commitOptions<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#393A34">{</span>
+    <span class="token" style="color:#999988;font-style:italic">// Every valid `options` for a commit</span>
+  <span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">,</span>
+<span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+</code></pre></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Add event listeners on commits</h2><pre style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:.5em 0;overflow:auto;border:1px solid #dddddd;background-color:white"><code style="color:#393A34;font-family:&quot;Consolas&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;font-size:0.95em;line-height:1.2em;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none">master<span class="token" style="color:#393A34">.</span><span class="token" style="color:#9a050f;font-weight:bold">commit</span><span class="token" style="color:#393A34">(</span><span class="token" style="color:#393A34">{</span>
+  subject<span class="token" style="color:#393A34">:</span> <span class="token" style="color:#e3116c">&quot;Add tests&quot;</span><span class="token" style="color:#393A34">,</span>
+  <span class="token" style="color:#9a050f;font-weight:bold">onMessageClick</span><span class="token" style="color:#393A34">(</span><span class="token,parameter">commit</span><span class="token" style="color:#393A34">)</span> <span class="token" style="color:#393A34">{</span>
+    <span class="token" style="color:#9a050f;font-weight:bold">alert</span><span class="token" style="color:#393A34">(</span><span class="token,template-string"><span class="token" style="color:#e3116c">`Commit </span><span class="token,interpolation"><span class="token,interpolation-punctuation" style="color:#393A34">${</span>commit<span class="token" style="color:#393A34">.</span>hash<span class="token,interpolation-punctuation" style="color:#393A34">}</span></span><span class="token" style="color:#e3116c"> selected`</span></span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+  <span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">,</span>
+<span class="token" style="color:#393A34">}</span><span class="token" style="color:#393A34">)</span><span class="token" style="color:#393A34">;</span>
+</code></pre><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">But also: <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">onMouseOver</code>, <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">onMouseOut</code>, etc.</p></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Check detailed use-cases 🧐</h2><ul font-size="2" class="components__ul-mhn4yb-3 wJUqW"><li class="components__li-mhn4yb-5 flYqAW"><a href="./stories?path=/story/gitgraph-js-1-basic-usage--default" color="link" class="components__a-mhn4yb-1 kmwXOo">JS stories</a> of <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">@gitgraph/js</code></li><li class="components__li-mhn4yb-5 flYqAW"><a href="./stories?path=/story/gitgraph-react-1-basic-usage--default" color="link" class="components__a-mhn4yb-1 kmwXOo">React stories</a> of <code color="code" class="components__inlineCode-mhn4yb-8 bqPFUu">@gitgraph/react</code></li></ul></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Thank you 🤗</h2><p font-size="2" class="components__p-mhn4yb-2 bLgNgG">To our contributors:</p><p font-size="2" class="components__p-mhn4yb-2 bLgNgG"><p class="sr-only">List of contributors images</p></p><p font-size="2" class="components__p-mhn4yb-2 bLgNgG"><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/0" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/0" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/1" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/1" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/2" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/2" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/3" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/3" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/4" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/4" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/5" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/5" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/6" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/6" class="components__img-mhn4yb-9 evkkKK"/></a><a href="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/7" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/7" class="components__img-mhn4yb-9 evkkKK"/></a></p><p font-size="2" class="components__p-mhn4yb-2 bLgNgG"><a href="https://www.chromaticqa.com/" color="link" class="components__a-mhn4yb-1 kmwXOo"><img src="https://cdn-images-1.medium.com/letterbox/147/36/50/50/1*oHHjTjInDOBxIuYHDY2gFA.png?source=logoAvatar-d7276495b101---37816ec27d7a" alt="Chromatic QA" class="components__img-mhn4yb-9 evkkKK"/></a> for helping catching visual regressions.</p></div></div><div class="Slide__Root-sc-1lv2mpt-0 bjRLwG"><div><h2 font-size="3" class="components__Heading-mhn4yb-0-h2 sc-jzJRlG hhOokc">Do you like George Michael? 🎷</h2><iframe width="784" height="441" src="https://www.youtube-nocookie.com/embed/GaoLU6zKaws" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></div></div></div></div></div><div class="Provider__Bottom-sc-1iqnegd-0 dCXoOk"><div class="Flex-sc-1wyx7c4-0 RRYwl"><button title="go to: 0" color="text" class="Dots__Dot-m5ie3q-0 gUHqSP"></button><button title="go to: 1" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 2" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 3" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 4" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 5" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 6" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 7" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 8" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 9" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 10" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 11" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 12" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 13" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 14" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 15" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 16" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 17" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 18" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 19" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 20" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button><button title="go to: 21" color="text" class="Dots__Dot-m5ie3q-0 eJriox"></button></div></div><div role="button" title="Previous Slide" class="Provider__Button-sc-1iqnegd-1 sc-bdVaJa evDtJG"></div><div role="button" title="Next Slide" class="Provider__Button-sc-1iqnegd-1 sc-bwzfXH iCAEIQ"></div><a href="https://github.com/nicoespeon/gitgraph.js/" class="github-corner" aria-label="Open GitHub project"><svg width="80" height="80" viewBox="0 0 250 250" style="position:absolute;top:0;fill:#fff;right:0"><path class="octo-banner" d="M0 0l115 115h15l12 27 108 108V0z" fill="#151513"></path><path class="octo-arm" d="M128 109c-15-9-9-19-9-19 3-7 2-11 2-11-1-7 3-2 3-2 4 5 2 11 2 11-3 10 5 15 9 16" style="-webkit-transform-origin:130px 106px;transform-origin:130px 106px"></path><path class="octo-body" d="M115 115s4 2 5 0l14-14c3-2 6-3 8-3-8-11-15-24 2-41 5-5 10-7 16-7 1-2 3-7 12-11 0 0 5 3 7 16 4 2 8 5 12 9s7 8 9 12c14 3 17 7 17 7-4 8-9 11-11 11 0 6-2 11-7 16-16 16-30 10-41 2 0 3-1 7-5 11l-12 11c-1 1 1 5 1 5z"></path></svg></a></div>
+<script src="main.js"></script>
 </body>
 </html>
