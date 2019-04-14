@@ -26,6 +26,8 @@
     "watch": "lerna run watch",
     "storybook": "lerna run storybook",
     "develop": "concurrently npm:watch npm:storybook",
+    "website": "lerna run start --scope=@gitgraph/website",
+    "deploy:website": "lerna run deploy --scope=@gitgraph/website",
     "lint": "tslint packages/**/src/**/*",
     "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run build",
