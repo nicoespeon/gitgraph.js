@@ -15,7 +15,9 @@
     "start": "mdx-deck deck.mdx",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "build": "mdx-deck build deck.mdx && cp -R assets dist",
+    "build": "npm run build:deck && npm run build:stories",
+    "build:stories": "cd ../stories && npm run build -- -o ../website/dist/stories",
+    "build:deck": "mdx-deck build deck.mdx && cp -R assets dist",
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
