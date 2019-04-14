@@ -38,8 +38,11 @@ export { default as theme } from "./theme";
 
 ## 📦 Install GitGraph.js
 
-- For JS: `npm install @gitgraph/js`
-- For React: `npm install @gitgraph/react`
+- For JS (<small>[README][js-readme]</small>): `npm i @gitgraph/js`
+- For React (<small>[README][react-readme]</small>): `npm i @gitgraph/react`
+
+[js-readme]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js#gitgraphjs
+[react-readme]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-react#gitgraphreact
 
 ---
 
@@ -78,19 +81,19 @@ import { BasicUsage } from "./components/CodeOverview";
 
 export default Invert;
 
-## Customize the graph
+## Advanced usage
 
 ---
 
-You can provide `options`
+You can customize the graph with `options`
 
 ```jsx
-// Pass `options` as second param
+// @gitgraph/js − Pass `options` as second param
 const gitgraph = createGitgraph(graphContainer, options);
 ```
 
 ```jsx
-// Provide `options` as props
+// @gitgraph/react − Provide `options` as props
 <Gitgraph options={options}>{(gitgraph) => {}}</Gitgraph>
 ```
 
