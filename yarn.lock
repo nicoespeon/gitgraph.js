@@ -1725,12 +1725,38 @@
     react-inspector "^2.3.0"
     uuid "^3.3.2"
 
+"@storybook/addon-storysource@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-storysource/-/addon-storysource-5.0.7.tgz#cc3089aa84d5d3a83b63658c4ba648d7e3c4f633"
+  dependencies:
+    "@storybook/addons" "5.0.7"
+    "@storybook/components" "5.0.7"
+    "@storybook/router" "5.0.7"
+    "@storybook/theming" "5.0.7"
+    core-js "^2.6.5"
+    estraverse "^4.2.0"
+    loader-utils "^1.2.1"
+    prettier "^1.16.4"
+    prop-types "^15.6.2"
+    react-syntax-highlighter "^8.0.1"
+    regenerator-runtime "^0.12.1"
+
 "@storybook/addons@5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-5.0.6.tgz#3ecb7fd8421e6557b1abc71ebede905e8decfebc"
   dependencies:
     "@storybook/channels" "5.0.6"
     "@storybook/client-logger" "5.0.6"
+    core-js "^2.6.5"
+    global "^4.3.2"
+    util-deprecate "^1.0.2"
+
+"@storybook/addons@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-5.0.7.tgz#2663cb384a0c840e74dc34d738b4f8173b58a0e5"
+  dependencies:
+    "@storybook/channels" "5.0.7"
+    "@storybook/client-logger" "5.0.7"
     core-js "^2.6.5"
     global "^4.3.2"
     util-deprecate "^1.0.2"
@@ -1748,6 +1774,12 @@
 "@storybook/channels@5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-5.0.6.tgz#bf056194d633cae873875d6e238c1abadb301dbe"
+  dependencies:
+    core-js "^2.6.5"
+
+"@storybook/channels@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-5.0.7.tgz#38fa956882acbcdab75aadbf7f8f04e864fce402"
   dependencies:
     core-js "^2.6.5"
 
@@ -1773,6 +1805,12 @@
 "@storybook/client-logger@5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-5.0.6.tgz#d183534ccc8c864039113dcc33407e7f1f5d7594"
+  dependencies:
+    core-js "^2.6.5"
+
+"@storybook/client-logger@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-5.0.7.tgz#24a4471d152610e898b0ccb62189d14ffd03491b"
   dependencies:
     core-js "^2.6.5"
 
@@ -1806,9 +1844,45 @@
     recompose "^0.30.0"
     render-fragment "^0.1.1"
 
+"@storybook/components@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/components/-/components-5.0.7.tgz#c24e0bda88454e87e22c251c3d8d37ab82c286e3"
+  dependencies:
+    "@storybook/addons" "5.0.7"
+    "@storybook/client-logger" "5.0.7"
+    "@storybook/core-events" "5.0.7"
+    "@storybook/router" "5.0.7"
+    "@storybook/theming" "5.0.7"
+    core-js "^2.6.5"
+    global "^4.3.2"
+    immer "^1.12.0"
+    js-beautify "^1.8.9"
+    lodash.pick "^4.4.0"
+    lodash.throttle "^4.1.1"
+    memoizerific "^1.11.3"
+    polished "^2.3.3"
+    prop-types "^15.6.2"
+    react "^16.8.1"
+    react-dom "^16.8.1"
+    react-focus-lock "^1.17.7"
+    react-helmet-async "^0.2.0"
+    react-inspector "^2.3.0"
+    react-popper-tooltip "^2.8.0"
+    react-syntax-highlighter "^8.0.1"
+    react-textarea-autosize "^7.0.4"
+    reactjs-popup "^1.3.2"
+    recompose "^0.30.0"
+    render-fragment "^0.1.1"
+
 "@storybook/core-events@5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-5.0.6.tgz#ead92a1e463d53fa57151b62192e74f8e3f45b3b"
+  dependencies:
+    core-js "^2.6.5"
+
+"@storybook/core-events@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-5.0.7.tgz#527f09231a20feb354fcfabb38be5da6b5ed6a65"
   dependencies:
     core-js "^2.6.5"
 
@@ -1931,6 +2005,17 @@
     memoizerific "^1.11.3"
     qs "^6.5.2"
 
+"@storybook/router@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/router/-/router-5.0.7.tgz#5b9bdc91ac7a4b35531fbf88c9519fd5f143ab83"
+  dependencies:
+    "@reach/router" "^1.2.1"
+    "@storybook/theming" "5.0.7"
+    core-js "^2.6.5"
+    global "^4.3.2"
+    memoizerific "^1.11.3"
+    qs "^6.5.2"
+
 "@storybook/theming@5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-5.0.6.tgz#5827d780eb45a031ad27cd19bd87cd70a818546f"
@@ -1938,6 +2023,25 @@
     "@emotion/core" "^10.0.7"
     "@emotion/styled" "^10.0.7"
     "@storybook/client-logger" "5.0.6"
+    common-tags "^1.8.0"
+    core-js "^2.6.5"
+    deep-object-diff "^1.1.0"
+    emotion-theming "^10.0.7"
+    global "^4.3.2"
+    lodash.isequal "^4.5.0"
+    lodash.mergewith "^4.6.1"
+    memoizerific "^1.11.3"
+    polished "^2.3.3"
+    prop-types "^15.6.2"
+    react-inspector "^2.3.1"
+
+"@storybook/theming@5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-5.0.7.tgz#cb253580c699dcebb7702905f07bb2815ef141ce"
+  dependencies:
+    "@emotion/core" "^10.0.7"
+    "@emotion/styled" "^10.0.7"
+    "@storybook/client-logger" "5.0.7"
     common-tags "^1.8.0"
     core-js "^2.6.5"
     deep-object-diff "^1.1.0"
@@ -7692,7 +7796,7 @@ loader-utils@1.1.0:
     emojis-list "^2.0.0"
     json5 "^0.5.0"
 
-loader-utils@1.2.3, loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3:
+loader-utils@1.2.3, loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.1, loader-utils@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.2.3.tgz#1ff5dc6911c9f0a062531a4c04b609406108c2c7"
   dependencies:
@@ -9477,6 +9581,10 @@ preserve@^0.2.0:
 prettier@1.13.7:
   version "1.13.7"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.13.7.tgz#850f3b8af784a49a6ea2d2eaa7ed1428a34b7281"
+
+prettier@^1.16.4:
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.17.0.tgz#53b303676eed22cc14a9f0cec09b477b3026c008"
 
 pretty-error@^2.1.1:
   version "2.1.1"
