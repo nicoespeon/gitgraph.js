@@ -2,9 +2,9 @@ const master = gitgraph.branch("master");
 master.commit("Init the project");
 
 master
-  .commit("Init the project")
   .commit("Add README")
-  .commit("Add tests");
+  .commit("Add tests")
+  .commit("Implement feature");
 
 master.tag("v1.0");
 
@@ -15,4 +15,4 @@ master.commit("Hotfix a bug");
 newFeature.commit("Fix tests");
 
 // Merge `newFeature` into `master`
-master.merge(newFeature);
+master.merge(newFeature, "Release new version");

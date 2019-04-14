@@ -1,5 +1,7 @@
 import { Head, Image } from "mdx-deck";
-export { default as theme } from "./theme";
+import { Invert, Split } from "mdx-deck/layouts";
+
+import { BasicScenario } from "./components/Examples";
 
 <Head>
   <title>GitGraph.js</title>
@@ -12,8 +14,11 @@ export { default as theme } from "./theme";
   />
   <meta name="twitter:image" content="https://gitgraphjs.com/cover.png" />
   <meta name="og:image" content="https://gitgraphjs.com/cover.png" />
+  <link rel="shortcut icon" type="image/png" href="./assets/favicon.png" />
 </Head>
 <h1 className="sr-only">GitGraph.js</h1>
+
+export { default as theme } from "./theme";
 
 ![](./assets/gitgraph-logo.png)
 
@@ -69,6 +74,171 @@ import { BasicUsage } from "./components/CodeOverview";
 
 ---
 
+export default Invert;
+
+## Customize the graph
+
+---
+
+You can provide `options`
+
+```jsx
+// Pass `options` as second param
+const gitgraph = createGitgraph(graphContainer, options);
+```
+
+```jsx
+// Provide `options` as props
+<Gitgraph options={options}>{(gitgraph) => {}}</Gitgraph>
+```
+
+---
+
+export default Split;
+
+<BasicScenario />
+
+### `options.orientation`
+
+Default is vertical
+
+---
+
+export default Split;
+
+<BasicScenario options={{ orientation: "vertical-reverse" }} />
+
+### `options.orientation`
+
+With `"vertical-reverse"`
+
+---
+
+### `options.orientation`
+
+With `"horizontal"`
+
+<BasicScenario options={{ orientation: "horizontal" }} />
+
+You also have `"horizontal-reverse"`
+
+---
+
+export default Split;
+
+<BasicScenario />
+
+### `options.template`
+
+Default is `"metro"`
+
+---
+
+export default Split;
+
+<BasicScenario templateName="blackarrow" />
+
+### `options.template`
+
+With `"blackarrow"`
+
+---
+
+### `options.template`
+
+You can create your own with `templateExtend()`:
+
+```jsx
+const options = {
+  template: templateExtend("metro", {
+    colors: ["red", "blue", "orange"],
+    // …
+  }),
+};
+```
+
+---
+
+export default Split;
+
+<BasicScenario options={{ mode: "compact" }} />
+
+### `options.mode`
+
+You can opt-in `"compact"`
+
+It renders commit messages in tooltips
+
+---
+
+## Create branch with `options`
+
+```jsx
+gitgraph.branch({
+  name: "develop",
+  style: {
+    // Specific style for this branch
+  },
+});
+```
+
+---
+
+## Create commit with `options`
+
+```jsx
+master.commit({
+  subject: "Add feature",
+  body: "More details about the feature…",
+  dotText: "❤️",
+  tag: "v1.2",
+  style: {
+    // Specific style for this commit
+  },
+});
+```
+
+---
+
+## Merge branch with `options`
+
+```jsx
+master.merge({
+  branch: develop,
+  fastForward: true,
+  commitOptions: {
+    // Every valid `options` for a commit
+  },
+});
+```
+
+---
+
+## Add event listeners on commits
+
+```jsx
+master.commit({
+  subject: "Add tests",
+  onMessageClick(commit) {
+    alert(`Commit ${commit.hash} selected`);
+  },
+});
+```
+
+But also: `onMouseOver`, `onMouseOut`, etc.
+
+---
+
+## Check detailed use-cases 🧐
+
+- [JS stories][js-stories] of `@gitgraph/js`
+- [React stories][react-stories] of `@gitgraph/react`
+
+[js-stories]: ./stories?path=/story/gitgraph-js-1-basic-usage--default
+[react-stories]: ./stories?path=/story/gitgraph-react-1-basic-usage--default
+
+---
+
 ## Thank you 🤗
 
 To our contributors:
@@ -85,3 +255,16 @@ To our contributors:
 [![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/7)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/7)
 
 [![Chromatic QA](https://cdn-images-1.medium.com/letterbox/147/36/50/50/1*oHHjTjInDOBxIuYHDY2gFA.png?source=logoAvatar-d7276495b101---37816ec27d7a)](https://www.chromaticqa.com/) for helping catching visual regressions.
+
+---
+
+## Do you like George Michael? 🎷
+
+<iframe
+  width="784"
+  height="441"
+  src="https://www.youtube-nocookie.com/embed/GaoLU6zKaws"
+  frameBorder="0"
+  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+/>

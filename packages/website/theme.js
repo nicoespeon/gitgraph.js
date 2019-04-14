@@ -1,7 +1,7 @@
-import React from "react";
 import { notes } from "mdx-deck/themes";
 import highlightStyle from "react-syntax-highlighter/styles/prism/ghcolors";
-import GithubCorner from "react-github-corner";
+
+import Provider from "./Provider";
 
 export default {
   ...notes,
@@ -18,6 +18,13 @@ export default {
     },
     pre: {
       padding: "0.5em",
+    },
+    // Ensure graph elements are correctly sized
+    svg: {
+      fontSize: "16px",
+      textAlign: "left",
+      display: "block",
+      marginLeft: 65,
     },
     ".sr-only": {
       position: "absolute",
@@ -37,14 +44,7 @@ export default {
   },
   // Code surfer highlighter
   codeSurfer: codeSurferTheme(),
-  Provider: (props) => {
-    return (
-      <>
-        {props.children}
-        <GithubCorner href="https://github.com/nicoespeon/gitgraph.js/" />
-      </>
-    );
-  },
+  Provider,
 };
 
 function codeSurferTheme() {
