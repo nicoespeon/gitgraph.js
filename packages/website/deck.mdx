@@ -1,4 +1,5 @@
 import { Head, Image } from "mdx-deck";
+export { default as theme } from "./theme";
 
 <Head>
   <title>GitGraph.js</title>
@@ -12,11 +13,75 @@ import { Head, Image } from "mdx-deck";
   <meta name="twitter:image" content="https://gitgraphjs.com/cover.png" />
   <meta name="og:image" content="https://gitgraphjs.com/cover.png" />
 </Head>
+<h1 className="sr-only">GitGraph.js</h1>
 
-<Image src="./assets/cover.png" size={"contain"} />;
+![](./assets/gitgraph-logo.png)
+
+## A JavaScript library<br />to draw pretty git graphs.
 
 ---
 
-import PlaygroundGitgraphReact from "./components/PlaygroundGitgraphReact";
+## Why this library? 🤔
 
-# <PlaygroundGitgraphReact />
+- To draw git graphs examples that are <u>easy to maintain</u>
+- For presentations, blog posts…
+- … or any use case that implies to render a git graph!
+
+---
+
+## 📦 Install GitGraph.js
+
+- For JS: `npm install @gitgraph/js`
+- For React: `npm install @gitgraph/react`
+
+---
+
+### Importing the JS library
+
+```html
+<!-- Somewhere in the DOM -->
+<div id="gitgraph"></div>
+```
+
+```js
+import { createGitgraph } from "@gitgraph/js";
+
+const graphContainer = document.getElementById("gitgraph");
+const gitgraph = createGitgraph(graphContainer);
+```
+
+---
+
+### Importing the React library
+
+```jsx
+import { Gitgraph } from "@gitgraph/react";
+
+// Now you can use the component =>
+<Gitgraph>{(gitgraph) => {}}</Gitgraph>;
+```
+
+---
+
+import { BasicUsage } from "./components/CodeOverview";
+
+<BasicUsage title="👾 Start using `gitgraph`" />
+
+---
+
+## Thank you 🤗
+
+To our contributors:
+
+<p className="sr-only">List of contributors images</p>
+
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/0)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/0)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/1)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/1)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/2)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/2)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/3)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/3)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/4)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/4)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/5)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/5)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/6)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/6)
+[![](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/7)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/7)
+
+[![Chromatic QA](https://cdn-images-1.medium.com/letterbox/147/36/50/50/1*oHHjTjInDOBxIuYHDY2gFA.png?source=logoAvatar-d7276495b101---37816ec27d7a)](https://www.chromaticqa.com/) for helping catching visual regressions.
