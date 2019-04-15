@@ -208,6 +208,23 @@ storiesOf("gitgraph-react/1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("branching from a past reference", () => (
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master");
+        master.commit();
+
+        const feat1 = gitgraph.branch("feat1");
+        feat1.commit().commit();
+
+        const feat2 = gitgraph.branch({
+          name: "feat2",
+          from: master,
+        });
+        feat2.commit();
+      }}
+    </Gitgraph>
+  ))
   .add("compact mode", () => (
     <Gitgraph
       options={{
