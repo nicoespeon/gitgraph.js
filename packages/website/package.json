@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "gh-pages": "2.0.1",
-    "mdx-deck": "git+ssh://git@github.com:nicoespeon/mdx-deck.git#gitgraphjs-custom-build",
+    "mdx-deck": "git://github.com/nicoespeon/mdx-deck.git#gitgraphjs-custom-build",
     "mdx-deck-code-surfer": "0.5.5",
     "prism-react-renderer": "0.1.6",
     "raw-loader": "0.5.1",
