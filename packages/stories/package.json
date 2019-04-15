@@ -13,7 +13,8 @@
   "license": "MIT",
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "test:e2e": "CHROMATIC_APP_CODE=fpva75oqc1g chromatic test --exit-zero-on-changes"
+    "test:e2e": "CHROMATIC_APP_CODE=fpva75oqc1g chromatic test --exit-zero-on-changes",
+    "build": "build-storybook"
   },
   "dependencies": {
     "@gitgraph/js": "1.0.0-4",
@@ -24,6 +25,7 @@
     "@emotion/core": "10.0.10",
     "@emotion/styled": "10.0.10",
     "@storybook/addon-actions": "5.0.6",
+    "@storybook/addon-storysource": "5.0.7",
     "@storybook/addons": "5.0.6",
     "@storybook/core": "5.0.6",
     "@storybook/react": "5.0.6",
