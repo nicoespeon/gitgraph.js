@@ -45,7 +45,7 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
     "prepare": "npm run build",
-    "version": "auto-changelog -l 0 --tag-prefix @gitgraph/js@ && git add CHANGELOG.md"
+    "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/js@ && git add CHANGELOG.md"
   },
   "dependencies": {
     "@gitgraph/core": "1.1.0"

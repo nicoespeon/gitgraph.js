@@ -31,7 +31,7 @@
   "scripts": {
     "example:default": "ts-node examples/default.ts",
     "example:branches": "ts-node examples/branches.ts",
-    "version": "auto-changelog -l 0 --tag-prefix @gitgraph/node@ && git add CHANGELOG.md"
+    "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/node@ && git add CHANGELOG.md"
   },
   "dependencies": {
     "@gitgraph/core": "1.1.0",
