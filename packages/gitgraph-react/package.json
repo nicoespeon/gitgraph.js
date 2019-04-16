@@ -39,7 +39,8 @@
     "build:bundle": "rollup -c rollup.config.js",
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "version": "auto-changelog -l 0 --tag-prefix @gitgraph/react@ && git add CHANGELOG.md"
   },
   "dependencies": {
     "@gitgraph/core": "1.1.0-6"
@@ -51,6 +52,7 @@
     "@types/node": "^9.4.6",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.3",
+    "auto-changelog": "1.12.1",
     "browserify": "^14.5.0",
     "npm-run-all": "^4.1.2",
     "react": "16.8.4",
