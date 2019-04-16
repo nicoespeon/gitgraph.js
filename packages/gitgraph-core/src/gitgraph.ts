@@ -1,9 +1,4 @@
-import {
-  Branch,
-  DELETED_BRANCH_NAME,
-  createDeletedBranch,
-  BranchOptions,
-} from "./branch";
+import { Branch, DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows, GraphRows } from "./graph-rows";
 import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
