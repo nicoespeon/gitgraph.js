@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/js",
-  "version": "1.0.0-4",
+  "version": "1.0.0",
   "description": "Draw pretty git graphs in the browser",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -48,7 +48,7 @@
     "version": "auto-changelog -l 0 --tag-prefix @gitgraph/js@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@gitgraph/core": "1.1.0-6"
+    "@gitgraph/core": "1.1.0"
   },
   "devDependencies": {
     "@types/node": "^9.4.6",

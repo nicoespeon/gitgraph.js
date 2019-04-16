@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/website",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Gitgraphjs.com website",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -18,13 +18,12 @@
     "build": "npm run build:deck && npm run build:stories",
     "build:stories": "cd ../stories && npm run build -- -o ../website/dist/stories",
     "build:deck": "mdx-deck build deck.mdx && cp -R assets dist",
-    "github-files":
-      "touch dist/.nojekyll && echo 'gitgraphjs.com' > dist/CNAME",
+    "github-files": "touch dist/.nojekyll && echo 'gitgraphjs.com' > dist/CNAME",
     "deploy": "npm run build && npm run github-files && gh-pages -d dist"
   },
   "dependencies": {
-    "@gitgraph/js": "^1.0.0-4",
-    "@gitgraph/react": "^1.1.0-8"
+    "@gitgraph/js": "1.0.0",
+    "@gitgraph/react": "1.1.0"
   },
   "devDependencies": {
     "gh-pages": "2.0.1",
