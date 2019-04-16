@@ -30,7 +30,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "example:default": "ts-node examples/default.ts",
-    "example:branches": "ts-node examples/branches.ts"
+    "example:branches": "ts-node examples/branches.ts",
+    "version": "auto-changelog -l 0 --tag-prefix @gitgraph/node@ && git add CHANGELOG.md"
   },
   "dependencies": {
     "@gitgraph/core": "1.1.0-6",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.110",
     "@types/node": "^9.4.6",
+    "auto-changelog": "1.12.1",
     "ts-node": "^6.1.1",
     "typescript": "^2.8.1"
   }
