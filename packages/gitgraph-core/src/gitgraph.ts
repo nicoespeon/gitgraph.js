@@ -1,9 +1,4 @@
-import {
-  Branch,
-  DELETED_BRANCH_NAME,
-  createDeletedBranch,
-  BranchOptions,
-} from "./branch";
+import { Branch, DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows, GraphRows } from "./graph-rows";
 import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
@@ -165,21 +160,29 @@ class GitgraphCore<TNode = SVGElement> {
    */
   public createBranch(name: string): Branch<TNode>;
   public createBranch(args: any): Branch<TNode> {
-    const parentCommitHash = this.refs.getCommit("HEAD");
-    let options: BranchOptions<TNode> = {
+    const defaultParentBranchName = "HEAD";
+
+    let options = {
       gitgraph: this,
       name: "",
-      parentCommitHash,
+      parentCommitHash: this.refs.getCommit(defaultParentBranchName),
       style: this.template.branch,
       onGraphUpdate: () => this.next(),
     };
+
     if (typeof args === "string") {
       options.name = args;
+      options.parentCommitHash = this.refs.getCommit(defaultParentBranchName);
     } else {
+      const parentBranchName = args.from
+        ? args.from.name
+        : defaultParentBranchName;
+
       args.style = args.style || {};
       options = {
         ...options,
         ...args,
+        parentCommitHash: this.refs.getCommit(parentBranchName),
         style: {
           ...options.style,
           ...args.style,
@@ -190,6 +193,7 @@ class GitgraphCore<TNode = SVGElement> {
         },
       };
     }
+
     const branch = new Branch<TNode>(options);
     this.branches.set(branch.name, branch);
 

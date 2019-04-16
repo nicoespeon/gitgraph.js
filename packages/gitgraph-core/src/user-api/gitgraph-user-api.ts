@@ -37,6 +37,10 @@ interface GitgraphBranchOptions<TNode> {
    */
   name: string;
   /**
+   * Origin branch
+   */
+  from?: BranchUserApi<TNode>;
+  /**
    * Default options for commits
    */
   commitDefaultOptions?: BranchCommitDefaultOptions<TNode>;

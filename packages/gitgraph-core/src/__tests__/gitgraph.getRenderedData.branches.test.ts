@@ -80,6 +80,44 @@ describe("Gitgraph.getRenderedData.branches", () => {
     ]);
   });
 
+  it("should create branch from another one", () => {
+    const core = new GitgraphCore();
+    const gitgraph = core.getUserApi();
+
+    const master = gitgraph.branch("master");
+    master.commit("one");
+
+    const feat1 = gitgraph.branch("feat1");
+    feat1.commit("two");
+
+    const feat2 = gitgraph.branch({ name: "feat2", from: master });
+    feat2.commit("three");
+
+    const feat1Part1 = feat1.branch("feat1/part1");
+    feat1Part1.commit("four");
+
+    const { commits } = core.getRenderedData();
+
+    expect(commits).toMatchObject([
+      {
+        subject: "one",
+        branches: ["master", "feat1", "feat2", "feat1/part1"],
+      },
+      {
+        subject: "two",
+        branches: ["feat1", "feat1/part1"],
+      },
+      {
+        subject: "three",
+        branches: ["feat2"],
+      },
+      {
+        subject: "four",
+        branches: ["feat1/part1"],
+      },
+    ]);
+  });
+
   it("should calculate branch to display", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
