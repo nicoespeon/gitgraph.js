@@ -1,9 +1,12 @@
 import { GitgraphCore, Mode } from "../gitgraph";
-import { GitgraphCommitOptions } from "./gitgraph-user-api";
+import {
+  GitgraphCommitOptions,
+  GitgraphBranchOptions,
+} from "./gitgraph-user-api";
 import { TemplateOptions, CommitStyle } from "../template";
 import { Commit } from "../commit";
 import { Branch } from "../branch";
-import { withoutUndefinedKeys } from "../utils";
+import { withoutUndefinedKeys, Omit } from "../utils";
 
 export { BranchUserApi, GitgraphMergeOptions };
 
@@ -49,6 +52,29 @@ class BranchUserApi<TNode> {
     this.name = branch.name;
     this._graph = graph;
     this._onGraphUpdate = onGraphUpdate;
+  }
+
+  /**
+   * Create a new branch (as `git branch`).
+   *
+   * @param options Options of the branch
+   */
+  public branch(
+    options: Omit<GitgraphBranchOptions<TNode>, "from">,
+  ): BranchUserApi<TNode>;
+  /**
+   * Create a new branch (as `git branch`).
+   *
+   * @param name Name of the created branch
+   */
+  public branch(name: string): BranchUserApi<TNode>;
+  public branch(args: any): BranchUserApi<TNode> {
+    const options: GitgraphBranchOptions<TNode> =
+      typeof args === "string" ? { name: args } : args;
+
+    options.from = this;
+
+    return this._graph.createBranch(options).getUserApi();
   }
 
   /**

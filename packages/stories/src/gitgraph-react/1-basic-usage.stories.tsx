@@ -222,6 +222,9 @@ storiesOf("gitgraph-react/1. Basic usage", module)
           from: master,
         });
         feat2.commit();
+
+        const feat1Part2 = feat1.branch("feat1/part2");
+        feat1Part2.commit().commit();
       }}
     </Gitgraph>
   ))
