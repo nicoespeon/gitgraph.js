@@ -1,5 +1,8 @@
 # `@gitgraph/js`
 
+[![version](https://img.shields.io/npm/v/@gitgraph/js.svg?logo=npm)](https://www.npmjs.com/package/@gitgraph/js)
+[![Changelog](https://img.shields.io/badge/%F0%9F%93%94-changelog-CD9523.svg)](https://github.com/nicoespeon/gitgraph.js/blob/master/packages/gitgraph-js/CHANGELOG.md)
+
 Draw pretty git graphs with vanilla JS.
 
 > This is the vanilla JS rendering library of [GitGraph.js][gitgraph-repo].
