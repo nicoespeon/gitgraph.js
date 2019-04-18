@@ -318,7 +318,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       if (commit.branchToDisplay !== branch.name) return null;
 
       const ref = this.createBranchLabelRef(commit);
-      const branchLabel = <BranchLabel branch={branch} commit={commit} />;
+      const branchLabel = branch.renderLabel ? (
+        branch.renderLabel(branch)
+      ) : (
+        <BranchLabel branch={branch} commit={commit} />
+      );
 
       if (this.gitgraph.isVertical) {
         return (

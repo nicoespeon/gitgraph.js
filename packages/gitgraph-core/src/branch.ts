@@ -5,6 +5,7 @@ import { TemplateOptions, BranchStyle } from "./template";
 
 export {
   BranchCommitDefaultOptions,
+  BranchRenderOptions,
   BranchOptions,
   DELETED_BRANCH_NAME,
   createDeletedBranch,
@@ -17,7 +18,11 @@ interface BranchCommitDefaultOptions<TNode> extends CommitRenderOptions<TNode> {
   style?: TemplateOptions["commit"];
 }
 
-interface BranchOptions<TNode = SVGElement> {
+interface BranchRenderOptions<TNode> {
+  renderLabel?: (branch: Branch<TNode>) => TNode;
+}
+
+interface BranchOptions<TNode = SVGElement> extends BranchRenderOptions<TNode> {
   /**
    * Gitgraph constructor
    */
@@ -52,6 +57,7 @@ class Branch<TNode = SVGElement> {
   public computedColor?: BranchStyle["color"];
   public parentCommitHash: BranchOptions["parentCommitHash"];
   public commitDefaultOptions: BranchCommitDefaultOptions<TNode>;
+  public renderLabel: BranchOptions<TNode>["renderLabel"];
 
   private gitgraph: GitgraphCore<TNode>;
   private onGraphUpdate: () => void;
@@ -63,6 +69,7 @@ class Branch<TNode = SVGElement> {
     this.parentCommitHash = options.parentCommitHash;
     this.commitDefaultOptions = options.commitDefaultOptions || { style: {} };
     this.onGraphUpdate = options.onGraphUpdate;
+    this.renderLabel = options.renderLabel;
   }
 
   /**

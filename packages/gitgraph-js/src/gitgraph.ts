@@ -429,24 +429,28 @@ function createGitgraph(
       // To do so, we'd need to reposition each of them appropriately.
       if (commit.branchToDisplay !== branch.name) return null;
 
-      let branchLabel;
+      const branchLabel = branch.renderLabel
+        ? branch.renderLabel(branch)
+        : createBranchLabel(branch, commit);
+
+      let branchLabelContainer;
       if (gitgraph.isVertical) {
-        branchLabel = createG({
-          children: [createBranchLabel(branch, commit)],
+        branchLabelContainer = createG({
+          children: [branchLabel],
         });
       } else {
         const commitDotSize = commit.style.dot.size * 2;
         const horizontalMarginTop = 10;
 
-        branchLabel = createG({
+        branchLabelContainer = createG({
           translate: { x: commit.x, y: commitDotSize + horizontalMarginTop },
-          children: [createBranchLabel(branch, commit)],
+          children: [branchLabel],
         });
       }
 
-      setBranchLabelRef(commit, branchLabel);
+      setBranchLabelRef(commit, branchLabelContainer);
 
-      return branchLabel;
+      return branchLabelContainer;
     });
   }
 
