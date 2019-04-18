@@ -3,6 +3,7 @@ import { storiesOf } from "@storybook/react";
 import {
   Gitgraph,
   CommitOptions,
+  BranchOptions,
   Mode,
   Orientation,
   templateExtend,
@@ -241,6 +242,39 @@ storiesOf("gitgraph-react/6. Custom renders", module)
             .commit({
               subject: "This is a saxo!",
             });
+        }}
+      </Gitgraph>
+    );
+  })
+  .add("with render branch label", () => {
+    const renderLabel: BranchOptions["renderLabel"] = (branch) => {
+      return (
+        <text
+          alignmentBaseline="middle"
+          dominantBaseline="middle"
+          fill={branch.style.label.color}
+          style={{ font: branch.style.label.font }}
+          y={20}
+          transform={"rotate(-15)"}
+        >
+          🎷 {branch.name}
+        </text>
+      );
+    };
+
+    return (
+      <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+        {(gitgraph) => {
+          gitgraph
+            .branch({ name: "master", renderLabel })
+            .commit("Initial commit")
+            .commit("Another commit")
+            .commit("Do something crazy");
+
+          gitgraph
+            .branch({ name: "dev", renderLabel })
+            .commit("Oh my god")
+            .commit("Last commit of the branch");
         }}
       </Gitgraph>
     );

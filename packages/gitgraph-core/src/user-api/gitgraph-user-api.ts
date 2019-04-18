@@ -3,6 +3,7 @@ import { Commit, CommitRenderOptions, CommitOptions } from "../commit";
 import {
   Branch,
   BranchCommitDefaultOptions,
+  BranchRenderOptions,
   DELETED_BRANCH_NAME,
 } from "../branch";
 import { GitgraphCore } from "../gitgraph";
@@ -31,7 +32,7 @@ interface GitgraphTagOptions {
   style?: TemplateOptions["tag"];
 }
 
-interface GitgraphBranchOptions<TNode> {
+interface GitgraphBranchOptions<TNode> extends BranchRenderOptions<TNode> {
   /**
    * Branch name
    */

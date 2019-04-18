@@ -130,6 +130,7 @@ interface TextOptions {
     x: number;
     y: number;
   };
+  rotate?: number;
   onClick?: () => void;
 }
 
@@ -154,6 +155,10 @@ function createText(options: TextOptions): SVGTextElement {
   if (options.translate) {
     text.setAttribute("x", options.translate.x.toString());
     text.setAttribute("y", options.translate.y.toString());
+  }
+
+  if (options.rotate) {
+    text.setAttribute("transform", `rotate(${options.rotate})`);
   }
 
   if (options.onClick) {
