@@ -41,6 +41,7 @@ interface TextOptions {
         x: number;
         y: number;
     };
+    rotate?: number;
     onClick?: () => void;
 }
 declare function createText(options: TextOptions): SVGTextElement;
