@@ -1,3 +1,7 @@
-import build from "../../rollup.config";
-
-export default build("gitgraph.core");
+export default {
+  input: "lib/index.js",
+  output: {
+    file: "lib/bundle.umd.js",
+    format: "umd",
+  },
+};
