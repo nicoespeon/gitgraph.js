@@ -11,6 +11,7 @@ import {
   Mode,
   BranchUserApi,
   GitgraphBranchOptions,
+  GitgraphTagOptions,
   GitgraphMergeOptions,
   Orientation,
   TemplateName,
@@ -38,6 +39,7 @@ import { createTooltip, PADDING as TOOLTIP_PADDING } from "./tooltip";
 
 type CommitOptions = GitgraphCommitOptions<SVGElement>;
 type BranchOptions = GitgraphBranchOptions<SVGElement>;
+type TagOptions = GitgraphTagOptions<SVGElement>;
 type MergeOptions = GitgraphMergeOptions<SVGElement>;
 type Branch = BranchUserApi<SVGElement>;
 
@@ -46,6 +48,7 @@ export {
   CommitOptions,
   Branch,
   BranchOptions,
+  TagOptions,
   MergeOptions,
   Mode,
   Orientation,
@@ -459,14 +462,17 @@ function createGitgraph(
     if (gitgraph.isHorizontal) return [];
 
     return commit.tags.map((tag) => {
-      const tagElement = createTag(tag);
-
-      setTagRef(commit, tagElement);
-
-      return createG({
+      const tagElement = tag.render
+        ? tag.render(tag.name, tag.style)
+        : createTag(tag);
+      const tagContainer = createG({
         translate: { x: 0, y: commit.style.dot.size },
         children: [tagElement],
       });
+
+      setTagRef(commit, tagContainer);
+
+      return tagContainer;
     });
   }
 

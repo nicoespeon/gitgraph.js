@@ -2,6 +2,7 @@ import { GitgraphCore, Mode } from "../gitgraph";
 import {
   GitgraphCommitOptions,
   GitgraphBranchOptions,
+  GitgraphTagOptions,
 } from "./gitgraph-user-api";
 import { TemplateOptions, CommitStyle } from "../template";
 import { Commit } from "../commit";
@@ -25,10 +26,7 @@ interface GitgraphMergeOptions<TNode> {
   commitOptions?: GitgraphCommitOptions<TNode>;
 }
 
-interface BranchTagOptions {
-  name: string;
-  style?: TemplateOptions["tag"];
-}
+type BranchTagOptions<TNode> = Omit<GitgraphTagOptions<TNode>, ["ref"]>;
 
 class BranchUserApi<TNode> {
   /**
@@ -175,25 +173,20 @@ class BranchUserApi<TNode> {
    *
    * @param options Options of the tag
    */
-  public tag(options: BranchTagOptions): this;
+  public tag(options: BranchTagOptions<TNode>): this;
   /**
    * Tag the last commit of the branch.
    *
    * @param name Name of the tag
    */
-  public tag(name: BranchTagOptions["name"]): this;
+  public tag(name: BranchTagOptions<TNode>["name"]): this;
   public tag(options?: any): this {
-    let name: BranchTagOptions["name"];
-    let style: BranchTagOptions["style"];
-
     if (typeof options === "string") {
-      name = options;
+      this._graph.getUserApi().tag({ name: options, ref: this._branch.name });
     } else {
-      name = options.name;
-      style = options.style;
+      this._graph.getUserApi().tag({ ...options, ref: this._branch.name });
     }
 
-    this._graph.getUserApi().tag({ name, ref: this._branch.name, style });
     return this;
   }
 
