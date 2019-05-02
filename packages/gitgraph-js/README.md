@@ -13,11 +13,21 @@ Draw pretty git graphs with vanilla JS.
 
 ## Get started
 
+### Example with ParcelJS
+
 > You need to have [npm][get-npm] installed.
+
+Create a new folder for your project and go there: `mkdir your-project && cd your-project`
+
+Initialize your npm project: `npm init -y`
 
 Install the package with npm: `npm i --save @gitgraph/js`
 
+Install Parcel bundler: `npm i --save-dev parcel-bundler`
+
 Now you can use `createGitgraph` to render your graph in a DOM element:
+
+Create an `index.html` file:
 
 ```html
 <!DOCTYPE html>
@@ -27,13 +37,18 @@ Now you can use `createGitgraph` to render your graph in a DOM element:
 </head>
 <body>
   <!-- DOM element in which we'll mount our graph -->
-  <div id="#graph-container"></div>
+  <div id="graph-container"></div>
+
+  <!-- This is for ParcelJS bundler -->
+  <script src="./index.js"></script>
 </body>
 </html>
 ```
 
+Create an `index.js` file:
+
 ```js
-const { createGitgraph } = require("@gitgraph/js");
+import { createGitgraph } from "@gitgraph/js";
 
 // Get the graph container HTML element.
 const graphContainer = document.getElementById("graph-container");
@@ -60,9 +75,24 @@ develop.commit("Prepare v1");
 master.merge(develop).tag("v1.0.0");
 ```
 
-This code will render the following graph:
+Add start command in your `package.json`:
+
+```diff
+{
+  "name": "your-project",
+  "version": "1.0.0",
+  "scripts": {
++   "start": "parcel index.html"
+  }
+```
+
+Run `npm start`. You should see the following graph:
 
 ![Example of usage](./assets/example-usage.png)
+
+### Example with browser bundle
+
+TODO: fill
 
 ## More examples
 
@@ -72,3 +102,7 @@ This code will render the following graph:
 [gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
 [stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/stories/src/gitgraph-js/
 [migration-guide]: https://github.com/nicoespeon/gitgraph.js/blob/master/packages/gitgraph-js/MIGRATE_FROM_GITGRAPH.JS.md
+
+```
+
+```
