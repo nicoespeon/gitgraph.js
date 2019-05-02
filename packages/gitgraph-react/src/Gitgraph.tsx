@@ -5,6 +5,7 @@ import {
   GitgraphUserApi,
   GitgraphCommitOptions,
   GitgraphBranchOptions,
+  GitgraphTagOptions,
   GitgraphMergeOptions,
   BranchUserApi,
   Commit,
@@ -28,6 +29,7 @@ type ReactSvgElement = React.ReactElement<SVGElement>;
 
 type CommitOptions = GitgraphCommitOptions<ReactSvgElement>;
 type BranchOptions = GitgraphBranchOptions<ReactSvgElement>;
+type TagOptions = GitgraphTagOptions<ReactSvgElement>;
 type MergeOptions = GitgraphMergeOptions<ReactSvgElement>;
 type Branch = BranchUserApi<ReactSvgElement>;
 
@@ -37,6 +39,7 @@ export {
   GitgraphState,
   CommitOptions,
   BranchOptions,
+  TagOptions,
   MergeOptions,
   Branch,
   TemplateName,
@@ -361,7 +364,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           ref={ref}
           transform={`translate(0, ${commit.style.dot.size})`}
         >
-          <Tag tag={tag} />
+          {tag.render ? tag.render(tag.name, tag.style) : <Tag tag={tag} />}
         </g>
       );
     });

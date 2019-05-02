@@ -1,13 +1,18 @@
 import { TagStyle, CommitStyle, DEFAULT_FONT } from "./template";
 import { numberOptionOr } from "./utils";
+import { GitgraphTagOptions } from "./user-api/gitgraph-user-api";
 
 export { Tag };
 
-class Tag {
+class Tag<TNode> {
   /**
    * Name
    */
   public readonly name: string;
+  /**
+   * Custom render function
+   */
+  public readonly render?: GitgraphTagOptions<TNode>["render"];
   /**
    * Style
    */
@@ -27,11 +32,13 @@ class Tag {
 
   constructor(
     name: string,
-    tagStyle: Partial<TagStyle>,
+    style: Partial<TagStyle>,
+    render: GitgraphTagOptions<TNode>["render"],
     commitStyle: CommitStyle,
   ) {
     this.name = name;
-    this.tagStyle = tagStyle;
+    this.tagStyle = style;
     this.commitStyle = commitStyle;
+    this.render = render;
   }
 }

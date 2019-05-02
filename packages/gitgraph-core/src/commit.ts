@@ -2,6 +2,7 @@ import { CommitStyle, TagStyle } from "./template";
 import { Branch } from "./branch";
 import { Refs } from "./refs";
 import { Tag } from "./tag";
+import { GitgraphTagOptions } from "./user-api/gitgraph-user-api";
 
 export { CommitRenderOptions, CommitOptions, Commit };
 
@@ -156,7 +157,7 @@ class Commit<TNode = SVGElement> {
   /**
    * List of tags attached
    */
-  public tags?: Tag[];
+  public tags?: Array<Tag<TNode>>;
   /**
    * Callback to execute on click.
    */
@@ -240,11 +241,17 @@ class Commit<TNode = SVGElement> {
 
   public setTags(
     tags: Refs,
-    getTagStyle: (name: Tag["name"]) => Partial<TagStyle>,
+    getTagStyle: (name: Tag<TNode>["name"]) => Partial<TagStyle>,
+    getTagRender: (
+      name: Tag<TNode>["name"],
+    ) => GitgraphTagOptions<TNode>["render"],
   ): this {
     this.tags = tags
       .getNames(this.hash)
-      .map((name) => new Tag(name, getTagStyle(name), this.style));
+      .map(
+        (name) =>
+          new Tag(name, getTagStyle(name), getTagRender(name), this.style),
+      );
     return this;
   }
 

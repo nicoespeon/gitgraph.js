@@ -11,6 +11,7 @@ import {
   Mode,
   BranchUserApi,
   GitgraphBranchOptions,
+  GitgraphTagOptions,
   GitgraphMergeOptions,
   Orientation,
   TemplateName,
@@ -38,6 +39,7 @@ import { createTooltip, PADDING as TOOLTIP_PADDING } from "./tooltip";
 
 type CommitOptions = GitgraphCommitOptions<SVGElement>;
 type BranchOptions = GitgraphBranchOptions<SVGElement>;
+type TagOptions = GitgraphTagOptions<SVGElement>;
 type MergeOptions = GitgraphMergeOptions<SVGElement>;
 type Branch = BranchUserApi<SVGElement>;
 
@@ -46,6 +48,7 @@ export {
   CommitOptions,
   Branch,
   BranchOptions,
+  TagOptions,
   MergeOptions,
   Mode,
   Orientation,
@@ -208,8 +211,8 @@ function createGitgraph(
           moveElement(tag, x);
 
           // BBox width misses box padding and offset
-          // => they are set later, on branch label update.
-          // We would need to make branch label update happen before to solve it.
+          // => they are set later, on tag update.
+          // We would need to make tag update happen before to solve it.
           const offset = parseFloat(tag.getAttribute("data-offset") || "0");
           const tagWidth = tag.getBBox().width + 2 * TAG_PADDING_X + offset;
           x += tagWidth + padding;
@@ -459,14 +462,23 @@ function createGitgraph(
     if (gitgraph.isHorizontal) return [];
 
     return commit.tags.map((tag) => {
-      const tagElement = createTag(tag);
-
-      setTagRef(commit, tagElement);
-
-      return createG({
+      const tagElement = tag.render
+        ? tag.render(tag.name, tag.style)
+        : createTag(tag);
+      const tagContainer = createG({
         translate: { x: 0, y: commit.style.dot.size },
         children: [tagElement],
       });
+      // `data-offset` is used to position tag element in `positionCommitsElements`.
+      // => because when it's executed, tag offsets are not resolved yet
+      tagContainer.setAttribute(
+        "data-offset",
+        tag.style.pointerWidth.toString(),
+      );
+
+      setTagRef(commit, tagContainer);
+
+      return tagContainer;
     });
   }
 

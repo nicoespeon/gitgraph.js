@@ -1,4 +1,4 @@
-import { TemplateOptions } from "../template";
+import { TagStyle, TemplateOptions } from "../template";
 import { Commit, CommitRenderOptions, CommitOptions } from "../commit";
 import {
   Branch,
@@ -10,7 +10,12 @@ import { GitgraphCore } from "../gitgraph";
 import { Refs } from "../refs";
 import { BranchUserApi } from "./branch-user-api";
 
-export { GitgraphCommitOptions, GitgraphBranchOptions, GitgraphUserApi };
+export {
+  GitgraphCommitOptions,
+  GitgraphBranchOptions,
+  GitgraphTagOptions,
+  GitgraphUserApi,
+};
 
 interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
   author?: string;
@@ -26,10 +31,11 @@ interface GitgraphCommitOptions<TNode> extends CommitRenderOptions<TNode> {
   onMouseOut?: (commit: Commit<TNode>) => void;
 }
 
-interface GitgraphTagOptions {
+interface GitgraphTagOptions<TNode> {
   name: string;
-  ref?: Commit["hash"] | Branch["name"];
   style?: TemplateOptions["tag"];
+  ref?: Commit["hash"] | Branch["name"];
+  render?: (name: string, style: TagStyle) => TNode;
 }
 
 interface GitgraphBranchOptions<TNode> extends BranchRenderOptions<TNode> {
@@ -113,7 +119,7 @@ class GitgraphUserApi<TNode> {
    *
    * @param options Options of the tag
    */
-  public tag(options: GitgraphTagOptions): this;
+  public tag(options: GitgraphTagOptions<TNode>): this;
   /**
    * Tag a specific commit.
    *
@@ -121,14 +127,16 @@ class GitgraphUserApi<TNode> {
    * @param ref Commit or branch name or commit hash
    */
   public tag(
-    name: GitgraphTagOptions["name"],
-    ref?: GitgraphTagOptions["ref"],
+    name: GitgraphTagOptions<TNode>["name"],
+    ref?: GitgraphTagOptions<TNode>["ref"],
   ): this;
   public tag(...args: any[]): this {
     // Deal with shorter syntax
-    let name: GitgraphTagOptions["name"];
-    let ref: GitgraphTagOptions["ref"];
-    let style: GitgraphTagOptions["style"];
+    let name: GitgraphTagOptions<TNode>["name"];
+    let ref: GitgraphTagOptions<TNode>["ref"];
+    let style: GitgraphTagOptions<TNode>["style"];
+    let render: GitgraphTagOptions<TNode>["render"];
+
     if (typeof args[0] === "string") {
       name = args[0];
       ref = args[1];
@@ -136,6 +144,7 @@ class GitgraphUserApi<TNode> {
       name = args[0].name;
       ref = args[0].ref;
       style = args[0].style;
+      render = args[0].render;
     }
 
     if (!ref) {
@@ -162,6 +171,7 @@ class GitgraphUserApi<TNode> {
 
     this._graph.tags.set(name, commitHash);
     this._graph.tagStyles[name] = style;
+    this._graph.tagRenders[name] = render;
     this._onGraphUpdate();
     return this;
   }
