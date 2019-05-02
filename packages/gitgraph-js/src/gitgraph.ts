@@ -211,8 +211,8 @@ function createGitgraph(
           moveElement(tag, x);
 
           // BBox width misses box padding and offset
-          // => they are set later, on branch label update.
-          // We would need to make branch label update happen before to solve it.
+          // => they are set later, on tag update.
+          // We would need to make tag update happen before to solve it.
           const offset = parseFloat(tag.getAttribute("data-offset") || "0");
           const tagWidth = tag.getBBox().width + 2 * TAG_PADDING_X + offset;
           x += tagWidth + padding;
@@ -469,6 +469,12 @@ function createGitgraph(
         translate: { x: 0, y: commit.style.dot.size },
         children: [tagElement],
       });
+      // `data-offset` is used to position tag element in `positionCommitsElements`.
+      // => because when it's executed, tag offsets are not resolved yet
+      tagContainer.setAttribute(
+        "data-offset",
+        tag.style.pointerWidth.toString(),
+      );
 
       setTagRef(commit, tagContainer);
 

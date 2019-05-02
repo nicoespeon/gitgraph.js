@@ -20,9 +20,7 @@ function createTag(tag: Tag<SVGElement>): SVGGElement {
   });
 
   const result = createG({ children: [path] });
-  // Pass computed box width to gitgraph so it can adapt.
   const offset = tag.style.pointerWidth;
-  result.setAttribute("data-offset", offset.toString());
 
   const observer = new MutationObserver(() => {
     const { height, width } = text.getBBox();
