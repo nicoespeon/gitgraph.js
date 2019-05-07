@@ -92,7 +92,56 @@ Run `npm start`. You should see the following graph:
 
 ### Example with browser bundle
 
-TODO: fill
+Download the JS file attached to [the last release of `@gitgraph/js`][latest-release].
+
+Create an `index.html` file and start coding:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Load the JS file -->
+  <script src="./gitgraph.umd.min.js"></script>
+</head>
+<body>
+  <!-- DOM element in which we'll mount our graph -->
+  <div id="graph-container"></div>
+
+  <!-- Use the `GitgraphJS` global variable to create your graph -->
+  <script>
+    // Get the graph container HTML element.
+    const graphContainer = document.getElementById("graph-container");
+
+    // Instantiate the graph.
+    const gitgraph = GitgraphJS.createGitgraph(graphContainer);
+
+    // Simulate git commands with Gitgraph API.
+    const master = gitgraph.branch("master");
+    master.commit("Initial commit");
+
+    const develop = gitgraph.branch("develop");
+    develop.commit("Add TypeScript");
+
+    const aFeature = gitgraph.branch("a-feature");
+    aFeature
+      .commit("Make it work")
+      .commit("Make it right")
+      .commit("Make it fast");
+
+    develop.merge(aFeature);
+    develop.commit("Prepare v1");
+
+    master.merge(develop).tag("v1.0.0");
+  </script>
+</body>
+</html>
+```
+
+Serve your files: `npx serve .`
+
+You should see the following graph:
+
+![Example of usage](./assets/example-usage.png)
 
 ## More examples
 
@@ -102,7 +151,4 @@ TODO: fill
 [gitgraph-repo]: https://github.com/nicoespeon/gitgraph.js/
 [stories]: https://github.com/nicoespeon/gitgraph.js/tree/master/packages/stories/src/gitgraph-js/
 [migration-guide]: https://github.com/nicoespeon/gitgraph.js/blob/master/packages/gitgraph-js/MIGRATE_FROM_GITGRAPH.JS.md
-
-```
-
-```
+[latest-release]: https://github.com/nicoespeon/gitgraph.js/releases/latest
