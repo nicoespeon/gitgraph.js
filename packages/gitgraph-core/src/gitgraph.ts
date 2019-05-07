@@ -1,6 +1,7 @@
 import { Branch, DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
 import { Commit } from "./commit";
 import { createGraphRows, GraphRows } from "./graph-rows";
+import { Mode } from "./mode";
 import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
 import {
   Template,
@@ -18,11 +19,7 @@ import {
   GitgraphTagOptions,
 } from "./user-api/gitgraph-user-api";
 
-export { Mode, GitgraphOptions, RenderedData, GitgraphCore };
-
-enum Mode {
-  Compact = "compact",
-}
+export { GitgraphOptions, RenderedData, GitgraphCore };
 
 interface GitgraphOptions {
   template?: TemplateName | Template;

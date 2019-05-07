@@ -1,4 +1,5 @@
-import { GitgraphCore, Mode } from "../gitgraph";
+import { GitgraphCore } from "../gitgraph";
+import { Mode } from "../mode";
 import { BranchOptions } from "../branch";
 import { metroTemplate, TemplateName, blackArrowTemplate } from "../template";
 import { Orientation } from "../orientation";

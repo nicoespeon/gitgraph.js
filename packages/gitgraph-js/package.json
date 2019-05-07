@@ -26,7 +26,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./lib/bundle.umd.js",
+  "main": "./lib/index.js",
+  "browser": "./lib/gitgraph.umd.js",
   "module": "./lib/index.js",
   "jsnext:main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -42,8 +43,7 @@
     "build:clear": "rimraf ./lib",
     "build:tsc": "tsc",
     "build:bundle": "rollup -c rollup.config.js",
-    "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
-    "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
+    "build:minify": "uglifyjs -c -m -o ./lib/gitgraph.umd.min.js -- ./lib/gitgraph.umd.js",
     "prepare": "npm run build",
     "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/js@ && git add CHANGELOG.md"
   },
@@ -53,10 +53,11 @@
   "devDependencies": {
     "@types/node": "^9.4.6",
     "auto-changelog": "1.12.1",
-    "browserify": "^14.5.0",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
-    "rollup": "^0.51.8",
+    "rollup": "1.10.1",
+    "rollup-plugin-commonjs": "9.3.4",
+    "rollup-plugin-node-resolve": "4.2.3",
     "typescript": "3.3.4000",
     "uglify-es": "^3.3.9"
   }

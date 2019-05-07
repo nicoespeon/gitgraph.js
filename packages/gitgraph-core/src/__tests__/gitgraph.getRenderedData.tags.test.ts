@@ -1,5 +1,4 @@
 import { GitgraphCore } from "../gitgraph";
-import { Tag } from "../tag";
 
 describe("Gitgraph.getRenderedData.tags", () => {
   it("should tag a commit", () => {
