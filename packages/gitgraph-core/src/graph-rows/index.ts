@@ -1,4 +1,4 @@
-import { Mode } from "../gitgraph";
+import { Mode } from "../mode";
 import { Commit } from "../commit";
 
 import { CompactGraphRows } from "./compact";

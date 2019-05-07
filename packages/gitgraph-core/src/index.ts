@@ -1,4 +1,5 @@
-export { GitgraphCore, GitgraphOptions, RenderedData, Mode } from "./gitgraph";
+export { GitgraphCore, GitgraphOptions, RenderedData } from "./gitgraph";
+export { Mode } from "./mode";
 export {
   GitgraphUserApi,
   GitgraphCommitOptions,

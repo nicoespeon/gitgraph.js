@@ -1,4 +1,5 @@
-import { GitgraphCore, Mode } from "../gitgraph";
+import { GitgraphCore } from "../gitgraph";
+import { Mode } from "../mode";
 import {
   GitgraphCommitOptions,
   GitgraphBranchOptions,
