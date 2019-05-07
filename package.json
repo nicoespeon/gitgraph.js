@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "lerna": "lerna",
-    "build": "lerna run build --no-private --stream",
+    "build": "lerna run build --scope=@gitgraph/{core,react,js,node} --stream",
     "watch": "lerna run watch --stream",
     "storybook": "lerna run storybook --stream",
     "develop": "concurrently npm:watch npm:storybook",

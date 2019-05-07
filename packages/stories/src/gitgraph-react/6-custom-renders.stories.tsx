@@ -4,6 +4,7 @@ import {
   Gitgraph,
   CommitOptions,
   BranchOptions,
+  TagOptions,
   Mode,
   Orientation,
   templateExtend,
@@ -275,6 +276,26 @@ storiesOf("gitgraph-react/6. Custom renders", module)
             .branch({ name: "dev", renderLabel })
             .commit("Oh my god")
             .commit("Last commit of the branch");
+        }}
+      </Gitgraph>
+    );
+  })
+  .add("with render tag", () => {
+    const renderTag: TagOptions["render"] = (name, style) => {
+      return (
+        <text style={{ font: style.font }} fill={style.bgColor} y={6}>
+          🎷 {name}
+        </text>
+      );
+    };
+
+    return (
+      <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+        {(gitgraph) => {
+          gitgraph
+            .branch("master")
+            .commit("Initial commit")
+            .tag({ name: "v1.0", render: renderTag });
         }}
       </Gitgraph>
     );

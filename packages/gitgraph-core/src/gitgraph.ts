@@ -16,6 +16,7 @@ import { Orientation } from "./orientation";
 import {
   GitgraphUserApi,
   GitgraphBranchOptions,
+  GitgraphTagOptions,
 } from "./user-api/gitgraph-user-api";
 
 export { GitgraphOptions, RenderedData, GitgraphCore };
@@ -70,6 +71,9 @@ class GitgraphCore<TNode = SVGElement> {
   public refs = new Refs();
   public tags = new Refs();
   public tagStyles: { [name: string]: TemplateOptions["tag"] } = {};
+  public tagRenders: {
+    [name: string]: GitgraphTagOptions<TNode>["render"];
+  } = {};
   public commits: Array<Commit<TNode>> = [];
   public branches: Map<Branch["name"], Branch<TNode>> = new Map();
   public currentBranch: Branch<TNode>;
@@ -225,8 +229,11 @@ class GitgraphCore<TNode = SVGElement> {
         )
         // Tags need commit style to be computed (with default color).
         .map((commit) =>
-          commit.setTags(this.tags, (name) =>
-            Object.assign({}, this.tagStyles[name], this.template.tag),
+          commit.setTags(
+            this.tags,
+            (name) =>
+              Object.assign({}, this.tagStyles[name], this.template.tag),
+            (name) => this.tagRenders[name],
           ),
         )
     );

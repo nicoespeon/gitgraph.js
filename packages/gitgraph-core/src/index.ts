@@ -4,6 +4,7 @@ export {
   GitgraphUserApi,
   GitgraphCommitOptions,
   GitgraphBranchOptions,
+  GitgraphTagOptions,
 } from "./user-api/gitgraph-user-api";
 export {
   BranchUserApi,

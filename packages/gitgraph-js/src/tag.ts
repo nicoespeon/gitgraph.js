@@ -6,7 +6,7 @@ export { createTag, PADDING_X };
 const PADDING_X = 10;
 const PADDING_Y = 5;
 
-function createTag(tag: Tag): SVGGElement {
+function createTag(tag: Tag<SVGElement>): SVGGElement {
   const path = createPath({
     d: "",
     fill: tag.style.bgColor,
@@ -20,9 +20,7 @@ function createTag(tag: Tag): SVGGElement {
   });
 
   const result = createG({ children: [path] });
-  // Pass computed box width to gitgraph so it can adapt.
   const offset = tag.style.pointerWidth;
-  result.setAttribute("data-offset", offset.toString());
 
   const observer = new MutationObserver(() => {
     const { height, width } = text.getBBox();

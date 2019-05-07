@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Tag as CoreTag } from "@gitgraph/core";
 
 interface Props {
-  tag: CoreTag;
+  tag: CoreTag<React.ReactElement<SVGElement>>;
 }
 
 export const TAG_PADDING_X = 10;
