@@ -224,5 +224,27 @@ describe("Gitgraph.getRenderedData.branches", () => {
         { subject: "four", refs: ["master", "HEAD"] },
       ]);
     });
+
+    it.skip("should ref the commit on which branch was created", () => {
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
+
+      const master = gitgraph.branch("master");
+      master.commit("one").commit("two");
+
+      // We should render `feat1` at current `HEAD`
+      gitgraph.branch("feat1");
+
+      master.commit("three").commit("four");
+
+      const { commits } = core.getRenderedData();
+
+      expect(commits).toMatchObject([
+        { subject: "one", refs: [] },
+        { subject: "two", refs: ["feat1"] },
+        { subject: "three", refs: [] },
+        { subject: "four", refs: ["master", "HEAD"] },
+      ]);
+    });
   });
 });

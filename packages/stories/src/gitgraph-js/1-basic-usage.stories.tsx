@@ -272,6 +272,23 @@ storiesOf("gitgraph-js/1. Basic usage", module)
       }}
     </GraphContainer>
   ))
+  .add("branch without commit", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+        });
+
+        const master = gitgraph.branch("master");
+        master.commit().commit();
+
+        // We should render `feat1` at current `HEAD`
+        gitgraph.branch("feat1");
+
+        master.commit().commit();
+      }}
+    </GraphContainer>
+  ))
   .add("compact mode", () => (
     <GraphContainer>
       {(graphContainer) => {

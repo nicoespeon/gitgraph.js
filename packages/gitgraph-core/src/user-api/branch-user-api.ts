@@ -205,9 +205,9 @@ class BranchUserApi<TNode> {
     options: GitgraphCommitOptions<TNode>,
     parents: string[],
   ): void {
-    const parentOnSameBranch = this._graph.refs.getCommit(this._branch.name);
-    if (parentOnSameBranch) {
-      parents.unshift(parentOnSameBranch);
+    const currentBranchCommit = this._graph.refs.getCommit(this._branch.name);
+    if (currentBranchCommit) {
+      parents.unshift(currentBranchCommit);
     } else if (this._branch.parentCommitHash) {
       parents.unshift(this._branch.parentCommitHash);
     }
@@ -224,10 +224,13 @@ class BranchUserApi<TNode> {
       style: this._getCommitStyle(options.style),
     });
 
-    if (parentOnSameBranch) {
-      // Take all the refs from the parent
-      const parentRefs = this._graph.refs.getNames(parentOnSameBranch);
-      parentRefs.forEach((ref) => this._graph.refs.set(ref, commit.hash));
+    if (currentBranchCommit) {
+      const currentBranchCommitRefs = this._graph.refs.getNames(
+        currentBranchCommit,
+      );
+      currentBranchCommitRefs.forEach((ref) =>
+        this._graph.refs.set(ref, commit.hash),
+      );
     } else {
       // Set the branch ref
       this._graph.refs.set(this._branch.name, commit.hash);
