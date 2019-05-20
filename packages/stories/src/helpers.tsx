@@ -11,9 +11,10 @@ export {
   createForeignObject,
 };
 
+export const hashPrefix = "h45h";
 function createFixedHashGenerator() {
   let hashIndex = 0;
-  return () => `h45h${hashIndex++}`;
+  return () => `${hashPrefix}${hashIndex++}`;
 }
 
 /**

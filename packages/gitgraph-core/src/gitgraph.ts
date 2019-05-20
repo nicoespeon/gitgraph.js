@@ -178,16 +178,14 @@ class GitgraphCore<TNode = SVGElement> {
       const parentBranchName = args.from
         ? args.from.name
         : defaultParentBranchName;
-
+      const parentCommitHash =
+        this.refs.getCommit(parentBranchName) ||
+        (this.refs.hasCommit(args.from) ? args.from : undefined);
       args.style = args.style || {};
       options = {
         ...options,
         ...args,
-        parentCommitHash:
-          this.refs.getCommit(parentBranchName) ||
-          (this.refs.hasCommit(parentBranchName)
-            ? parentBranchName
-            : undefined),
+        parentCommitHash,
         style: {
           ...options.style,
           ...args.style,
