@@ -2,7 +2,11 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { createGitgraph, Mode, Branch } from "@gitgraph/js";
 
-import { createFixedHashGenerator, GraphContainer } from "../helpers";
+import {
+  createFixedHashGenerator,
+  GraphContainer,
+  hashPrefix,
+} from "../helpers";
 
 storiesOf("gitgraph-js/1. Basic usage", module)
   .add("default", () => (
@@ -245,6 +249,24 @@ storiesOf("gitgraph-js/1. Basic usage", module)
           .branch("feat1")
           .commit()
           .commit();
+      }}
+    </GraphContainer>
+  ))
+  .add("branching from a past commit hash", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+        });
+        const master = gitgraph.branch("master");
+        master.commit();
+        const feat1 = gitgraph.branch("feat1");
+        feat1.commit().commit();
+        const feat2 = gitgraph.branch({
+          name: "feat2",
+          from: `${hashPrefix}1`,
+        });
+        feat2.commit();
       }}
     </GraphContainer>
   ))

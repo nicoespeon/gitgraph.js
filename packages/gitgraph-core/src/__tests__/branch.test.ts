@@ -25,6 +25,24 @@ describe("Branch", () => {
       log = commits;
     });
 
+    it("should be able to branch from hash", () => {
+      const core = new GitgraphCore();
+      const gitgraph = core.getUserApi();
+
+      const master = gitgraph.branch("master");
+      const commitHash = "abc1234";
+      master.commit({ subject: "one", hash: commitHash });
+      master.commit("two");
+      const fromHash = gitgraph.branch({
+        name: "fromHash",
+        from: commitHash,
+      });
+      fromHash.commit("three");
+
+      const { commits } = core.getRenderedData();
+      expect(commits[commits.length - 1].parents.length).toBe(1);
+    });
+
     it("should create a merge commit into master", () => {
       const mergeCommit = log.find((c) => c.subject === "Merge branch develop");
       expect(mergeCommit).toBeDefined();
