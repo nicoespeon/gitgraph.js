@@ -28,19 +28,19 @@ describe("Branch", () => {
     it("should be able to branch from hash", () => {
       const core = new GitgraphCore();
       const gitgraph = core.getUserApi();
+
       const master = gitgraph.branch("master");
-      master.commit("master 1");
-      master.commit("master 2");
-      let { commits } = core.getRenderedData();
-      const pastCommit = commits.find((c) => c.subject === "master 1");
+      const commitHash = "abc1234";
+      master.commit({ subject: "one", hash: commitHash });
+      master.commit("two");
       const fromHash = gitgraph.branch({
         name: "fromHash",
-        from: pastCommit.hash,
+        from: commitHash,
       });
-      fromHash.commit("fromHash 1");
-      commits = core.getRenderedData().commits;
-      const newCommit = commits.find((c) => c.subject === "fromHash 1");
-      expect(newCommit.parents.length).toBe(1);
+      fromHash.commit("three");
+
+      const { commits } = core.getRenderedData();
+      expect(commits[commits.length - 1].parents.length).toBe(1);
     });
 
     it("should create a merge commit into master", () => {
