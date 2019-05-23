@@ -46,7 +46,7 @@ interface GitgraphBranchOptions<TNode> extends BranchRenderOptions<TNode> {
   /**
    * Origin branch or commit hash
    */
-  from?: BranchUserApi<TNode> | string;
+  from?: BranchUserApi<TNode> | Commit["hash"];
   /**
    * Default options for commits
    */
