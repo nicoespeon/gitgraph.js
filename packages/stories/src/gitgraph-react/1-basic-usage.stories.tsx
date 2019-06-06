@@ -208,6 +208,28 @@ storiesOf("gitgraph-react/1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("branch label on every commit", () => (
+    <Gitgraph
+      options={{
+        generateCommitHash: createFixedHashGenerator(),
+        branchLabelOnEveryCommit: true,
+      }}
+    >
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit();
+        const develop = gitgraph
+          .branch("develop")
+          .commit()
+          .commit();
+        master.commit();
+        gitgraph
+          .branch("feat1")
+          .commit()
+          .commit();
+        master.merge(develop);
+      }}
+    </Gitgraph>
+  ))
   .add("branching from a past commit hash", () => (
     <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
