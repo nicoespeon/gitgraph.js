@@ -31,6 +31,7 @@
   "jsnext:main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
+    "prewatch": "rimraf ./lib",
     "watch": "tsc -w",
     "test": "jest",
     "build": "run-s build:*",
@@ -50,7 +51,6 @@
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.51.8",
-    "typescript": "^3.1.0",
     "uglify-es": "^3.3.9"
   },
   "jest": {

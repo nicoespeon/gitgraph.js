@@ -254,7 +254,7 @@ class GitgraphUserApi<TNode> {
         if (!commit.branches) return mem;
         commit.branches.forEach((branch) => mem.add(branch));
         return mem;
-      }, new Set())
+      }, new Set<Branch["name"]>())
       .forEach((branch) => this.branch(branch));
 
     this._onGraphUpdate();
