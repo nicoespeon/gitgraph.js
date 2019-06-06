@@ -29,6 +29,7 @@ interface GitgraphOptions {
   initCommitOffsetY?: number;
   mode?: Mode;
   author?: string;
+  branchLabelOnEveryCommit?: boolean;
   commitMessage?: string;
   generateCommitHash?: () => Commit["hash"];
   compareBranchesOrder?: CompareBranchesOrder;
@@ -67,6 +68,7 @@ class GitgraphCore<TNode = SVGElement> {
   public generateCommitHash: () => Commit["hash"] | undefined;
   public branchesOrderFunction: CompareBranchesOrder | undefined;
   public template: Template;
+  public branchLabelOnEveryCommit: boolean;
 
   public refs = new Refs();
   public tags = new Refs();
@@ -104,6 +106,10 @@ class GitgraphCore<TNode = SVGElement> {
       typeof options.compareBranchesOrder === "function"
         ? options.compareBranchesOrder
         : undefined;
+    this.branchLabelOnEveryCommit = booleanOptionOr(
+      options.branchLabelOnEveryCommit,
+      false,
+    );
   }
 
   /**

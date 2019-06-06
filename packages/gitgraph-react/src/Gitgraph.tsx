@@ -313,8 +313,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     return branches.map((branch) => {
       if (!branch.style.label.display) return null;
 
-      const commitHash = this.gitgraph.refs.getCommit(branch.name);
-      if (commit.hash !== commitHash) return null;
+      if (!this.gitgraph.branchLabelOnEveryCommit) {
+        const commitHash = this.gitgraph.refs.getCommit(branch.name);
+        if (commit.hash !== commitHash) return null;
+      }
 
       // For the moment, we don't handle multiple branch labels.
       // To do so, we'd need to reposition each of them appropriately.
