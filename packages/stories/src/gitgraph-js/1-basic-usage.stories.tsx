@@ -252,6 +252,28 @@ storiesOf("gitgraph-js/1. Basic usage", module)
       }}
     </GraphContainer>
   ))
+  .add("branch label on every commit", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+          branchLabelOnEveryCommit: true,
+        });
+
+        const master = gitgraph.branch("master").commit();
+        const develop = gitgraph
+          .branch("develop")
+          .commit()
+          .commit();
+        master.commit();
+        gitgraph
+          .branch("feat1")
+          .commit()
+          .commit();
+        master.merge(develop);
+      }}
+    </GraphContainer>
+  ))
   .add("branching from a past commit hash", () => (
     <GraphContainer>
       {(graphContainer) => {
