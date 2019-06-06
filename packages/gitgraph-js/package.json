@@ -38,6 +38,7 @@
     "lib"
   ],
   "scripts": {
+    "prewatch": "rimraf ./lib",
     "watch": "tsc -w",
     "build": "run-s build:*",
     "build:clear": "rimraf ./lib",

@@ -32,6 +32,7 @@
   "jsnext:main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
+    "prewatch": "rimraf ./lib",
     "watch": "tsc -w",
     "build": "run-s build:*",
     "build:clear": "rimraf ./lib",
