@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { Gitgraph } from "@gitgraph/react";
+import { Gitgraph, Mode } from "@gitgraph/react";
 
 import simpleGraph from "../import-fixtures/simple-graph";
 import deletedBranch from "../import-fixtures/deleted-branch";
@@ -40,4 +40,11 @@ storiesOf("gitgraph-react/4. Imports", module)
     ),
     // Chromatic can't take a snapshot, it's too big!
     { chromatic: { disable: true } },
-  );
+  )
+  .add("import & compact mode", () => (
+    <Gitgraph options={{ mode: Mode.Compact }}>
+      {(gitgraph) => {
+        gitgraph.import(deletedBranch);
+      }}
+    </Gitgraph>
+  ));
