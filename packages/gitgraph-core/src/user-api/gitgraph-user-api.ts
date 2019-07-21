@@ -9,6 +9,7 @@ import {
 import { GitgraphCore } from "../gitgraph";
 import { Refs } from "../refs";
 import { BranchUserApi } from "./branch-user-api";
+import { Mode } from "../mode";
 
 export {
   GitgraphCommitOptions,
@@ -214,7 +215,15 @@ class GitgraphUserApi<TNode> {
     > = data
       .map((options) => ({
         ...options,
-        style: { ...this._graph.template.commit },
+        style: {
+          ...this._graph.template.commit,
+          message: {
+            ...this._graph.template.commit.message,
+            display: !(
+              this._graph.isHorizontal || this._graph.mode === Mode.Compact
+            ),
+          },
+        },
         author: `${options.author.name} <${options.author.email}>`,
       }))
       // Git2json outputs is reverse-chronological.
