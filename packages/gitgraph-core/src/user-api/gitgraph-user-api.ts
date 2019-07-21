@@ -9,7 +9,6 @@ import {
 import { GitgraphCore } from "../gitgraph";
 import { Refs } from "../refs";
 import { BranchUserApi } from "./branch-user-api";
-import { Mode } from "../mode";
 
 export {
   GitgraphCommitOptions,
@@ -219,9 +218,7 @@ class GitgraphUserApi<TNode> {
           ...this._graph.template.commit,
           message: {
             ...this._graph.template.commit.message,
-            display: !(
-              this._graph.isHorizontal || this._graph.mode === Mode.Compact
-            ),
+            display: this._graph.shouldDisplayCommitMessage,
           },
         },
         author: `${options.author.name} <${options.author.email}>`,
