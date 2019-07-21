@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/node",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Draw pretty git graphs in the terminal, with node.js",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -34,7 +34,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/node@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@gitgraph/core": "1.4.0",
+    "@gitgraph/core": "1.4.1",
     "chalk": "^2.4.1",
     "lodash": "4.17.11"
   },
