@@ -214,7 +214,13 @@ class GitgraphUserApi<TNode> {
     > = data
       .map((options) => ({
         ...options,
-        style: { ...this._graph.template.commit },
+        style: {
+          ...this._graph.template.commit,
+          message: {
+            ...this._graph.template.commit.message,
+            display: this._graph.shouldDisplayCommitMessage,
+          },
+        },
         author: `${options.author.name} <${options.author.email}>`,
       }))
       // Git2json outputs is reverse-chronological.

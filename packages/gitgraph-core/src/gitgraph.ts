@@ -58,6 +58,9 @@ class GitgraphCore<TNode = SVGElement> {
       this.orientation === Orientation.VerticalReverse
     );
   }
+  public get shouldDisplayCommitMessage(): boolean {
+    return !this.isHorizontal && this.mode !== Mode.Compact;
+  }
 
   public reverseArrow: boolean;
   public initCommitOffsetX: number;

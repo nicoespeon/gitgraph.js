@@ -1,5 +1,4 @@
 import { GitgraphCore } from "../gitgraph";
-import { Mode } from "../mode";
 import {
   GitgraphCommitOptions,
   GitgraphBranchOptions,
@@ -272,21 +271,18 @@ class BranchUserApi<TNode> {
   }
 
   private _getCommitStyle(style: TemplateOptions["commit"] = {}): CommitStyle {
-    const message = {
-      ...withoutUndefinedKeys(this._graph.template.commit.message),
-      ...withoutUndefinedKeys(this._branch.commitDefaultOptions.style!.message),
-      ...style.message,
-    };
-
-    if (this._graph.isHorizontal || this._graph.mode === Mode.Compact) {
-      message.display = false;
-    }
-
     return {
       ...withoutUndefinedKeys(this._graph.template.commit),
       ...withoutUndefinedKeys(this._branch.commitDefaultOptions.style),
       ...style,
-      message,
+      message: {
+        ...withoutUndefinedKeys(this._graph.template.commit.message),
+        ...withoutUndefinedKeys(
+          this._branch.commitDefaultOptions.style!.message,
+        ),
+        display: this._graph.shouldDisplayCommitMessage,
+        ...style.message,
+      },
       dot: {
         ...withoutUndefinedKeys(this._graph.template.commit.dot),
         ...withoutUndefinedKeys(this._branch.commitDefaultOptions.style!.dot),
