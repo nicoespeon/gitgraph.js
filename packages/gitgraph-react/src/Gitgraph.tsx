@@ -51,6 +51,7 @@ export {
 
 interface GitgraphProps {
   options?: GitgraphOptions;
+  graph?: GitgraphCore<ReactSvgElement>;
   children: (gitgraph: GitgraphUserApi<ReactSvgElement>) => void;
 }
 
@@ -94,7 +95,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       shouldRecomputeOffsets: true,
       currentCommitOver: null,
     };
-    this.gitgraph = new GitgraphCore<ReactSvgElement>(props.options);
+    this.gitgraph =
+      props.graph || new GitgraphCore<ReactSvgElement>(props.options);
     this.gitgraph.subscribe((data) => {
       const { commits, branchesPaths, commitMessagesX } = data;
       this.setState({
