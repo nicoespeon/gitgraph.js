@@ -49,10 +49,21 @@ export {
   Orientation,
 };
 
-interface GitgraphProps {
+type GitgraphProps = GitgraphPropsWithChildren | GitgraphPropsWithGraph;
+
+interface GitgraphPropsWithChildren {
   options?: GitgraphOptions;
-  graph?: GitgraphCore<ReactSvgElement>;
   children: (gitgraph: GitgraphUserApi<ReactSvgElement>) => void;
+}
+
+interface GitgraphPropsWithGraph {
+  graph: GitgraphCore<ReactSvgElement>;
+}
+
+function isPropsWithGraph(
+  props: GitgraphProps,
+): props is GitgraphPropsWithGraph {
+  return "graph" in props;
 }
 
 interface GitgraphState {
@@ -95,8 +106,9 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       shouldRecomputeOffsets: true,
       currentCommitOver: null,
     };
-    this.gitgraph =
-      props.graph || new GitgraphCore<ReactSvgElement>(props.options);
+    this.gitgraph = isPropsWithGraph(props)
+      ? props.graph
+      : new GitgraphCore<ReactSvgElement>(props.options);
     this.gitgraph.subscribe((data) => {
       const { commits, branchesPaths, commitMessagesX } = data;
       this.setState({
@@ -123,6 +135,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   public componentDidMount() {
+    if (isPropsWithGraph(this.props)) return;
     this.props.children(this.gitgraph.getUserApi());
   }
 

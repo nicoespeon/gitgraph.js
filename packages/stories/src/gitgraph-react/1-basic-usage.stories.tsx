@@ -1,6 +1,7 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { Gitgraph, Mode, Branch } from "@gitgraph/react";
+import { GitgraphCore } from "@gitgraph/core";
 
 import { createFixedHashGenerator, hashPrefix } from "../helpers";
 
@@ -17,6 +18,23 @@ storiesOf("gitgraph-react/1. Basic usage", module)
       }}
     </Gitgraph>
   ))
+  .add("pass graph instance as a prop", () => {
+    const graph = new GitgraphCore<React.ReactElement<SVGElement>>({
+      generateCommitHash: createFixedHashGenerator(),
+    });
+
+    const gitgraph = graph.getUserApi();
+    const master = gitgraph
+      .branch("master")
+      .commit("Initial commit (from graph props)");
+    const develop = gitgraph.branch("develop");
+    develop.commit("one");
+    master.commit("two");
+    develop.commit("three");
+    master.merge(develop);
+
+    return <Gitgraph graph={graph} />;
+  })
   .add("stop on last commit", () => (
     <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
       {(gitgraph) => {
