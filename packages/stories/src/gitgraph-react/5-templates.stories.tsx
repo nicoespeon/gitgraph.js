@@ -67,6 +67,31 @@ storiesOf("gitgraph-react/5. Templates", module)
       }}
     </Gitgraph>
   ))
+  .add("without commit message", () => {
+    const withoutMessage= templateExtend(TemplateName.Metro, {
+      commit: {
+        message: {
+          display: false,
+        },
+      },
+    });
+
+    return (
+      <Gitgraph
+        options={{
+          template: withoutMessage,
+          generateCommitHash: createFixedHashGenerator(),
+        }}
+      >
+        {(gitgraph) => {
+          gitgraph
+            .commit("one")
+            .commit("two")
+            .commit("three");
+        }}
+      </Gitgraph>
+    );
+  })
   .add("without commit hash", () => {
     const withoutHash = templateExtend(TemplateName.Metro, {
       commit: {
