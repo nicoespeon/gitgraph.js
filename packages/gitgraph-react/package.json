@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/react",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [

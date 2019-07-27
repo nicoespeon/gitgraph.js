@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/website",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "description": "Gitgraphjs.com website",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@gitgraph/js": "1.3.1",
-    "@gitgraph/react": "1.4.1"
+    "@gitgraph/react": "1.5.0"
   },
   "devDependencies": {
     "gh-pages": "2.0.1",
