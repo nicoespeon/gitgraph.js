@@ -280,8 +280,10 @@ class BranchUserApi<TNode> {
         ...withoutUndefinedKeys(
           this._branch.commitDefaultOptions.style!.message,
         ),
-        display: this._graph.shouldDisplayCommitMessage,
         ...style.message,
+        ...withoutUndefinedKeys({
+          display: this._graph.shouldDisplayCommitMessage && undefined,
+        }),
       },
       dot: {
         ...withoutUndefinedKeys(this._graph.template.commit.dot),
