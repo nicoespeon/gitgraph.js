@@ -1,7 +1,12 @@
 import { GitgraphCore } from "../gitgraph";
 import { Mode } from "../mode";
 import { BranchOptions } from "../branch";
-import { metroTemplate, TemplateName, blackArrowTemplate } from "../template";
+import {
+  metroTemplate,
+  TemplateName,
+  blackArrowTemplate,
+  templateExtend,
+} from "../template";
 import { Orientation } from "../orientation";
 
 describe("Gitgraph.getRenderedData.style", () => {
@@ -187,6 +192,26 @@ describe("Gitgraph.getRenderedData.style", () => {
     const core = new GitgraphCore({
       orientation: Orientation.HorizontalReverse,
     });
+    const gitgraph = core.getUserApi();
+
+    gitgraph.commit();
+
+    const { commits } = core.getRenderedData();
+    const [commit] = commits;
+
+    expect(commit.style.message.display).toBe(false);
+  });
+
+  it("should hide message if so specified in template", () => {
+    const template = templateExtend(TemplateName.Metro, {
+      commit: {
+        message: {
+          display: false,
+        },
+      },
+    });
+
+    const core = new GitgraphCore({ template });
     const gitgraph = core.getUserApi();
 
     gitgraph.commit();
