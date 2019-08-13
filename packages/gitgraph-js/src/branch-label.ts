@@ -7,6 +7,8 @@ const PADDING_X = 10;
 const PADDING_Y = 5;
 
 function createBranchLabel(branch: Branch, commit: Commit): SVGElement {
+  const paddingX = branch.style.label.paddingX || PADDING_X;
+  const paddingY = branch.style.label.paddingY || PADDING_Y;
   const rect = createRect({
     width: 0,
     height: 0,
@@ -17,7 +19,7 @@ function createBranchLabel(branch: Branch, commit: Commit): SVGElement {
   const text = createText({
     content: branch.name,
     translate: {
-      x: PADDING_X,
+      x: paddingX,
       y: 0,
     },
     font: branch.style.label.font,
@@ -29,8 +31,8 @@ function createBranchLabel(branch: Branch, commit: Commit): SVGElement {
   const observer = new MutationObserver(() => {
     const { height, width } = text.getBBox();
 
-    const boxWidth = width + 2 * PADDING_X;
-    const boxHeight = height + 2 * PADDING_Y;
+    const boxWidth = width + 2 * paddingX;
+    const boxHeight = height + 2 * paddingY;
 
     // Ideally, it would be great to refactor these behavior into SVG elements.
     rect.setAttribute("width", boxWidth.toString());
