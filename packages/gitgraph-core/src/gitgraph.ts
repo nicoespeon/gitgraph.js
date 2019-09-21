@@ -13,6 +13,7 @@ import { Refs } from "./refs";
 import { BranchesPathsCalculator, BranchesPaths } from "./branches-paths";
 import { booleanOptionOr, numberOptionOr } from "./utils";
 import { Orientation } from "./orientation";
+import { Layout } from "./layout";
 import {
   GitgraphUserApi,
   GitgraphBranchOptions,
@@ -24,6 +25,7 @@ export { GitgraphOptions, RenderedData, GitgraphCore };
 interface GitgraphOptions {
   template?: TemplateName | Template;
   orientation?: Orientation;
+  layout?: Layout;
   reverseArrow?: boolean;
   initCommitOffsetX?: number;
   initCommitOffsetY?: number;
@@ -43,6 +45,7 @@ interface RenderedData<TNode> {
 
 class GitgraphCore<TNode = SVGElement> {
   public orientation?: Orientation;
+  public layout?: Layout;
   public get isHorizontal(): boolean {
     return (
       this.orientation === Orientation.Horizontal ||
@@ -57,6 +60,9 @@ class GitgraphCore<TNode = SVGElement> {
       this.orientation === Orientation.HorizontalReverse ||
       this.orientation === Orientation.VerticalReverse
     );
+  }
+  public get getLayout(): Layout {
+    return this.layout;
   }
   public get shouldDisplayCommitMessage(): boolean {
     return !this.isHorizontal && this.mode !== Mode.Compact;
@@ -113,6 +119,7 @@ class GitgraphCore<TNode = SVGElement> {
       options.branchLabelOnEveryCommit,
       false,
     );
+    this.layout = options.layout || Layout.Regular;
   }
 
   /**
