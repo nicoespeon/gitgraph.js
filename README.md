@@ -4,6 +4,8 @@ A JavaScript library to draw pretty git graphs.
 
 ---
 
+👋 **[Help! The project is looking for maintainers!](https://github.com/nicoespeon/gitgraph.js/issues/328)**
+
 [![Build Status](https://travis-ci.org/nicoespeon/gitgraph.js.svg?branch=master)](https://travis-ci.org/nicoespeon/gitgraph.js)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)][license]
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
