@@ -140,14 +140,14 @@ class BranchUserApi<TNode> {
     }
 
     let canFastForward = false;
-    const lastCommitHash = this._graph.refs.getCommit(this._branch.name);
-    if (lastCommitHash) {
-      canFastForward = this._areCommitsConnected(
-        lastCommitHash,
-        branchLastCommitHash,
-      );
-    } else {
-      canFastForward = false;
+    if (fastForward) {
+      const lastCommitHash = this._graph.refs.getCommit(this._branch.name);
+      if (lastCommitHash) {
+        canFastForward = this._areCommitsConnected(
+          lastCommitHash,
+          branchLastCommitHash,
+        );
+      }
     }
 
     if (fastForward && canFastForward) {
