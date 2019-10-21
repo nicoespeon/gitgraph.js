@@ -95,6 +95,14 @@ interface BranchLabelStyle {
    * Branch label border radius
    */
   borderRadius: number;
+  /**
+   * Branch label padding on x axis
+   */
+  paddingX: number;
+  /**
+   * Branch label padding on y axis
+   */
+  paddingY: number;
 }
 
 type BranchLabelStyleOptions = Partial<BranchLabelStyle>;
