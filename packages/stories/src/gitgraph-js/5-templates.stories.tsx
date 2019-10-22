@@ -147,6 +147,8 @@ storiesOf("gitgraph-js/5. Templates", module)
               strokeColor: "#ce9b00",
               borderRadius: 0,
               font: "italic 12pt serif",
+              paddingX: 5,
+              paddingY: 2,
             },
           },
         });

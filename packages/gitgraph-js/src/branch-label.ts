@@ -7,8 +7,14 @@ const PADDING_X = 10;
 const PADDING_Y = 5;
 
 function createBranchLabel(branch: Branch, commit: Commit): SVGElement {
-  const paddingX = branch.style.label.paddingX || PADDING_X;
-  const paddingY = branch.style.label.paddingY || PADDING_Y;
+  const paddingX =
+    branch.style.label.paddingX !== undefined
+      ? branch.style.label.paddingX
+      : PADDING_X;
+  const paddingY =
+    branch.style.label.paddingY !== undefined
+      ? branch.style.label.paddingY
+      : PADDING_Y;
   const rect = createRect({
     width: 0,
     height: 0,

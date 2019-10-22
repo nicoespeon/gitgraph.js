@@ -26,8 +26,14 @@ export class BranchLabel extends React.Component<Props, State> {
   public render() {
     const { branch, commit } = this.props;
 
-    const paddingX = branch.style.label.paddingX || BranchLabel.paddingX;
-    const paddingY = branch.style.label.paddingY || BranchLabel.paddingY;
+    const paddingX =
+      branch.style.label.paddingX !== undefined
+        ? branch.style.label.paddingX
+        : BranchLabel.paddingX;
+    const paddingY =
+      branch.style.label.paddingY !== undefined
+        ? branch.style.label.paddingY
+        : BranchLabel.paddingY;
     const boxWidth = this.state.textWidth + 2 * paddingX;
     const boxHeight = this.state.textHeight + 2 * paddingY;
 
