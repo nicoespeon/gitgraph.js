@@ -181,7 +181,17 @@ class BranchesPathsCalculator<TNode> {
         (mem, point, i) => {
           if (point.mergeCommit) {
             mem[mem.length - 1].push(pick(point, ["x", "y"]));
-            if (points[i - 1]) mem.push([points[i - 1]]);
+            var j = i - 1;
+            var previousPoint = points[j];
+            // finding the last of the previous points which is not a merge
+            while (j >= 0 && previousPoint.mergeCommit) {
+              j--;
+              previousPoint = points[j];
+            }
+            // starting a new array with this point
+            if (j >= 0) {
+              mem.push([previousPoint]);
+            }
           } else {
             mem[mem.length - 1].push(point);
           }
