@@ -32,7 +32,7 @@ export function Tag(props: Props) {
     `Q ${offset},${boxHeight / 2} ${offset + radius},${boxHeight / 2}`,
     `H ${boxWidth - radius}`,
     `Q ${boxWidth},${boxHeight / 2} ${boxWidth},${boxHeight / 2 - radius}`,
-    `V -${boxHeight / 2 - radius}`,
+    `V ${-(boxHeight / 2 - radius)}`,
     `Q ${boxWidth},-${boxHeight / 2} ${boxWidth - radius},-${boxHeight / 2}`,
     `H ${offset + radius}`,
     `Q ${offset},-${boxHeight / 2} ${offset},-${boxHeight / 2}`,
