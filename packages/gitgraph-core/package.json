@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/core",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Core of gitgraph, a JavaScript library to draw pretty git graphs",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
