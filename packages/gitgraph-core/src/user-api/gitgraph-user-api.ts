@@ -307,12 +307,12 @@ class GitgraphUserApi<TNode> {
         const currentHash = queue.pop() as Commit["hash"];
         const current = this._graph.commits.find(
           ({ hash }) => hash === currentHash,
-        ) as Commit<TNode>;
+        ) as Commit<TNode> | null;
         const prevBranches =
           result.get(currentHash) || new Set<Branch["name"]>();
         prevBranches.add(branch);
         result.set(currentHash, prevBranches);
-        if (current.parents.length > 0) {
+        if (current && current.parents && current.parents.length > 0) {
           queue.push(current.parents[0]);
         }
       }
