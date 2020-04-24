@@ -50,10 +50,10 @@ Create an `index.html` file and start coding:
     const master = gitgraph.branch("master");
     master.commit("Initial commit");
 
-    const develop = gitgraph.branch("develop");
+    const develop = master.branch("develop");
     develop.commit("Add TypeScript");
 
-    const aFeature = gitgraph.branch("a-feature");
+    const aFeature = develop.branch("a-feature");
     aFeature
       .commit("Make it work")
       .commit("Make it right")
