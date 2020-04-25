@@ -34,10 +34,10 @@ const gitgraph = new Gitgraph();
 const master = gitgraph.branch("master");
 master.commit("Set up the project");
 
-const develop = gitgraph.branch("develop");
+const develop = master.branch("develop");
 develop.commit("Add TypeScript");
 
-const aFeature = gitgraph.branch("a-feature");
+const aFeature = develop.branch("a-feature");
 aFeature
   .commit("Make it work")
   .commit("Make it right")
