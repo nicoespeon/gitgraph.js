@@ -234,7 +234,7 @@ storiesOf("gitgraph-js/1. Basic usage", module)
         });
 
         const master = gitgraph.branch("master").commit("one");
-        const feat1 = gitgraph.branch("feat/1");
+        const feat1 = gitgraph.branch("feat/1-trigger-ci");
         gitgraph.branch("develop");
         feat1.commit("two");
         master.merge(feat1);
