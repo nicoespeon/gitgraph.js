@@ -140,14 +140,14 @@ class BranchUserApi<TNode> {
     }
 
     let canFastForward = false;
-    const lastCommitHash = this._graph.refs.getCommit(this._branch.name);
-    if (lastCommitHash) {
-      canFastForward = this._areCommitsConnected(
-        lastCommitHash,
-        branchLastCommitHash,
-      );
-    } else {
-      canFastForward = false;
+    if (fastForward) {
+      const lastCommitHash = this._graph.refs.getCommit(this._branch.name);
+      if (lastCommitHash) {
+        canFastForward = this._areCommitsConnected(
+          lastCommitHash,
+          branchLastCommitHash,
+        );
+      }
     }
 
     if (fastForward && canFastForward) {
@@ -191,10 +191,17 @@ class BranchUserApi<TNode> {
   }
 
   /**
-   * Checkout onto this branch.
+   * Checkout onto this branch and update "HEAD" in refs
    */
   public checkout(): this {
-    this._graph.currentBranch = this._branch;
+    const target = this._branch;
+    const headCommit = this._graph.refs.getCommit(target.name);
+    this._graph.currentBranch = target;
+    // Update "HEAD" in refs when the target branch is not empty
+    if (headCommit) {
+      this._graph.refs.set("HEAD", headCommit);
+    }
+
     return this;
   }
 
@@ -237,7 +244,6 @@ class BranchUserApi<TNode> {
 
     // Move HEAD on the last commit
     this.checkout();
-    this._graph.refs.set("HEAD", commit.hash);
 
     // Add a tag to the commit if `option.tag` is provide
     if (tag) this.tag(tag);

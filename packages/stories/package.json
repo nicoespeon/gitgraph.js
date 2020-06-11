@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/stories",
-  "version": "0.0.10",
+  "version": "0.0.13",
   "private": true,
   "description": "Stories of @gitgraph rendering libraries for E2E tests",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -17,8 +17,8 @@
     "build": "build-storybook"
   },
   "dependencies": {
-    "@gitgraph/js": "1.3.2",
-    "@gitgraph/react": "1.5.1"
+    "@gitgraph/js": "1.3.5",
+    "@gitgraph/react": "1.5.4"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",

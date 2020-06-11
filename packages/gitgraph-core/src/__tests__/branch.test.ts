@@ -131,4 +131,61 @@ describe("Branch", () => {
 
     expect(master.style.spacing).toBe(12345);
   });
+
+  describe("checkout", () => {
+    describe("case: branch with commit", () => {
+      let master, develop, refs;
+      let masterLastCommit, developLastCommit;
+
+      beforeEach(() => {
+        const core = new GitgraphCore();
+        const gitgraph = core.getUserApi();
+        refs = core.refs;
+
+        master = gitgraph.branch("master");
+        master.commit("master 1");
+        master.commit("master 2");
+
+        develop = gitgraph.branch("develop");
+        develop.commit("develop 1");
+        develop.commit("develop 2");
+
+        masterLastCommit = core.refs.getCommit("master");
+        developLastCommit = core.refs.getCommit("develop");
+      });
+
+      it("should initialize 'HEAD' with the expected commit hash", () => {
+        expect(refs.getCommit("HEAD")).toEqual(developLastCommit);
+      });
+
+      it("should move 'HEAD' to target branch after checkout", () => {
+        expect(refs.getCommit("HEAD")).toEqual(developLastCommit);
+        master.checkout();
+        expect(refs.getCommit("HEAD")).toEqual(masterLastCommit);
+      });
+    });
+
+    describe("case: branch without commit", () => {
+      let master, develop, refs;
+
+      beforeEach(() => {
+        const core = new GitgraphCore();
+        const gitgraph = core.getUserApi();
+        refs = core.refs;
+
+        master = gitgraph.branch("master");
+        develop = gitgraph.branch("develop");
+      });
+
+      it("should not initialize 'HEAD'", () => {
+        expect(refs.getCommit("HEAD")).toBeUndefined();
+      });
+
+      it("should not set 'HEAD' after checkout", () => {
+        expect(refs.getCommit("HEAD")).toBeUndefined();
+        master.checkout();
+        expect(refs.getCommit("HEAD")).toBeUndefined();
+      });
+    });
+  });
 });
