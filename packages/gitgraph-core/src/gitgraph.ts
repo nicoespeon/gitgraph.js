@@ -62,7 +62,10 @@ class GitgraphCore<TNode = SVGElement> {
     );
   }
   public get getLayout(): Layout {
-    return this.layout;
+    if (this.layout) {
+      return this.layout;
+    }
+    return Layout.Regular;
   }
   public get shouldDisplayCommitMessage(): boolean {
     return !this.isHorizontal && this.mode !== Mode.Compact;
