@@ -2,27 +2,21 @@ import { GitgraphCore } from "../gitgraph";
 import { Layout } from "../layout";
 
 describe("Gitgraph Layout", () => {
-  it("should tell it's regular by default", () => {
+  it("should tell it's default layout if not set", () => {
     const gitgraph = new GitgraphCore();
 
-    expect(gitgraph.getLayout).toBe(Layout.Regular);
+    expect(gitgraph.getLayout).toBe(Layout.Default);
   });
 
-  it("should not re-use any columns for regular layout", () => {
+  it("should not re-use any columns for default layout", () => {
     const core = new GitgraphCore({
-      layout: Layout.Regular,
+      layout: Layout.Default,
     });
   });
 
-  it("should re-use closed branches columns for compact layout", () => {
+  it("should not recognize the Gitamine layout is set", () => {
     const core = new GitgraphCore({
-      layout: Layout.Compact,
-    });
-  });
-
-  it("should re-use all columns for compact layout", () => {
-    const core = new GitgraphCore({
-      layout: Layout.Condensed,
+      layout: Layout.Gitamine,
     });
   });
 });

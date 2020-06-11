@@ -1,5 +1,4 @@
 export enum Layout {
-  Regular = "regular",
-  Compact = "compact",
-  Condensed = "condensed",
+  Default = "default",
+  Gitamine = "gitamine",
 }

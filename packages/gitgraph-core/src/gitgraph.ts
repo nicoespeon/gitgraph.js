@@ -65,7 +65,7 @@ class GitgraphCore<TNode = SVGElement> {
     if (this.layout) {
       return this.layout;
     }
-    return Layout.Regular;
+    return Layout.Default;
   }
   public get shouldDisplayCommitMessage(): boolean {
     return !this.isHorizontal && this.mode !== Mode.Compact;
@@ -122,7 +122,7 @@ class GitgraphCore<TNode = SVGElement> {
       options.branchLabelOnEveryCommit,
       false,
     );
-    this.layout = options.layout || Layout.Regular;
+    this.layout = options.layout || Layout.Default;
   }
 
   /**
@@ -231,7 +231,7 @@ class GitgraphCore<TNode = SVGElement> {
       this.withBranches(branches, commit),
     );
 
-    const rows = createGraphRows(this.mode, this.commits);
+    const rows = createGraphRows(this.mode, this.commits, this.layout);
     const branchesOrder = new BranchesOrder<TNode>(
       commitsWithBranches,
       this.template.colors,
