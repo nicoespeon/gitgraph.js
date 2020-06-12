@@ -1,15 +1,20 @@
 import { Commit } from "../commit";
 
-import { RegularGraphRows } from "./regular";
+import { DefaultRendering } from "./default";
 
-export class GitamineGraphRows<TNode> extends RegularGraphRows<TNode> {
-  protected computeRowsFromCommits(commits: Array<Commit<TNode>>): void {
+export { CompactRendering };
+
+class GitamineRendering<TNode> extends DefaultRendering<TNode> {
+  protected computePositions(commits: Array<Commit<TNode>>): void {
     commits.forEach((commit, i) => {
-      const newRow = i;
-
-      // TODO update newRow variable to follow Gitamine algorithm
-
-      this.rows.set(commit.hash, newRow);
+      // TODO
+      // columns
+      const col = Array.from(this.branches).findIndex(
+        (branch) => branch === commit.branchToDisplay,
+      );
+      this.cols.set(commit.hash, col);
+      // rows
+      this.rows.set(commit.hash, i);
     });
   }
 }

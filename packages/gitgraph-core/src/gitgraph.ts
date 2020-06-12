@@ -1,8 +1,11 @@
 import { Branch, DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
 import { Commit } from "./commit";
-import { createGraphRows, GraphRows } from "./graph-rows";
 import { Mode } from "./mode";
-import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
+import { CompareBranchesOrder } from "./branches-order";
+
+import { DefaultRendering } from "./layout-algorithms/default";
+import { CompactRendering } from "./layout-algorithms/compact";
+
 import {
   Template,
   TemplateOptions,
@@ -231,21 +234,16 @@ class GitgraphCore<TNode = SVGElement> {
       this.withBranches(branches, commit),
     );
 
-    const rows = createGraphRows(this.mode, this.commits, this.layout);
-    const branchesOrder = new BranchesOrder<TNode>(
-      commitsWithBranches,
-      this.template.colors,
-      this.branchesOrderFunction,
-    );
+    const renderedLayout = this.ComputeLayout(commitsWithBranches);
 
     return (
       commitsWithBranches
         .map((commit) => commit.setRefs(this.refs))
-        .map((commit) => this.withPosition(rows, branchesOrder, commit))
+        .map((commit) => this.withPosition(renderedLayout, commit))
         // Fallback commit computed color on branch color.
         .map((commit) =>
           commit.withDefaultColor(
-            this.getBranchDefaultColor(branchesOrder, commit.branchToDisplay),
+            this.getBranchDefaultColor(renderedLayout, commit.branchToDisplay),
           ),
         )
         // Tags need commit style to be computed (with default color).
@@ -288,15 +286,11 @@ class GitgraphCore<TNode = SVGElement> {
     commits: Array<Commit<TNode>>,
     branchesPaths: BranchesPaths<TNode>,
   ): void {
-    const branchesOrder = new BranchesOrder<TNode>(
-      commits,
-      this.template.colors,
-      this.branchesOrderFunction,
-    );
+    const renderedLayout = this.ComputeLayout(commits);
     Array.from(branchesPaths).forEach(([branch]) => {
       branch.computedColor =
         branch.style.color ||
-        this.getBranchDefaultColor(branchesOrder, branch.name);
+        this.getBranchDefaultColor(renderedLayout, branch.name);
     });
   }
 
@@ -367,19 +361,17 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Add position to given commit.
    *
-   * @param rows Graph rows
-   * @param branchesOrder Computed order of branches
+   * @param renderedLayout Computed rows and order of branches
    * @param commit Commit to position
    */
   private withPosition(
-    rows: GraphRows<TNode>,
-    branchesOrder: BranchesOrder<TNode>,
+    renderedLayout: DefaultRendering<TNode>,
     commit: Commit<TNode>,
   ): Commit<TNode> {
-    const row = rows.getRowOf(commit.hash);
-    const maxRow = rows.getMaxRow();
+    const row = renderedLayout.getRowOf(commit.hash);
+    const maxRow = renderedLayout.getMaxRow();
 
-    const order = branchesOrder.get(commit.branchToDisplay);
+    const order = renderedLayout.getOrder(commit.hash);
 
     switch (this.orientation) {
       default:
@@ -415,14 +407,14 @@ class GitgraphCore<TNode = SVGElement> {
   /**
    * Return the default color for given branch.
    *
-   * @param branchesOrder Computed order of branches
+   * @param renderedLayout Computed rows order of branches
    * @param branchName Name of the branch
    */
   private getBranchDefaultColor(
-    branchesOrder: BranchesOrder<TNode>,
+    renderedLayout: DefaultRendering<TNode>,
     branchName: Branch["name"],
   ): string {
-    return branchesOrder.getColorOf(branchName);
+    return renderedLayout.getColorOf(branchName);
   }
 
   /**
@@ -438,5 +430,25 @@ class GitgraphCore<TNode = SVGElement> {
     this.nextTimeoutId = window.setTimeout(() => {
       this.listeners.forEach((listener) => listener(this.getRenderedData()));
     }, 0);
+  }
+
+  /**
+   * Return applies appropriate rendering algorithm depending on the options
+   */
+  private ComputeLayout(
+    commitsWithBranches: Array<Commit<TNode>>,
+  ): DefaultRendering<TNode> {
+    if (this.mode == Mode.Compact) {
+      return new CompactRendering<TNode>(
+        commitsWithBranches,
+        this.template.colors,
+        this.branchesOrderFunction,
+      );
+    }
+    return new DefaultRendering<TNode>(
+      commitsWithBranches,
+      this.template.colors,
+      this.branchesOrderFunction,
+    );
   }
 }
