@@ -178,7 +178,7 @@ function createRect(options: RectOptions): SVGRectElement {
   }
 
   if (options.fill) {
-    rect.setAttribute("fill", options.fill || "transparent");
+    rect.setAttribute("fill", options.fill || "none");
   }
 
   if (options.stroke) {

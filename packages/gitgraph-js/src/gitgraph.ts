@@ -273,7 +273,7 @@ function createGitgraph(
           isBezier,
           gitgraph.isVertical,
         ),
-        fill: "transparent",
+        fill: "none",
         stroke: branch.computedColor || "",
         strokeWidth: branch.style.lineWidth,
         translate: {
