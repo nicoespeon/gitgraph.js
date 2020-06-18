@@ -5,6 +5,7 @@ import { CompareBranchesOrder } from "./branches-order";
 
 import { DefaultRendering } from "./layout-algorithms/default";
 import { CompactRendering } from "./layout-algorithms/compact";
+import { GitamineRendering } from "./layout-algorithms/gitamine";
 
 import {
   Template,
@@ -438,6 +439,13 @@ class GitgraphCore<TNode = SVGElement> {
   private ComputeLayout(
     commitsWithBranches: Array<Commit<TNode>>,
   ): DefaultRendering<TNode> {
+    if (this.layout == Layout.Gitamine) {
+      return new GitamineRendering<TNode>(
+        commitsWithBranches,
+        this.template.colors,
+        this.branchesOrderFunction,
+      );
+    }
     if (this.mode == Mode.Compact) {
       return new CompactRendering<TNode>(
         commitsWithBranches,

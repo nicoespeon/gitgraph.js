@@ -1,4 +1,5 @@
 import { Commit } from "../commit";
+import FastPriorityQueue from "fastpriorityqueue";
 
 import { DefaultRendering } from "./default";
 
