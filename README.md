@@ -6,6 +6,12 @@ A JavaScript library to draw pretty git graphs.
 
 👋 **[Help! The project is looking for maintainers!](https://github.com/nicoespeon/gitgraph.js/issues/328)**
 
+<!-- prettier-ignore-start -->
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+<!-- prettier-ignore-end -->
+
 [![Build Status](https://travis-ci.org/nicoespeon/gitgraph.js.svg?branch=master)](https://travis-ci.org/nicoespeon/gitgraph.js)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)][license]
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
@@ -73,20 +79,12 @@ Releases use the following format:
 - Backward compatible changes bump `<minor>` (and reset `<patch>`)
 - Bug fixes bump `<patch>`
 
-## Authors and contributors
+## Contributors
 
-**Nicolas Carlo** - [@nicoespeon](https://twitter.com/nicoespeon) / <https://nicoespeon.com>
-
-**Fabien Bernard** - [@fabien0102](https://twitter.com/fabien0102) / <https://fabien0102.com>
-
-[![0](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/0)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/0)
-[![1](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/1)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/1)
-[![2](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/2)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/2)
-[![3](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/3)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/3)
-[![4](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/4)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/4)
-[![5](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/5)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/5)
-[![6](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/6)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/6)
-[![7](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/images/7)](https://sourcerer.io/fame/nicoespeon/nicoespeon/gitgraph.js/links/7)
+<!-- prettier-ignore-start -->
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-end -->
 
 ## Copyright and License
 
