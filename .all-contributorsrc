@@ -1,4 +1,6 @@
 {
+  "projectName": "Gitgraph.js",
+  "projectOwner": "nicoespeon",
   "files": ["README.md"],
   "imageSize": 100,
   "contributorsPerLine": 7,
