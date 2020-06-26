@@ -8,7 +8,7 @@ A JavaScript library to draw pretty git graphs.
 
 <!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- prettier-ignore-end -->
 
@@ -81,10 +81,20 @@ Releases use the following format:
 
 ## Contributors
 
-<!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://nicoespeon.com/"><img src="https://avatars0.githubusercontent.com/u/1094774?v=4" width="100px;" alt=""/><br /><sub><b>Nicolas Carlo</b></sub></a><br /><a href="#ideas-nicoespeon" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/nicoespeon/Gitgraph.js/commits?author=nicoespeon" title="Code">💻</a> <a href="https://github.com/nicoespeon/Gitgraph.js/issues?q=author%3Anicoespeon" title="Bug reports">🐛</a> <a href="https://github.com/nicoespeon/Gitgraph.js/commits?author=nicoespeon" title="Documentation">📖</a> <a href="https://github.com/nicoespeon/Gitgraph.js/pulls?q=is%3Apr+reviewed-by%3Anicoespeon" title="Reviewed Pull Requests">👀</a> <a href="#question-nicoespeon" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="https://fabien0102.com/"><img src="https://avatars1.githubusercontent.com/u/1761469?v=4" width="100px;" alt=""/><br /><sub><b>Fabien BERNARD</b></sub></a><br /><a href="#ideas-fabien0102" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/nicoespeon/Gitgraph.js/commits?author=fabien0102" title="Code">💻</a> <a href="https://github.com/nicoespeon/Gitgraph.js/issues?q=author%3Afabien0102" title="Bug reports">🐛</a> <a href="https://github.com/nicoespeon/Gitgraph.js/pulls?q=is%3Apr+reviewed-by%3Afabien0102" title="Reviewed Pull Requests">👀</a> <a href="#question-fabien0102" title="Answering Questions">💬</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## Copyright and License
 

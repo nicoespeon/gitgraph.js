@@ -1,13 +1,43 @@
 {
   "projectName": "Gitgraph.js",
   "projectOwner": "nicoespeon",
-  "files": ["README.md"],
+  "files": [
+    "README.md"
+  ],
   "imageSize": 100,
   "contributorsPerLine": 7,
   "contributorsSortAlphabetically": false,
-  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat-square)](#contributors)",
-  "contributorTemplate": "<a href=\"<%= contributor.profile %>\"><img src=\"<%= contributor.avatar_url %>\" width=\"<%= options.imageSize %>px;\" alt=\"\"/><br /><sub><b><%= contributor.name %></b></sub></a>",
   "types": {},
   "skipCi": "true",
-  "contributors": []
+  "contributors": [
+    {
+      "login": "nicoespeon",
+      "name": "Nicolas Carlo",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1094774?v=4",
+      "profile": "https://nicoespeon.com/",
+      "contributions": [
+        "ideas",
+        "code",
+        "bug",
+        "doc",
+        "review",
+        "question"
+      ]
+    },
+    {
+      "login": "fabien0102",
+      "name": "Fabien BERNARD",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1761469?v=4",
+      "profile": "https://fabien0102.com/",
+      "contributions": [
+        "ideas",
+        "code",
+        "bug",
+        "review",
+        "question"
+      ]
+    }
+  ],
+  "repoType": "github",
+  "commitConvention": "none"
 }
