@@ -34,10 +34,12 @@
     "test": "jest",
     "test:e2e": "lerna run test:e2e --stream",
     "test:ci": "CI=true npm run test && npm run test:e2e",
-    "clean": "lerna clean"
+    "clean": "lerna clean",
+    "all-contributors": "all-contributors"
   },
   "devDependencies": {
     "@types/jest": "23.1.4",
+    "all-contributors-cli": "^6.16.0",
     "concurrently": "4.1.0",
     "husky": "1.1.2",
     "jest": "23.3.0",
