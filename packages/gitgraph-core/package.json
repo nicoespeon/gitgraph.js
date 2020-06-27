@@ -45,13 +45,13 @@
     "prepublishOnly": "npm run test"
   },
   "devDependencies": {
-    "@types/node": "^9.4.6",
+    "@types/node": "9.4.6",
     "auto-changelog": "1.12.1",
-    "browserify": "^14.5.0",
-    "npm-run-all": "^4.1.2",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.51.8",
-    "uglify-es": "^3.3.9"
+    "browserify": "14.5.0",
+    "npm-run-all": "4.1.2",
+    "rimraf": "2.6.2",
+    "rollup": "0.51.8",
+    "uglify-es": "3.3.9"
   },
   "jest": {
     "transform": {
