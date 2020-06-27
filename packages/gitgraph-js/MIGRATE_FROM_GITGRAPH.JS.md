@@ -234,7 +234,7 @@ For the detailed options signature, things have changed a bit:
 
 ### Removed
 
-- `options.displayTagBox` was used to customize the visibility of the tag box. If `false`, only the tag text is rendered. Now you can customize more elements. Thus, you can achieve the same result with `options.style.bgColor` set to `transparent` and `options.style.strokeWidth` set to `0`.
+- `options.displayTagBox` was used to customize the visibility of the tag box. If `false`, only the tag text is rendered. Now you can customize more elements. Thus, you can achieve the same result with `options.style.bgColor` set to `none` and `options.style.strokeWidth` set to `0`.
 
 ### Added
 

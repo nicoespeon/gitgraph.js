@@ -180,7 +180,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           isBezier,
           this.gitgraph.isVertical,
         )}
-        fill="transparent"
+        fill="none"
         stroke={branch.computedColor}
         strokeWidth={branch.style.lineWidth}
         transform={`translate(${offset}, ${offset})`}
