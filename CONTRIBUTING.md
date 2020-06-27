@@ -8,6 +8,8 @@ the developers managing and developing this open source project. In return,
 they should reciprocate that respect in addressing your issue or assessing
 patches and features.
 
+Whether it's code, design, typo or documentation, every contribution is welcomed! So again, thank you very, very much 🧙‍
+
 ## 🕵️‍ Using the issue tracker
 
 The issue tracker is the preferred channel for [bug reports](#bugs), [features requests](#features) and [submitting pull requests](#pull-requests), but please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
@@ -32,6 +34,8 @@ Guidelines for bug reports:
 
 4.  **Create a new issue** using the "Bug Report" template. Fill the different
     sections to provide a maximum of details. They will help us to fix potential bugs.
+
+5.  [**Use all-contributors bot command**][all-contributors-bot-command] to add yourself to the list of contributors. It's very easy to do, you basically need to mention the bot in a comment of your PR.
 
 <a name="features"></a>
 
@@ -109,6 +113,8 @@ project:
 
 7.  [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
     with a clear title and description.
+
+8.  [Use all-contributors bot command][all-contributors-bot-command] to add yourself to the list of contributors. It's very easy to do, you basically need to mention the bot in a comment of your PR.
 
 **IMPORTANT**: By submitting a patch, you agree to allow the project owner to license your work under the same license as that used by the project.
 
