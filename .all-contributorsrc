@@ -1,5 +1,5 @@
 {
-  "projectName": "Gitgraph.js",
+  "projectName": "gitgraph.js",
   "projectOwner": "nicoespeon",
   "files": [
     "README.md"
@@ -8,7 +8,7 @@
   "contributorsPerLine": 7,
   "contributorsSortAlphabetically": false,
   "types": {},
-  "skipCi": "true",
+  "skipCi": true,
   "contributors": [
     {
       "login": "nicoespeon",
@@ -323,8 +323,18 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "Nebula83",
+      "name": "Nebula83",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/12481964?v=4",
+      "profile": "https://github.com/Nebula83",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoType": "github",
-  "commitConvention": "none"
+  "commitConvention": "none",
+  "repoHost": "https://github.com"
 }
