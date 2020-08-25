@@ -1,7 +1,7 @@
 import { GitgraphCore } from "@gitgraph/core";
 
 // Domain (rendering logic)
-import computeGraphMap from "./compute-graph-map";
+import computeGraphMap from "./compute-graph-map.test.ts";
 
 // Infrastructure (logger implementations)
 import consoleGraphLogger from "./console-graph-logger";
