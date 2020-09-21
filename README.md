@@ -31,6 +31,14 @@ You'll find usage details in their README.
 
 As a contributor, you might be interested in checking out [gitgraph-core][gitgraph-core]. It contains the core logic for rendering libraries to use.
 
+## Usage Demo
+
+You can find demo at [Here](https://gitgraphjs.com/stories/)
+
+## Documentation
+
+You can find documentation at [Here](https://gitgraphjs.com/v1/docs/)
+
 ## Running the project locally
 
 Pre-requisites:
