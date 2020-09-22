@@ -332,6 +332,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "andreasonny83",
+      "name": "Andrea Sonny",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/8806300?v=4",
+      "profile": "https://about.me/andreasonny83",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
     }
   ],
   "repoType": "github",
