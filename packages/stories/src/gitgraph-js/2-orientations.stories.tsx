@@ -17,8 +17,13 @@ storiesOf("gitgraph-js/2. Orientations", module)
         const develop = gitgraph.branch("develop");
         develop.commit("one");
         master.commit("two");
+        master.commit({ subject: "Initial commit", body: "Sample body" });
         develop.commit("three");
         master.merge(develop);
+        master.commit({
+          subject: "four",
+          body: "Last commit body",
+        });
       }}
     </GraphContainer>
   ))
