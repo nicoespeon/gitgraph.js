@@ -25,7 +25,7 @@ const withoutBranchLabels = templateExtend(TemplateName.Metro, {
   branch: { label: { display: false } },
 });
 
-const renderSax: CommitOptions["renderDot"] = (commit) =>
+const renderSax: CommitOptions["renderDot"] = (commit: any) =>
   createSvg({
     height: 30,
     width: 30,
@@ -49,7 +49,7 @@ const renderSax: CommitOptions["renderDot"] = (commit) =>
     ],
   });
 
-const renderLongMessage: CommitOptions["renderMessage"] = (commit) => {
+const renderLongMessage: CommitOptions["renderMessage"] = (commit: any) => {
   return createG({
     translate: { x: 0, y: commit.style.dot.size },
     children: [
@@ -79,7 +79,7 @@ storiesOf("gitgraph-js/6. Custom renders", module)
   .add("with render dot", () => (
     <GraphContainer>
       {(graphContainer) => {
-        const renderDot: CommitOptions["renderDot"] = (commit) =>
+        const renderDot: CommitOptions["renderDot"] = (commit: any) =>
           renderSax(commit);
 
         const gitgraph = createGitgraph(graphContainer, {
@@ -110,7 +110,7 @@ storiesOf("gitgraph-js/6. Custom renders", module)
   .add("with render tooltip", () => (
     <GraphContainer>
       {(graphContainer) => {
-        const renderTooltip: CommitOptions["renderTooltip"] = (commit) => {
+        const renderTooltip: CommitOptions["renderTooltip"] = (commit: any) => {
           const commitSize = commit.style.dot.size * 2;
 
           return createG({
@@ -156,7 +156,7 @@ storiesOf("gitgraph-js/6. Custom renders", module)
   .add("with render message", () => (
     <GraphContainer>
       {(graphContainer) => {
-        const renderMessage: CommitOptions["renderMessage"] = (commit) => {
+        const renderMessage: CommitOptions["renderMessage"] = (commit: any) => {
           return createText({
             translate: { x: 0, y: commit.style.dot.size },
             fill: commit.style.dot.color,
@@ -243,7 +243,7 @@ storiesOf("gitgraph-js/6. Custom renders", module)
     </GraphContainer>
   ))
   .add("with render branch label", () => {
-    const renderLabel: BranchOptions["renderLabel"] = (branch) => {
+    const renderLabel: BranchOptions["renderLabel"] = (branch: any) => {
       return createText({
         content: `🎷 ${branch.name}`,
         fill: branch.style.label.color,
@@ -278,7 +278,7 @@ storiesOf("gitgraph-js/6. Custom renders", module)
     );
   })
   .add("with render tag", () => {
-    const renderTag: TagOptions["render"] = (name, style) => {
+    const renderTag: TagOptions["render"] = (name: any, style: any) => {
       return createText({
         content: `🎷 ${name}`,
         font: style.font,

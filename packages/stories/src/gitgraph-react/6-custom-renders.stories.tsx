@@ -19,7 +19,7 @@ const withoutBranchLabels = templateExtend(TemplateName.Metro, {
 
 storiesOf("gitgraph-react/6. Custom renders", module)
   .add("with render dot", () => {
-    const renderDot: CommitOptions["renderDot"] = (commit) => (
+    const renderDot: CommitOptions["renderDot"] = (commit: any) => (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 71.84 75.33"
@@ -59,7 +59,7 @@ storiesOf("gitgraph-react/6. Custom renders", module)
     );
   })
   .add("with render tooltip", () => {
-    const renderTooltip: CommitOptions["renderTooltip"] = (commit) => {
+    const renderTooltip: CommitOptions["renderTooltip"] = (commit: any) => {
       const commitSize = commit.style.dot.size * 2;
       return (
         <g transform={`translate(${commitSize + 10}, ${commitSize / 2})`}>
@@ -113,7 +113,7 @@ storiesOf("gitgraph-react/6. Custom renders", module)
     );
   })
   .add("with render message", () => {
-    const renderMessage: CommitOptions["renderMessage"] = (commit) => {
+    const renderMessage: CommitOptions["renderMessage"] = (commit: any) => {
       return (
         <text
           y={commit.style.dot.size}
@@ -151,7 +151,7 @@ storiesOf("gitgraph-react/6. Custom renders", module)
     );
   })
   .add("with render message (long)", () => {
-    const renderMessage: CommitOptions["renderMessage"] = (commit) => {
+    const renderMessage: CommitOptions["renderMessage"] = (commit: any) => {
       return (
         <g transform={`translate(0, ${commit.style.dot.size})`}>
           <text fill={commit.style.dot.color} alignmentBaseline="central">
@@ -197,7 +197,7 @@ storiesOf("gitgraph-react/6. Custom renders", module)
     );
   })
   .add("with render message (long & reverse orientation)", () => {
-    const renderMessage: CommitOptions["renderMessage"] = (commit) => {
+    const renderMessage: CommitOptions["renderMessage"] = (commit: any) => {
       return (
         <g transform={`translate(0, ${commit.style.dot.size})`}>
           <text fill={commit.style.dot.color} alignmentBaseline="central">
@@ -248,7 +248,7 @@ storiesOf("gitgraph-react/6. Custom renders", module)
     );
   })
   .add("with render branch label", () => {
-    const renderLabel: BranchOptions["renderLabel"] = (branch) => {
+    const renderLabel: BranchOptions["renderLabel"] = (branch: any) => {
       return (
         <text
           alignmentBaseline="middle"
@@ -281,7 +281,7 @@ storiesOf("gitgraph-react/6. Custom renders", module)
     );
   })
   .add("with render tag", () => {
-    const renderTag: TagOptions["render"] = (name, style) => {
+    const renderTag: TagOptions["render"] = (name: any, style: any) => {
       return (
         <text style={{ font: style.font }} fill={style.bgColor} y={6}>
           🎷 {name}
