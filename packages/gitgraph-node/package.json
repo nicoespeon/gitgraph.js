@@ -35,13 +35,13 @@
   },
   "dependencies": {
     "@gitgraph/core": "1.4.5",
-    "chalk": "^2.4.1",
+    "chalk": "2.4.1",
     "lodash": "4.17.13"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.110",
-    "@types/node": "^9.4.6",
+    "@types/lodash": "4.14.110",
+    "@types/node": "9.4.6",
     "auto-changelog": "1.12.1",
-    "ts-node": "^6.1.1"
+    "ts-node": "6.1.1"
   }
 }

@@ -236,6 +236,7 @@ function createGitgraph(
       // It works… by chance. Technically, we should compute what would
       // *actually* go beyond the computed limits of the graph.
       const horizontalCustomOffset = 50;
+      const verticalCustomOffset = 20;
 
       const widthOffset = gitgraph.isHorizontal
         ? horizontalCustomOffset
@@ -247,7 +248,7 @@ function createGitgraph(
         ? horizontalCustomOffset
         : // Add `TOOLTIP_PADDING` so we don't crop tooltip text
           // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
-          BRANCH_LABEL_PADDING_Y + TOOLTIP_PADDING;
+          BRANCH_LABEL_PADDING_Y + TOOLTIP_PADDING + verticalCustomOffset;
 
       svg.setAttribute("width", (width + widthOffset).toString());
       svg.setAttribute("height", (height + heightOffset).toString());
@@ -275,7 +276,7 @@ function createGitgraph(
           isBezier,
           gitgraph.isVertical,
         ),
-        fill: "transparent",
+        fill: "none",
         stroke: branch.computedColor || "",
         strokeWidth: branch.style.lineWidth,
         translate: {
