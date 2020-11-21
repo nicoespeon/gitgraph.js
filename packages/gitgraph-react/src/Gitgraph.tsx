@@ -16,7 +16,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { TAG_PADDING_X } from "./Tag";
-import { CommitElement, ReactSvgElement } from "./types";
+import { CommitElement, ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
 import { CommitComp } from "./Commit";
 import { BranchPath } from "./BranchPath";
 
@@ -29,6 +29,11 @@ export {
   MergeStyle,
   Mode,
   Orientation,
+  CommitOptions,
+  BranchOptions,
+  TagOptions,
+  MergeOptions,
+  Branch,
 };
 
 type GitgraphProps = GitgraphPropsWithChildren | GitgraphPropsWithGraph;
