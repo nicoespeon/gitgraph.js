@@ -23,79 +23,47 @@ interface CommitsProps {
   setCurrentCommitOver: (val: Commit<ReactSvgElement> | null) => void;
 }
 
-export class CommitComp extends React.Component<CommitsProps, {}> {
-  public render() {
-    const commit = this.props.commit;
-    const { x, y } = this.props.getWithCommitOffset(commit);
+export const CommitComp = (props: CommitsProps) => {
+  const {commit, commits, gitgraph} = props;
 
-    const shouldRenderTooltip =
-      this.props.currentCommitOver === commit &&
-      (this.props.gitgraph.isHorizontal ||
-        (this.props.gitgraph.mode === Mode.Compact &&
-          commit.style.hasTooltipInCompactMode));
-
-    if (shouldRenderTooltip) {
-      this.props.setTooltip(
-        <g transform={`translate(${x}, ${y})`}>
-          <Tooltip commit={commit}>
-            {commit.hashAbbrev} - {commit.subject}
-          </Tooltip>
-        </g>,
-      );
-    }
-
-    return (
-      <g transform={`translate(${x}, ${y})`}>
-        <Dot
-          commit={commit}
-          onMouseOver={() => {
-            this.props.setCurrentCommitOver(commit);
-            commit.onMouseOver();
-          }}
-          onMouseOut={() => {
-            this.props.setCurrentCommitOver(null);
-            this.props.setTooltip(null);
-            commit.onMouseOut();
-          }}
-        />
-        {this.props.gitgraph.template.arrow.size && this.renderArrows(commit)}
-
-        {/* These elements are positionned after component update. */}
-        <g transform={`translate(${-x}, 0)`}>
-          {
-            commit.style.message.display &&
-            <Message
-              commit={commit}
-            />
-          }
-          {this.renderBranchLabels(commit)}
-          {this.renderTags(commit)}
-        </g>
-      </g>
-    );
-  }
-
-  private renderArrows(commit: Commit<ReactSvgElement>) {
+  const arrows = React.useMemo(() => {
+    if (!gitgraph.template.arrow.size) return null;
     const commitRadius = commit.style.dot.size;
 
     return commit.parents.map((parentHash: string) => {
       return (
         <Arrow
           key={parentHash}
-          commits={this.props.commits}
+          commits={commits}
           commit={commit}
-          gitgraph={this.props.gitgraph}
+          gitgraph={gitgraph}
           parentHash={parentHash}
           commitRadius={commitRadius}
         />
       );
     });
-  }
+  }, [commits, commit, gitgraph]);
 
+  const branchLabels = React.useMemo(() => {
+    // @gitgraph/core could compute branch labels into commits directly.
+    // That will make it easier to retrieve them, just like tags.
+    // TODO: WILL THIS CAUSE A BUG BY BEING IN USEMEMO?
+    const branches = Array.from(gitgraph.branches.values());
+    return branches.map((branch) => {
+      return (
+        <BranchLabel
+          key={branch.name}
+          gitgraph={gitgraph}
+          branch={branch}
+          commit={commit}
+        />
+      );
+    });
+  }, [gitgraph, commit])
 
-  private renderTags(commit: Commit<ReactSvgElement>) {
+  const tags = React.useMemo(() => {
     if (!commit.tags) return null;
-    if (this.props.gitgraph.isHorizontal) return null;
+    if (gitgraph.isHorizontal) return null;
 
     return commit.tags.map((tag) =>
       <Tag
@@ -104,22 +72,53 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
         tag={tag}
       />,
     );
+  }, [commit, gitgraph])
+
+  const { x, y } = props.getWithCommitOffset(commit);
+
+  const shouldRenderTooltip =
+    props.currentCommitOver === commit &&
+    (props.gitgraph.isHorizontal ||
+      (props.gitgraph.mode === Mode.Compact &&
+        commit.style.hasTooltipInCompactMode));
+
+  if (shouldRenderTooltip) {
+    props.setTooltip(
+      <g transform={`translate(${x}, ${y})`}>
+        <Tooltip commit={commit}>
+          {commit.hashAbbrev} - {commit.subject}
+        </Tooltip>
+      </g>,
+    );
   }
 
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <Dot
+        commit={commit}
+        onMouseOver={() => {
+          props.setCurrentCommitOver(commit);
+          commit.onMouseOver();
+        }}
+        onMouseOut={() => {
+          props.setCurrentCommitOver(null);
+          props.setTooltip(null);
+          commit.onMouseOut();
+        }}
+      />
+      {arrows}
 
-  private renderBranchLabels(commit: Commit<ReactSvgElement>) {
-    // @gitgraph/core could compute branch labels into commits directly.
-    // That will make it easier to retrieve them, just like tags.
-    const branches = Array.from(this.props.gitgraph.branches.values());
-    return branches.map((branch) => {
-      return (
-        <BranchLabel
-          key={branch.name}
-          gitgraph={this.props.gitgraph}
-          branch={branch}
-          commit={commit}
-        />
-      );
-    });
-  }
+      {/* These elements are positionned after component update. */}
+      <g transform={`translate(${-x}, 0)`}>
+        {
+          commit.style.message.display &&
+          <Message
+            commit={commit}
+          />
+        }
+        {branchLabels}
+        {tags}
+      </g>
+    </g>
+  );
 }

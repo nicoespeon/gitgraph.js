@@ -15,7 +15,6 @@ import {
 
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
-import { TAG_PADDING_X } from "./Tag";
 import { ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
 import { CommitComp } from "./Commit";
 import { BranchPath } from "./BranchPath";
@@ -121,7 +120,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
               />
             )}
           </g>
-          {this.$tooltip}
+          {this.$tooltip}[
         </g>
       </svg>
     );
@@ -197,40 +196,40 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       return;
     }
 
-    const padding = 10;
+    // const padding = 10;
 
     // Ensure commits elements (branch labels, message…) are well positionned.
     // It can't be done at render time since elements size is dynamic.
-    Object.keys(this.commitsElements).forEach((commitHash) => {
-      const { branchLabel, tags, message } = this.commitsElements[commitHash];
-
-      // We'll store X position progressively and translate elements.
-      let x = this.state.commitMessagesX;
-
-      if (branchLabel && branchLabel.current) {
-        moveElement(branchLabel.current, x);
-
-        // For some reason, one paddingX is missing in BBox width.
-        const branchLabelWidth =
-          branchLabel.current.getBBox().width + BranchLabel.paddingX;
-        x += branchLabelWidth + padding;
-      }
-
-      tags.forEach((tag) => {
-        if (!tag || !tag.current) return;
-
-        moveElement(tag.current, x);
-
-        // For some reason, one paddingX is missing in BBox width.
-        const tagWidth = tag.current.getBBox().width + TAG_PADDING_X;
-        x += tagWidth + padding;
-      });
-
-      if (message && message.current) {
-        // Move message is here
-        moveElement(message.current, x);
-      }
-    });
+    // Object.keys(this.commitsElements).forEach((commitHash) => {
+    //   const { branchLabel, tags, message } = this.commitsElements[commitHash];
+    //
+    //   // We'll store X position progressively and translate elements.
+    //   let x = this.state.commitMessagesX;
+    //
+    //   if (branchLabel && branchLabel.current) {
+    //     moveElement(branchLabel.current, x);
+    //
+    //     // For some reason, one paddingX is missing in BBox width.
+    //     const branchLabelWidth =
+    //       branchLabel.current.getBBox().width + BranchLabel.paddingX;
+    //     x += branchLabelWidth + padding;
+    //   }
+    //
+    //   tags.forEach((tag) => {
+    //     if (!tag || !tag.current) return;
+    //
+    //     moveElement(tag.current, x);
+    //
+    //     // For some reason, one paddingX is missing in BBox width.
+    //     const tagWidth = tag.current.getBBox().width + TAG_PADDING_X;
+    //     x += tagWidth + padding;
+    //   });
+    //
+    //   if (message && message.current) {
+    //     // Move message is here
+    //     moveElement(message.current, x);
+    //   }
+    // });
   }
 
   private computeOffsets(
@@ -292,10 +291,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 }
 
-function moveElement(target: Element, x: number): void {
-  const transform = target.getAttribute("transform") || "translate(0, 0)";
-  target.setAttribute(
-    "transform",
-    transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
-  );
-}
+// function moveElement(target: Element, x: number): void {
+//   const transform = target.getAttribute("transform") || "translate(0, 0)";
+//   target.setAttribute(
+//     "transform",
+//     transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
+//   );
+// }
