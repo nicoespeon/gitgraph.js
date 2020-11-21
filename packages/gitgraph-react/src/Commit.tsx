@@ -39,7 +39,7 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
 
     if (shouldRenderTooltip) {
       this.props.setTooltip(
-        <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+        <g transform={`translate(${x}, ${y})`}>
           <Tooltip commit={commit}>
             {commit.hashAbbrev} - {commit.subject}
           </Tooltip>
@@ -48,7 +48,7 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
     }
 
     return (
-      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
+      <g transform={`translate(${x}, ${y})`}>
         <Dot
           commit={commit}
           onMouseOver={() => {
@@ -86,6 +86,7 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
     return commit.parents.map((parentHash: string) => {
       return (
         <Arrow
+          key={parentHash}
           commits={this.props.commits}
           commit={commit}
           gitgraph={this.props.gitgraph}
@@ -103,6 +104,7 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
 
     return commit.tags.map((tag) =>
       <Tag
+        key={`${commit.hashAbbrev}-${tag.name}`}
         commit={commit}
         initCommitElements={this.props.initCommitElements}
         commitsElements={this.props.commitsElements}
@@ -119,6 +121,7 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
     return branches.map((branch) => {
       return (
         <BranchLabel
+          key={branch.name}
           gitgraph={this.props.gitgraph}
           initCommitElements={this.props.initCommitElements}
           commitsElements={this.props.commitsElements}

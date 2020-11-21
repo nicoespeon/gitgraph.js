@@ -76,7 +76,7 @@ export class BranchLabel extends React.Component<BranchLabelProps> {
 
     if (this.props.gitgraph.isVertical) {
       return (
-        <g key={branch.name} ref={ref}>
+        <g ref={ref}>
           {branchLabel}
         </g>
       );
@@ -87,7 +87,6 @@ export class BranchLabel extends React.Component<BranchLabelProps> {
 
       return (
         <g
-          key={branch.name}
           ref={ref}
           transform={`translate(${commit.x}, ${y})`}
         >

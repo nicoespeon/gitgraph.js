@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
 import { Tag as CoreTag, Commit } from "@gitgraph/core";
 import { CommitElement, ReactSvgElement } from "./types";
 
@@ -10,11 +9,11 @@ interface BaseTagProps {
 export const TAG_PADDING_X = 10;
 export const TAG_PADDING_Y = 5;
 
-export function DefaultTag(props: BaseTagProps) {
-  const [state, setState] = useState({ textWidth: 0, textHeight: 0 });
-  const $text = useRef<SVGTextElement>(null);
+function DefaultTag(props: BaseTagProps) {
+  const [state, setState] = React.useState({ textWidth: 0, textHeight: 0 });
+  const $text = React.useRef<SVGTextElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const box = $text.current!.getBBox();
     setState({ textWidth: box.width, textHeight: box.height });
   }, []);
@@ -79,7 +78,6 @@ export class Tag extends React.Component<TagProps> {
 
     return (
       <g
-        key={`${commit.hashAbbrev}-${tag.name}`}
         ref={ref}
         transform={`translate(0, ${commit.style.dot.size})`}
       >

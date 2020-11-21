@@ -16,7 +16,6 @@ export class BranchPath extends React.Component<BranchPathProps, any> {
   public render() {
     return (
       <path
-        key={this.props.branch.name}
         d={toSvgPath(
           this.props.coordinates.map((a) => a.map((b) => this.props.getWithCommitOffset(b))),
           this.props.isBezier,

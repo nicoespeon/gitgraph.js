@@ -108,14 +108,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           <g ref={this.$commits}>
             {this.state.commits.map((commit) =>
               <CommitComp
+                key={commit.hashAbbrev}
                 commits={this.state.commits}
                 commit={commit}
                 currentCommitOver={this.state.currentCommitOver}
                 gitgraph={this.gitgraph}
-                initCommitElements={this.initCommitElements}
+                initCommitElements={this.initCommitElements.bind(this)}
                 commitsElements={this.commitsElements}
-                getWithCommitOffset={this.getWithCommitOffset}
-                setTooltip={this.setTooltip}
+                getWithCommitOffset={this.getWithCommitOffset.bind(this)}
+                setTooltip={this.setTooltip.bind(this)}
               />
             )}
           </g>
@@ -167,12 +168,14 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const offset = this.gitgraph.template.commit.dot.size;
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
+
     return Array.from(this.state.branchesPaths).map(([branch, coordinates]) => (
         <BranchPath
+          key={branch.name}
           gitgraph={this.gitgraph}
           branch={branch}
           coordinates={coordinates}
-          getWithCommitOffset={this.getWithCommitOffset}
+          getWithCommitOffset={this.getWithCommitOffset.bind(this)}
           isBezier={isBezier}
           offset={offset}
         />
