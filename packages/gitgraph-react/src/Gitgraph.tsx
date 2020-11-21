@@ -11,14 +11,14 @@ import {
   templateExtend,
   BranchesPaths,
   Coordinate,
-  toSvgPath,
 } from "@gitgraph/core";
 
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
-import { Tag, TAG_PADDING_X } from "./Tag";
+import { TAG_PADDING_X } from "./Tag";
 import { CommitElement, ReactSvgElement } from "./types";
 import { CommitComp } from "./Commit";
+import { BranchPath } from "./BranchPath";
 
 export {
   Gitgraph,
@@ -114,6 +114,8 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
                 gitgraph={this.gitgraph}
                 initCommitElements={this.initCommitElements}
                 commitsElements={this.commitsElements}
+                getWithCommitOffset={this.getWithCommitOffset}
+                setTooltip={this.setTooltip}
               />
             )}
           </g>
@@ -157,23 +159,23 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
+  private setTooltip(v:  React.ReactElement<SVGGElement> | null) {
+    this.$tooltip = v;
+  }
+
   private renderBranchesPaths() {
     const offset = this.gitgraph.template.commit.dot.size;
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
     return Array.from(this.state.branchesPaths).map(([branch, coordinates]) => (
-      <path
-        key={branch.name}
-        d={toSvgPath(
-          coordinates.map((a) => a.map((b) => this.getWithCommitOffset(b))),
-          isBezier,
-          this.gitgraph.isVertical,
-        )}
-        fill="none"
-        stroke={branch.computedColor}
-        strokeWidth={branch.style.lineWidth}
-        transform={`translate(${offset}, ${offset})`}
-      />
+        <BranchPath
+          gitgraph={this.gitgraph}
+          branch={branch}
+          coordinates={coordinates}
+          getWithCommitOffset={this.getWithCommitOffset}
+          isBezier={isBezier}
+          offset={offset}
+        />
     ));
   }
 
