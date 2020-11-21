@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Branch, Commit, GitgraphCore } from "@gitgraph/core";
 import { ReactSvgElement } from "./types";
+import { MutableRefObject } from "react";
 
 interface BranchLabelBaseProps {
   branch: Branch<React.ReactElement<SVGElement>>;
@@ -44,6 +45,7 @@ function DefaultBranchLabel({branch, commit}: BranchLabelBaseProps) {
 
 interface BranchLabelProps extends BranchLabelBaseProps {
   gitgraph: GitgraphCore<ReactSvgElement>;
+  ref: MutableRefObject<SVGGElement | undefined>;
 }
 
 export interface CompoundedComponent extends React.ForwardRefExoticComponent<BranchLabelProps> {

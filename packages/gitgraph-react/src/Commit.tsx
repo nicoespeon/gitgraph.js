@@ -12,6 +12,7 @@ import { Arrow } from "./Arrow";
 import { Message } from "./Message";
 import { Tag } from "./Tag";
 import { BranchLabel } from "./BranchLabel";
+import { MutableRefObject } from "react";
 
 interface CommitsProps {
   commits: Array<Commit<ReactSvgElement>>;
@@ -25,6 +26,13 @@ interface CommitsProps {
 
 export const CommitComp = (props: CommitsProps) => {
   const {commit, commits, gitgraph} = props;
+
+  // This _should_ likely be an array, but is not in order to intentionally keep
+  // a bug in the codebase that existed prior to Hook-ifying this component
+  const branchLabelRef = React.useRef<SVGGElement>();
+  const tagRefs: MutableRefObject<SVGGElement[]> = React.useRef([]);
+  // "as unknown as any" needed to avoid `ref` mistypings later. :(
+  const messageRef: MutableRefObject<SVGGElement> = React.useRef<SVGGElement>() as unknown as any;
 
   const arrows = React.useMemo(() => {
     if (!gitgraph.template.arrow.size) return null;
@@ -56,20 +64,23 @@ export const CommitComp = (props: CommitsProps) => {
           gitgraph={gitgraph}
           branch={branch}
           commit={commit}
+          ref={branchLabelRef}
         />
       );
     });
   }, [gitgraph, commit])
 
   const tags = React.useMemo(() => {
+    tagRefs.current = [];
     if (!commit.tags) return null;
     if (gitgraph.isHorizontal) return null;
 
-    return commit.tags.map((tag) =>
+    return commit.tags.map((tag, i) =>
       <Tag
         key={`${commit.hashAbbrev}-${tag.name}`}
         commit={commit}
         tag={tag}
+        ref={r => tagRefs.current[i] = r!}
       />,
     );
   }, [commit, gitgraph])
@@ -114,6 +125,7 @@ export const CommitComp = (props: CommitsProps) => {
           commit.style.message.display &&
           <Message
             commit={commit}
+            ref={messageRef}
           />
         }
         {branchLabels}
