@@ -3,7 +3,7 @@ import {
   GitgraphCore,
   Commit,
   Mode,
-  Coordinate
+  Coordinate,
 } from "@gitgraph/core";
 import { CommitElement, ReactSvgElement } from "./types";
 import { Dot } from "./Dot";
@@ -24,6 +24,7 @@ interface CommitsProps {
   };
   getWithCommitOffset: (props: any) => Coordinate;
   setTooltip: (val: React.ReactElement<SVGGElement> | null) => void;
+  setCurrentCommitOver: (val: Commit<ReactSvgElement> | null) => void;
 }
 
 export class CommitComp extends React.Component<CommitsProps, {}> {
@@ -43,7 +44,7 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
           <Tooltip commit={commit}>
             {commit.hashAbbrev} - {commit.subject}
           </Tooltip>
-        </g>
+        </g>,
       );
     }
 
@@ -52,11 +53,11 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
         <Dot
           commit={commit}
           onMouseOver={() => {
-            this.setState({ currentCommitOver: commit });
+            this.props.setCurrentCommitOver(commit);
             commit.onMouseOver();
           }}
           onMouseOut={() => {
-            this.setState({ currentCommitOver: null });
+            this.props.setCurrentCommitOver(null);
             this.props.setTooltip(null);
             commit.onMouseOut();
           }}

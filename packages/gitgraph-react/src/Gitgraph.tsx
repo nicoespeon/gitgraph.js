@@ -112,6 +112,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
                 commits={this.state.commits}
                 commit={commit}
                 currentCommitOver={this.state.currentCommitOver}
+                setCurrentCommitOver={this.setCurrentCommitOver.bind(this)}
                 gitgraph={this.gitgraph}
                 initCommitElements={this.initCommitElements.bind(this)}
                 commitsElements={this.commitsElements}
@@ -158,6 +159,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
     });
+  }
+
+  private setCurrentCommitOver(v: Commit<ReactSvgElement> | null) {
+    this.setState({ currentCommitOver: v });
   }
 
   private setTooltip(v:  React.ReactElement<SVGGElement> | null) {
