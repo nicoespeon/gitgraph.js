@@ -5,7 +5,7 @@ import {
   Mode,
   Coordinate,
 } from "@gitgraph/core";
-import { CommitElement, ReactSvgElement } from "./types";
+import { ReactSvgElement } from "./types";
 import { Dot } from "./Dot";
 import { Tooltip } from "./Tooltip";
 import { Arrow } from "./Arrow";
@@ -18,10 +18,6 @@ interface CommitsProps {
   commit: Commit<ReactSvgElement>;
   currentCommitOver: Commit<ReactSvgElement> | null;
   gitgraph: GitgraphCore<ReactSvgElement>;
-  initCommitElements: (commit: Commit<ReactSvgElement>) => void;
-  commitsElements: {
-    [commitHash: string]: CommitElement;
-  };
   getWithCommitOffset: (props: any) => Coordinate;
   setTooltip: (val: React.ReactElement<SVGGElement> | null) => void;
   setCurrentCommitOver: (val: Commit<ReactSvgElement> | null) => void;
@@ -70,8 +66,6 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
             commit.style.message.display &&
             <Message
               commit={commit}
-              commitsElements={this.props.commitsElements}
-              initCommitElements={this.props.initCommitElements}
             />
           }
           {this.renderBranchLabels(commit)}
@@ -107,8 +101,6 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
       <Tag
         key={`${commit.hashAbbrev}-${tag.name}`}
         commit={commit}
-        initCommitElements={this.props.initCommitElements}
-        commitsElements={this.props.commitsElements}
         tag={tag}
       />,
     );
@@ -124,8 +116,6 @@ export class CommitComp extends React.Component<CommitsProps, {}> {
         <BranchLabel
           key={branch.name}
           gitgraph={this.props.gitgraph}
-          initCommitElements={this.props.initCommitElements}
-          commitsElements={this.props.commitsElements}
           branch={branch}
           commit={commit}
         />

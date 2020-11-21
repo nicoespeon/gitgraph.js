@@ -16,7 +16,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { TAG_PADDING_X } from "./Tag";
-import { CommitElement, ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
+import { ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
 import { CommitComp } from "./Commit";
 import { BranchPath } from "./BranchPath";
 
@@ -75,9 +75,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
   private $tooltip: React.ReactElement<SVGGElement> | null = null;
-  private commitsElements: {
-    [commitHash: string]: CommitElement;
-  } = {};
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -119,8 +116,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
                 currentCommitOver={this.state.currentCommitOver}
                 setCurrentCommitOver={this.setCurrentCommitOver.bind(this)}
                 gitgraph={this.gitgraph}
-                initCommitElements={this.initCommitElements.bind(this)}
-                commitsElements={this.commitsElements}
                 getWithCommitOffset={this.getWithCommitOffset.bind(this)}
                 setTooltip={this.setTooltip.bind(this)}
               />
@@ -192,14 +187,10 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     ));
   }
 
-  private initCommitElements(commit: Commit<ReactSvgElement>): void {
-    this.commitsElements[commit.hashAbbrev] = {
-      branchLabel: null,
-      tags: [],
-      message: null,
-    };
-  }
-
+  /**
+   * REFACTOR THIS
+   * @private
+   */
   private positionCommitsElements(): void {
     if (this.gitgraph.isHorizontal) {
       // Elements don't appear on horizontal mode, yet.
@@ -236,6 +227,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       });
 
       if (message && message.current) {
+        // Move message is here
         moveElement(message.current, x);
       }
     });

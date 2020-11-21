@@ -14,9 +14,3 @@ export type BranchOptions = GitgraphBranchOptions<ReactSvgElement>;
 export type TagOptions = GitgraphTagOptions<ReactSvgElement>;
 export type MergeOptions = GitgraphMergeOptions<ReactSvgElement>;
 export type Branch = BranchUserApi<ReactSvgElement>;
-
-export interface CommitElement {
-  branchLabel: React.RefObject<SVGGElement> | null;
-  tags: Array<React.RefObject<SVGGElement>>;
-  message: React.RefObject<SVGGElement> | null;
-}

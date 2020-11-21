@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Tag as CoreTag, Commit } from "@gitgraph/core";
-import { CommitElement, ReactSvgElement } from "./types";
+import { ReactSvgElement } from "./types";
 
 interface BaseTagProps {
   tag: CoreTag<React.ReactElement<SVGElement>>;
@@ -60,44 +60,17 @@ function DefaultTag(props: BaseTagProps) {
 
 interface TagProps extends BaseTagProps {
   commit: Commit<ReactSvgElement>;
-  initCommitElements: (commit: Commit<ReactSvgElement>) => void;
-  commitsElements: {
-    [commitHash: string]: CommitElement;
-  };
 }
 
-/**
- * This needs to be refactored into a functional component as well - likely
- * merged with DefaultTag with an early return instead
- */
-export class Tag extends React.Component<TagProps> {
-  public render() {
-    const tag = this.props.tag;
-    const commit = this.props.commit;
-    const ref = this.createTagRef(commit);
+export const Tag = React.forwardRef<SVGGElement, TagProps>((props, ref) => {
+  const {tag, commit} = props;
 
-    return (
-      <g
-        ref={ref}
-        transform={`translate(0, ${commit.style.dot.size})`}
-      >
-        {tag.render ? tag.render(tag.name, tag.style) : <DefaultTag tag={tag} />}
-      </g>
-    );
-  }
-
-  private createTagRef(
-    commit: Commit<ReactSvgElement>,
-  ): React.RefObject<SVGGElement> {
-    const ref = React.createRef<SVGGElement>();
-
-    if (!this.props.commitsElements[commit.hashAbbrev]) {
-      this.props.initCommitElements(commit);
-    }
-
-    this.props.commitsElements[commit.hashAbbrev].tags.push(ref);
-
-    return ref;
-  }
-}
-
+  return (
+    <g
+      ref={ref}
+      transform={`translate(0, ${commit.style.dot.size})`}
+    >
+      {tag.render ? tag.render(tag.name, tag.style) : <DefaultTag tag={tag} />}
+    </g>
+  );
+});

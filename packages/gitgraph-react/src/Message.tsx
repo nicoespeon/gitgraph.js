@@ -1,19 +1,13 @@
 import * as React from 'react';
-import { CommitElement, ReactSvgElement } from "./types";
+import { ReactSvgElement } from "./types";
 import { Commit } from "@gitgraph/core";
 
 interface MessageProps {
   commit: Commit<ReactSvgElement>;
-  initCommitElements: (commit: Commit<ReactSvgElement>) => void;
-  commitsElements: {
-    [commitHash: string]: CommitElement;
-  };
 }
 
-export class Message extends React.Component<MessageProps> {
-  public render() {
-    const commit = this.props.commit;
-    const ref = this.createMessageRef(commit);
+export const Message = React.forwardRef<SVGGElement, MessageProps>((props, ref) => {
+    const commit = props.commit;
 
     if (commit.renderMessage) {
       return <g ref={ref}>{commit.renderMessage(commit)}</g>;
@@ -32,6 +26,8 @@ export class Message extends React.Component<MessageProps> {
     const y = commit.style.dot.size;
 
     return (
+      // 0, 14 on buggy
+      // 150, 14 on non-buggy
       <g ref={ref} transform={`translate(0, ${y})`}>
         <text
           alignmentBaseline="central"
@@ -44,19 +40,4 @@ export class Message extends React.Component<MessageProps> {
         {body}
       </g>
     );
-  }
-
-  private createMessageRef(
-    commit: Commit<ReactSvgElement>,
-  ): React.RefObject<SVGGElement> {
-    const ref = React.createRef<SVGGElement>();
-
-    if (!this.props.commitsElements[commit.hashAbbrev]) {
-      this.props.initCommitElements(commit);
-    }
-
-    this.props.commitsElements[commit.hashAbbrev].message = ref;
-
-    return ref;
-  }
-}
+});
