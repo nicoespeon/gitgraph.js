@@ -4,10 +4,11 @@ import { Commit } from "@gitgraph/core";
 
 interface MessageProps {
   commit: Commit<ReactSvgElement>;
+  messageX: number;
 }
 
 export const Message = React.forwardRef<SVGGElement, MessageProps>((props, ref) => {
-    const commit = props.commit;
+    const {commit, messageX} = props;
 
     if (commit.renderMessage) {
       return <g ref={ref}>{commit.renderMessage(commit)}</g>;
@@ -28,7 +29,7 @@ export const Message = React.forwardRef<SVGGElement, MessageProps>((props, ref) 
     return (
       // 0, 14 on buggy
       // 150, 14 on non-buggy
-      <g ref={ref} transform={`translate(0, ${y})`}>
+      <g ref={ref} transform={`translate(${messageX}, ${y})`}>
         <text
           alignmentBaseline="central"
           fill={commit.style.message.color}

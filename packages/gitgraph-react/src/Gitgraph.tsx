@@ -117,6 +117,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
                 gitgraph={this.gitgraph}
                 getWithCommitOffset={this.getWithCommitOffset.bind(this)}
                 setTooltip={this.setTooltip.bind(this)}
+                commitMessagesX={this.state.commitMessagesX}
               />
             )}
           </g>
@@ -151,8 +152,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
-    this.positionCommitsElements();
-
     const commits = Array.from(this.$commits.current.children);
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
@@ -184,52 +183,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           offset={offset}
         />
     ));
-  }
-
-  /**
-   * REFACTOR THIS
-   * @private
-   */
-  private positionCommitsElements(): void {
-    if (this.gitgraph.isHorizontal) {
-      // Elements don't appear on horizontal mode, yet.
-      return;
-    }
-
-    // const padding = 10;
-
-    // Ensure commits elements (branch labels, message…) are well positionned.
-    // It can't be done at render time since elements size is dynamic.
-    // Object.keys(this.commitsElements).forEach((commitHash) => {
-    //   const { branchLabel, tags, message } = this.commitsElements[commitHash];
-    //
-    //   // We'll store X position progressively and translate elements.
-    //   let x = this.state.commitMessagesX;
-    //
-    //   if (branchLabel && branchLabel.current) {
-    //     moveElement(branchLabel.current, x);
-    //
-    //     // For some reason, one paddingX is missing in BBox width.
-    //     const branchLabelWidth =
-    //       branchLabel.current.getBBox().width + BranchLabel.paddingX;
-    //     x += branchLabelWidth + padding;
-    //   }
-    //
-    //   tags.forEach((tag) => {
-    //     if (!tag || !tag.current) return;
-    //
-    //     moveElement(tag.current, x);
-    //
-    //     // For some reason, one paddingX is missing in BBox width.
-    //     const tagWidth = tag.current.getBBox().width + TAG_PADDING_X;
-    //     x += tagWidth + padding;
-    //   });
-    //
-    //   if (message && message.current) {
-    //     // Move message is here
-    //     moveElement(message.current, x);
-    //   }
-    // });
   }
 
   private computeOffsets(
@@ -290,11 +243,3 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     return { x, y: this.state.commitYWithOffsets[y] || y };
   }
 }
-
-// function moveElement(target: Element, x: number): void {
-//   const transform = target.getAttribute("transform") || "translate(0, 0)";
-//   target.setAttribute(
-//     "transform",
-//     transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
-//   );
-// }

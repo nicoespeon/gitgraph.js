@@ -10,7 +10,7 @@ import { Dot } from "./Dot";
 import { Tooltip } from "./Tooltip";
 import { Arrow } from "./Arrow";
 import { Message } from "./Message";
-import { Tag } from "./Tag";
+import { Tag, TAG_PADDING_X } from "./Tag";
 import { BranchLabel } from "./BranchLabel";
 import { MutableRefObject } from "react";
 
@@ -22,10 +22,11 @@ interface CommitsProps {
   getWithCommitOffset: (props: any) => Coordinate;
   setTooltip: (val: React.ReactElement<SVGGElement> | null) => void;
   setCurrentCommitOver: (val: Commit<ReactSvgElement> | null) => void;
+  commitMessagesX: number;
 }
 
 export const CommitComp = (props: CommitsProps) => {
-  const {commit, commits, gitgraph} = props;
+  const {commit, commits, gitgraph, commitMessagesX} = props;
 
   // This _should_ likely be an array, but is not in order to intentionally keep
   // a bug in the codebase that existed prior to Hook-ifying this component
@@ -33,6 +34,10 @@ export const CommitComp = (props: CommitsProps) => {
   const tagRefs: MutableRefObject<SVGGElement[]> = React.useRef([]);
   // "as unknown as any" needed to avoid `ref` mistypings later. :(
   const messageRef: MutableRefObject<SVGGElement> = React.useRef<SVGGElement>() as unknown as any;
+
+  const [branchLabelX, setBranchLabelX] = React.useState(0);
+  const [tagXs, setTagXs] = React.useState<number[]>([]);
+  const [messageX, setMessageX] = React.useState(0);
 
   const arrows = React.useMemo(() => {
     if (!gitgraph.template.arrow.size) return null;
@@ -55,7 +60,6 @@ export const CommitComp = (props: CommitsProps) => {
   const branchLabels = React.useMemo(() => {
     // @gitgraph/core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
-    // TODO: WILL THIS CAUSE A BUG BY BEING IN USEMEMO?
     const branches = Array.from(gitgraph.branches.values());
     return branches.map((branch) => {
       return (
@@ -65,10 +69,11 @@ export const CommitComp = (props: CommitsProps) => {
           branch={branch}
           commit={commit}
           ref={branchLabelRef}
+          branchLabelX={branchLabelX}
         />
       );
     });
-  }, [gitgraph, commit])
+  }, [gitgraph, commit, branchLabelX])
 
   const tags = React.useMemo(() => {
     tagRefs.current = [];
@@ -81,11 +86,51 @@ export const CommitComp = (props: CommitsProps) => {
         commit={commit}
         tag={tag}
         ref={r => tagRefs.current[i] = r!}
+        tagX={tagXs[i] || 0}
       />,
     );
-  }, [commit, gitgraph])
+  }, [commit, gitgraph, tagXs])
 
   const { x, y } = props.getWithCommitOffset(commit);
+
+  // positionCommitsElements
+  React.useLayoutEffect(() => {
+    if (gitgraph.isHorizontal) {
+      // Elements don't appear on horizontal mode, yet.
+      return;
+    }
+
+    const padding = 10;
+
+    let translateX = commitMessagesX;
+
+    if (branchLabelRef.current) {
+      setBranchLabelX(translateX);
+
+      // For some reason, one paddingX is missing in BBox width.
+      const branchLabelWidth =
+        branchLabelRef.current.getBBox().width + BranchLabel.paddingX;
+      translateX += branchLabelWidth + padding;
+    }
+
+    const allTagXs = tagRefs.current.map((tag) => {
+      if (!tag) return 0;
+
+      const tagX = translateX;
+
+      // For some reason, one paddingX is missing in BBox width.
+      const tagWidth = tag.getBBox().width + TAG_PADDING_X;
+      translateX += tagWidth + padding;
+
+      return tagX;
+    });
+
+    setTagXs(allTagXs);
+
+    if (messageRef.current) {
+      setMessageX(translateX);
+    }
+  }, [tagRefs, gitgraph, commitMessagesX])
 
   const shouldRenderTooltip =
     props.currentCommitOver === commit &&
@@ -118,14 +163,13 @@ export const CommitComp = (props: CommitsProps) => {
         }}
       />
       {arrows}
-
-      {/* These elements are positionned after component update. */}
       <g transform={`translate(${-x}, 0)`}>
         {
           commit.style.message.display &&
           <Message
             commit={commit}
             ref={messageRef}
+            messageX={messageX}
           />
         }
         {branchLabels}

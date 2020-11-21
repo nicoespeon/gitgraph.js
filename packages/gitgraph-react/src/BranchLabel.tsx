@@ -46,6 +46,7 @@ function DefaultBranchLabel({branch, commit}: BranchLabelBaseProps) {
 interface BranchLabelProps extends BranchLabelBaseProps {
   gitgraph: GitgraphCore<ReactSvgElement>;
   ref: MutableRefObject<SVGGElement | undefined>;
+  branchLabelX: number;
 }
 
 export interface CompoundedComponent extends React.ForwardRefExoticComponent<BranchLabelProps> {
@@ -54,7 +55,7 @@ export interface CompoundedComponent extends React.ForwardRefExoticComponent<Bra
 }
 
 export const BranchLabel = React.forwardRef<SVGGElement, BranchLabelProps>((props, ref) => {
-  const {branch, commit} = props;
+  const {branch, commit, branchLabelX} = props;
   if (!branch.style.label.display) return null;
 
   if (!props.gitgraph.branchLabelOnEveryCommit) {
@@ -74,7 +75,7 @@ export const BranchLabel = React.forwardRef<SVGGElement, BranchLabelProps>((prop
 
   if (props.gitgraph.isVertical) {
     return (
-      <g ref={ref}>
+      <g ref={ref} transform={`translate(${branchLabelX || 0}, 0)`}>
         {branchLabel}
       </g>
     );

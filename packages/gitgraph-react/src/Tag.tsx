@@ -60,15 +60,16 @@ function DefaultTag(props: BaseTagProps) {
 
 interface TagProps extends BaseTagProps {
   commit: Commit<ReactSvgElement>;
+  tagX: number;
 }
 
 export const Tag = React.forwardRef<SVGGElement, TagProps>((props, ref) => {
-  const {tag, commit} = props;
+  const {tag, commit, tagX} = props;
 
   return (
     <g
       ref={ref}
-      transform={`translate(0, ${commit.style.dot.size})`}
+      transform={`translate(${tagX || 0}, ${commit.style.dot.size})`}
     >
       {tag.render ? tag.render(tag.name, tag.style) : <DefaultTag tag={tag} />}
     </g>
