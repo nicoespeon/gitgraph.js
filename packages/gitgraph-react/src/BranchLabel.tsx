@@ -12,6 +12,7 @@ function DefaultBranchLabel({branch, commit}: BranchLabelBaseProps) {
   const [textSizing, setTextSizing] = React.useState({ textWidth: 0, textHeight: 0 })
 
   const getSizing = React.useCallback((node) => {
+    if (!node) return;
     const box = node.getBBox();
     setTextSizing({ textWidth: box.width, textHeight: box.height });
   }, [])
