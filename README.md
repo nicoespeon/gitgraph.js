@@ -8,7 +8,7 @@ A JavaScript library to draw pretty git graphs.
 
 <!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-35-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-36-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- prettier-ignore-end -->
 
@@ -137,6 +137,9 @@ Releases use the following format:
     <td align="center"><a href="https://github.com/pvigier"><img src="https://avatars2.githubusercontent.com/u/934316?v=4" width="100px;" alt=""/><br /><sub><b>Pierre Vigier</b></sub></a><br /><a href="#ideas-pvigier" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/Nebula83"><img src="https://avatars0.githubusercontent.com/u/12481964?v=4" width="100px;" alt=""/><br /><sub><b>Nebula83</b></sub></a><br /><a href="https://github.com/nicoespeon/gitgraph.js/commits?author=Nebula83" title="Code">💻</a></td>
     <td align="center"><a href="https://about.me/andreasonny83"><img src="https://avatars0.githubusercontent.com/u/8806300?v=4" width="100px;" alt=""/><br /><sub><b>Andrea Sonny</b></sub></a><br /><a href="#infra-andreasonny83" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/nicoespeon/gitgraph.js/commits?author=andreasonny83" title="Tests">⚠️</a> <a href="https://github.com/nicoespeon/gitgraph.js/commits?author=andreasonny83" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://crutchcorn.dev"><img src="https://avatars0.githubusercontent.com/u/9100169?v=4" width="100px;" alt=""/><br /><sub><b>Corbin Crutchley</b></sub></a><br /><a href="https://github.com/nicoespeon/gitgraph.js/issues?q=author%3Acrutchcorn" title="Bug reports">🐛</a> <a href="https://github.com/nicoespeon/gitgraph.js/commits?author=crutchcorn" title="Code">💻</a></td>
   </tr>
 </table>
 
