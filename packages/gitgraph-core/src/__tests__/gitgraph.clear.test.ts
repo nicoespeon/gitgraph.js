@@ -37,15 +37,9 @@ describe("Gitgraph.clear", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 
-    gitgraph
-      .branch("dev")
-      .commit("one")
-      .commit("two");
+    gitgraph.branch("dev").commit("one").commit("two");
     gitgraph.clear();
-    gitgraph
-      .branch("feat")
-      .commit("three")
-      .commit("four");
+    gitgraph.branch("feat").commit("three").commit("four");
 
     const { commits } = core.getRenderedData();
 

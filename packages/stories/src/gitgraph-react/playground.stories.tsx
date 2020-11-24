@@ -89,14 +89,16 @@ class GitgraphPlayground extends React.Component<any, any> {
           </form>
         ))}
         {branches.map((to) =>
-          branches.filter((from) => to.name !== from.name).map((from) => (
-            <button
-              key={`${to.name}->${from.name}`}
-              onClick={() => from.merge(to)}
-            >
-              Merge {to.name} into {from.name}
-            </button>
-          )),
+          branches
+            .filter((from) => to.name !== from.name)
+            .map((from) => (
+              <button
+                key={`${to.name}->${from.name}`}
+                onClick={() => from.merge(to)}
+              >
+                Merge {to.name} into {from.name}
+              </button>
+            )),
         )}
         <button
           onClick={this.clear}
@@ -105,6 +107,7 @@ class GitgraphPlayground extends React.Component<any, any> {
           clear
         </button>
         <br />
+        {/* eslint-disable-next-line react/no-children-prop */}
         <Gitgraph children={(gitgraph) => this.setState({ gitgraph })} />
       </div>
     );

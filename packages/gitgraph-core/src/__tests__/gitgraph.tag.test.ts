@@ -8,10 +8,7 @@ describe("Gitgraph.tag", () => {
     const master = gitgraph
       .branch("master")
       .commit({ subject: "one-tagged", hash: "one-tagged-hash" });
-    gitgraph
-      .branch("dev")
-      .commit("two")
-      .commit("three");
+    gitgraph.branch("dev").commit("two").commit("three");
     master.commit("four");
     gitgraph.tag("this-one", "one-tagged-hash");
 
@@ -110,10 +107,7 @@ describe("Gitgraph.tag", () => {
     const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master").commit("one");
-    gitgraph
-      .branch("dev")
-      .commit("two")
-      .commit("three");
+    gitgraph.branch("dev").commit("two").commit("three");
     master.commit({ subject: "four-tagged", hash: "four-tagged-hash" });
     gitgraph.tag("this-one");
 
@@ -138,10 +132,7 @@ describe("Gitgraph.tag", () => {
     const gitgraph = core.getUserApi();
 
     const master = gitgraph.branch("master").commit("one");
-    gitgraph
-      .branch("dev")
-      .commit("two")
-      .commit("three");
+    gitgraph.branch("dev").commit("two").commit("three");
     master.commit("four-tagged");
     gitgraph.tag("tag-one").tag("tag-two");
 

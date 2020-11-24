@@ -10,10 +10,7 @@ describe("Gitgraph.subscribe", () => {
     const onUpdate = jest.fn();
     core.subscribe(onUpdate);
 
-    gitgraph
-      .commit()
-      .commit()
-      .commit();
+    gitgraph.commit().commit().commit();
 
     jest.runAllTimers();
 
@@ -28,15 +25,8 @@ describe("Gitgraph.subscribe", () => {
     const onUpdate = jest.fn();
     core.subscribe(onUpdate);
 
-    const master = gitgraph
-      .branch("master")
-      .commit()
-      .commit()
-      .commit();
-    const dev = gitgraph
-      .branch("dev")
-      .commit()
-      .commit();
+    const master = gitgraph.branch("master").commit().commit().commit();
+    const dev = gitgraph.branch("dev").commit().commit();
     master.merge(dev);
 
     jest.runAllTimers();
@@ -52,20 +42,13 @@ describe("Gitgraph.subscribe", () => {
     const onUpdate = jest.fn();
     const unsubscribe = core.subscribe(onUpdate);
 
-    const master = gitgraph
-      .branch("master")
-      .commit()
-      .commit()
-      .commit();
+    const master = gitgraph.branch("master").commit().commit().commit();
 
     jest.runAllTimers();
 
     unsubscribe();
 
-    const dev = gitgraph
-      .branch("dev")
-      .commit()
-      .commit();
+    const dev = gitgraph.branch("dev").commit().commit();
     master.merge(dev);
 
     jest.runAllTimers();

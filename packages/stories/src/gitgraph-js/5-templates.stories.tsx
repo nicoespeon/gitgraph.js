@@ -83,10 +83,7 @@ storiesOf("gitgraph-js/5. Templates", module)
           template: withoutHash,
         });
 
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
+        gitgraph.commit("one").commit("two").commit("three");
       }}
     </GraphContainer>
   ))
@@ -106,10 +103,7 @@ storiesOf("gitgraph-js/5. Templates", module)
           template: withoutAuthor,
         });
 
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
+        gitgraph.commit("one").commit("two").commit("three");
       }}
     </GraphContainer>
   ))
@@ -129,10 +123,7 @@ storiesOf("gitgraph-js/5. Templates", module)
           template: withoutBranchLabel,
         });
 
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
+        gitgraph.commit("one").commit("two").commit("three");
       }}
     </GraphContainer>
   ))
@@ -156,10 +147,7 @@ storiesOf("gitgraph-js/5. Templates", module)
           template: customBranchLabels,
         });
 
-        gitgraph
-          .commit("one")
-          .commit("two")
-          .commit("three");
+        gitgraph.commit("one").commit("two").commit("three");
       }}
     </GraphContainer>
   ))

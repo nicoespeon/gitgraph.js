@@ -23,6 +23,7 @@ module.exports = {
     "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "react/prop-types": "off",
+    "react/display-name": "off"
   },
   settings: {
     react: {

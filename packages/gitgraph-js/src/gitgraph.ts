@@ -155,10 +155,7 @@ function createGitgraph(
       commitYWithOffsets = orientedCommits.reduce<CommitYWithOffsets>(
         (newOffsets, commit) => {
           const commitY = parseInt(
-            commit
-              .getAttribute("transform")!
-              .split(",")[1]
-              .slice(0, -1),
+            commit.getAttribute("transform")!.split(",")[1].slice(0, -1),
             10,
           );
 

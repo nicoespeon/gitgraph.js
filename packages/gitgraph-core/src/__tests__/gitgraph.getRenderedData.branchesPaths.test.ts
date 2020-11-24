@@ -79,10 +79,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
     const gitgraph = core.getUserApi();
 
     gitgraph.branch("master").commit("Initial commit");
-    gitgraph
-      .branch("dev")
-      .commit()
-      .commit();
+    gitgraph.branch("dev").commit().commit();
 
     const { branchesPaths } = core.getRenderedData();
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { toSvgPath, GitgraphCore, Coordinate, Branch } from "@gitgraph/core";
 import { ReactSvgElement } from "./types";
 import { ReactElement } from "react";
@@ -17,7 +17,9 @@ export class BranchPath extends React.Component<BranchPathProps, any> {
     return (
       <path
         d={toSvgPath(
-          this.props.coordinates.map((a) => a.map((b) => this.props.getWithCommitOffset(b))),
+          this.props.coordinates.map((a) =>
+            a.map((b) => this.props.getWithCommitOffset(b)),
+          ),
           this.props.isBezier,
           this.props.gitgraph.isVertical,
         )}
@@ -26,6 +28,6 @@ export class BranchPath extends React.Component<BranchPathProps, any> {
         strokeWidth={this.props.branch.style.lineWidth}
         transform={`translate(${this.props.offset}, ${this.props.offset})`}
       />
-    )
+    );
   }
 }

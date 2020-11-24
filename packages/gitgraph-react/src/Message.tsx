@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { ReactSvgElement } from "./types";
 import { Commit } from "@gitgraph/core";
 
@@ -7,11 +7,16 @@ interface MessageProps {
   messageX: number;
 }
 
-export const Message = React.forwardRef<SVGGElement, MessageProps>((props, ref) => {
-    const {commit, messageX} = props;
+export const Message = React.forwardRef<SVGGElement, MessageProps>(
+  (props, ref) => {
+    const { commit, messageX } = props;
 
     if (commit.renderMessage) {
-      return <g ref={ref}  transform={`translate(${messageX}, 0)`}>{commit.renderMessage(commit)}</g>;
+      return (
+        <g ref={ref} transform={`translate(${messageX}, 0)`}>
+          {commit.renderMessage(commit)}
+        </g>
+      );
     }
 
     let body = null;
@@ -39,4 +44,5 @@ export const Message = React.forwardRef<SVGGElement, MessageProps>((props, ref) 
         {body}
       </g>
     );
-});
+  },
+);
