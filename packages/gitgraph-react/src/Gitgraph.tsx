@@ -3,7 +3,7 @@ import {
   GitgraphCore,
   GitgraphOptions,
   GitgraphUserApi,
-  Commit,
+  Commit as CommitCore,
   MergeStyle,
   Mode,
   Orientation,
@@ -16,7 +16,7 @@ import {
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
 import { ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
-import { CommitComp } from "./Commit";
+import { Commit } from "./Commit";
 import { BranchPath } from "./BranchPath";
 
 export {
@@ -53,7 +53,7 @@ function isPropsWithGraph(
 }
 
 interface GitgraphState {
-  commits: Array<Commit<ReactSvgElement>>;
+  commits: Array<CommitCore<ReactSvgElement>>;
   branchesPaths: BranchesPaths<ReactSvgElement>;
   commitMessagesX: number;
   // Store a map to replace commits y with the correct value,
@@ -62,7 +62,7 @@ interface GitgraphState {
   // Offset should be computed when graph is rendered (componentDidUpdate).
   commitYWithOffsets: { [key: number]: number };
   shouldRecomputeOffsets: boolean;
-  currentCommitOver: Commit<ReactSvgElement> | null;
+  currentCommitOver: CommitCore<ReactSvgElement> | null;
 }
 
 class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -108,7 +108,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           {this.renderBranchesPaths()}
           <g ref={this.$commits}>
             {this.state.commits.map((commit) =>
-              <CommitComp
+              <Commit
                 key={commit.hashAbbrev}
                 commits={this.state.commits}
                 commit={commit}
@@ -159,7 +159,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
-  private setCurrentCommitOver(v: Commit<ReactSvgElement> | null) {
+  private setCurrentCommitOver(v: CommitCore<ReactSvgElement> | null) {
     this.setState({ currentCommitOver: v });
   }
 

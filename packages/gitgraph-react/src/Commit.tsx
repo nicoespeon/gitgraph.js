@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
   GitgraphCore,
-  Commit,
+  Commit as CommitCore,
   Mode,
   Coordinate,
 } from "@gitgraph/core";
@@ -15,17 +15,17 @@ import { BranchLabel } from "./BranchLabel";
 import { MutableRefObject } from "react";
 
 interface CommitsProps {
-  commits: Array<Commit<ReactSvgElement>>;
-  commit: Commit<ReactSvgElement>;
-  currentCommitOver: Commit<ReactSvgElement> | null;
+  commits: Array<CommitCore<ReactSvgElement>>;
+  commit: CommitCore<ReactSvgElement>;
+  currentCommitOver: CommitCore<ReactSvgElement> | null;
   gitgraph: GitgraphCore<ReactSvgElement>;
   getWithCommitOffset: (props: any) => Coordinate;
   setTooltip: (val: React.ReactElement<SVGGElement> | null) => void;
-  setCurrentCommitOver: (val: Commit<ReactSvgElement> | null) => void;
+  setCurrentCommitOver: (val: CommitCore<ReactSvgElement> | null) => void;
   commitMessagesX: number;
 }
 
-export const CommitComp = (props: CommitsProps) => {
+export const Commit = (props: CommitsProps) => {
   const {commit, commits, gitgraph, commitMessagesX} = props;
 
   // This _should_ likely be an array, but is not in order to intentionally keep
