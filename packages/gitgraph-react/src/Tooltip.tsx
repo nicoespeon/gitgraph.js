@@ -14,6 +14,10 @@ export class Tooltip extends React.Component<
   }
 
   public render() {
+    if (this.props.commit.renderTooltip) {
+      return this.props.commit.renderTooltip(this.props.commit);
+    }
+
     const commitSize = this.props.commit.style.dot.size * 2;
     const offset = 10;
     const padding = Tooltip.padding;

@@ -1,19 +1,19 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
-import { Tag as CoreTag } from "@gitgraph/core";
+import { Tag as CoreTag, Commit } from "@gitgraph/core";
+import { CommitElement, ReactSvgElement } from "./types";
 
-interface Props {
+interface BaseTagProps {
   tag: CoreTag<React.ReactElement<SVGElement>>;
 }
 
 export const TAG_PADDING_X = 10;
 export const TAG_PADDING_Y = 5;
 
-export function Tag(props: Props) {
-  const [state, setState] = useState({ textWidth: 0, textHeight: 0 });
-  const $text = useRef<SVGTextElement>(null);
+function DefaultTag(props: BaseTagProps) {
+  const [state, setState] = React.useState({ textWidth: 0, textHeight: 0 });
+  const $text = React.useRef<SVGTextElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const box = $text.current!.getBBox();
     setState({ textWidth: box.width, textHeight: box.height });
   }, []);
@@ -57,3 +57,47 @@ export function Tag(props: Props) {
     </g>
   );
 }
+
+interface TagProps extends BaseTagProps {
+  commit: Commit<ReactSvgElement>;
+  initCommitElements: (commit: Commit<ReactSvgElement>) => void;
+  commitsElements: {
+    [commitHash: string]: CommitElement;
+  };
+}
+
+/**
+ * This needs to be refactored into a functional component as well - likely
+ * merged with DefaultTag with an early return instead
+ */
+export class Tag extends React.Component<TagProps> {
+  public render() {
+    const tag = this.props.tag;
+    const commit = this.props.commit;
+    const ref = this.createTagRef(commit);
+
+    return (
+      <g
+        ref={ref}
+        transform={`translate(0, ${commit.style.dot.size})`}
+      >
+        {tag.render ? tag.render(tag.name, tag.style) : <DefaultTag tag={tag} />}
+      </g>
+    );
+  }
+
+  private createTagRef(
+    commit: Commit<ReactSvgElement>,
+  ): React.RefObject<SVGGElement> {
+    const ref = React.createRef<SVGGElement>();
+
+    if (!this.props.commitsElements[commit.hashAbbrev]) {
+      this.props.initCommitElements(commit);
+    }
+
+    this.props.commitsElements[commit.hashAbbrev].tags.push(ref);
+
+    return ref;
+  }
+}
+

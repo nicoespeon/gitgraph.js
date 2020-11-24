@@ -3,11 +3,6 @@ import {
   GitgraphCore,
   GitgraphOptions,
   GitgraphUserApi,
-  GitgraphCommitOptions,
-  GitgraphBranchOptions,
-  GitgraphTagOptions,
-  GitgraphMergeOptions,
-  BranchUserApi,
   Commit,
   MergeStyle,
   Mode,
@@ -16,37 +11,29 @@ import {
   templateExtend,
   BranchesPaths,
   Coordinate,
-  toSvgPath,
-  arrowSvgPath,
 } from "@gitgraph/core";
 
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
-import { Dot } from "./Dot";
-import { Tag, TAG_PADDING_X } from "./Tag";
-
-type ReactSvgElement = React.ReactElement<SVGElement>;
-
-type CommitOptions = GitgraphCommitOptions<ReactSvgElement>;
-type BranchOptions = GitgraphBranchOptions<ReactSvgElement>;
-type TagOptions = GitgraphTagOptions<ReactSvgElement>;
-type MergeOptions = GitgraphMergeOptions<ReactSvgElement>;
-type Branch = BranchUserApi<ReactSvgElement>;
+import { TAG_PADDING_X } from "./Tag";
+import { CommitElement, ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
+import { CommitComp } from "./Commit";
+import { BranchPath } from "./BranchPath";
 
 export {
   Gitgraph,
   GitgraphProps,
   GitgraphState,
-  CommitOptions,
-  BranchOptions,
-  TagOptions,
-  MergeOptions,
-  Branch,
   TemplateName,
   templateExtend,
   MergeStyle,
   Mode,
   Orientation,
+  CommitOptions,
+  BranchOptions,
+  TagOptions,
+  MergeOptions,
+  Branch,
 };
 
 type GitgraphProps = GitgraphPropsWithChildren | GitgraphPropsWithGraph;
@@ -89,11 +76,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private $commits = React.createRef<SVGGElement>();
   private $tooltip: React.ReactElement<SVGGElement> | null = null;
   private commitsElements: {
-    [commitHash: string]: {
-      branchLabel: React.RefObject<SVGGElement> | null;
-      tags: Array<React.RefObject<SVGGElement>>;
-      message: React.RefObject<SVGGElement> | null;
-    };
+    [commitHash: string]: CommitElement;
   } = {};
 
   constructor(props: GitgraphProps) {
@@ -127,7 +110,22 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         {/* Translate graph down => top-most commit tooltip is not cropped */}
         <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
-          {this.renderCommits()}
+          <g ref={this.$commits}>
+            {this.state.commits.map((commit) =>
+              <CommitComp
+                key={commit.hashAbbrev}
+                commits={this.state.commits}
+                commit={commit}
+                currentCommitOver={this.state.currentCommitOver}
+                setCurrentCommitOver={this.setCurrentCommitOver.bind(this)}
+                gitgraph={this.gitgraph}
+                initCommitElements={this.initCommitElements.bind(this)}
+                commitsElements={this.commitsElements}
+                getWithCommitOffset={this.getWithCommitOffset.bind(this)}
+                setTooltip={this.setTooltip.bind(this)}
+              />
+            )}
+          </g>
           {this.$tooltip}
         </g>
       </svg>
@@ -168,265 +166,30 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
+  private setCurrentCommitOver(v: Commit<ReactSvgElement> | null) {
+    this.setState({ currentCommitOver: v });
+  }
+
+  private setTooltip(v:  React.ReactElement<SVGGElement> | null) {
+    this.$tooltip = v;
+  }
+
   private renderBranchesPaths() {
     const offset = this.gitgraph.template.commit.dot.size;
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
+
     return Array.from(this.state.branchesPaths).map(([branch, coordinates]) => (
-      <path
-        key={branch.name}
-        d={toSvgPath(
-          coordinates.map((a) => a.map((b) => this.getWithCommitOffset(b))),
-          isBezier,
-          this.gitgraph.isVertical,
-        )}
-        fill="none"
-        stroke={branch.computedColor}
-        strokeWidth={branch.style.lineWidth}
-        transform={`translate(${offset}, ${offset})`}
-      />
+        <BranchPath
+          key={branch.name}
+          gitgraph={this.gitgraph}
+          branch={branch}
+          coordinates={coordinates}
+          getWithCommitOffset={this.getWithCommitOffset.bind(this)}
+          isBezier={isBezier}
+          offset={offset}
+        />
     ));
-  }
-
-  private renderCommits() {
-    return (
-      <g ref={this.$commits}>
-        {this.state.commits.map((commit) => this.renderCommit(commit))}
-      </g>
-    );
-  }
-
-  private renderCommit(commit: Commit<ReactSvgElement>) {
-    const { x, y } = this.getWithCommitOffset(commit);
-
-    const shouldRenderTooltip =
-      this.state.currentCommitOver === commit &&
-      (this.gitgraph.isHorizontal ||
-        (this.gitgraph.mode === Mode.Compact &&
-          commit.style.hasTooltipInCompactMode));
-
-    if (shouldRenderTooltip) {
-      this.$tooltip = (
-        <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
-          {this.renderTooltip(commit)}
-        </g>
-      );
-    }
-
-    return (
-      <g key={commit.hashAbbrev} transform={`translate(${x}, ${y})`}>
-        {this.renderDot(commit)}
-        {this.gitgraph.template.arrow.size && this.renderArrows(commit)}
-
-        {/* These elements are positionned after component update. */}
-        <g transform={`translate(${-x}, 0)`}>
-          {commit.style.message.display && this.renderMessage(commit)}
-          {this.renderBranchLabels(commit)}
-          {this.renderTags(commit)}
-        </g>
-      </g>
-    );
-  }
-
-  private renderTooltip(commit: Commit<ReactSvgElement>) {
-    if (commit.renderTooltip) {
-      return commit.renderTooltip(commit);
-    }
-
-    return (
-      <Tooltip commit={commit}>
-        {commit.hashAbbrev} - {commit.subject}
-      </Tooltip>
-    );
-  }
-
-  private renderDot(commit: Commit<ReactSvgElement>) {
-    if (commit.renderDot) {
-      return commit.renderDot(commit);
-    }
-
-    return (
-      <Dot
-        commit={commit}
-        onMouseOver={() => {
-          this.setState({ currentCommitOver: commit });
-          commit.onMouseOver();
-        }}
-        onMouseOut={() => {
-          this.setState({ currentCommitOver: null });
-          this.$tooltip = null;
-          commit.onMouseOut();
-        }}
-      />
-    );
-  }
-
-  private renderArrows(commit: Commit<ReactSvgElement>) {
-    const commitRadius = commit.style.dot.size;
-
-    return commit.parents.map((parentHash) => {
-      const parent = this.state.commits.find(({ hash }) => hash === parentHash);
-      if (!parent) return null;
-
-      // Starting point, relative to commit
-      const origin = this.gitgraph.reverseArrow
-        ? {
-            x: commitRadius + (parent.x - commit.x),
-            y: commitRadius + (parent.y - commit.y),
-          }
-        : { x: commitRadius, y: commitRadius };
-
-      return (
-        <g transform={`translate(${origin.x}, ${origin.y})`}>
-          <path
-            d={arrowSvgPath(this.gitgraph, parent, commit)}
-            fill={this.gitgraph.template.arrow.color!}
-          />
-        </g>
-      );
-    });
-  }
-
-  private renderMessage(commit: Commit<ReactSvgElement>) {
-    const ref = this.createMessageRef(commit);
-
-    if (commit.renderMessage) {
-      return <g ref={ref}>{commit.renderMessage(commit)}</g>;
-    }
-
-    let body = null;
-    if (commit.body) {
-      body = (
-        <foreignObject width="600" x="10">
-          <p>{commit.body}</p>
-        </foreignObject>
-      );
-    }
-
-    // Use commit dot radius to align text with the middle of the dot.
-    const y = commit.style.dot.size;
-
-    return (
-      <g ref={ref} transform={`translate(0, ${y})`}>
-        <text
-          alignmentBaseline="central"
-          fill={commit.style.message.color}
-          style={{ font: commit.style.message.font }}
-          onClick={commit.onMessageClick}
-        >
-          {commit.message}
-        </text>
-        {body}
-      </g>
-    );
-  }
-
-  private renderBranchLabels(commit: Commit<ReactSvgElement>) {
-    // @gitgraph/core could compute branch labels into commits directly.
-    // That will make it easier to retrieve them, just like tags.
-    const branches = Array.from(this.gitgraph.branches.values());
-    return branches.map((branch) => {
-      if (!branch.style.label.display) return null;
-
-      if (!this.gitgraph.branchLabelOnEveryCommit) {
-        const commitHash = this.gitgraph.refs.getCommit(branch.name);
-        if (commit.hash !== commitHash) return null;
-      }
-
-      // For the moment, we don't handle multiple branch labels.
-      // To do so, we'd need to reposition each of them appropriately.
-      if (commit.branchToDisplay !== branch.name) return null;
-
-      const ref = this.createBranchLabelRef(commit);
-      const branchLabel = branch.renderLabel ? (
-        branch.renderLabel(branch)
-      ) : (
-        <BranchLabel branch={branch} commit={commit} />
-      );
-
-      if (this.gitgraph.isVertical) {
-        return (
-          <g key={branch.name} ref={ref}>
-            {branchLabel}
-          </g>
-        );
-      } else {
-        const commitDotSize = commit.style.dot.size * 2;
-        const horizontalMarginTop = 10;
-        const y = commitDotSize + horizontalMarginTop;
-
-        return (
-          <g
-            key={branch.name}
-            ref={ref}
-            transform={`translate(${commit.x}, ${y})`}
-          >
-            {branchLabel}
-          </g>
-        );
-      }
-    });
-  }
-
-  private renderTags(commit: Commit<ReactSvgElement>) {
-    if (!commit.tags) return null;
-    if (this.gitgraph.isHorizontal) return null;
-
-    return commit.tags.map((tag) => {
-      const ref = this.createTagRef(commit);
-
-      return (
-        <g
-          key={`${commit.hashAbbrev}-${tag.name}`}
-          ref={ref}
-          transform={`translate(0, ${commit.style.dot.size})`}
-        >
-          {tag.render ? tag.render(tag.name, tag.style) : <Tag tag={tag} />}
-        </g>
-      );
-    });
-  }
-
-  private createBranchLabelRef(
-    commit: Commit<ReactSvgElement>,
-  ): React.RefObject<SVGGElement> {
-    const ref = React.createRef<SVGGElement>();
-
-    if (!this.commitsElements[commit.hashAbbrev]) {
-      this.initCommitElements(commit);
-    }
-
-    this.commitsElements[commit.hashAbbrev].branchLabel = ref;
-
-    return ref;
-  }
-
-  private createMessageRef(
-    commit: Commit<ReactSvgElement>,
-  ): React.RefObject<SVGGElement> {
-    const ref = React.createRef<SVGGElement>();
-
-    if (!this.commitsElements[commit.hashAbbrev]) {
-      this.initCommitElements(commit);
-    }
-
-    this.commitsElements[commit.hashAbbrev].message = ref;
-
-    return ref;
-  }
-
-  private createTagRef(
-    commit: Commit<ReactSvgElement>,
-  ): React.RefObject<SVGGElement> {
-    const ref = React.createRef<SVGGElement>();
-
-    if (!this.commitsElements[commit.hashAbbrev]) {
-      this.initCommitElements(commit);
-    }
-
-    this.commitsElements[commit.hashAbbrev].tags.push(ref);
-
-    return ref;
   }
 
   private initCommitElements(commit: Commit<ReactSvgElement>): void {
