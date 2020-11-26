@@ -121,7 +121,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
               />
             )}
           </g>
-          {this.$tooltip}[
+          {this.$tooltip}
         </g>
       </svg>
     );

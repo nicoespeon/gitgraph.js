@@ -27,8 +27,6 @@ export const Message = React.forwardRef<SVGGElement, MessageProps>((props, ref) 
     const y = commit.style.dot.size;
 
     return (
-      // 0, 14 on buggy
-      // 150, 14 on non-buggy
       <g ref={ref} transform={`translate(${messageX}, ${y})`}>
         <text
           alignmentBaseline="central"

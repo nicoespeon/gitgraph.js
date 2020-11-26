@@ -28,8 +28,18 @@ interface CommitsProps {
 export const Commit = (props: CommitsProps) => {
   const {commit, commits, gitgraph, commitMessagesX} = props;
 
-  // This _should_ likely be an array, but is not in order to intentionally keep
-  // a bug in the codebase that existed prior to Hook-ifying this component
+  /**
+   * This _should_ likely be an array, but is not in order to intentionally keep
+   *  a potential bug in the codebase that existed prior to Hook-ifying this component
+   * @see https://github.com/nicoespeon/gitgraph.js/blob/be9cdf45c7f00970e68e1a4ba579ca7f5c672da4/packages/gitgraph-react/src/Gitgraph.tsx#L197
+   * (notice that it's a single `null` value instead of an array
+   *
+   * The potential bug in question is "what happens when there are more than one
+   * branch label rendered? Do they overlap or cause the message X position to be
+   * in the wrong position?"
+   *
+   * TODO: Investigate potential bug outlined above
+   */
   const branchLabelRef = React.useRef<SVGGElement>();
   const tagRefs: MutableRefObject<SVGGElement[]> = React.useRef([]);
   // "as unknown as any" needed to avoid `ref` mistypings later. :(
