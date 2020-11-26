@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Branch, Commit, GitgraphCore } from "@gitgraph/core";
-import { CommitElement, ReactSvgElement } from "./types";
+import { ReactSvgElement } from "./types";
+import { MutableRefObject } from "react";
 
 interface BranchLabelBaseProps {
   branch: Branch<React.ReactElement<SVGElement>>;
@@ -11,6 +12,7 @@ function DefaultBranchLabel({branch, commit}: BranchLabelBaseProps) {
   const [textSizing, setTextSizing] = React.useState({ textWidth: 0, textHeight: 0 })
 
   const getSizing = React.useCallback((node) => {
+    if (!node) return;
     const box = node.getBBox();
     setTextSizing({ textWidth: box.width, textHeight: box.height });
   }, [])
@@ -44,69 +46,55 @@ function DefaultBranchLabel({branch, commit}: BranchLabelBaseProps) {
 
 interface BranchLabelProps extends BranchLabelBaseProps {
   gitgraph: GitgraphCore<ReactSvgElement>;
-  initCommitElements: (commit: Commit<ReactSvgElement>) => void;
-  commitsElements: {
-    [commitHash: string]: CommitElement;
-  };
+  ref: MutableRefObject<SVGGElement | undefined>;
+  branchLabelX: number;
 }
 
-export class BranchLabel extends React.Component<BranchLabelProps> {
-  public static readonly paddingX = 10;
-  public static readonly paddingY = 5;
+export interface CompoundedComponent extends React.ForwardRefExoticComponent<BranchLabelProps> {
+  paddingX: number;
+  paddingY: number;
+}
 
-  public render() {
-    const {branch, commit} = this.props;
-    if (!branch.style.label.display) return null;
+export const BranchLabel = React.forwardRef<SVGGElement, BranchLabelProps>((props, ref) => {
+  const {branch, commit, branchLabelX} = props;
+  if (!branch.style.label.display) return null;
 
-    if (!this.props.gitgraph.branchLabelOnEveryCommit) {
-      const commitHash = this.props.gitgraph.refs.getCommit(branch.name);
-      if (commit.hash !== commitHash) return null;
-    }
+  if (!props.gitgraph.branchLabelOnEveryCommit) {
+    const commitHash = props.gitgraph.refs.getCommit(branch.name);
+    if (commit.hash !== commitHash) return null;
+  }
 
-    // For the moment, we don't handle multiple branch labels.
-    // To do so, we'd need to reposition each of them appropriately.
-    if (commit.branchToDisplay !== branch.name) return null;
+  // For the moment, we don't handle multiple branch labels.
+  // To do so, we'd need to reposition each of them appropriately.
+  if (commit.branchToDisplay !== branch.name) return null;
 
-    const ref = this.createBranchLabelRef(commit);
-    const branchLabel = branch.renderLabel ? (
-      branch.renderLabel(branch)
-    ) : (
-      <DefaultBranchLabel branch={branch} commit={commit} />
+  const branchLabel = branch.renderLabel ? (
+    branch.renderLabel(branch)
+  ) : (
+    <DefaultBranchLabel branch={branch} commit={commit} />
+  );
+
+  if (props.gitgraph.isVertical) {
+    return (
+      <g ref={ref} transform={`translate(${branchLabelX || 0}, 0)`}>
+        {branchLabel}
+      </g>
     );
+  } else {
+    const commitDotSize = commit.style.dot.size * 2;
+    const horizontalMarginTop = 10;
+    const y = commitDotSize + horizontalMarginTop;
 
-    if (this.props.gitgraph.isVertical) {
-      return (
-        <g ref={ref}>
-          {branchLabel}
-        </g>
-      );
-    } else {
-      const commitDotSize = commit.style.dot.size * 2;
-      const horizontalMarginTop = 10;
-      const y = commitDotSize + horizontalMarginTop;
-
-      return (
-        <g
-          ref={ref}
-          transform={`translate(${commit.x}, ${y})`}
-        >
-          {branchLabel}
-        </g>
-      );
-    }
+    return (
+      <g
+        ref={ref}
+        transform={`translate(${commit.x}, ${y})`}
+      >
+        {branchLabel}
+      </g>
+    );
   }
+}) as CompoundedComponent;
 
-  private createBranchLabelRef(
-    commit: Commit<ReactSvgElement>,
-  ): React.RefObject<SVGGElement> {
-    const ref = React.createRef<SVGGElement>();
-
-    if (!this.props.commitsElements[commit.hashAbbrev]) {
-      this.props.initCommitElements(commit);
-    }
-
-    this.props.commitsElements[commit.hashAbbrev].branchLabel = ref;
-
-    return ref;
-  }
-}
+BranchLabel.paddingX = 10;
+BranchLabel.paddingY = 5;

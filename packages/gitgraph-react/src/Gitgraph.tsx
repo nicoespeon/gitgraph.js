@@ -3,7 +3,7 @@ import {
   GitgraphCore,
   GitgraphOptions,
   GitgraphUserApi,
-  Commit,
+  Commit as CommitCore,
   MergeStyle,
   Mode,
   Orientation,
@@ -15,9 +15,8 @@ import {
 
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
-import { TAG_PADDING_X } from "./Tag";
-import { CommitElement, ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
-import { CommitComp } from "./Commit";
+import { ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
+import { Commit } from "./Commit";
 import { BranchPath } from "./BranchPath";
 
 export {
@@ -54,7 +53,7 @@ function isPropsWithGraph(
 }
 
 interface GitgraphState {
-  commits: Array<Commit<ReactSvgElement>>;
+  commits: Array<CommitCore<ReactSvgElement>>;
   branchesPaths: BranchesPaths<ReactSvgElement>;
   commitMessagesX: number;
   // Store a map to replace commits y with the correct value,
@@ -63,7 +62,7 @@ interface GitgraphState {
   // Offset should be computed when graph is rendered (componentDidUpdate).
   commitYWithOffsets: { [key: number]: number };
   shouldRecomputeOffsets: boolean;
-  currentCommitOver: Commit<ReactSvgElement> | null;
+  currentCommitOver: CommitCore<ReactSvgElement> | null;
 }
 
 class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
@@ -75,9 +74,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private $graph = React.createRef<SVGSVGElement>();
   private $commits = React.createRef<SVGGElement>();
   private $tooltip: React.ReactElement<SVGGElement> | null = null;
-  private commitsElements: {
-    [commitHash: string]: CommitElement;
-  } = {};
 
   constructor(props: GitgraphProps) {
     super(props);
@@ -112,17 +108,16 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           {this.renderBranchesPaths()}
           <g ref={this.$commits}>
             {this.state.commits.map((commit) =>
-              <CommitComp
+              <Commit
                 key={commit.hashAbbrev}
                 commits={this.state.commits}
                 commit={commit}
                 currentCommitOver={this.state.currentCommitOver}
                 setCurrentCommitOver={this.setCurrentCommitOver.bind(this)}
                 gitgraph={this.gitgraph}
-                initCommitElements={this.initCommitElements.bind(this)}
-                commitsElements={this.commitsElements}
                 getWithCommitOffset={this.getWithCommitOffset.bind(this)}
                 setTooltip={this.setTooltip.bind(this)}
+                commitMessagesX={this.state.commitMessagesX}
               />
             )}
           </g>
@@ -157,8 +152,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     if (!this.state.shouldRecomputeOffsets) return;
     if (!this.$commits.current) return;
 
-    this.positionCommitsElements();
-
     const commits = Array.from(this.$commits.current.children);
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
@@ -166,7 +159,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     });
   }
 
-  private setCurrentCommitOver(v: Commit<ReactSvgElement> | null) {
+  private setCurrentCommitOver(v: CommitCore<ReactSvgElement> | null) {
     this.setState({ currentCommitOver: v });
   }
 
@@ -190,55 +183,6 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           offset={offset}
         />
     ));
-  }
-
-  private initCommitElements(commit: Commit<ReactSvgElement>): void {
-    this.commitsElements[commit.hashAbbrev] = {
-      branchLabel: null,
-      tags: [],
-      message: null,
-    };
-  }
-
-  private positionCommitsElements(): void {
-    if (this.gitgraph.isHorizontal) {
-      // Elements don't appear on horizontal mode, yet.
-      return;
-    }
-
-    const padding = 10;
-
-    // Ensure commits elements (branch labels, message…) are well positionned.
-    // It can't be done at render time since elements size is dynamic.
-    Object.keys(this.commitsElements).forEach((commitHash) => {
-      const { branchLabel, tags, message } = this.commitsElements[commitHash];
-
-      // We'll store X position progressively and translate elements.
-      let x = this.state.commitMessagesX;
-
-      if (branchLabel && branchLabel.current) {
-        moveElement(branchLabel.current, x);
-
-        // For some reason, one paddingX is missing in BBox width.
-        const branchLabelWidth =
-          branchLabel.current.getBBox().width + BranchLabel.paddingX;
-        x += branchLabelWidth + padding;
-      }
-
-      tags.forEach((tag) => {
-        if (!tag || !tag.current) return;
-
-        moveElement(tag.current, x);
-
-        // For some reason, one paddingX is missing in BBox width.
-        const tagWidth = tag.current.getBBox().width + TAG_PADDING_X;
-        x += tagWidth + padding;
-      });
-
-      if (message && message.current) {
-        moveElement(message.current, x);
-      }
-    });
   }
 
   private computeOffsets(
@@ -298,12 +242,4 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private getWithCommitOffset({ x, y }: Coordinate): Coordinate {
     return { x, y: this.state.commitYWithOffsets[y] || y };
   }
-}
-
-function moveElement(target: Element, x: number): void {
-  const transform = target.getAttribute("transform") || "translate(0, 0)";
-  target.setAttribute(
-    "transform",
-    transform.replace(/translate\(([\d\.]+),/, `translate(${x},`),
-  );
 }
