@@ -53,6 +53,9 @@
     "rollup": "0.51.8",
     "uglify-es": "3.3.9"
   },
+  "dependencies": {
+    "fastpriorityqueue": "^0.6.1"
+  },
   "jest": {
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
