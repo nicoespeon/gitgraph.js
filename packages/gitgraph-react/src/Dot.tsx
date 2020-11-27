@@ -7,7 +7,7 @@ export interface DotProps {
   onMouseOut: () => void;
 }
 
-export const Dot: React.SFC<DotProps> = ({
+export const Dot: React.FC<DotProps> = ({
   commit,
   onMouseOver,
   onMouseOut,

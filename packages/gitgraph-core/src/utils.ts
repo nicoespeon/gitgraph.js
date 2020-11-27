@@ -27,7 +27,7 @@ type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
  * @ref http://tycho01.github.io/typical/modules/_object_nonmatchingpropsnames_.html
  */
 type NonMatchingPropNames<T, X> = {
-  [K in keyof T]: T[K] extends X ? never : K
+  [K in keyof T]: T[K] extends X ? never : K;
 }[keyof T];
 
 /**
@@ -77,7 +77,11 @@ function debug<TNode = SVGElement>(
 ): void {
   // tslint:disable-next-line:no-console
   console.log(
-    JSON.stringify(commits.map((commit) => pick(commit, paths)), null, 2),
+    JSON.stringify(
+      commits.map((commit) => pick(commit, paths)),
+      null,
+      2,
+    ),
   );
 }
 
@@ -95,7 +99,7 @@ function isUndefined(obj: any): obj is undefined {
  *
  * @param obj
  */
-function withoutUndefinedKeys<T extends object>(
+function withoutUndefinedKeys<T>(
   obj: T = {} as T,
 ): NonMatchingProp<T, undefined> {
   return (Object.keys(obj) as [keyof T]).reduce<T>(

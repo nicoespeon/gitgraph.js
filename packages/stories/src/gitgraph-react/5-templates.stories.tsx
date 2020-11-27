@@ -84,10 +84,7 @@ storiesOf("gitgraph-react/5. Templates", module)
         }}
       >
         {(gitgraph) => {
-          gitgraph
-            .commit("one")
-            .commit("two")
-            .commit("three");
+          gitgraph.commit("one").commit("two").commit("three");
         }}
       </Gitgraph>
     );
@@ -109,10 +106,7 @@ storiesOf("gitgraph-react/5. Templates", module)
         }}
       >
         {(gitgraph) => {
-          gitgraph
-            .commit("one")
-            .commit("two")
-            .commit("three");
+          gitgraph.commit("one").commit("two").commit("three");
         }}
       </Gitgraph>
     );
@@ -134,10 +128,7 @@ storiesOf("gitgraph-react/5. Templates", module)
         }}
       >
         {(gitgraph) => {
-          gitgraph
-            .commit("one")
-            .commit("two")
-            .commit("three");
+          gitgraph.commit("one").commit("two").commit("three");
         }}
       </Gitgraph>
     );
@@ -163,10 +154,7 @@ storiesOf("gitgraph-react/5. Templates", module)
         }}
       >
         {(gitgraph) => {
-          gitgraph
-            .commit("one")
-            .commit("two")
-            .commit("three");
+          gitgraph.commit("one").commit("two").commit("three");
         }}
       </Gitgraph>
     );

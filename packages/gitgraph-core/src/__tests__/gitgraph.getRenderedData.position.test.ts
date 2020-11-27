@@ -7,10 +7,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 
-    gitgraph
-      .commit("one")
-      .commit("two")
-      .commit("three");
+    gitgraph.commit("one").commit("two").commit("three");
 
     const { commits } = core.getRenderedData();
 
@@ -39,10 +36,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     });
     const gitgraph = core.getUserApi();
 
-    gitgraph
-      .commit("one")
-      .commit("two")
-      .commit("three");
+    gitgraph.commit("one").commit("two").commit("three");
 
     const { commits } = core.getRenderedData();
 
@@ -71,10 +65,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     });
     const gitgraph = core.getUserApi();
 
-    gitgraph
-      .commit("one")
-      .commit("two")
-      .commit("three");
+    gitgraph.commit("one").commit("two").commit("three");
 
     const { commits } = core.getRenderedData();
 
@@ -103,10 +94,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     });
     const gitgraph = core.getUserApi();
 
-    gitgraph
-      .commit("one")
-      .commit("two")
-      .commit("three");
+    gitgraph.commit("one").commit("two").commit("three");
 
     const { commits } = core.getRenderedData();
 
@@ -583,10 +571,7 @@ describe("Gitgraph.getRenderedData.position", () => {
     });
     const gitgraph = core.getUserApi();
 
-    const master = gitgraph
-      .branch("master")
-      .commit("one")
-      .commit("two");
+    const master = gitgraph.branch("master").commit("one").commit("two");
 
     // Branch has more commits.
     const dev = gitgraph.branch("dev").commit("three");

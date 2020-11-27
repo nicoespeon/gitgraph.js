@@ -33,18 +33,10 @@ interface CommitOptions<TNode> extends CommitRenderOptions<TNode> {
  */
 const getRandomHash = () =>
   (
-    Math.random()
-      .toString(16)
-      .substring(3) +
-    Math.random()
-      .toString(16)
-      .substring(3) +
-    Math.random()
-      .toString(16)
-      .substring(3) +
-    Math.random()
-      .toString(16)
-      .substring(3)
+    Math.random().toString(16).substring(3) +
+    Math.random().toString(16).substring(3) +
+    Math.random().toString(16).substring(3) +
+    Math.random().toString(16).substring(3)
   ).substring(0, 40);
 
 class Commit<TNode = SVGElement> {
@@ -55,11 +47,11 @@ class Commit<TNode = SVGElement> {
   /**
    * Commit x position
    */
-  public x: number = 0;
+  public x = 0;
   /**
    * Commit y position
    */
-  public y: number = 0;
+  public y = 0;
   /**
    * Commit hash
    */

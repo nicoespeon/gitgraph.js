@@ -26,7 +26,7 @@ interface CommitsProps {
 }
 
 export const Commit = (props: CommitsProps) => {
-  const {commit, commits, gitgraph, commitMessagesX} = props;
+  const { commit, commits, gitgraph, commitMessagesX } = props;
 
   /**
    * This _should_ likely be an array, but is not in order to intentionally keep
@@ -43,7 +43,7 @@ export const Commit = (props: CommitsProps) => {
   const branchLabelRef = React.useRef<SVGGElement>();
   const tagRefs: MutableRefObject<SVGGElement[]> = React.useRef([]);
   // "as unknown as any" needed to avoid `ref` mistypings later. :(
-  const messageRef: MutableRefObject<SVGGElement> = React.useRef<SVGGElement>() as unknown as any;
+  const messageRef: MutableRefObject<SVGGElement> = (React.useRef<SVGGElement>() as unknown) as any;
 
   const [branchLabelX, setBranchLabelX] = React.useState(0);
   const [tagXs, setTagXs] = React.useState<number[]>([]);
@@ -83,23 +83,23 @@ export const Commit = (props: CommitsProps) => {
         />
       );
     });
-  }, [gitgraph, commit, branchLabelX])
+  }, [gitgraph, commit, branchLabelX]);
 
   const tags = React.useMemo(() => {
     tagRefs.current = [];
     if (!commit.tags) return null;
     if (gitgraph.isHorizontal) return null;
 
-    return commit.tags.map((tag, i) =>
+    return commit.tags.map((tag, i) => (
       <Tag
         key={`${commit.hashAbbrev}-${tag.name}`}
         commit={commit}
         tag={tag}
-        ref={r => tagRefs.current[i] = r!}
+        ref={(r) => (tagRefs.current[i] = r!)}
         tagX={tagXs[i] || 0}
-      />,
-    );
-  }, [commit, gitgraph, tagXs])
+      />
+    ));
+  }, [commit, gitgraph, tagXs]);
 
   const { x, y } = props.getWithCommitOffset(commit);
 
@@ -140,7 +140,7 @@ export const Commit = (props: CommitsProps) => {
     if (messageRef.current) {
       setMessageX(translateX);
     }
-  }, [tagRefs, gitgraph, commitMessagesX])
+  }, [tagRefs, gitgraph, commitMessagesX]);
 
   const shouldRenderTooltip =
     props.currentCommitOver === commit &&
@@ -174,17 +174,12 @@ export const Commit = (props: CommitsProps) => {
       />
       {arrows}
       <g transform={`translate(${-x}, 0)`}>
-        {
-          commit.style.message.display &&
-          <Message
-            commit={commit}
-            ref={messageRef}
-            messageX={messageX}
-          />
-        }
+        {commit.style.message.display && (
+          <Message commit={commit} ref={messageRef} messageX={messageX} />
+        )}
         {branchLabels}
         {tags}
       </g>
     </g>
   );
-}
+};

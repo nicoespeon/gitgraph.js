@@ -64,7 +64,7 @@ interface TagProps extends BaseTagProps {
 }
 
 export const Tag = React.forwardRef<SVGGElement, TagProps>((props, ref) => {
-  const {tag, commit, tagX} = props;
+  const { tag, commit, tagX } = props;
 
   return (
     <g

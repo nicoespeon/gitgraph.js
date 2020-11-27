@@ -15,7 +15,14 @@ import {
 
 import { BranchLabel } from "./BranchLabel";
 import { Tooltip } from "./Tooltip";
-import { ReactSvgElement, CommitOptions, BranchOptions, TagOptions, MergeOptions, Branch } from "./types";
+import {
+  ReactSvgElement,
+  CommitOptions,
+  BranchOptions,
+  TagOptions,
+  MergeOptions,
+  Branch,
+} from "./types";
 import { Commit } from "./Commit";
 import { BranchPath } from "./BranchPath";
 
@@ -107,7 +114,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
         <g transform={`translate(${BranchLabel.paddingX}, ${Tooltip.padding})`}>
           {this.renderBranchesPaths()}
           <g ref={this.$commits}>
-            {this.state.commits.map((commit) =>
+            {this.state.commits.map((commit) => (
               <Commit
                 key={commit.hashAbbrev}
                 commits={this.state.commits}
@@ -119,7 +126,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
                 setTooltip={this.setTooltip.bind(this)}
                 commitMessagesX={this.state.commitMessagesX}
               />
-            )}
+            ))}
           </g>
           {this.$tooltip}
         </g>
@@ -163,7 +170,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     this.setState({ currentCommitOver: v });
   }
 
-  private setTooltip(v:  React.ReactElement<SVGGElement> | null) {
+  private setTooltip(v: React.ReactElement<SVGGElement> | null) {
     this.$tooltip = v;
   }
 
@@ -173,15 +180,15 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
 
     return Array.from(this.state.branchesPaths).map(([branch, coordinates]) => (
-        <BranchPath
-          key={branch.name}
-          gitgraph={this.gitgraph}
-          branch={branch}
-          coordinates={coordinates}
-          getWithCommitOffset={this.getWithCommitOffset.bind(this)}
-          isBezier={isBezier}
-          offset={offset}
-        />
+      <BranchPath
+        key={branch.name}
+        gitgraph={this.gitgraph}
+        branch={branch}
+        coordinates={coordinates}
+        getWithCommitOffset={this.getWithCommitOffset.bind(this)}
+        isBezier={isBezier}
+        offset={offset}
+      />
     ));
   }
 
@@ -199,10 +206,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     return orientedCommits.reduce<GitgraphState["commitYWithOffsets"]>(
       (newOffsets, commit) => {
         const commitY = parseInt(
-          commit
-            .getAttribute("transform")!
-            .split(",")[1]
-            .slice(0, -1),
+          commit.getAttribute("transform")!.split(",")[1].slice(0, -1),
           10,
         );
 

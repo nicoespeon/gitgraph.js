@@ -153,10 +153,7 @@ storiesOf("gitgraph-react/1. Basic usage", module)
         const master = gitgraph.branch("master");
 
         // Tag on branch
-        master
-          .commit()
-          .tag("v1.0")
-          .tag("first release");
+        master.commit().tag("v1.0").tag("first release");
 
         master.commit();
         master.tag("v1.1");
@@ -216,15 +213,9 @@ storiesOf("gitgraph-react/1. Basic usage", module)
           },
         });
 
-        master
-          .commit()
-          .commit()
-          .commit();
+        master.commit().commit().commit();
 
-        gitgraph
-          .branch("feat1")
-          .commit()
-          .commit();
+        gitgraph.branch("feat1").commit().commit();
       }}
     </Gitgraph>
   ))
@@ -237,15 +228,9 @@ storiesOf("gitgraph-react/1. Basic usage", module)
     >
       {(gitgraph) => {
         const master = gitgraph.branch("master").commit();
-        const develop = gitgraph
-          .branch("develop")
-          .commit()
-          .commit();
+        const develop = gitgraph.branch("develop").commit().commit();
         master.commit();
-        gitgraph
-          .branch("feat1")
-          .commit()
-          .commit();
+        gitgraph.branch("feat1").commit().commit();
         master.merge(develop);
       }}
     </Gitgraph>
@@ -293,10 +278,7 @@ storiesOf("gitgraph-react/1. Basic usage", module)
       }}
     >
       {(gitgraph) => {
-        const master = gitgraph
-          .branch("master")
-          .commit()
-          .commit();
+        const master = gitgraph.branch("master").commit().commit();
 
         // Branch has more commits.
         const develop = gitgraph.branch("develop").commit();
@@ -361,10 +343,7 @@ storiesOf("gitgraph-react/1. Basic usage", module)
         {(gitgraph) => {
           const master = gitgraph.branch("master").commit("Initial commit");
           const develop = gitgraph.branch("develop").commit();
-          const feat1 = gitgraph
-            .branch("feat1")
-            .commit()
-            .commit();
+          const feat1 = gitgraph.branch("feat1").commit().commit();
           master.commit();
           develop.commit();
           master.merge(develop);

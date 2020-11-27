@@ -15,13 +15,10 @@ function connectBranchCommits(branchColor: string, line: GraphLine): GraphLine {
     number[][]
   >(
     (cells) =>
-      cells.reduce(
-        (point, { value }, index) => {
-          if (value === GraphSymbol.Commit) point.push(index);
-          return point;
-        },
-        [] as number[],
-      ),
+      cells.reduce((point, { value }, index) => {
+        if (value === GraphSymbol.Commit) point.push(index);
+        return point;
+      }, [] as number[]),
     (points) =>
       points.map((point, index) => {
         // Duplicate inner points so we can build path chunks.
@@ -34,11 +31,10 @@ function connectBranchCommits(branchColor: string, line: GraphLine): GraphLine {
     (chunks) => chunks.filter((path) => path.length === 2),
   )(line);
 
-  return line.map(
-    (cell, index) =>
-      branchPaths.some(isInBranchPath(index))
-        ? { value: GraphSymbol.Branch, color: branchColor }
-        : cell,
+  return line.map((cell, index) =>
+    branchPaths.some(isInBranchPath(index))
+      ? { value: GraphSymbol.Branch, color: branchColor }
+      : cell,
   );
 }
 

@@ -297,7 +297,10 @@ describe("compute cells colors", () => {
 
     const graphMap = computeGraphMap(core);
 
-    expectGraphMapColors(graphMap).toEqual([["red", "red"], ["red", "red"]]);
+    expectGraphMapColors(graphMap).toEqual([
+      ["red", "red"],
+      ["red", "red"],
+    ]);
   });
 
   it("for commits on 2 branches", () => {
