@@ -1,23 +1,14 @@
-import { Branch, DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
-import { Commit } from "./commit";
-import { createGraphRows, GraphRows } from "./graph-rows";
-import { Mode } from "./mode";
-import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
-import {
-  Template,
-  TemplateOptions,
-  TemplateName,
-  getTemplate,
-} from "./template";
-import { Refs } from "./refs";
-import { BranchesPathsCalculator, BranchesPaths } from "./branches-paths";
-import { booleanOptionOr, numberOptionOr } from "./utils";
-import { Orientation } from "./orientation";
-import {
-  GitgraphUserApi,
-  GitgraphBranchOptions,
-  GitgraphTagOptions,
-} from "./user-api/gitgraph-user-api";
+import {Branch, createDeletedBranch, DELETED_BRANCH_NAME} from "./branch";
+import {Commit} from "./commit";
+import {createGraphRows, GraphRows} from "./graph-rows";
+import {Mode} from "./mode";
+import {BranchesOrder, CompareBranchesOrder} from "./branches-order";
+import {getTemplate, Template, TemplateName, TemplateOptions,} from "./template";
+import {Refs} from "./refs";
+import {BranchesPaths, BranchesPathsCalculator} from "./branches-paths";
+import {booleanOptionOr, numberOptionOr} from "./utils";
+import {Orientation} from "./orientation";
+import {GitgraphBranchOptions, GitgraphTagOptions, GitgraphUserApi,} from "./user-api/gitgraph-user-api";
 
 export { GitgraphOptions, RenderedData, GitgraphCore };
 
@@ -34,6 +25,7 @@ interface GitgraphOptions {
   generateCommitHash?: () => Commit["hash"];
   compareBranchesOrder?: CompareBranchesOrder;
 }
+
 
 interface RenderedData<TNode> {
   commits: Array<Commit<TNode>>;
