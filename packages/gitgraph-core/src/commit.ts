@@ -1,8 +1,8 @@
-import { CommitStyle, TagStyle } from "./template";
-import { Branch } from "./branch";
-import { Refs } from "./refs";
-import { Tag } from "./tag";
-import { GitgraphTagOptions } from "./user-api/gitgraph-user-api";
+import {CommitStyle, TagStyle} from "./template";
+import {Branch} from "./branch";
+import {Refs} from "./refs";
+import {Tag} from "./tag";
+import {GitgraphTagOptions} from "./user-api/gitgraph-user-api";
 
 export { CommitRenderOptions, CommitOptions, Commit };
 
@@ -64,6 +64,7 @@ class Commit<TNode = SVGElement> {
    * Parent hashes
    */
   public parents: Array<Commit<TNode>["hash"]>;
+
   /**
    * Abbreviated parent hashed
    */

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createRef, useLayoutEffect } from "react";
+import {createRef, useLayoutEffect} from "react";
 
 export {
   GraphContainer,
@@ -9,6 +9,7 @@ export {
   createText,
   createPath,
   createForeignObject,
+  createRect,
 };
 
 export const hashPrefix = "h45h";
@@ -167,6 +168,42 @@ function createText(options: TextOptions): SVGTextElement {
   }
 
   return text;
+}
+
+
+interface RectOptions {
+  width: number;
+  height: number;
+  borderRadius?: number;
+  fill?: string;
+  stroke?: string;
+  translate?: {
+    x: number;
+    y: number;
+  };
+}
+
+function createRect(options: RectOptions): SVGRectElement {
+  const rect = document.createElementNS(SVG_NAMESPACE, "rect");
+  rect.setAttribute("width", options.width.toString());
+  rect.setAttribute("height", options.height.toString());
+  if (options.translate) {
+    rect.setAttribute("transform", `translate(${options.translate.x}, ${options.translate.y})`);
+  }
+
+  if (options.borderRadius) {
+    rect.setAttribute("rx", options.borderRadius.toString());
+  }
+
+  if (options.fill) {
+    rect.setAttribute("fill", options.fill || "none");
+  }
+
+  if (options.stroke) {
+    rect.setAttribute("stroke", options.stroke);
+  }
+
+  return rect;
 }
 
 interface PathOptions {
