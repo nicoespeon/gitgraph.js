@@ -217,11 +217,65 @@ class GitgraphCore<TNode = SVGElement> {
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
     const branches = this.getBranches();
-    const commitsWithBranches = this.commits.map((commit) =>
+
+    // Commits that are not associated to a branch in `branches`
+    // were in a deleted branch. If the latter was merged beforehand
+    // they are reachable and are rendered. Others are not
+    const reachableUnassociatedCommits = (() => {
+      const unassociatedCommits = new Set(
+        this.commits.reduce(
+          (commits: Commit["hash"][], { hash }: { hash: Commit["hash"] }) =>
+            !branches.has(hash) ? [...commits, hash] : commits,
+          [],
+        ),
+      );
+
+      const tipsOfMergedBranches = this.commits.reduce(
+        (tipsOfMergedBranches: Commit<TNode>[], commit: Commit<TNode>) =>
+          commit.parents.length > 1
+            ? [
+                ...tipsOfMergedBranches,
+                ...commit.parents
+                  .slice(1)
+                  .map(
+                    (parentHash) =>
+                      this.commits.find(({ hash }) => parentHash === hash)!,
+                  ),
+              ]
+            : tipsOfMergedBranches,
+        [],
+      );
+
+      const reachableCommits = new Set();
+
+      tipsOfMergedBranches.forEach((tip) => {
+        let currentCommit: Commit<TNode> | undefined = tip;
+
+        while (currentCommit && unassociatedCommits.has(currentCommit.hash)) {
+          reachableCommits.add(currentCommit.hash);
+
+          currentCommit =
+            currentCommit.parents.length > 0
+              ? this.commits.find(
+                  ({ hash }) => currentCommit!.parents[0] === hash,
+                )
+              : undefined;
+        }
+      });
+
+      return reachableCommits;
+    })();
+
+    const commitsToRender = this.commits.filter(
+      ({ hash }) =>
+        branches.has(hash) || reachableUnassociatedCommits.has(hash),
+    );
+
+    const commitsWithBranches = commitsToRender.map((commit) =>
       this.withBranches(branches, commit),
     );
 
-    const rows = createGraphRows(this.mode, this.commits);
+    const rows = createGraphRows(this.mode, commitsToRender);
     const branchesOrder = new BranchesOrder<TNode>(
       commitsWithBranches,
       this.template.colors,

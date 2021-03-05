@@ -351,4 +351,29 @@ storiesOf("gitgraph-react/1. Basic usage", module)
         }}
       </Gitgraph>
     );
-  });
+  })
+  .add("delete a branch", () => (
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        master.checkout();
+        develop.delete();
+      }}
+    </Gitgraph>
+  ))
+  .add("delete a branch after merging it", () => (
+    <Gitgraph options={{ generateCommitHash: createFixedHashGenerator() }}>
+      {(gitgraph) => {
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        master.checkout();
+        master.merge(develop);
+        develop.delete();
+      }}
+    </Gitgraph>
+  ));

@@ -27,6 +27,21 @@ class Refs {
   }
 
   /**
+   * Delete a reference
+   *
+   * @param name Name of the reference
+   */
+  public delete(name: Name): this {
+    if (this.hasName(name)) {
+      this.removeNameFrom(this.getCommit(name)!, name);
+
+      this.commitPerName.delete(name);
+    }
+
+    return this;
+  }
+
+  /**
    * Get the commit hash associated with the given reference name.
    *
    * @param name Name of the ref

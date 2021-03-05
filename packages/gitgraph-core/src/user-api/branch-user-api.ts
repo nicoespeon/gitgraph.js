@@ -6,7 +6,7 @@ import {
 } from "./gitgraph-user-api";
 import { TemplateOptions, CommitStyle } from "../template";
 import { Commit } from "../commit";
-import { Branch } from "../branch";
+import { Branch, createDeletedBranch } from "../branch";
 import { withoutUndefinedKeys, Omit } from "../utils";
 
 export { BranchUserApi, GitgraphMergeOptions };
@@ -67,6 +67,10 @@ class BranchUserApi<TNode> {
    */
   public branch(name: string): BranchUserApi<TNode>;
   public branch(args: any): BranchUserApi<TNode> {
+    if (this._branch.isDeleted() && !this._isReferenced()) {
+      throw new Error(`Cannot branch from the deleted branch "${this.name}"`);
+    }
+
     const options: GitgraphBranchOptions<TNode> =
       typeof args === "string" ? { name: args } : args;
 
@@ -88,11 +92,73 @@ class BranchUserApi<TNode> {
    */
   public commit(options?: GitgraphCommitOptions<TNode>): this;
   public commit(options?: GitgraphCommitOptions<TNode> | string): this {
+    if (this._branch.isDeleted() && !this._isReferenced()) {
+      throw new Error(`Cannot commit on the deleted branch "${this.name}"`);
+    }
+
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: options };
     if (!options) options = {};
 
     this._commitWithParents(options, []);
+    this._onGraphUpdate();
+
+    return this;
+  }
+
+  /**
+   * Delete the branch (as `git branch -d`)
+   */
+  public delete(): this {
+    // Delete all references to the branch from the graph (graph.branches and graph.refs)
+    // and from the commits (commit.refs). Then, make the branch instance a deleted branch.
+    // Like in git, the commits and tags in the deleted branch remain in the graph
+    if (
+      this._graph.refs.getCommit("HEAD") ===
+      this._graph.refs.getCommit(this.name)
+    ) {
+      throw new Error(`Cannot delete the checked out branch "${this.name}"`);
+    }
+
+    const branchCommits = (function* (
+      graph: GitgraphCore<TNode>,
+      branch: Branch<TNode>,
+    ) {
+      const lookupCommit = (
+        graph: GitgraphCore<TNode>,
+        commitHash: Commit["hash"] | undefined,
+      ) => {
+        return graph.commits.find(({ hash }) => hash === commitHash);
+      };
+
+      let currentCommit = lookupCommit(
+        graph,
+        graph.refs.getCommit(branch.name),
+      );
+
+      while (currentCommit && currentCommit.hash !== branch.parentCommitHash) {
+        yield currentCommit;
+
+        currentCommit = lookupCommit(graph, currentCommit.parents[0]);
+      }
+
+      return;
+    })(this._graph, this._branch);
+
+    [...branchCommits].forEach((commit) => {
+      commit.refs = commit.refs.filter(
+        (branchName) => branchName !== this.name,
+      );
+    });
+
+    this._graph.refs.delete(this.name);
+
+    this._graph.branches.delete(this.name);
+
+    this._branch = createDeletedBranch(this._graph, this._branch.style, () => {
+      // do nothing
+    });
+
     this._onGraphUpdate();
 
     return this;
@@ -119,6 +185,10 @@ class BranchUserApi<TNode> {
    */
   public merge(options: GitgraphMergeOptions<TNode>): this;
   public merge(...args: any[]): this {
+    if (this._branch.isDeleted() && !this._isReferenced()) {
+      throw new Error(`Cannot merge to the deleted branch "${this.name}"`);
+    }
+
     let options = args[0];
     if (!isBranchMergeOptions<TNode>(options)) {
       options = {
@@ -181,6 +251,10 @@ class BranchUserApi<TNode> {
    */
   public tag(name: BranchTagOptions<TNode>["name"]): this;
   public tag(options?: any): this {
+    if (this._branch.isDeleted() && !this._isReferenced()) {
+      throw new Error(`Cannot tag on the deleted branch "${this.name}"`);
+    }
+
     if (typeof options === "string") {
       this._graph.getUserApi().tag({ name: options, ref: this._branch.name });
     } else {
@@ -194,6 +268,10 @@ class BranchUserApi<TNode> {
    * Checkout onto this branch and update "HEAD" in refs
    */
   public checkout(): this {
+    if (this._branch.isDeleted() && !this._isReferenced()) {
+      throw new Error(`Cannot checkout the deleted branch "${this.name}"`);
+    }
+
     const target = this._branch;
     const headCommit = this._graph.refs.getCommit(target.name);
     this._graph.currentBranch = target;
@@ -299,6 +377,15 @@ class BranchUserApi<TNode> {
     } as CommitStyle;
   }
 
+  private _isReferenced(): boolean {
+    return (
+      this._graph.branches.has(this.name) ||
+      this._graph.refs.hasName(this.name) ||
+      this._graph.commits
+        .reduce((allNames: string[], { refs }) => [...allNames, ...refs], [])
+        .includes(this.name)
+    );
+  }
   // tslint:enable:variable-name
 }
 
