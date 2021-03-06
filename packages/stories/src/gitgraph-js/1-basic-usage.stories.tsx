@@ -389,4 +389,37 @@ storiesOf("gitgraph-js/1. Basic usage", module)
         feat1.commit();
       }}
     </GraphContainer>
+  ))
+  .add("delete a branch", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+        });
+
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        master.checkout();
+        develop.delete();
+      }}
+    </GraphContainer>
+  ))
+  .add("delete a branch after merging it", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+        });
+
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        master.checkout();
+        master.merge(develop);
+        develop.delete();
+      }}
+    </GraphContainer>
   ));

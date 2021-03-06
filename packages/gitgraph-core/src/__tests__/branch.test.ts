@@ -188,4 +188,126 @@ describe("Branch", () => {
       });
     });
   });
+
+  describe("delete", () => {
+    let gitgraph;
+    let develop;
+    let feature;
+
+    beforeEach(() => {
+      gitgraph = new GitgraphCore().getUserApi();
+
+      develop = gitgraph.branch("develop");
+
+      develop.commit("develop first");
+
+      feature = gitgraph.branch("feature");
+
+      feature.commit("feature first");
+    });
+
+    it("should be deleted and not referenced", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(feature._branch.isDeleted() && !feature._isReferenced()).toBe(
+        true,
+      );
+    });
+
+    it("should leave commits and tags from the deleted branch in the graph", () => {
+      feature.tag("some tag");
+
+      const featureCommit = gitgraph._graph.refs.getCommit("feature");
+
+      develop.checkout();
+
+      feature.delete();
+
+      expect(
+        gitgraph._graph.commits.find(({ hash }) => hash === featureCommit) &&
+          gitgraph._graph.refs.hasCommit(featureCommit) &&
+          gitgraph._graph.tags.hasName("some tag"),
+      ).toBe(true);
+    });
+
+    it("should throw if the branch is checked out", () => {
+      expect(() => feature.delete()).toThrow(
+        `Cannot delete the checked out branch "feature"`,
+      );
+    });
+
+    it("should throw when branching from a deleted branch", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(() => feature.branch("other-feature")).toThrow(
+        `Cannot branch from the deleted branch "feature"`,
+      );
+    });
+
+    it("should throw when committing on a deleted branch", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(() => feature.commit("other commit")).toThrow(
+        `Cannot commit on the deleted branch "feature"`,
+      );
+    });
+
+    it("should silently do nothing when deleting twice", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      feature.delete();
+
+      expect(feature._branch.isDeleted() && !feature._isReferenced()).toBe(
+        true,
+      );
+    });
+
+    it("should throw when merging a deleted branch to an existing one", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(() => develop.merge(feature)).toThrow(
+        `The branch called "feature" is unknown`,
+      );
+    });
+
+    it("should throw when merging some branch to a deleted branch", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(() => feature.merge(develop)).toThrow(
+        `Cannot merge to the deleted branch "feature"`,
+      );
+    });
+
+    it("should throw when tagging on a deleted branch", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(() => feature.tag("some tag")).toThrow(
+        `Cannot tag on the deleted branch "feature"`,
+      );
+    });
+
+    it("should throw when checking out a deleted branch", () => {
+      develop.checkout();
+
+      feature.delete();
+
+      expect(() => feature.checkout()).toThrow(
+        `Cannot checkout the deleted branch "feature"`,
+      );
+    });
+  });
 });
