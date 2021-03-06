@@ -8,7 +8,7 @@ A JavaScript library to draw pretty git graphs.
 
 <!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-39-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-40-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- prettier-ignore-end -->
 
@@ -143,6 +143,7 @@ Releases use the following format:
     <td align="center"><a href="https://github.com/acransac"><img src="https://avatars.githubusercontent.com/u/34621976?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adrien Cransac</b></sub></a><br /><a href="https://github.com/nicoespeon/gitgraph.js/commits?author=acransac" title="Code">💻</a> <a href="https://github.com/nicoespeon/gitgraph.js/issues?q=author%3Aacransac" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/soumyart"><img src="https://avatars.githubusercontent.com/u/20027561?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Soumya Tripathy</b></sub></a><br /><a href="https://github.com/nicoespeon/gitgraph.js/issues?q=author%3Asoumyart" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://andrewensley.com"><img src="https://avatars.githubusercontent.com/u/95717?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Ensley</b></sub></a><br /><a href="#ideas-aensley" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/longgt"><img src="https://avatars.githubusercontent.com/u/27258608?v=4?s=100" width="100px;" alt=""/><br /><sub><b>longgt</b></sub></a><br /><a href="#ideas-longgt" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
