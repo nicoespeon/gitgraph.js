@@ -1,6 +1,6 @@
 {
   "name": "@gitgraph/react",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -44,7 +44,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/react@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@gitgraph/core": "1.4.5"
+    "@gitgraph/core": "1.5.0"
   },
   "peerDependencies": {
     "react": ">= 16.8.0"
