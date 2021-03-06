@@ -363,6 +363,15 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "soumyart",
+      "name": "Soumya Tripathy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20027561?v=4",
+      "profile": "https://github.com/soumyart",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "repoType": "github",
