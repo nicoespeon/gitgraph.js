@@ -353,6 +353,16 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "acransac",
+      "name": "Adrien Cransac",
+      "avatar_url": "https://avatars.githubusercontent.com/u/34621976?v=4",
+      "profile": "https://github.com/acransac",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoType": "github",
