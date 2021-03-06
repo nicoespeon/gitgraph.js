@@ -63,7 +63,7 @@ interface CommitYWithOffsets {
 
 function createGitgraph(
   graphContainer: HTMLElement,
-  options?: GitgraphOptions,
+  options?: GitgraphOptions & { responsive?: boolean },
 ) {
   let commitsElements: {
     [commitHash: string]: {
@@ -85,8 +85,15 @@ function createGitgraph(
 
   // Create an `svg` context in which we'll render the graph.
   const svg = createSvg();
-  adaptSvgOnUpdate();
+  adaptSvgOnUpdate(Boolean(options && options.responsive));
   graphContainer.appendChild(svg);
+
+  if (options && options.responsive) {
+    graphContainer.setAttribute(
+      "style",
+      "display:inline-block; position: relative; width:100%; padding-bottom:100%; vertical-align:middle; overflow:hidden;",
+    );
+  }
 
   // React on gitgraph updates to re-render the graph.
   const gitgraph = new GitgraphCore(options);
@@ -123,7 +130,7 @@ function createGitgraph(
     );
   }
 
-  function adaptSvgOnUpdate(): void {
+  function adaptSvgOnUpdate(adaptToContainer: boolean): void {
     const observer = new MutationObserver(() => {
       if (shouldRecomputeOffsets) {
         shouldRecomputeOffsets = false;
@@ -131,7 +138,7 @@ function createGitgraph(
         render(lastData);
       } else {
         positionCommitsElements();
-        adaptGraphDimensions();
+        adaptGraphDimensions(adaptToContainer);
       }
     });
 
@@ -221,7 +228,7 @@ function createGitgraph(
       });
     }
 
-    function adaptGraphDimensions(): void {
+    function adaptGraphDimensions(adaptToContainer: boolean): void {
       const { height, width } = svg.getBBox();
 
       // FIXME: In horizontal mode, we mimic @gitgraph/react behavior
@@ -245,8 +252,16 @@ function createGitgraph(
           // Add `BRANCH_LABEL_PADDING_Y` so we don't crop branch label.
           BRANCH_LABEL_PADDING_Y + TOOLTIP_PADDING + verticalCustomOffset;
 
-      svg.setAttribute("width", (width + widthOffset).toString());
-      svg.setAttribute("height", (height + heightOffset).toString());
+      if (adaptToContainer) {
+        svg.setAttribute("preserveAspectRatio", "xMinYMin meet");
+        svg.setAttribute(
+          "viewBox",
+          `0 0 ${width + widthOffset} ${height + heightOffset}`,
+        );
+      } else {
+        svg.setAttribute("width", (width + widthOffset).toString());
+        svg.setAttribute("height", (height + heightOffset).toString());
+      }
     }
   }
 

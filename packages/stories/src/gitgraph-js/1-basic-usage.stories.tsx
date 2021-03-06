@@ -389,4 +389,21 @@ storiesOf("gitgraph-js/1. Basic usage", module)
         feat1.commit();
       }}
     </GraphContainer>
+  ))
+  .add("responsive", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer, {
+          generateCommitHash: createFixedHashGenerator(),
+          responsive: true,
+        });
+
+        const master = gitgraph.branch("master").commit("Initial commit");
+        const develop = gitgraph.branch("develop");
+        develop.commit("one");
+        master.commit("two");
+        develop.commit("three");
+        master.merge(develop);
+      }}
+    </GraphContainer>
   ));
