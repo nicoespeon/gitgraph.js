@@ -221,4 +221,54 @@ describe("Gitgraph.getRenderedData.branches", () => {
       ]);
     });
   });
+
+  describe("deleted branch", () => {
+    let gitgraph;
+
+    let master;
+
+    let develop;
+
+    beforeEach(() => {
+      gitgraph = new GitgraphCore().getUserApi();
+
+      master = gitgraph.branch("master");
+
+      master.commit("one");
+
+      master.commit("two");
+
+      develop = gitgraph.branch("develop");
+
+      develop.commit("three");
+
+      master.checkout();
+    });
+
+    it("should ignore commits on a deleted branch", () => {
+      develop.delete();
+
+      const { commits } = gitgraph._graph.getRenderedData();
+
+      expect(commits).toMatchObject([
+        { subject: "one", refs: [] },
+        { subject: "two", refs: ["master", "HEAD"] },
+      ]);
+    });
+
+    it("should render commits on a deleted branch that was merged before", () => {
+      master.merge(develop);
+
+      develop.delete();
+
+      const { commits } = gitgraph._graph.getRenderedData();
+
+      expect(commits).toMatchObject([
+        { subject: "one", refs: [] },
+        { subject: "two", refs: [] },
+        { subject: "three", refs: [] },
+        { subject: "Merge branch develop", refs: ["master", "HEAD"] },
+      ]);
+    });
+  });
 });
