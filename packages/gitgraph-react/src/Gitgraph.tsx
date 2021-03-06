@@ -116,7 +116,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           <g ref={this.$commits}>
             {this.state.commits.map((commit) => (
               <Commit
-                key={commit.hashAbbrev}
+                key={commit.hash}
                 commits={this.state.commits}
                 commit={commit}
                 currentCommitOver={this.state.currentCommitOver}
