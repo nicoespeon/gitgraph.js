@@ -372,6 +372,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "aensley",
+      "name": "Andrew Ensley",
+      "avatar_url": "https://avatars.githubusercontent.com/u/95717?v=4",
+      "profile": "https://andrewensley.com",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "repoType": "github",
