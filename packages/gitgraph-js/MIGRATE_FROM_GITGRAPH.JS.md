@@ -170,7 +170,7 @@ In v2, you can match a branch to merge by its name: `master.merge("develop")` wi
 In v2, you can pass all Commit options as a second argument:
 
 ```js
-master.merge(develop, { subject: "Add feature", dotText: "🎉" });
+master.merge({ branch: develop, commitOptions: { subject: "Add feature", dotText: "🎉" } });
 ```
 
 ## Tags
