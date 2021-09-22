@@ -167,7 +167,7 @@ In v1, you could merge the branch into "HEAD" if you didn't provide a target bra
 
 In v2, you can match a branch to merge by its name: `master.merge("develop")` will work.
 
-In v2, you can pass all Commit options as a second argument:
+In v2, you can pass all Commit options in `commitOptions`:
 
 ```js
 master.merge({ branch: develop, commitOptions: { subject: "Add feature", dotText: "🎉" } });
