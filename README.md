@@ -33,11 +33,11 @@ As a contributor, you might be interested in checking out [gitgraph-core][gitgra
 
 ## Usage Demo
 
-You can find demo at [Here](https://gitgraphjs.com/stories/)
+You can find demo at [Here](https://www.nicoespeon.com/gitgraph.js/stories/)
 
 ## Documentation
 
-You can find documentation at [Here](https://gitgraphjs.com/v1/docs/)
+You can find documentation at [Here](https://www.nicoespeon.com/gitgraph.js/v1/docs/)
 
 ## Running the project locally
 
