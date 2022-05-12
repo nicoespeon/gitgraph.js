@@ -185,7 +185,15 @@ class GitgraphUserApi<TNode> {
    * @experimental
    * @param data JSON from `git2json` output
    */
-  public import(data: unknown) {
+  public import(
+    data: unknown,
+    events?: {
+      onClick?: (commit: Commit<TNode>) => void;
+      onMessageClick?: (commit: Commit<TNode>) => void;
+      onMouseOver?: (commit: Commit<TNode>) => void;
+      onMouseOut?: (commit: Commit<TNode>) => void;
+    },
+  ) {
     const invalidData = new Error(
       "Only `git2json` format is supported for imported data.",
     );
@@ -231,7 +239,11 @@ class GitgraphUserApi<TNode> {
     this.clear();
 
     this._graph.commits = commitOptionsList.map(
-      (options) => new Commit(options),
+      (options) =>
+        new Commit({
+          ...options,
+          ...events,
+        }),
     );
 
     // Create tags & refs.

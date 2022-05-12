@@ -4,6 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { createGitgraph } from "@gitgraph/js";
 
 import { createFixedHashGenerator, GraphContainer } from "../helpers";
+import simpleGraph from "../import-fixtures/simple-graph";
 
 storiesOf("gitgraph-js/3. Events", module)
   .add("on commit dot click", () => (
@@ -69,6 +70,17 @@ storiesOf("gitgraph-js/3. Events", module)
         const master = gitgraph.branch("master");
         master.commit({ subject: "Hello", onMessageClick });
         master.commit({ subject: "World", onMessageClick });
+      }}
+    </GraphContainer>
+  ))
+  .add("import with events", () => (
+    <GraphContainer>
+      {(graphContainer) => {
+        const gitgraph = createGitgraph(graphContainer);
+
+        const onClick = action("click on dot");
+
+        gitgraph.import(simpleGraph, { onClick });
       }}
     </GraphContainer>
   ));
