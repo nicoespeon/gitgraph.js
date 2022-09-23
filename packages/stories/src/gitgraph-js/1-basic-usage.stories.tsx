@@ -258,7 +258,7 @@ storiesOf("gitgraph-js/1. Basic usage", module)
 
         master.commit().commit().commit();
         gitgraph.branch("develop");
-        console.log("Here too")
+        console.log("Here too");
       }}
     </GraphContainer>
   ))
