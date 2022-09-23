@@ -21,9 +21,11 @@
     "javascript"
   ],
   "scripts": {
+    "install:all": "lerna bootstrap && lerna link",
+    "start:all": "lerna run start --parallel",
     "lerna": "lerna",
     "build": "lerna run build --scope=@gitgraph/{core,react,js,node} --stream",
-    "watch": "lerna run watch --stream",
+    "watch": "lerna run watch --scope=@gitgraph/{core,react,js,node} --stream",
     "storybook": "sleep 3 && lerna run storybook --stream",
     "develop": "concurrently npm:watch npm:storybook",
     "website": "lerna run start --scope=@gitgraph/website --stream",

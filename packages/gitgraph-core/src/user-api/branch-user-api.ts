@@ -96,7 +96,7 @@ class BranchUserApi<TNode> {
       throw new Error(`Cannot commit on the deleted branch "${this.name}"`);
     }
 
-    console.log("Here four");
+    console.log("Here four five six");
 
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: "foo" };

@@ -12,6 +12,7 @@
   ],
   "license": "MIT",
   "scripts": {
+    "start": "yarn storybook",
     "storybook": "start-storybook -p 6006",
     "test:e2e": "CHROMATIC_APP_CODE=fpva75oqc1g chromatic test --exit-zero-on-changes",
     "build": "build-storybook"

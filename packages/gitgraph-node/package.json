@@ -29,6 +29,7 @@
   },
   "main": "./src/index.ts",
   "scripts": {
+    "start": "rollup -c -w",
     "example:default": "ts-node examples/default.ts",
     "example:branches": "ts-node examples/branches.ts",
     "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/node@ && git add CHANGELOG.md"
