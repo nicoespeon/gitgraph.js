@@ -26,12 +26,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./lib/bundle.umd.js",
-  "module": "./lib/index.js",
-  "jsnext:main": "./lib/index.js",
-  "typings": "./lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "jsnext:main": "dist/index.es.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "start": "rollup -c rollup.config.js -w",
+    "start": "rollup -c -w",
     "prewatch": "rimraf ./lib",
     "watch": "tsc -w",
     "test": "jest",
@@ -46,12 +46,13 @@
     "prepublishOnly": "npm run test"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "8.5.0",
     "@types/node": "9.4.6",
     "auto-changelog": "1.12.1",
     "browserify": "14.5.0",
     "npm-run-all": "4.1.2",
     "rimraf": "2.6.2",
-    "rollup": "0.51.8",
+    "rollup": "2.79.1",
     "uglify-es": "3.3.9"
   },
   "jest": {

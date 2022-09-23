@@ -26,16 +26,16 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./lib/index.js",
-  "browser": "./lib/gitgraph.umd.js",
-  "module": "./lib/index.js",
-  "jsnext:main": "./lib/index.js",
-  "typings": "./lib/index.d.ts",
+  "main": "dist/index.js",
+  "browser": "gitgraph.umd.js",
+  "module": "dist/index.es.js",
+  "jsnext:main": "dist/index.es.js",
+  "typings:main": "dist/index.es.js",
   "directories": {
-    "lib": "lib"
+    "lib": "dist"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "start": "rollup -c -w",
@@ -50,14 +50,15 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/js@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@gitgraph/core": "1.5.0"
+    "@gitgraph/core": "1.5.0",
+    "@rollup/plugin-typescript": "8.5.0"
   },
   "devDependencies": {
     "@types/node": "9.4.6",
     "auto-changelog": "1.12.1",
     "npm-run-all": "4.1.2",
     "rimraf": "2.6.2",
-    "rollup": "1.10.1",
+    "rollup": "2.79.1",
     "rollup-plugin-commonjs": "9.3.4",
     "rollup-plugin-node-resolve": "4.2.3",
     "uglify-es": "3.3.9"

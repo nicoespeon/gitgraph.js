@@ -1,13 +1,17 @@
+import typescript from "@rollup/plugin-typescript";
+
 const globals = {
   "@gitgraph/core": "gitgraph.core",
 };
 
 export default {
-  input: "lib/index.js",
+  input: "src/index.tsx",
   output: {
-    file: "lib/bundle.umd.js",
+    name: "GitgraphReact",
+    file: "dist/bundle.umd.js",
     format: "umd",
   },
+  plugins: [typescript({ module: "ESNext" })],
   name: "GitgraphReact",
   exports: "named",
   sourcemap: true,
