@@ -7,7 +7,7 @@ const globals = {
 export default {
   input: "src/index.tsx",
   output: {
-    name: "GitgraphReact",
+    name: "@gitgraph/react",
     file: "dist/bundle.umd.js",
     format: "umd",
   },

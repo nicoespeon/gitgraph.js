@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "install:all": "lerna bootstrap && lerna link",
-    "start:all": "lerna run start --scope=@gitgraph/{core,js,react} --parallel",
+    "start:all": "lerna run start --scope=@gitgraph/{core,js,react,stories} --parallel",
     "lerna": "lerna",
     "build": "lerna run build --scope=@gitgraph/{core,react,js,node} --stream",
     "watch": "lerna run watch --scope=@gitgraph/{core,react,js,node} --stream",
