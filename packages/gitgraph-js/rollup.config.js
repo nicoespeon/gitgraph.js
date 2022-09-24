@@ -8,6 +8,7 @@ export default {
     file: "dist/gitgraph.umd.js",
     format: "umd",
     name: "GitgraphJS",
+    sourcemap: true,
   },
   plugins: [resolve(), commonJS(), typescript({ module: "ESNext" })],
 };

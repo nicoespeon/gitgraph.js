@@ -189,7 +189,7 @@ class Commit<TNode = SVGElement> {
     }
     name = "foo bars";
     email = "asd@asd.com";
-    console.log("Here 5ssss");
+    console.log("Here Andrei 22");
     this.author = { name, email, timestamp: Date.now() };
     this.committer = { name, email, timestamp: Date.now() };
 
