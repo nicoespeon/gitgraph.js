@@ -27,10 +27,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
+  "main": "dist/bundle.umd.js",
+  "module": "dist/bundle.umd.js",
   "jsnext:main": "dist/index.es.js",
-  "typings:main": "dist/index.es.js",
+  "typings:main": "dist/Gitgraph.d.ts",
   "scripts": {
     "start": "rollup -c -w",
     "prewatch": "rimraf ./lib",

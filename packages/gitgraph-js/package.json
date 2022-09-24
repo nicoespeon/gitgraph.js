@@ -26,11 +26,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/index.js",
-  "browser": "gitgraph.umd.js",
-  "module": "dist/index.es.js",
+  "main": "dist/gitgraph.umd.js",
+  "browser": "dist/gitgraph.umd.js",
+  "module": "dist/gitgraph.umd.js",
   "jsnext:main": "dist/index.es.js",
-  "typings:main": "dist/index.es.js",
+  "typings:main": "dist/gitgraph.d.ts",
   "directories": {
     "lib": "dist"
   },
