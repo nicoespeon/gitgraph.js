@@ -68,7 +68,7 @@ function createGitgraph(
   let commitsElements: {
     [commitHash: string]: {
       branchLabel: SVGGElement | null;
-      branchLabels: SVGElement[] | null;
+      branchLabels: SVGGraphicsElement[] | null;
       tags: SVGGElement[];
       message: SVGGElement | null;
     };
@@ -196,34 +196,24 @@ function createGitgraph(
       // Ensure commits elements (branch labels, message…) are well positionned.
       // It can't be done at render time since elements size is dynamic.
       Object.keys(commitsElements).forEach((commitHash) => {
-        const { branchLabel, branchLabels, tags, message } = commitsElements[
-          commitHash
-        ];
+        const { branchLabels, tags, message } = commitsElements[commitHash];
 
         // We'll store X position progressively and translate elements.
         let x = commitMessagesX;
 
-        branchLabels.forEach((tag) => {
-          moveElement(tag, x);
+        branchLabels.forEach((branchLabel) => {
+          moveElement(branchLabel, x);
 
           // BBox width misses box padding and offset
-          // => they are set later, on tag update.
-          // We would need to make tag update happen before to solve it.
-          const offset = parseFloat(tag.getAttribute("data-offset") || "0");
-          const tagWidth = tag.getBBox().width + 2 * TAG_PADDING_X + offset;
+          // => they are set later, on branchLabel update.
+          // We would need to make branchLabel update happen before to solve it.
+          const offset = parseFloat(
+            branchLabel.getAttribute("data-offset") || "0",
+          );
+          const tagWidth =
+            branchLabel.getBBox().width + 2 * TAG_PADDING_X + offset;
           x += tagWidth + padding;
         });
-
-        // if (branchLabel) {
-        //   moveElement(branchLabel, x);
-
-        //   // BBox width misses box padding
-        //   // => they are set later, on branch label update.
-        //   // We would need to make branch label update happen before to solve it.
-        //   const branchLabelWidth =
-        //     branchLabel.getBBox().width + 2 * BRANCH_LABEL_PADDING_X;
-        //   x += branchLabelWidth + padding;
-        // }
 
         tags.forEach((tag) => {
           moveElement(tag, x);
