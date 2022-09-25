@@ -9221,9 +9221,9 @@ mdx-deck-code-surfer@0.5.5:
     code-surfer "^0.5.5"
     memoize-one "^4.0.2"
 
-"mdx-deck@git://github.com/nicoespeon/mdx-deck.git#gitgraphjs-custom-build":
+"mdx-deck@https://github.com/nicoespeon/mdx-deck.git#gitgraphjs-custom-build":
   version "1.10.2"
-  resolved "git://github.com/nicoespeon/mdx-deck.git#6057b126523f7e8c977be1fd97075916d575b238"
+  resolved "https://github.com/nicoespeon/mdx-deck.git#6057b126523f7e8c977be1fd97075916d575b238"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
