@@ -293,12 +293,6 @@ class BranchUserApi<TNode> {
     options: GitgraphCommitOptions<TNode>,
     parents: string[],
   ): void {
-    // if (this.name == "develop") {
-    //   debugger;
-    // }
-    // if (this.name == "main") {
-    //   debugger;
-    // }
     const parentOnSameBranch = this._graph.refs.getCommit(this._branch.name);
     if (parentOnSameBranch) {
       parents.unshift(parentOnSameBranch);

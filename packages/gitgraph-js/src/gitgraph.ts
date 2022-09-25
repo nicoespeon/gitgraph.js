@@ -68,6 +68,7 @@ function createGitgraph(
   let commitsElements: {
     [commitHash: string]: {
       branchLabel: SVGGElement | null;
+      branchLabels: SVGElement[] | null;
       tags: SVGGElement[];
       message: SVGGElement | null;
     };
@@ -195,21 +196,34 @@ function createGitgraph(
       // Ensure commits elements (branch labels, message…) are well positionned.
       // It can't be done at render time since elements size is dynamic.
       Object.keys(commitsElements).forEach((commitHash) => {
-        const { branchLabel, tags, message } = commitsElements[commitHash];
+        const { branchLabel, branchLabels, tags, message } = commitsElements[
+          commitHash
+        ];
 
         // We'll store X position progressively and translate elements.
         let x = commitMessagesX;
 
-        if (branchLabel) {
-          moveElement(branchLabel, x);
+        branchLabels.forEach((tag) => {
+          moveElement(tag, x);
 
-          // BBox width misses box padding
-          // => they are set later, on branch label update.
-          // We would need to make branch label update happen before to solve it.
-          const branchLabelWidth =
-            branchLabel.getBBox().width + 2 * BRANCH_LABEL_PADDING_X;
-          x += branchLabelWidth + padding;
-        }
+          // BBox width misses box padding and offset
+          // => they are set later, on tag update.
+          // We would need to make tag update happen before to solve it.
+          const offset = parseFloat(tag.getAttribute("data-offset") || "0");
+          const tagWidth = tag.getBBox().width + 2 * TAG_PADDING_X + offset;
+          x += tagWidth + padding;
+        });
+
+        // if (branchLabel) {
+        //   moveElement(branchLabel, x);
+
+        //   // BBox width misses box padding
+        //   // => they are set later, on branch label update.
+        //   // We would need to make branch label update happen before to solve it.
+        //   const branchLabelWidth =
+        //     branchLabel.getBBox().width + 2 * BRANCH_LABEL_PADDING_X;
+        //   x += branchLabelWidth + padding;
+        // }
 
         tags.forEach((tag) => {
           moveElement(tag, x);
@@ -435,7 +449,6 @@ function createGitgraph(
     // @gitgraph/core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
     const branches = Array.from(gitgraph.branches.values());
-    debugger;
     return branches.map((branch) => {
       if (!branch.style.label.display) return null;
 
@@ -597,6 +610,7 @@ function createGitgraph(
     }
 
     commitsElements[commit.hashAbbrev].branchLabel = branchLabels;
+    commitsElements[commit.hashAbbrev].branchLabels.push(branchLabels);
   }
 
   function setMessageRef(commit: Commit, message: SVGGElement | null): void {
@@ -618,6 +632,7 @@ function createGitgraph(
   function initCommitElements(commit: Commit): void {
     commitsElements[commit.hashAbbrev] = {
       branchLabel: null,
+      branchLabels: [],
       tags: [],
       message: null,
     };

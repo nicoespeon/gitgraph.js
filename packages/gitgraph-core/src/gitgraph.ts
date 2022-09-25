@@ -172,10 +172,6 @@ class GitgraphCore<TNode = SVGElement> {
   public createBranch(args: any): Branch<TNode> {
     const defaultParentBranchName = "HEAD";
 
-    if (args == "develop") {
-      debugger;
-    }
-
     let options = {
       gitgraph: this,
       name: "",
@@ -213,7 +209,6 @@ class GitgraphCore<TNode = SVGElement> {
     const branch = new Branch<TNode>(options);
     this.branches.set(branch.name, branch);
     if (options.parentCommitHash != null) {
-      debugger;
       this.refs.set(branch.name, options.parentCommitHash);
     }
     return branch;

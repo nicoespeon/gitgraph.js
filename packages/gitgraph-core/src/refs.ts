@@ -23,10 +23,6 @@ class Refs {
     this.addNameTo(commitHash, name);
     this.addCommitTo(name, commitHash);
 
-    if (name == "develop") {
-      debugger;
-    }
-
     return this;
   }
 
@@ -98,24 +94,11 @@ class Refs {
   }
 
   private addNameTo(commitHash: Commit["hash"], nameToAdd: Name): void {
-    // if (nameToAdd == "main") {
-    //   debugger;
-    // }
-    // if (nameToAdd == "develop") {
-    //   debugger;
-    // }
-
     const prevNames = this.namesPerCommit.get(commitHash) || [];
     this.namesPerCommit.set(commitHash, [...prevNames, nameToAdd]);
   }
 
   private addCommitTo(name: Name, commitHashToAdd: Commit["hash"]): void {
-    // if (name == "main") {
-    //   debugger;
-    // }
-    // if (name == "develop") {
-    //   debugger;
-    // }
     this.commitPerName.set(name, commitHashToAdd);
   }
 }

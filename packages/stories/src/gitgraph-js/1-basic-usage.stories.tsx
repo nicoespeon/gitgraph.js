@@ -258,8 +258,7 @@ storiesOf("gitgraph-js/1. Basic usage", module)
 
         master.commit().commit().tag("a").tag("b").commit();
         gitgraph.branch("develop");
-        const main = gitgraph.branch("main");
-        main.commit();
+        gitgraph.branch("main");
       }}
     </GraphContainer>
   ))
