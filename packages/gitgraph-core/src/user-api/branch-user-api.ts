@@ -76,8 +76,7 @@ class BranchUserApi<TNode> {
 
     options.from = this;
 
-
-    const branch = this._graph.createBranch(options)
+    const branch = this._graph.createBranch(options);
     this._commitWithParents(options, []);
     this._onGraphUpdate();
 
