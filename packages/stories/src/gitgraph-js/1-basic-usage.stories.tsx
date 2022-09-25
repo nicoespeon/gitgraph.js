@@ -256,9 +256,10 @@ storiesOf("gitgraph-js/1. Basic usage", module)
           name: "master",
         });
 
-        master.commit().commit().commit();
+        master.commit().commit().tag('a').tag('b').commit();
         gitgraph.branch("develop");
-        console.log("Here too");
+        const main = gitgraph.branch("main");
+        main.commit()
       }}
     </GraphContainer>
   ))

@@ -435,17 +435,22 @@ function createGitgraph(
     // @gitgraph/core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
     const branches = Array.from(gitgraph.branches.values());
+    debugger;
     return branches.map((branch) => {
       if (!branch.style.label.display) return null;
 
       if (!gitgraph.branchLabelOnEveryCommit) {
         const commitHash = gitgraph.refs.getCommit(branch.name);
-        if (commit.hash !== commitHash) return null;
+        if (branch.name == "develop") {
+        }
+        if (commit.hash !== commitHash) {
+          return null;
+        }
       }
 
       // For the moment, we don't handle multiple branch labels.
       // To do so, we'd need to reposition each of them appropriately.
-      if (commit.branchToDisplay !== branch.name) return null;
+      // if (commit.branchToDisplay !== branch.name) return null;
 
       const branchLabel = branch.renderLabel
         ? branch.renderLabel(branch)

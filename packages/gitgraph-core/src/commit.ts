@@ -187,9 +187,6 @@ class Commit<TNode = SVGElement> {
     } catch (e) {
       [name, email] = [options.author, ""];
     }
-    name = "foo bars 232ss";
-    email = "asd@asd.com";
-    console.log("Here Andrei 23");
     this.author = { name, email, timestamp: Date.now() };
     this.committer = { name, email, timestamp: Date.now() };
 

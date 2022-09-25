@@ -76,7 +76,12 @@ class BranchUserApi<TNode> {
 
     options.from = this;
 
-    return this._graph.createBranch(options).getUserApi();
+
+    const branch = this._graph.createBranch(options)
+    this._commitWithParents(options, []);
+    this._onGraphUpdate();
+
+    return branch.getUserApi();
   }
 
   /**
@@ -95,8 +100,6 @@ class BranchUserApi<TNode> {
     if (this._branch.isDeleted() && !this._isReferenced()) {
       throw new Error(`Cannot commit on the deleted branch "${this.name}"`);
     }
-
-    console.log("Here four five six");
 
     // Deal with shorter syntax
     if (typeof options === "string") options = { subject: "foo" };
@@ -291,6 +294,12 @@ class BranchUserApi<TNode> {
     options: GitgraphCommitOptions<TNode>,
     parents: string[],
   ): void {
+    // if (this.name == "develop") {
+    //   debugger;
+    // }
+    // if (this.name == "main") {
+    //   debugger;
+    // }
     const parentOnSameBranch = this._graph.refs.getCommit(this._branch.name);
     if (parentOnSameBranch) {
       parents.unshift(parentOnSameBranch);
@@ -310,14 +319,14 @@ class BranchUserApi<TNode> {
       style: this._getCommitStyle(options.style),
     });
 
-    if (parentOnSameBranch) {
-      // Take all the refs from the parent
-      const parentRefs = this._graph.refs.getNames(parentOnSameBranch);
-      parentRefs.forEach((ref) => this._graph.refs.set(ref, commit.hash));
-    } else {
-      // Set the branch ref
-      this._graph.refs.set(this._branch.name, commit.hash);
-    }
+    // if (parentOnSameBranch) {
+    //   // Take all the refs from the parent
+    //   const parentRefs = this._graph.refs.getNames(parentOnSameBranch);
+    //   parentRefs.forEach((ref) => this._graph.refs.set(ref, commit.hash));
+    // } else {
+    //   // Set the branch ref
+    // }
+    this._graph.refs.set(this._branch.name, commit.hash);
 
     // Add the new commit
     this._graph.commits.push(commit);
