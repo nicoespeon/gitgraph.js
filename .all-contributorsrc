@@ -399,6 +399,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "aicioara",
+      "name": "Andrei Cioara",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3248682?v=4",
+      "profile": "https://andrei.cioara.me",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "repoType": "github",
