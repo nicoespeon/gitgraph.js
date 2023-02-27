@@ -67,7 +67,7 @@ interface GitgraphState {
   // including the message offset. Allows custom, flexible message height.
   // E.g. {20: 30} means for commit: y=20 -> y=30
   // Offset should be computed when graph is rendered (componentDidUpdate).
-  commitYWithOffsets: { [key: number]: number[] };
+  commitYWithOffsets: { [key: number]: number };
   shouldRecomputeOffsets: boolean;
   currentCommitOver: CommitCore<ReactSvgElement> | null;
 }
@@ -211,7 +211,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           10,
         );
 
-        if (!this.state.commitYWithOffsets[commitY]) {
+        if (!Object.values(this.state.commitYWithOffsets).includes(commitY)) {
           const firstForeignObject = commit.getElementsByTagName(
             "foreignObject",
           )[0];
@@ -234,12 +234,13 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
             firstForeignObject.setAttribute("height", `${messageHeight}px`);
           }
 
-          newOffsets[commitY] = [commitY + totalOffsetY, 1];
+          newOffsets[commitY] = commitY + totalOffsetY;
 
           // Increment total offset after setting the offset
           // => offset next commits accordingly.
           totalOffsetY += messageHeight;
         }
+
         return newOffsets;
       },
       {},
@@ -249,9 +250,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   private getWithCommitOffset({ x, y }: Coordinate): Coordinate {
     return {
       x,
-      y: this.state.commitYWithOffsets[y]
-        ? this.state.commitYWithOffsets[y][0]
-        : y,
+      y: this.state.commitYWithOffsets[y] || y,
     };
   }
 }
