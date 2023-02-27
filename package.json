@@ -1,7 +1,6 @@
 {
-  "name": "gitgraph.js-monorepo",
-  "private": true,
-  "version": "2.0.0-monorepo",
+  "name": "commitgraph",
+  "version": "1.0.2",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "description": "A JavaScript library to draw pretty git graphs",
   "contributors": [
@@ -22,12 +21,12 @@
   ],
   "scripts": {
     "lerna": "lerna",
-    "build": "lerna run build --scope=@gitgraph/{core,react,js,node} --stream",
+    "build": "lerna run build --scope=@commitgraph/{core,react,js,node} --stream",
     "watch": "lerna run watch --stream",
     "storybook": "sleep 3 && lerna run storybook --stream",
     "develop": "concurrently npm:watch npm:storybook",
-    "website": "lerna run start --scope=@gitgraph/website --stream",
-    "deploy:website": "lerna run deploy --scope=@gitgraph/website --stream",
+    "website": "lerna run start --scope=@commitgraph/website --stream",
+    "deploy:website": "lerna run deploy --scope=@commitgraph/website --stream",
     "lint": "eslint packages/**/src/**/*.{ts,tsx}",
     "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run build",

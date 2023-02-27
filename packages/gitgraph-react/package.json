@@ -1,5 +1,5 @@
 {
-  "name": "@gitgraph/react",
+  "name": "@commitgraph/react",
   "version": "1.6.0",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -41,10 +41,10 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
     "prepare": "npm run build",
-    "version": "auto-changelog -p -l 0 --tag-prefix @gitgraph/react@ && git add CHANGELOG.md"
+    "version": "auto-changelog -p -l 0 --tag-prefix @commitgraph/react@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@gitgraph/core": "1.5.0"
+    "@commitgraph/core": "1.5.0"
   },
   "peerDependencies": {
     "react": ">= 16.8.0"
