@@ -1,30 +1,30 @@
-import * as React from "react";
 import {
+  BranchesPaths,
+  Commit as CommitCore,
+  Coordinate,
   GitgraphCore,
   GitgraphOptions,
   GitgraphUserApi,
-  Commit as CommitCore,
   MergeStyle,
   Mode,
   Orientation,
   TemplateName,
   templateExtend,
-  BranchesPaths,
-  Coordinate,
 } from "@gitgraph/core";
+import * as React from "react";
 
 import { BranchLabel } from "./BranchLabel";
+import { BranchPath } from "./BranchPath";
+import { Commit } from "./Commit";
 import { Tooltip } from "./Tooltip";
 import {
-  ReactSvgElement,
-  CommitOptions,
-  BranchOptions,
-  TagOptions,
-  MergeOptions,
   Branch,
+  BranchOptions,
+  CommitOptions,
+  MergeOptions,
+  ReactSvgElement,
+  TagOptions,
 } from "./types";
-import { Commit } from "./Commit";
-import { BranchPath } from "./BranchPath";
 
 export {
   Gitgraph,
@@ -67,7 +67,7 @@ interface GitgraphState {
   // including the message offset. Allows custom, flexible message height.
   // E.g. {20: 30} means for commit: y=20 -> y=30
   // Offset should be computed when graph is rendered (componentDidUpdate).
-  commitYWithOffsets: { [key: number]: number };
+  commitYWithOffsets: { [key: number]: number[] };
   shouldRecomputeOffsets: boolean;
   currentCommitOver: CommitCore<ReactSvgElement> | null;
 }
@@ -160,6 +160,7 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     if (!this.$commits.current) return;
 
     const commits = Array.from(this.$commits.current.children);
+
     this.setState({
       commitYWithOffsets: this.computeOffsets(commits),
       shouldRecomputeOffsets: false,
@@ -210,33 +211,35 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           10,
         );
 
-        const firstForeignObject = commit.getElementsByTagName(
-          "foreignObject",
-        )[0];
-        const customHtmlMessage =
-          firstForeignObject && firstForeignObject.firstElementChild;
+        if (!this.state.commitYWithOffsets[commitY]) {
+          const firstForeignObject = commit.getElementsByTagName(
+            "foreignObject",
+          )[0];
 
-        let messageHeight = 0;
-        if (customHtmlMessage) {
-          const height = customHtmlMessage.getBoundingClientRect().height;
-          const marginTopInPx =
-            window.getComputedStyle(customHtmlMessage).marginTop || "0px";
-          const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
+          const customHtmlMessage =
+            firstForeignObject && firstForeignObject.firstElementChild;
 
-          messageHeight = height + marginTop;
+          let messageHeight = 0;
+          if (customHtmlMessage) {
+            const height = customHtmlMessage.getBoundingClientRect().height;
+            const marginTopInPx =
+              window.getComputedStyle(customHtmlMessage).marginTop || "0px";
+            const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
+
+            messageHeight = height + marginTop;
+          }
+
+          // Force the height of the foreignObject (browser issue)
+          if (firstForeignObject) {
+            firstForeignObject.setAttribute("height", `${messageHeight}px`);
+          }
+
+          newOffsets[commitY] = [commitY + totalOffsetY, 1];
+
+          // Increment total offset after setting the offset
+          // => offset next commits accordingly.
+          totalOffsetY += messageHeight;
         }
-
-        // Force the height of the foreignObject (browser issue)
-        if (firstForeignObject) {
-          firstForeignObject.setAttribute("height", `${messageHeight}px`);
-        }
-
-        newOffsets[commitY] = commitY + totalOffsetY;
-
-        // Increment total offset after setting the offset
-        // => offset next commits accordingly.
-        totalOffsetY += messageHeight;
-
         return newOffsets;
       },
       {},
@@ -244,6 +247,11 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
   }
 
   private getWithCommitOffset({ x, y }: Coordinate): Coordinate {
-    return { x, y: this.state.commitYWithOffsets[y] || y };
+    return {
+      x,
+      y: this.state.commitYWithOffsets[y]
+        ? this.state.commitYWithOffsets[y][0]
+        : y,
+    };
   }
 }

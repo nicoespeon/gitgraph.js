@@ -1,18 +1,18 @@
-import * as React from "react";
 import {
-  GitgraphCore,
   Commit as CommitCore,
-  Mode,
   Coordinate,
+  GitgraphCore,
+  Mode,
 } from "@gitgraph/core";
-import { ReactSvgElement } from "./types";
-import { Dot } from "./Dot";
-import { Tooltip } from "./Tooltip";
-import { Arrow } from "./Arrow";
-import { Message } from "./Message";
-import { Tag, TAG_PADDING_X } from "./Tag";
-import { BranchLabel } from "./BranchLabel";
+import * as React from "react";
 import { MutableRefObject } from "react";
+import { Arrow } from "./Arrow";
+import { BranchLabel } from "./BranchLabel";
+import { Dot } from "./Dot";
+import { Message } from "./Message";
+import { TAG_PADDING_X, Tag } from "./Tag";
+import { Tooltip } from "./Tooltip";
+import { ReactSvgElement } from "./types";
 
 interface CommitsProps {
   commits: Array<CommitCore<ReactSvgElement>>;
@@ -157,7 +157,6 @@ export const Commit = (props: CommitsProps) => {
       </g>,
     );
   }
-
   return (
     <g transform={`translate(${x}, ${y})`}>
       <Dot
