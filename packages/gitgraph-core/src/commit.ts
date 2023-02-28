@@ -1,7 +1,7 @@
-import { CommitStyle, TagStyle } from "./template";
 import { Branch } from "./branch";
 import { Refs } from "./refs";
 import { Tag } from "./tag";
+import { CommitStyle, TagStyle } from "./template";
 import { GitgraphTagOptions } from "./user-api/gitgraph-user-api";
 
 export { CommitRenderOptions, CommitOptions, Commit };

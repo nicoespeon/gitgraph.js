@@ -32,6 +32,7 @@ class BranchesOrder<TNode> {
 
     if (compareFunction) {
       this.branches = new Set(Array.from(this.branches).sort(compareFunction));
+      console.log(this.branches);
     }
   }
 

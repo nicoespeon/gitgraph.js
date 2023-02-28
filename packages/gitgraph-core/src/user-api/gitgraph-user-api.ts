@@ -1,13 +1,13 @@
-import { TagStyle, TemplateOptions } from "../template";
-import { Commit, CommitRenderOptions, CommitOptions } from "../commit";
 import {
   Branch,
   BranchCommitDefaultOptions,
   BranchRenderOptions,
   DELETED_BRANCH_NAME,
 } from "../branch";
+import { Commit, CommitOptions, CommitRenderOptions } from "../commit";
 import { GitgraphCore } from "../gitgraph";
 import { Refs } from "../refs";
+import { TagStyle, TemplateOptions } from "../template";
 import { BranchUserApi } from "./branch-user-api";
 
 export {
@@ -208,7 +208,6 @@ class GitgraphUserApi<TNode> {
     if (!areDataValid) {
       throw invalidData;
     }
-
     const commitOptionsList: Array<
       CommitOptions<TNode> & { refs: string[] }
     > = data
@@ -229,10 +228,12 @@ class GitgraphUserApi<TNode> {
 
     // Use validated `value`.
     this.clear();
-
+    console.log(this._graph.commits);
     this._graph.commits = commitOptionsList.map(
       (options) => new Commit(options),
     );
+    console.log(commitOptionsList);
+    console.log(this._graph.commits);
 
     // Create tags & refs.
     commitOptionsList.forEach(({ refs, hash }) => {
@@ -262,7 +263,6 @@ class GitgraphUserApi<TNode> {
         return mem;
       }, new Set<Branch["name"]>())
       .forEach((branch) => this.branch(branch));
-
     this._onGraphUpdate();
 
     return this;

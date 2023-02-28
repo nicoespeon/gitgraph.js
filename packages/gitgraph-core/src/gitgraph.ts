@@ -1,23 +1,23 @@
 import { Branch, DELETED_BRANCH_NAME, createDeletedBranch } from "./branch";
-import { Commit } from "./commit";
-import { createGraphRows, GraphRows } from "./graph-rows";
-import { Mode } from "./mode";
 import { BranchesOrder, CompareBranchesOrder } from "./branches-order";
+import { BranchesPaths, BranchesPathsCalculator } from "./branches-paths";
+import { Commit } from "./commit";
+import { GraphRows, createGraphRows } from "./graph-rows";
+import { Mode } from "./mode";
+import { Orientation } from "./orientation";
+import { Refs } from "./refs";
 import {
   Template,
-  TemplateOptions,
   TemplateName,
+  TemplateOptions,
   getTemplate,
 } from "./template";
-import { Refs } from "./refs";
-import { BranchesPathsCalculator, BranchesPaths } from "./branches-paths";
-import { booleanOptionOr, numberOptionOr } from "./utils";
-import { Orientation } from "./orientation";
 import {
-  GitgraphUserApi,
   GitgraphBranchOptions,
   GitgraphTagOptions,
+  GitgraphUserApi,
 } from "./user-api/gitgraph-user-api";
+import { booleanOptionOr, numberOptionOr } from "./utils";
 
 export { GitgraphOptions, RenderedData, GitgraphCore };
 
@@ -424,7 +424,12 @@ class GitgraphCore<TNode = SVGElement> {
     const maxRow = rows.getMaxRow();
 
     const order = branchesOrder.get(commit.branchToDisplay);
-
+    console.log(
+      this.initCommitOffsetX,
+      branchesOrder,
+      commit.branchToDisplay,
+      this.template.branch.spacing * order,
+    );
     switch (this.orientation) {
       default:
         return commit.setPosition({
