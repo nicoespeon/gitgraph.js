@@ -12,10 +12,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+    "url": "git+https://github.com/dolthub/gitgraph.js.git"
   },
   "bugs": {
-    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+    "url": "https://github.com/dolthub/gitgraph.js/issues"
   },
   "keywords": [
     "react",
@@ -23,7 +23,7 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "homepage": "https://github.com/dolthub/gitgraph.js#readme",
   "publishConfig": {
     "access": "public"
   },
