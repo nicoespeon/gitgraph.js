@@ -1315,6 +1315,25 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@gitgraph/core@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@gitgraph/core/-/core-1.5.0.tgz#fc27924b82eabc5fa1f90480df5239e0c84dcafa"
+  integrity sha512-8CeeHbkKoFHM1y9vfjYiHyEpzl1mEhVrg5c/eFgDBsntOYswoDKU2yOf6DjtVINcE60wmcuynBSJqjMkQo07Ww==
+
+"@gitgraph/js@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@gitgraph/js/-/js-1.4.0.tgz#27d92664841af1d886e1b970742d3f0b80df2867"
+  integrity sha512-7wxTTCFnRVjsqj+Zt09+3F79WhH4MK46ZS20AwbcB/MJFshSMeMH4nYmNDPa9McVsiL+cFsvW1pmZoquAOoHMw==
+  dependencies:
+    "@gitgraph/core" "1.5.0"
+
+"@gitgraph/react@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@gitgraph/react/-/react-1.6.0.tgz#45783da838d975c225849766c337028a92cd3f14"
+  integrity sha512-cLFNZDoEiNbsnMfdT82zeZti5saYghQamfCbTpVvCRr+BrrQ/k94glkZqYPXKKNTEqbQV6L9JeOfAk1hNiFYXA==
+  dependencies:
+    "@gitgraph/core" "1.5.0"
+
 "@lerna/add@3.13.1":
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.13.1.tgz#2cd7838857edb3b43ed73e3c21f69a20beb9b702"

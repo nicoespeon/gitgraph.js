@@ -49,7 +49,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @commitgraph/js@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@commitgraph/core": "1.5.0"
+    "commitgraph-core": "1.0.1"
   },
   "devDependencies": {
     "@types/node": "9.4.6",

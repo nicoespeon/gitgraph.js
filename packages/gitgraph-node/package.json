@@ -12,10 +12,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+    "url": "git+https://github.com/dolthub/gitgraph.js.git"
   },
   "bugs": {
-    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+    "url": "https://github.com/dolthub/gitgraph.js/issues"
   },
   "keywords": [
     "node",
@@ -23,7 +23,7 @@
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "homepage": "https://github.com/dolthub/gitgraph.js#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -34,7 +34,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @commitgraph/node@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@commitgraph/core": "1.5.0",
+    "commitgraph-core": "1.0.1",
     "chalk": "2.4.1",
     "lodash": "4.17.13"
   },

@@ -1,7 +1,7 @@
+import { Branch, Commit, GitgraphCore } from "commitgraph-core";
 import * as React from "react";
-import { Branch, Commit, GitgraphCore } from "@gitgraph/core";
-import { ReactSvgElement } from "./types";
 import { MutableRefObject } from "react";
+import { ReactSvgElement } from "./types";
 
 interface BranchLabelBaseProps {
   branch: Branch<React.ReactElement<SVGElement>>;
