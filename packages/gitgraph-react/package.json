@@ -1,6 +1,6 @@
 {
   "name": "commitgraph-react",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -44,7 +44,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix commitgraph-react@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "commitgraph-core": "1.0.2"
+    "commitgraph-core": "1.0.3"
   },
   "peerDependencies": {
     "react": ">= 16.8.0"
