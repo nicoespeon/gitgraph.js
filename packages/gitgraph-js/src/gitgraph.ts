@@ -1,41 +1,41 @@
 import {
-  GitgraphCore,
-  GitgraphOptions,
-  Commit,
-  GitgraphCommitOptions,
-  RenderedData,
-  MergeStyle,
-  arrowSvgPath,
-  toSvgPath,
-  Coordinate,
-  Mode,
   BranchUserApi,
+  Commit,
+  Coordinate,
   GitgraphBranchOptions,
-  GitgraphTagOptions,
+  GitgraphCommitOptions,
+  GitgraphCore,
   GitgraphMergeOptions,
+  GitgraphOptions,
+  GitgraphTagOptions,
+  MergeStyle,
+  Mode,
   Orientation,
+  RenderedData,
   TemplateName,
+  arrowSvgPath,
   templateExtend,
+  toSvgPath,
 } from "@gitgraph/core";
 
 import {
-  createSvg,
-  createG,
-  createText,
+  PADDING_X as BRANCH_LABEL_PADDING_X,
+  PADDING_Y as BRANCH_LABEL_PADDING_Y,
+  createBranchLabel,
+} from "./branch-label";
+import {
   createCircle,
-  createUse,
-  createPath,
   createClipPath,
   createDefs,
   createForeignObject,
+  createG,
+  createPath,
+  createSvg,
+  createText,
+  createUse,
 } from "./svg-elements";
-import {
-  createBranchLabel,
-  PADDING_X as BRANCH_LABEL_PADDING_X,
-  PADDING_Y as BRANCH_LABEL_PADDING_Y,
-} from "./branch-label";
-import { createTag, PADDING_X as TAG_PADDING_X } from "./tag";
-import { createTooltip, PADDING as TOOLTIP_PADDING } from "./tooltip";
+import { PADDING_X as TAG_PADDING_X, createTag } from "./tag";
+import { PADDING as TOOLTIP_PADDING, createTooltip } from "./tooltip";
 
 type CommitOptions = GitgraphCommitOptions<SVGElement>;
 type BranchOptions = GitgraphBranchOptions<SVGElement>;

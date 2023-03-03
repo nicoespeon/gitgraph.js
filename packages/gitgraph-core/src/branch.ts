@@ -1,7 +1,7 @@
 import { Commit, CommitRenderOptions } from "./commit";
 import { GitgraphCore } from "./gitgraph";
+import { BranchStyle, TemplateOptions } from "./template";
 import { BranchUserApi } from "./user-api/branch-user-api";
-import { TemplateOptions, BranchStyle } from "./template";
 
 export {
   BranchCommitDefaultOptions,

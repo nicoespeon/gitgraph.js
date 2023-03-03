@@ -1,13 +1,13 @@
+import { Branch, createDeletedBranch } from "../branch";
+import { Commit } from "../commit";
 import { GitgraphCore } from "../gitgraph";
+import { CommitStyle, TemplateOptions } from "../template";
+import { Omit, withoutUndefinedKeys } from "../utils";
 import {
-  GitgraphCommitOptions,
   GitgraphBranchOptions,
+  GitgraphCommitOptions,
   GitgraphTagOptions,
 } from "./gitgraph-user-api";
-import { TemplateOptions, CommitStyle } from "../template";
-import { Commit } from "../commit";
-import { Branch, createDeletedBranch } from "../branch";
-import { withoutUndefinedKeys, Omit } from "../utils";
 
 export { BranchUserApi, GitgraphMergeOptions };
 

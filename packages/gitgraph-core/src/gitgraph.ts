@@ -217,7 +217,6 @@ class GitgraphCore<TNode = SVGElement> {
    */
   private computeRenderedCommits(): Array<Commit<TNode>> {
     const branches = this.getBranches();
-
     // Commits that are not associated to a branch in `branches`
     // were in a deleted branch. If the latter was merged beforehand
     // they are reachable and are rendered. Others are not
@@ -383,21 +382,54 @@ class GitgraphCore<TNode = SVGElement> {
     const result = new Map<Commit["hash"], Set<Branch["name"]>>();
 
     const queue: Array<Commit["hash"]> = [];
+
     const branches = this.refs.getAllNames().filter((name) => name !== "HEAD");
+
     branches.forEach((branch) => {
       const commitHash = this.refs.getCommit(branch);
       if (commitHash) {
         queue.push(commitHash);
       }
-
       while (queue.length > 0) {
         const currentHash = queue.pop() as Commit["hash"];
         const current = this.commits.find(
           ({ hash }) => hash === currentHash,
         ) as Commit<TNode> | null;
+
+        // console.log(
+        //   "refs",
+        //   this.refs,
+        //   currentHash,
+        //   this.refs.hasCommit(currentHash),
+        //   this.refs.getAllNames(),
+        //   this.refs.getCommit(currentHash),
+        //   this.refs.getNames(currentHash),
+        // );
+
+        // console.log("current commit is ", currentHash);
+
+        //  console.log("current commit is ", current);
+        // if (current) {
+        //   console.log(
+        //     "ref length is",
+        //     current.refs.length,
+        //     current.refs,
+        //     current,
+        //   );
+        // } else {
+        //   console.log("current is null");
+        // }
+
         const prevBranches =
           result.get(currentHash) || new Set<Branch["name"]>();
-        prevBranches.add(branch);
+
+        // console.log(prevBranches, branch);
+
+        if (!this.refs.hasCommit(currentHash)) {
+          prevBranches.add(branch);
+        } else {
+          this.refs.getNames(currentHash).forEach((h) => prevBranches.add(h));
+        }
         result.set(currentHash, prevBranches);
         if (current && current.parents && current.parents.length > 0) {
           queue.push(current.parents[0]);
@@ -422,14 +454,8 @@ class GitgraphCore<TNode = SVGElement> {
   ): Commit<TNode> {
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
-
     const order = branchesOrder.get(commit.branchToDisplay);
-    console.log(
-      this.initCommitOffsetX,
-      branchesOrder,
-      commit.branchToDisplay,
-      this.template.branch.spacing * order,
-    );
+
     switch (this.orientation) {
       default:
         return commit.setPosition({

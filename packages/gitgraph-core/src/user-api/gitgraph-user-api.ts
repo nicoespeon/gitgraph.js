@@ -228,15 +228,13 @@ class GitgraphUserApi<TNode> {
 
     // Use validated `value`.
     this.clear();
-    console.log(this._graph.commits);
+
     this._graph.commits = commitOptionsList.map(
       (options) => new Commit(options),
     );
-    console.log(commitOptionsList);
-    console.log(this._graph.commits);
 
     // Create tags & refs.
-    commitOptionsList.forEach(({ refs, hash }) => {
+    commitOptionsList.reverse().forEach(({ refs, hash }) => {
       if (!refs) return;
       if (!hash) return;
 
@@ -247,7 +245,6 @@ class GitgraphUserApi<TNode> {
         .map(([_, tag]) => tag)
         .filter((tag) => typeof tag === "string");
       tags.forEach((tag) => this._graph.tags.set(tag, hash));
-
       refs
         .filter((ref) => !ref.startsWith(TAG_PREFIX))
         .forEach((ref) => this._graph.refs.set(ref, hash));

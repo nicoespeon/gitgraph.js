@@ -1,6 +1,6 @@
 {
   "name": "commitgraph",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "description": "A JavaScript library to draw pretty git graphs",
   "contributors": [

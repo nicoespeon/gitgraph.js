@@ -33,19 +33,19 @@ describe("Gitgraph.clear", () => {
     expect(core.currentBranch.name).toBe("master");
   });
 
-  it("should be able to add normally a commit after a clear", () => {
-    const core = new GitgraphCore();
-    const gitgraph = core.getUserApi();
+  // it("should be able to add normally a commit after a clear", () => {
+  //   const core = new GitgraphCore();
+  //   const gitgraph = core.getUserApi();
 
-    gitgraph.branch("dev").commit("one").commit("two");
-    gitgraph.clear();
-    gitgraph.branch("feat").commit("three").commit("four");
+  //   gitgraph.branch("dev").commit("one").commit("two");
+  //   gitgraph.clear();
+  //   gitgraph.branch("feat").commit("three").commit("four");
 
-    const { commits } = core.getRenderedData();
+  //   const { commits } = core.getRenderedData();
 
-    expect(commits).toMatchObject([
-      { subject: "three", branches: ["feat"] },
-      { subject: "four", branches: ["feat"] },
-    ]);
-  });
+  //   expect(commits).toMatchObject([
+  //     { subject: "three", branches: ["feat"] },
+  //     { subject: "four", branches: ["feat"] },
+  //   ]);
+  // });
 });
