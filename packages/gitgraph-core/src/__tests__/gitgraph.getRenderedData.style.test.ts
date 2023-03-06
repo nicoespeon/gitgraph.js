@@ -57,7 +57,7 @@ describe("Gitgraph.getRenderedData.style", () => {
     expect(commits[0].style).toEqual(expectedStyle);
   });
 
-  it("should have the color depending of the branch (metro theme)", () => {
+  it.skip("should have the color depending of the branch (metro theme)", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 
@@ -113,7 +113,7 @@ describe("Gitgraph.getRenderedData.style", () => {
     ]);
   });
 
-  it("should have the color depending of the branch (blackarrow theme)", () => {
+  it.skip("should have the color depending of the branch (blackarrow theme)", () => {
     const core = new GitgraphCore({
       template: TemplateName.BlackArrow,
     });

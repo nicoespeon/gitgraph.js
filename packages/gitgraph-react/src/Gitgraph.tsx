@@ -10,7 +10,7 @@ import {
   Orientation,
   TemplateName,
   templateExtend,
-} from "@gitgraph/core";
+} from "commitgraph-core";
 import * as React from "react";
 
 import { BranchLabel } from "./BranchLabel";

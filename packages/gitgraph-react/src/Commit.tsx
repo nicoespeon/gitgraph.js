@@ -3,7 +3,7 @@ import {
   Coordinate,
   GitgraphCore,
   Mode,
-} from "@gitgraph/core";
+} from "commitgraph-core";
 import * as React from "react";
 import { MutableRefObject } from "react";
 import { Arrow } from "./Arrow";
@@ -157,6 +157,7 @@ export const Commit = (props: CommitsProps) => {
       </g>,
     );
   }
+
   return (
     <g transform={`translate(${x}, ${y})`}>
       <Dot

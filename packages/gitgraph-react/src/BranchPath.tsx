@@ -1,7 +1,7 @@
+import { Branch, Coordinate, GitgraphCore, toSvgPath } from "commitgraph-core";
 import * as React from "react";
-import { toSvgPath, GitgraphCore, Coordinate, Branch } from "@gitgraph/core";
-import { ReactSvgElement } from "./types";
 import { ReactElement } from "react";
+import { ReactSvgElement } from "./types";
 
 interface BranchPathProps {
   branch: Branch<ReactElement<SVGElement>>;

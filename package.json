@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "lerna": "lerna",
-    "build": "lerna run build --scope=@commitgraph/{core,react,js,node} --stream",
+    "build": "lerna run build --scope={commitgraph-core,commitgraph-react} --stream",
     "watch": "lerna run watch --stream",
     "storybook": "sleep 3 && lerna run storybook --stream",
     "develop": "concurrently npm:watch npm:storybook",
