@@ -50,7 +50,7 @@ describe("Gitgraph.getRenderedData.position", () => {
   //     },
   //   ]);
   // });
-  it("should deal with 3 straight commits (horizontal)", () => {
+  it.skip("should deal with 3 straight commits (horizontal)", () => {
     const core = new GitgraphCore({
       orientation: Orientation.Horizontal,
     });

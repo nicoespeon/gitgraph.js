@@ -157,6 +157,7 @@ export const Commit = (props: CommitsProps) => {
       </g>,
     );
   }
+
   return (
     <g transform={`translate(${x}, ${y})`}>
       <Dot

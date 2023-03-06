@@ -338,6 +338,7 @@ class GitgraphCore<TNode = SVGElement> {
     );
     Array.from(branchesPaths).forEach(([branch]) => {
       branch.computedColor =
+        branch.computedColor ||
         branch.style.color ||
         this.getBranchDefaultColor(branchesOrder, branch.name);
     });
@@ -454,6 +455,7 @@ class GitgraphCore<TNode = SVGElement> {
   ): Commit<TNode> {
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
+
     const order = branchesOrder.get(commit.branchToDisplay);
 
     switch (this.orientation) {
