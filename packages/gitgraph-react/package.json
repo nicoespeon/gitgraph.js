@@ -1,6 +1,6 @@
 {
   "name": "commitgraph-react",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
