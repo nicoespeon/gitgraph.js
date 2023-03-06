@@ -1,6 +1,6 @@
+import { Commit } from "commitgraph-core";
 import * as React from "react";
 import { ReactSvgElement } from "./types";
-import { Commit } from "@gitgraph/core";
 
 interface MessageProps {
   commit: Commit<ReactSvgElement>;

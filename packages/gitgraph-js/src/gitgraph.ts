@@ -356,7 +356,6 @@ function createGitgraph(
     if (!commit.style.message.display) {
       return null;
     }
-
     let message;
 
     if (commit.renderMessage) {

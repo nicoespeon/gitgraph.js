@@ -1,5 +1,5 @@
-import { Commit } from "./commit";
 import { Branch } from "./branch";
+import { Commit } from "./commit";
 import { CommitStyleBase } from "./template";
 import { pick } from "./utils";
 
@@ -283,11 +283,16 @@ function toSvgPath(
             ) {
               const previous = points[i - 1];
               if (isVertical) {
-                const middleY = (previous.y + y) / 2;
-                return `C ${previous.x} ${middleY} ${x} ${middleY} ${x} ${y}`;
+                if (previous.x < x) {
+                  return `L ${previous.x} ${previous.y} ${x} ${
+                    previous.y - 8
+                  } ${x} ${y}`;
+                } else {
+                  return `L ${previous.x} ${y + 8} ${x} ${y} ${x} ${y}`;
+                }
               } else {
                 const middleX = (previous.x + x) / 2;
-                return `C ${middleX} ${previous.y} ${middleX} ${y} ${x} ${y}`;
+                return `L ${middleX} ${previous.y} ${middleX} ${y} ${x} ${y}`;
               }
             }
             return `L ${x} ${y}`;

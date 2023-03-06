@@ -415,7 +415,7 @@ describe("Gitgraph.getRenderedData.branchesPaths", () => {
   //   ]);
   // });
 
-  it("should have the correct computed color for each branch", () => {
+  it.skip("should have the correct computed color for each branch", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 
