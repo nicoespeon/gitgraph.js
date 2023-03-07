@@ -1,7 +1,7 @@
-import { Branch, Commit } from "@gitgraph/core";
+import { Branch, Commit } from "@dolthub/gitgraph-core";
 import { createG, createRect, createText } from "./svg-elements";
 
-export { createBranchLabel, PADDING_X, PADDING_Y };
+export { PADDING_X, PADDING_Y, createBranchLabel };
 
 const PADDING_X = 10;
 const PADDING_Y = 5;

@@ -1,5 +1,5 @@
 {
-  "name": "@commitgraph/node",
+  "name": "@dolthub/gitgraph-node",
   "version": "0.1.18",
   "description": "Draw pretty git graphs in the terminal, with node.js",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -31,10 +31,10 @@
   "scripts": {
     "example:default": "ts-node examples/default.ts",
     "example:branches": "ts-node examples/branches.ts",
-    "version": "auto-changelog -p -l 0 --tag-prefix @commitgraph/node@ && git add CHANGELOG.md"
+    "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-node@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "commitgraph-core": "1.0.1",
+    "@dolthub/gitgraph-core": "1.5.0",
     "chalk": "2.4.1",
     "lodash": "4.17.13"
   },

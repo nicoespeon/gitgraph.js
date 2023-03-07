@@ -1,5 +1,5 @@
 {
-  "name": "@commitgraph/js",
+  "name": "@dolthub/gitgraph-js",
   "version": "1.4.0",
   "description": "Draw pretty git graphs in the browser",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -12,17 +12,17 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicoespeon/gitgraph.js.git"
+    "url": "git+https://github.com/dolthub/gitgraph.js.git"
   },
   "bugs": {
-    "url": "https://github.com/nicoespeon/gitgraph.js/issues"
+    "url": "https://github.com/dolthub/gitgraph.js/issues"
   },
   "keywords": [
     "git",
     "graph",
     "javascript"
   ],
-  "homepage": "https://github.com/nicoespeon/gitgraph.js#readme",
+  "homepage": "https://github.com/dolthub/gitgraph.js#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -46,10 +46,10 @@
     "build:bundle": "rollup -c rollup.config.js",
     "build:minify": "uglifyjs -c -m -o ./lib/gitgraph.umd.min.js -- ./lib/gitgraph.umd.js",
     "prepare": "npm run build",
-    "version": "auto-changelog -p -l 0 --tag-prefix @commitgraph/js@ && git add CHANGELOG.md"
+    "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-js@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "commitgraph-core": "1.0.1"
+    "@dolthub/gitgraph-core": "1.5.0"
   },
   "devDependencies": {
     "@types/node": "9.4.6",

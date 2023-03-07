@@ -1,7 +1,7 @@
-import * as React from "react";
+import { GitgraphCore } from "@dolthub/gitgraph-core";
+import { Branch, Gitgraph, Mode } from "@dolthub/gitgraph-react";
 import { storiesOf } from "@storybook/react";
-import { Gitgraph, Mode, Branch } from "@gitgraph/react";
-import { GitgraphCore } from "@gitgraph/core";
+import * as React from "react";
 
 import { createFixedHashGenerator, hashPrefix } from "../helpers";
 

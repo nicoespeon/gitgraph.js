@@ -1,7 +1,7 @@
-import * as React from "react";
-import { storiesOf } from "@storybook/react";
+import { createGitgraph } from "@dolthub/gitgraph-js";
 import { action } from "@storybook/addon-actions";
-import { createGitgraph } from "@gitgraph/js";
+import { storiesOf } from "@storybook/react";
+import * as React from "react";
 
 import { createFixedHashGenerator, GraphContainer } from "../helpers";
 

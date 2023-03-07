@@ -1,8 +1,8 @@
-import { Commit } from "@gitgraph/core";
+import { Commit } from "@dolthub/gitgraph-core";
 
 import { createG, createPath, createText } from "./svg-elements";
 
-export { createTooltip, PADDING };
+export { PADDING, createTooltip };
 
 const PADDING = 10;
 const OFFSET = 10;
