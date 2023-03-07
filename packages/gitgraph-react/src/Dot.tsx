@@ -1,4 +1,4 @@
-import { Commit } from "commitgraph-core";
+import { Commit } from "@dolthub/gitgraph-core";
 import * as React from "react";
 
 export interface DotProps {

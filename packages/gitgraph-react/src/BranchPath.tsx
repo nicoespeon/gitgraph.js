@@ -1,4 +1,9 @@
-import { Branch, Coordinate, GitgraphCore, toSvgPath } from "commitgraph-core";
+import {
+  Branch,
+  Coordinate,
+  GitgraphCore,
+  toSvgPath,
+} from "@dolthub/gitgraph-core";
 import * as React from "react";
 import { ReactElement } from "react";
 import { ReactSvgElement } from "./types";

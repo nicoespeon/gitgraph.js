@@ -1,5 +1,5 @@
 {
-  "name": "@commitgraph/js",
+  "name":"@dolthub/gitgraph-js",
   "version": "1.4.0",
   "description": "Draw pretty git graphs in the browser",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -49,7 +49,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @commitgraph/js@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "commitgraph-core": "1.0.1"
+    "@dolthub/gitgraph-core": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "9.4.6",

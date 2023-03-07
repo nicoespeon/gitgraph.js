@@ -1,5 +1,5 @@
 {
-  "name": "commitgraph-react",
+  "name": "@dolthub/gitgraph-react",
   "version": "1.6.9",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
@@ -43,9 +43,7 @@
     "prepare": "npm run build",
     "version": "auto-changelog -p -l 0 --tag-prefix commitgraph-react@ && git add CHANGELOG.md"
   },
-  "dependencies": {
-    "commitgraph-core": "1.0.8"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": ">= 16.8.0"
   },

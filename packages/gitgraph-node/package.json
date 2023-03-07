@@ -1,5 +1,5 @@
 {
-  "name": "@commitgraph/node",
+  "name": "@dolthub/gitgraph-node",
   "version": "0.1.18",
   "description": "Draw pretty git graphs in the terminal, with node.js",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",

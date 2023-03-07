@@ -3,7 +3,7 @@ import {
   Coordinate,
   GitgraphCore,
   Mode,
-} from "commitgraph-core";
+} from "@dolthub/gitgraph-core";
 import * as React from "react";
 import { MutableRefObject } from "react";
 import { Arrow } from "./Arrow";
