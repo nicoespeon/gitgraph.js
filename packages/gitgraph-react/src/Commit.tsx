@@ -47,7 +47,6 @@ export const Commit = (props: CommitsProps) => {
 
   const [branchLabelX, setBranchLabelX] = React.useState(0);
   const [tagXs, setTagXs] = React.useState<number[]>([]);
-  const [messageX, setMessageX] = React.useState(0);
 
   const arrows = React.useMemo(() => {
     if (!gitgraph.template.arrow.size) return null;
@@ -79,7 +78,7 @@ export const Commit = (props: CommitsProps) => {
           branch={branch}
           commit={commit}
           ref={branchLabelRef}
-          branchLabelX={branchLabelX}
+          branchLabelX={branchLabelX + 650}
         />
       );
     });
@@ -136,10 +135,6 @@ export const Commit = (props: CommitsProps) => {
     });
 
     setTagXs(allTagXs);
-
-    if (messageRef.current) {
-      setMessageX(translateX);
-    }
   }, [tagRefs, gitgraph, commitMessagesX]);
 
   const shouldRenderTooltip =
@@ -175,7 +170,11 @@ export const Commit = (props: CommitsProps) => {
       {arrows}
       <g transform={`translate(${-x}, 0)`}>
         {commit.style.message.display && (
-          <Message commit={commit} ref={messageRef} messageX={messageX} />
+          <Message
+            commit={commit}
+            ref={messageRef}
+            messageX={commitMessagesX}
+          />
         )}
         {branchLabels}
         {tags}

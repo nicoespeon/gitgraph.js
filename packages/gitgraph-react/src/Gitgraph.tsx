@@ -180,23 +180,25 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
     const isBezier =
       this.gitgraph.template.branch.mergeStyle === MergeStyle.Bezier;
 
-    return Array.from(this.state.branchesPaths).map(([branch, coordinates]) => (
-      <BranchPath
-        key={branch.name}
-        gitgraph={this.gitgraph}
-        branch={branch}
-        coordinates={coordinates}
-        getWithCommitOffset={this.getWithCommitOffset.bind(this)}
-        isBezier={isBezier}
-        offset={offset}
-      />
-    ));
+    return Array.from(this.state.branchesPaths)
+      .reverse()
+      .map(([branch, coordinates]) => (
+        <BranchPath
+          key={branch.name}
+          gitgraph={this.gitgraph}
+          branch={branch}
+          coordinates={coordinates}
+          getWithCommitOffset={this.getWithCommitOffset.bind(this)}
+          isBezier={isBezier}
+          offset={offset}
+        />
+      ));
   }
 
   private computeOffsets(
     commits: Element[],
   ): GitgraphState["commitYWithOffsets"] {
-    let totalOffsetY = 0;
+    // const totalOffsetY = 0;
 
     // In VerticalReverse orientation, commits are in the same order in the DOM.
     const orientedCommits =
@@ -210,35 +212,34 @@ class Gitgraph extends React.Component<GitgraphProps, GitgraphState> {
           commit.getAttribute("transform")!.split(",")[1].slice(0, -1),
           10,
         );
-
         if (!Object.values(this.state.commitYWithOffsets).includes(commitY)) {
-          const firstForeignObject = commit.getElementsByTagName(
-            "foreignObject",
-          )[0];
+          // give a fixed offset Y to avoid false rendering
+          // const firstForeignObject = commit.getElementsByTagName(
+          //   "foreignObject",
+          // )[0];
 
-          const customHtmlMessage =
-            firstForeignObject && firstForeignObject.firstElementChild;
+          // const customHtmlMessage =
+          //   firstForeignObject && firstForeignObject.firstElementChild;
 
-          let messageHeight = 0;
-          if (customHtmlMessage) {
-            const height = customHtmlMessage.getBoundingClientRect().height;
-            const marginTopInPx =
-              window.getComputedStyle(customHtmlMessage).marginTop || "0px";
-            const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
+          // let messageHeight = 0;
+          // if (customHtmlMessage) {
+          //   const height = customHtmlMessage.getBoundingClientRect().height;
+          //   const marginTopInPx =
+          //     window.getComputedStyle(customHtmlMessage).marginTop || "0px";
+          //   const marginTop = parseInt(marginTopInPx.replace("px", ""), 10);
 
-            messageHeight = height + marginTop;
-          }
+          //   messageHeight = height + marginTop;
+          // }
 
-          // Force the height of the foreignObject (browser issue)
-          if (firstForeignObject) {
-            firstForeignObject.setAttribute("height", `${messageHeight}px`);
-          }
+          // // Force the height of the foreignObject (browser issue)
+          // if (firstForeignObject) {
+          //   firstForeignObject.setAttribute("height", `${messageHeight}px`);
+          // }
 
-          newOffsets[commitY] = commitY + totalOffsetY;
-
+          newOffsets[commitY] = commitY;
           // Increment total offset after setting the offset
           // => offset next commits accordingly.
-          totalOffsetY += messageHeight;
+          // totalOffsetY += 90;
         }
 
         return newOffsets;

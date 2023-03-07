@@ -455,7 +455,6 @@ class GitgraphCore<TNode = SVGElement> {
   ): Commit<TNode> {
     const row = rows.getRowOf(commit.hash);
     const maxRow = rows.getMaxRow();
-
     const order = branchesOrder.get(commit.branchToDisplay);
 
     switch (this.orientation) {

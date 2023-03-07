@@ -1,6 +1,6 @@
 {
   "name": "commitgraph-core",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Core of gitgraph, a JavaScript library to draw pretty git graphs",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [

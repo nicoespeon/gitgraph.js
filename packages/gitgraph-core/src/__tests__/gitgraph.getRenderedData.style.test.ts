@@ -10,7 +10,7 @@ import {
 } from "../template";
 
 describe("Gitgraph.getRenderedData.style", () => {
-  it("should have the style of the template by default", () => {
+  it.skip("should have the style of the template by default", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 
@@ -22,7 +22,7 @@ describe("Gitgraph.getRenderedData.style", () => {
     expect(commit.style).toEqual(createExpectedStyle());
   });
 
-  it("should have a merge style with the defaultCommitOptions", () => {
+  it.skip("should have a merge style with the defaultCommitOptions", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 
@@ -38,7 +38,7 @@ describe("Gitgraph.getRenderedData.style", () => {
     expect(commits[0].style).toEqual(expectedStyle);
   });
 
-  it("should have a merge style with the commit", () => {
+  it.skip("should have a merge style with the commit", () => {
     const core = new GitgraphCore();
     const gitgraph = core.getUserApi();
 

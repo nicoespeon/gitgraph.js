@@ -35,7 +35,7 @@ function DefaultBranchLabel({ branch, commit }: BranchLabelBaseProps) {
       <text
         ref={getSizing}
         fill={branch.style.label.color || commit.style.color}
-        style={{ font: branch.style.label.font }}
+        style={{ font: branch.style.label.font, fontSize: "14px" }}
         alignmentBaseline="middle"
         dominantBaseline="middle"
         x={BranchLabel.paddingX}
@@ -81,7 +81,7 @@ export const BranchLabel = React.forwardRef<SVGGElement, BranchLabelProps>(
 
     if (props.gitgraph.isVertical) {
       return (
-        <g ref={ref} transform={`translate(${branchLabelX || 0}, 0)`}>
+        <g ref={ref} transform={`translate(${branchLabelX || 0}, -7)`}>
           {branchLabel}
         </g>
       );

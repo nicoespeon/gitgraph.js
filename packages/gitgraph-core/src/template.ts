@@ -294,7 +294,7 @@ class Template {
           options.branch.label.font ||
           options.commit.message.font ||
           DEFAULT_FONT,
-        borderRadius: numberOptionOr(options.branch.label.borderRadius, 10),
+        borderRadius: numberOptionOr(options.branch.label.borderRadius, 3),
       },
     };
 
@@ -380,7 +380,7 @@ const metroTemplate = new Template({
     spacing: 50,
   },
   commit: {
-    spacing: 80,
+    spacing: 100,
     dot: {
       size: 14,
     },
