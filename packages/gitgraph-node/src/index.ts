@@ -1,11 +1,11 @@
-import { GitgraphCore } from "@gitgraph/core";
+import { GitgraphCore } from "@dolthub/gitgraph-core";
 
 // Domain (rendering logic)
 import computeGraphMap from "./compute-graph-map";
 
 // Infrastructure (logger implementations)
-import consoleGraphLogger from "./console-graph-logger";
 import bufferGraphLogger, { bufferLength } from "./buffer-graph-logger";
+import consoleGraphLogger from "./console-graph-logger";
 
 class Gitgraph extends GitgraphCore {
   // Limiting Gitgraph Core config options is intentional since most of them

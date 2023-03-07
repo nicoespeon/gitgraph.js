@@ -1,6 +1,6 @@
 {
-  "name": "commitgraph-react",
-  "version": "1.6.9",
+  "name": "@dolthub/gitgraph-react",
+  "version": "1.6.0",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -41,10 +41,10 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
     "prepare": "npm run build",
-    "version": "auto-changelog -p -l 0 --tag-prefix commitgraph-react@ && git add CHANGELOG.md"
+    "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-react@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "commitgraph-core": "1.0.8"
+    "@dolthub/gitgraph-core": "1.6.0"
   },
   "peerDependencies": {
     "react": ">= 16.8.0"

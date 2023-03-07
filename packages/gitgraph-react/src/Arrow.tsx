@@ -1,4 +1,4 @@
-import { Commit, GitgraphCore, arrowSvgPath } from "commitgraph-core";
+import { Commit, GitgraphCore, arrowSvgPath } from "@dolthub/gitgraph-core";
 import * as React from "react";
 import { ReactSvgElement } from "./types";
 

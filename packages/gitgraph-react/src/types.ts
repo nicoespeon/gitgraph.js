@@ -4,7 +4,7 @@ import {
   GitgraphCommitOptions,
   GitgraphMergeOptions,
   GitgraphTagOptions,
-} from "commitgraph-core";
+} from "@dolthub/gitgraph-core";
 import * as React from "react";
 
 export type ReactSvgElement = React.ReactElement<SVGElement>;

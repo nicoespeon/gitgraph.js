@@ -1,5 +1,5 @@
-import { GitgraphCore, Commit } from "@gitgraph/core";
-import { flow, fill, includes, range } from "lodash";
+import { Commit, GitgraphCore } from "@dolthub/gitgraph-core";
+import { fill, flow, includes, range } from "lodash";
 import { unzip } from "lodash/fp";
 
 import connectBranchCommits from "./connect-branch-commits";

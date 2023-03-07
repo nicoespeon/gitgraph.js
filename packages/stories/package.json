@@ -1,5 +1,5 @@
 {
-  "name": "@gitgraph/stories",
+  "name": "@dolthub/gitgraph-stories",
   "version": "0.0.14",
   "private": true,
   "description": "Stories of @gitgraph rendering libraries for E2E tests",
@@ -17,9 +17,9 @@
     "build": "build-storybook"
   },
   "dependencies": {
-    "@gitgraph/core": "1.5.0",
-    "@gitgraph/js": "1.4.0",
-    "@gitgraph/react": "1.6.0"
+    "@dolthub/gitgraph-core": "1.6.0",
+    "@dolthub/gitgraph-js": "1.4.0",
+    "@dolthub/gitgraph-react": "1.6.0"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",

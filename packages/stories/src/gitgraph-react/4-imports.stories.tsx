@@ -1,11 +1,11 @@
-import * as React from "react";
+import { Gitgraph, Mode } from "@dolthub/gitgraph-react";
 import { storiesOf } from "@storybook/react";
-import { Gitgraph, Mode } from "@gitgraph/react";
+import * as React from "react";
 
-import simpleGraph from "../import-fixtures/simple-graph";
 import deletedBranch from "../import-fixtures/deleted-branch";
 import gitflow from "../import-fixtures/gitflow";
 import largeGraph from "../import-fixtures/large-graph";
+import simpleGraph from "../import-fixtures/simple-graph";
 
 storiesOf("gitgraph-react/4. Imports", module)
   .add("simple graph", () => (
