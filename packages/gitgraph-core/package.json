@@ -1,6 +1,6 @@
 {
-  "name": "commitgraph-core",
-  "version": "1.0.8",
+  "name": "@dolthub/gitgraph-core",
+  "version": "1.6.0",
   "description": "Core of gitgraph, a JavaScript library to draw pretty git graphs",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -41,7 +41,7 @@
     "build:browserify": "browserify ./lib/bundle.umd.js -o ./lib/bundle.js",
     "build:minify": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
     "prepare": "npm run build",
-    "version": "auto-changelog -p -l 0 --tag-prefix commitgraph-core@ && git add CHANGELOG.md",
+    "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-core@ && git add CHANGELOG.md",
     "prepublishOnly": "npm run test"
   },
   "devDependencies": {

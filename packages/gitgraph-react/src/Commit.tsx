@@ -3,7 +3,7 @@ import {
   Coordinate,
   GitgraphCore,
   Mode,
-} from "commitgraph-core";
+} from "@dolthub/gitgraph-core";
 import * as React from "react";
 import { MutableRefObject } from "react";
 import { Arrow } from "./Arrow";
@@ -67,7 +67,7 @@ export const Commit = (props: CommitsProps) => {
   }, [commits, commit, gitgraph]);
 
   const branchLabels = React.useMemo(() => {
-    // @gitgraph/core could compute branch labels into commits directly.
+    // @dolthub/gitgraph-core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
     const branches = Array.from(gitgraph.branches.values());
     return branches.map((branch) => {

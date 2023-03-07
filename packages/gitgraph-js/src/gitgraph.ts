@@ -16,7 +16,7 @@ import {
   arrowSvgPath,
   templateExtend,
   toSvgPath,
-} from "@gitgraph/core";
+} from "@dolthub/gitgraph-core";
 
 import {
   PADDING_X as BRANCH_LABEL_PADDING_X,
@@ -44,17 +44,17 @@ type MergeOptions = GitgraphMergeOptions<SVGElement>;
 type Branch = BranchUserApi<SVGElement>;
 
 export {
-  createGitgraph,
-  CommitOptions,
   Branch,
   BranchOptions,
-  TagOptions,
+  CommitOptions,
   MergeOptions,
+  MergeStyle,
   Mode,
   Orientation,
+  TagOptions,
   TemplateName,
+  createGitgraph,
   templateExtend,
-  MergeStyle,
 };
 
 interface CommitYWithOffsets {
@@ -231,7 +231,7 @@ function createGitgraph(
     function adaptGraphDimensions(adaptToContainer: boolean): void {
       const { height, width } = svg.getBBox();
 
-      // FIXME: In horizontal mode, we mimic @gitgraph/react behavior
+      // FIXME: In horizontal mode, we mimic @dolthub/gitgraph-react behavior
       // => it gets re-rendered after offsets are computed
       // => it applies paddings twice!
       //
@@ -431,7 +431,7 @@ function createGitgraph(
   }
 
   function renderBranchLabels(commit: Commit): Array<SVGElement | null> {
-    // @gitgraph/core could compute branch labels into commits directly.
+    // @dolthub/gitgraph-core could compute branch labels into commits directly.
     // That will make it easier to retrieve them, just like tags.
     const branches = Array.from(gitgraph.branches.values());
     return branches.map((branch) => {

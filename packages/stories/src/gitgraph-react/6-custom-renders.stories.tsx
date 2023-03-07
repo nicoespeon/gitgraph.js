@@ -1,15 +1,15 @@
-import * as React from "react";
-import { storiesOf } from "@storybook/react";
 import {
-  Gitgraph,
-  CommitOptions,
   BranchOptions,
-  TagOptions,
+  CommitOptions,
+  Gitgraph,
   Mode,
   Orientation,
-  templateExtend,
+  TagOptions,
   TemplateName,
-} from "@gitgraph/react";
+  templateExtend,
+} from "@dolthub/gitgraph-react";
+import { storiesOf } from "@storybook/react";
+import * as React from "react";
 
 import { createFixedHashGenerator } from "../helpers";
 

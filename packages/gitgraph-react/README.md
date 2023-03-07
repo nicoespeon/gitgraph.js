@@ -1,4 +1,4 @@
-This is a fork of [GitGraph.js](https://github.com/nicoespeon/gitgraph.js)'s core package.
+This is a fork package of React rendering library of [GitGraph.js](https://github.com/nicoespeon/gitgraph.js).
 
 This package makes changes to take commit info from [DoltHub](https://wwww.dolthub.com) in order to render the commit graph.
 

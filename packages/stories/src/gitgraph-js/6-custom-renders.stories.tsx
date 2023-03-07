@@ -1,24 +1,24 @@
-import * as React from "react";
-import { storiesOf } from "@storybook/react";
 import {
-  createGitgraph,
-  CommitOptions,
   BranchOptions,
-  TagOptions,
+  CommitOptions,
   Mode,
   Orientation,
+  TagOptions,
   TemplateName,
+  createGitgraph,
   templateExtend,
-} from "@gitgraph/js";
+} from "@dolthub/gitgraph-js";
+import { storiesOf } from "@storybook/react";
+import * as React from "react";
 
 import {
   GraphContainer,
   createFixedHashGenerator,
-  createSvg,
+  createForeignObject,
   createG,
   createPath,
+  createSvg,
   createText,
-  createForeignObject,
 } from "../helpers";
 
 const withoutBranchLabels = templateExtend(TemplateName.Metro, {
