@@ -10,7 +10,7 @@ import {
   Orientation,
   TemplateName,
   templateExtend,
-} from "commitgraph-core";
+} from "@dolthub/gitgraph-core";
 import * as React from "react";
 
 import { BranchLabel } from "./BranchLabel";
@@ -27,19 +27,19 @@ import {
 } from "./types";
 
 export {
+  Branch,
+  BranchOptions,
+  CommitOptions,
   Gitgraph,
   GitgraphProps,
   GitgraphState,
-  TemplateName,
-  templateExtend,
+  MergeOptions,
   MergeStyle,
   Mode,
   Orientation,
-  CommitOptions,
-  BranchOptions,
   TagOptions,
-  MergeOptions,
-  Branch,
+  TemplateName,
+  templateExtend,
 };
 
 type GitgraphProps = GitgraphPropsWithChildren | GitgraphPropsWithGraph;

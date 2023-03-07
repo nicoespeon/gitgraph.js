@@ -1,4 +1,4 @@
-import { Commit, Tag as CoreTag } from "commitgraph-core";
+import { Commit, Tag as CoreTag } from "@dolthub/gitgraph-core";
 import * as React from "react";
 import { ReactSvgElement } from "./types";
 

@@ -1,4 +1,4 @@
-import { Branch, Commit, GitgraphCore } from "commitgraph-core";
+import { Branch, Commit, GitgraphCore } from "@dolthub/gitgraph-core";
 import * as React from "react";
 import { MutableRefObject } from "react";
 import { ReactSvgElement } from "./types";
