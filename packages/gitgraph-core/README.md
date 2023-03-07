@@ -1,6 +1,6 @@
 This is a fork of [GitGraph.js](https://github.com/nicoespeon/gitgraph.js)'s core package.
 
-Made changes to take commit info from [DoltHub](https://wwww.dolthub.com) and render graph.
+This package makes changes to take commit info from [DoltHub](https://wwww.dolthub.com) in order to render the commit graph.
 
 Changes are:
 
@@ -12,7 +12,7 @@ Changes are:
 });
 ```
 
-2. in `packages/gitgraph-core/src/branches-paths.ts`, change the branch path from a curve line to a straight line.
+2. in `packages/gitgraph-core/src/branches-paths.ts`, change the branch path from a curved line to a straight line.
 
 3. in `packages/gitgraph-core/src/gitgraph.ts`, add all branch names of the current hash to the branches array.
 
