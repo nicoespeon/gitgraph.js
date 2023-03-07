@@ -1,10 +1,10 @@
 import {
+  BranchUserApi,
   GitgraphCore,
   GitgraphUserApi,
-  BranchUserApi,
-  templateExtend,
   TemplateName,
-} from "@gitgraph/core";
+  templateExtend,
+} from "@dolthub/gitgraph-core";
 
 import computeGraphMap, { GraphCommit, GraphMap } from "./compute-graph-map";
 

@@ -1,6 +1,6 @@
-import * as React from "react";
+import { Branch, createGitgraph, Mode } from "@dolthub/gitgraph-js";
 import { storiesOf } from "@storybook/react";
-import { createGitgraph, Mode, Branch } from "@gitgraph/js";
+import * as React from "react";
 
 import {
   createFixedHashGenerator,

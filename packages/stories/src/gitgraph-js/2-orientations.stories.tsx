@@ -1,6 +1,10 @@
-import * as React from "react";
+import {
+  createGitgraph,
+  Orientation,
+  TemplateName,
+} from "@dolthub/gitgraph-js";
 import { storiesOf } from "@storybook/react";
-import { createGitgraph, Orientation, TemplateName } from "@gitgraph/js";
+import * as React from "react";
 
 import { createFixedHashGenerator, GraphContainer } from "../helpers";
 

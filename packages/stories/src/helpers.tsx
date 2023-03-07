@@ -4,11 +4,11 @@ import { createRef, useLayoutEffect } from "react";
 export {
   GraphContainer,
   createFixedHashGenerator,
-  createSvg,
-  createG,
-  createText,
-  createPath,
   createForeignObject,
+  createG,
+  createPath,
+  createSvg,
+  createText,
 };
 
 export const hashPrefix = "h45h";
@@ -18,7 +18,7 @@ function createFixedHashGenerator() {
 }
 
 /**
- * A React container to wrap HTMLElement so we can render @gitgraph/js
+ * A React container to wrap HTMLElement so we can render @dolthub/gitgraph-js
  * stories with @storybook/react.
  * We need to because Chromatic QA only handle 1 Storybook / repo.
  * And Storybook doesn't run multiple frameworks in 1 Storybook (yet).

@@ -1,7 +1,7 @@
-import { createG, createText, createPath } from "./svg-elements";
-import { Tag } from "@gitgraph/core";
+import { Tag } from "@dolthub/gitgraph-core";
+import { createG, createPath, createText } from "./svg-elements";
 
-export { createTag, PADDING_X };
+export { PADDING_X, createTag };
 
 const PADDING_X = 10;
 const PADDING_Y = 5;
