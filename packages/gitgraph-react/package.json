@@ -1,6 +1,6 @@
 {
   "name": "@dolthub/gitgraph-react",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Draw pretty git graphs in the browser, with React",
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "contributors": [
@@ -44,7 +44,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-react@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@dolthub/gitgraph-core": "1.6.0"
+    "@dolthub/gitgraph-core": "1.6.1"
   },
   "peerDependencies": {
     "react": ">= 16.8.0"
