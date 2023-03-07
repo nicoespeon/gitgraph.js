@@ -34,7 +34,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-node@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@dolthub/gitgraph-core": "1.5.0",
+    "@dolthub/gitgraph-core": "1.6.0",
     "chalk": "2.4.1",
     "lodash": "4.17.13"
   },

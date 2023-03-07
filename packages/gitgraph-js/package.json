@@ -49,7 +49,7 @@
     "version": "auto-changelog -p -l 0 --tag-prefix @dolthub/gitgraph-js@ && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@dolthub/gitgraph-core": "1.5.0"
+    "@dolthub/gitgraph-core": "1.6.0"
   },
   "devDependencies": {
     "@types/node": "9.4.6",
