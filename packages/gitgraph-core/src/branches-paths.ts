@@ -3,7 +3,7 @@ import { Commit } from "./commit";
 import { CommitStyleBase } from "./template";
 import { pick } from "./utils";
 
-export { BranchesPaths, Coordinate, BranchesPathsCalculator, toSvgPath };
+export { BranchesPaths, BranchesPathsCalculator, Coordinate, toSvgPath };
 
 type BranchesPaths<TNode> = Map<Branch<TNode>, Coordinate[][]>;
 
@@ -284,11 +284,21 @@ function toSvgPath(
               const previous = points[i - 1];
               if (isVertical) {
                 if (previous.x < x) {
-                  return `L ${previous.x} ${previous.y} ${x} ${
-                    previous.y - 8
-                  } ${x} ${y}`;
+                  return `L ${previous.x} ${previous.y} ${
+                    (previous.x + x) / 2
+                  } ${previous.y - 2} C ${x} ${previous.y - 4} ${x} ${
+                    previous.y - 7
+                  } ${x} ${previous.y - 11} L ${x} ${y} `;
                 } else {
-                  return `L ${previous.x} ${y + 8} ${x} ${y} ${x} ${y}`;
+                  if (previous.x > x) {
+                    return ` L ${previous.x} ${y + 14} C ${previous.x} ${
+                      y + 5
+                    } ${previous.x - 1} ${y + 4} ${(previous.x + x) / 2} ${
+                      y + 2
+                    } L ${x} ${y} `;
+                  } else {
+                    return `L ${previous.x} ${y + 8} ${x} ${y} ${x} ${y}`;
+                  }
                 }
               } else {
                 const middleX = (previous.x + x) / 2;
