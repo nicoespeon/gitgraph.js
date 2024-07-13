@@ -1,10 +1,22 @@
+> [!IMPORTANT]
+> This project has been unmaintained since 2019. Since I couldn't find a new dedicated maintainer, **the project is now archived.**
+> 
+> Gitgraph.js was designed to draw simple git graphs using a JS API, to illustrate blog articles or make presentations. Feel free to fork the project to make it fit your needs.
+> As of 2024, I would recommend checking out what [Mermaid.js](https://mermaid.js.org/) can do.
+> 
+> Today, my OSS energy is dedicated towards [Abracadabra](https://github.com/nicoespeon/abracadabra), a VS Code extension that gives you automated refactorings for JS and TS.
+>
+> Thanks!
+> 
+> *— Nicolas Carlo*
+
+---
+
 ![GitGraph.js](/assets/logo/gitgraph-logo.png)
 
 A JavaScript library to draw pretty git graphs.
 
 ---
-
-👋 **[Help! The project is looking for maintainers!](https://github.com/nicoespeon/gitgraph.js/issues/328)**
 
 <!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
